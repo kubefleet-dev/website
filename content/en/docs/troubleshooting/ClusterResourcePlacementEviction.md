@@ -4,9 +4,9 @@ This guide provides troubleshooting steps for issues related to placement evicti
 
 An eviction object when created is only reconciled once and reaches a terminal state. List of terminal states for 
 eviction are:
-- Eviction is invalid - terminal state
+- Eviction is invalid
 - Eviction is valid, Eviction failed to execute
-- Eviction is valid, Eviction executed 
+- Eviction is valid, Eviction executed successfully
 
 > **Note:** If an eviction object doesn't reach a terminal state, it is likely due to a failure in the reconciliation
 > process where the controller is unable to reach the api server.
@@ -76,14 +76,63 @@ status:
     type: Valid
 ```
 
-In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because 
+In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because
 there is more than one `ClusterResourceBinding` object present for the `ClusterResourcePlacement` object. This is a rare
-scenario, the user cac retrying the eviction again shortly to successfully evict resources.
+scenario, the user can retry the eviction again shortly to successfully evict resources.
+
+### PickFixed CRP is targeted by CRP Eviction
+
+Example status for `ClusterResourcePlacementEviction` object targeting a PickFixed `ClusterResourcePlacement` object:
+```
+status:
+  conditions:
+  - lastTransitionTime: "2025-04-21T23:19:06Z"
+    message: Found ClusterResourcePlacement with PickFixed placement type targeted
+      by eviction
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionInvalid
+    status: "False"
+    type: Valid
+```
+
+In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because
+the `ClusterResourcePlacement` object is of type `PickFixed`. Users cannot use `ClusterResourcePlacementEviction` 
+objects to evict resources propagated by `ClusterResourcePlacement` objects of type `PickFixed`. The user can instead 
+remove the member cluster name from the `clusterNames` field in the policy of the `ClusterResourcePlacement` object.
 
 ## Failed to execute eviction
 
-### Due to specified CRPDB
+### Eviction blocked by Invalid CRPDB
 
+Example status for `ClusterResourcePlacementEviction` object with invalid `ClusterResourcePlacementDisruptionBudget`,
+```
+status:
+  conditions:
+  - lastTransitionTime: "2025-04-21T23:39:42Z"
+    message: Eviction is valid
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionValid
+    status: "True"
+    type: Valid
+  - lastTransitionTime: "2025-04-21T23:39:42Z"
+    message: Eviction is blocked by misconfigured ClusterResourcePlacementDisruptionBudget,
+      either MaxUnavailable is specified or MinAvailable is specified as a percentage
+      for PickAll ClusterResourcePlacement
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionNotExecuted
+    status: "False"
+    type: Executed
+```
+
+In this cae the Eviction object reached a terminal state, it's status has `executed` condition set to `False`, because
+the `ClusterResourcePlacementDisruptionBudget` object is invalid, in case of protected `ClusterResourcePlacement` 
+objects of type `PickAll`, the `minAvailable` field should be set to an absolute number and not a percentage and the
+`maxUnavailable` field should not be set since the total number of placements is not non-deterministic.
+
+### Eviction blocked by specified CRPDB
+
+Example status for `ClusterResourcePlacementEviction` object blocked by a `ClusterResourcePlacementDisruptionBudget` 
+object,
 ```
 status:
   conditions:
