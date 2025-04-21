@@ -8,13 +8,14 @@ eviction are:
 - Eviction is valid, Eviction failed to execute
 - Eviction is valid, Eviction executed 
 
-If an eviction object doesn't reach a terminal state, it is likely due to a failure in the reconciliation process where 
-the controller is unable to reach the api server.
+> **Note:** If an eviction object doesn't reach a terminal state, it is likely due to a failure in the reconciliation
+> process where the controller is unable to reach the api server.
 
 ## Invalid eviction
 
-### Missing CRP object
+### Missing/Deleting CRP object
 
+Example status with missing `CRP` object:
 ```
 status:
   conditions:
@@ -26,8 +27,25 @@ status:
     type: Valid
 ```
 
+Example status with deleting `CRP` object:
+```
+status:
+  conditions:
+  - lastTransitionTime: "2025-04-21T19:53:42Z"
+    message: Found deleting ClusterResourcePlacement targeted by eviction
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionInvalid
+    status: "False"
+    type: Valid
+```
+
+In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because the 
+`ClusterResourcePlacement` object is not found. The user should verify if the `ClusterResourcePlacement` object is missing or
+if it is being deleted and recreate the `ClusterResourcePlacement` object if needed.
+
 ### Missing CRB object
 
+Example status with missing `CRB` object:
 ```
 status:
   conditions:
@@ -40,8 +58,12 @@ status:
     type: Valid
 ```
 
+In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because the
+`ClusterResourceBinding` object is not found.
+
 ### More than one CRB is present
 
+Example status with multiple `CRB` objects:
 ```
 status:
   conditions:
@@ -54,9 +76,13 @@ status:
     type: Valid
 ```
 
+In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because 
+there is more than one `ClusterResourceBinding` object present for the `ClusterResourcePlacement` object. This is a rare
+scenario, the user cac retrying the eviction again shortly to successfully evict resources.
+
 ## Failed to execute eviction
 
-### Due to specified PDB
+### Due to specified CRPDB
 
 ```
 status:
@@ -75,6 +101,3 @@ status:
     status: "False"
     type: Executed
 ```
-
-> **Note:** If an eviction object doesn't reach a terminal state, it is likely due to a failure in the reconciliation 
-> process where the controller is unable to reach the api server.
