@@ -102,6 +102,53 @@ remove the member cluster name from the `clusterNames` field in the policy of th
 
 ## Failed to execute eviction
 
+### Eviction blocked because placement is missing
+
+```
+status:
+  conditions:
+  - lastTransitionTime: "2025-04-22T00:36:44Z"
+    message: Eviction is valid
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionValid
+    status: "True"
+    type: Valid
+  - lastTransitionTime: "2025-04-22T00:36:44Z"
+    message: Eviction is blocked, placement has not propagated resources to target
+      cluster yet
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionNotExecuted
+    status: "False"
+    type: Executed
+```
+
+In this case the Eviction object reached a terminal state, it's status has `executed` condition set to `False`, because
+for the targeted `ClusterResourcePlacement` the corresponding `ClusterResourceBinding` object's spec is set to 
+`UnScheduled` meaning the scheduler decided to pick a different cluster for the placement.
+
+```
+spec:
+  applyStrategy:
+    type: ClientSideApply
+  clusterDecision:
+    clusterName: kind-cluster-1
+    clusterScore:
+      affinityScore: 0
+      priorityScore: 0
+    reason: 'Successfully scheduled resources for placement in "kind-cluster-1" (affinity
+      score: 0, topology spread score: 0): picked by scheduling policy'
+    selected: true
+  resourceSnapshotName: pick-all-crp-0-snapshot
+  schedulingPolicySnapshotName: pick-all-crp-0
+  state: UnScheduled
+  targetCluster: kind-cluster-1
+```
+
+In this case the user can either wait to see,
+
+- if the cluster is picked by the scheduler again to retry the eviction 
+- if the cluster is not picked by the scheduler again, no need to retry eviction
+
 ### Eviction blocked by Invalid CRPDB
 
 Example status for `ClusterResourcePlacementEviction` object with invalid `ClusterResourcePlacementDisruptionBudget`,
