@@ -1,15 +1,18 @@
 # Placement Eviction & Placement Disruption Budget Troubleshooting Guide
 
-This guide provides troubleshooting steps for issues related to placement eviction in the system.
+This guide provides troubleshooting steps for issues related to placement eviction.
 
-An eviction object when created is only reconciled once and reaches a terminal state. List of terminal states for 
-eviction are:
+An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states 
+for eviction are:
 - Eviction is invalid
 - Eviction is valid, Eviction failed to execute
 - Eviction is valid, Eviction executed successfully
 
 > **Note:** If an eviction object doesn't reach a terminal state, it is likely due to a failure in the reconciliation
 > process where the controller is unable to reach the api server.
+
+The first step in troubleshooting is to check the status of the eviction object to understand if the eviction reached
+a terminal state or not.
 
 ## Invalid eviction
 
@@ -39,9 +42,9 @@ status:
     type: Valid
 ```
 
-In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because the 
-`ClusterResourcePlacement` object is not found. The user should verify if the `ClusterResourcePlacement` object is missing or
-if it is being deleted and recreate the `ClusterResourcePlacement` object if needed and retry eviction.
+In both cases the Eviction object reached a terminal state, it's status has `valid` condition set to `False`. 
+The user should verify if the `ClusterResourcePlacement` object is missing or if it is being deleted and recreate the 
+`ClusterResourcePlacement` object if needed and retry eviction.
 
 ### Missing CRB object
 
@@ -59,7 +62,12 @@ status:
 ```
 
 In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because the
-`ClusterResourceBinding` object is not found.
+`ClusterResourceBinding` object or Placement for target cluster is not found. The user should verify to see if the 
+`ClusterResourcePlacement` object is propagating resources to the target cluster,
+
+- If yes, the next step is to check if the `ClusterResourceBinding` object is present for the target cluster or why it 
+was not created and try to create an eviction object once `ClusterResourceBinding` is created.
+- If no, the cluster is not picked by the scheduler and hence no need to retry eviction.
 
 ### Multiple CRB is present
 
@@ -77,8 +85,9 @@ status:
 ```
 
 In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because
-there is more than one `ClusterResourceBinding` object present for the `ClusterResourcePlacement` object. This is a rare
-scenario, the user can retry the eviction again shortly to successfully evict resources.
+there is more than one `ClusterResourceBinding` object or Placement present for the `ClusterResourcePlacement` object 
+targeting the member cluster. This is a rare scenario, where one `ClusterResourceBinding` is being deleted while a new 
+`ClusterResourceBinding` is being created.
 
 ### PickFixed CRP is targeted by CRP Eviction
 
