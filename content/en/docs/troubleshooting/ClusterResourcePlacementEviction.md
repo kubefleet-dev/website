@@ -4,9 +4,9 @@ This guide provides troubleshooting steps for issues related to placement evicti
 
 An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states 
 for eviction are:
-- Eviction is invalid
-- Eviction is valid, Eviction failed to execute
-- Eviction is valid, Eviction executed successfully
+- Eviction is Invalid
+- Eviction is Valid, Eviction failed to Execute
+- Eviction is Valid, Eviction executed successfully
 
 > **Note:** If an eviction object doesn't reach a terminal state, it is likely due to a failure in the reconciliation
 > process where the controller is unable to reach the api server.
@@ -42,7 +42,7 @@ status:
     type: Valid
 ```
 
-In both cases the Eviction object reached a terminal state, it's status has `valid` condition set to `False`. 
+In both cases the Eviction object reached a terminal state, it's status has `Valid` condition set to `False`. 
 The user should verify if the `ClusterResourcePlacement` object is missing or if it is being deleted and recreate the 
 `ClusterResourcePlacement` object if needed and retry eviction.
 
@@ -61,7 +61,7 @@ status:
     type: Valid
 ```
 
-In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because the
+In this case the Eviction object reached a terminal state, it's status has `Valid` condition set to `False`, because the
 `ClusterResourceBinding` object or Placement for target cluster is not found. The user should verify to see if the 
 `ClusterResourcePlacement` object is propagating resources to the target cluster,
 
@@ -84,7 +84,7 @@ status:
     type: Valid
 ```
 
-In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because
+In this case the Eviction object reached a terminal state, it's status has `Valid` condition set to `False`, because
 there is more than one `ClusterResourceBinding` object or Placement present for the `ClusterResourcePlacement` object 
 targeting the member cluster. This is a rare scenario, where one `ClusterResourceBinding` is being deleted while a new 
 `ClusterResourceBinding` is being created.
@@ -104,7 +104,7 @@ status:
     type: Valid
 ```
 
-In this case the Eviction object reached a terminal state, it's status has `valid` condition set to `False`, because
+In this case the Eviction object reached a terminal state, it's status has `Valid` condition set to `False`, because
 the `ClusterResourcePlacement` object is of type `PickFixed`. Users cannot use `ClusterResourcePlacementEviction` 
 objects to evict resources propagated by `ClusterResourcePlacement` objects of type `PickFixed`. The user can instead 
 remove the member cluster name from the `clusterNames` field in the policy of the `ClusterResourcePlacement` object.
@@ -131,7 +131,7 @@ status:
     type: Executed
 ```
 
-In this case the Eviction object reached a terminal state, it's status has `executed` condition set to `False`, because
+In this case the Eviction object reached a terminal state, it's status has `Executed` condition set to `False`, because
 for the targeted `ClusterResourcePlacement` the corresponding `ClusterResourceBinding` object's spec is set to 
 `UnScheduled` meaning the scheduler decided to pick a different cluster for the placement.
 
@@ -180,7 +180,7 @@ status:
     type: Executed
 ```
 
-In this cae the Eviction object reached a terminal state, it's status has `executed` condition set to `False`, because
+In this cae the Eviction object reached a terminal state, it's status has `Executed` condition set to `False`, because
 the `ClusterResourcePlacementDisruptionBudget` object is invalid, in case of protected `ClusterResourcePlacement` 
 objects of type `PickAll`, the `minAvailable` field should be set to an absolute number and not a percentage and the
 `maxUnavailable` field should not be set since the total number of placements is not non-deterministic.
@@ -207,7 +207,7 @@ status:
     type: Executed
 ```
 
-In this cae the Eviction object reached a terminal state, it's status has `executed` condition set to `False`, because 
+In this cae the Eviction object reached a terminal state, it's status has `Executed` condition set to `False`, because 
 the `ClusterResourcePlacementDisruptionBudget` object is blocking the eviction.
 
 Taking a look at the `ClusterResourcePlacementDisruptionBudget` object,
