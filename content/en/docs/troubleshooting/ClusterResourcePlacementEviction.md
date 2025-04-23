@@ -116,13 +116,13 @@ remove the member cluster name from the `clusterNames` field in the policy of th
 ```
 status:
   conditions:
-  - lastTransitionTime: "2025-04-22T00:36:44Z"
+  - lastTransitionTime: "2025-04-23T23:54:03Z"
     message: Eviction is valid
     observedGeneration: 1
     reason: ClusterResourcePlacementEvictionValid
     status: "True"
     type: Valid
-  - lastTransitionTime: "2025-04-22T00:36:44Z"
+  - lastTransitionTime: "2025-04-23T23:54:03Z"
     message: Eviction is blocked, placement has not propagated resources to target
       cluster yet
     observedGeneration: 1
@@ -133,30 +133,29 @@ status:
 
 In this case the Eviction object reached a terminal state, its status has `Executed` condition set to `False`, because
 for the targeted `ClusterResourcePlacement` the corresponding `ClusterResourceBinding` object's spec is set to 
-`UnScheduled` meaning the scheduler decided to pick a different cluster for the placement.
+`Scheduled` meaning the rollout of resources is not started yet. The user should check the status of the 
+`ClusterResourceBinding` to verify.
 
 ```
 spec:
   applyStrategy:
     type: ClientSideApply
   clusterDecision:
-    clusterName: kind-cluster-1
+    clusterName: kind-cluster-3
     clusterScore:
       affinityScore: 0
       priorityScore: 0
-    reason: 'Successfully scheduled resources for placement in "kind-cluster-1" (affinity
+    reason: 'Successfully scheduled resources for placement in "kind-cluster-3" (affinity
       score: 0, topology spread score: 0): picked by scheduling policy'
     selected: true
-  resourceSnapshotName: pick-all-crp-0-snapshot
-  schedulingPolicySnapshotName: pick-all-crp-0
-  state: UnScheduled
-  targetCluster: kind-cluster-1
+  resourceSnapshotName: ""
+  schedulingPolicySnapshotName: test-crp-1
+  state: Scheduled
+  targetCluster: kind-cluster-3
 ```
 
-In this case the user can either wait to see,
-
-- if the cluster is picked by the scheduler again to retry the eviction 
-- if the cluster is not picked by the scheduler again, no need to retry eviction
+Here the user can wait for the `ClusterResourceBinding` object to be updated to `Bound` state which means that
+resources have been propagated to the target cluster and then retry eviction.
 
 ### Eviction blocked by Invalid CRPDB
 
