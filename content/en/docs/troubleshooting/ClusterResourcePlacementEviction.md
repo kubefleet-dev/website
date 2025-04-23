@@ -181,9 +181,10 @@ status:
 ```
 
 In this cae the Eviction object reached a terminal state, it's status has `Executed` condition set to `False`, because
-the `ClusterResourcePlacementDisruptionBudget` object is invalid, in case of protected `ClusterResourcePlacement` 
-objects of type `PickAll`, the `minAvailable` field should be set to an absolute number and not a percentage and the
-`maxUnavailable` field should not be set since the total number of placements is not non-deterministic.
+the `ClusterResourcePlacementDisruptionBudget` object is invalid. For `ClusterResourcePlacement` objects of type 
+`PickAll`, when specifying a `ClusterResourcePlacementDisruptionBudget` the `minAvailable` field should be set to an 
+absolute number and not a percentage and the `maxUnavailable` field should not be set since the total number of 
+placements is non-deterministic.
 
 ### Eviction blocked by specified CRPDB
 
