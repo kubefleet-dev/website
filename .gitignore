@@ -43,3 +43,7 @@ __pycache__/
 # Node.js stuff
 node_modules/
 package-lock.json
+
+# Hugo outputs
+public/
+docs/
