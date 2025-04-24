@@ -61,6 +61,13 @@ status:
     type: Valid
 ```
 
+> **Note:** The user can find the corresponding `ClusterResourceBinding` object by listing all `ClusterResourceBinding`
+> objects for the `ClusterResourcePlacement` object
+> ```
+> kubectl get rb -l kubernetes-fleet.io/parent-CRP=<CRPName>
+> ```
+> The `ClusterResourceBinding` object name is formatted as `<CRPName>-<ClusterName>-randomsuffix`
+
 In this case the Eviction object reached a terminal state, its status has `Valid` condition set to `False`, because the
 `ClusterResourceBinding` object or Placement for target cluster is not found. The user should verify to see if the 
 `ClusterResourcePlacement` object is propagating resources to the target cluster,
@@ -161,7 +168,8 @@ spec:
 ```
 
 Here the user can wait for the `ClusterResourceBinding` object to be updated to `Bound` state which means that
-resources have been propagated to the target cluster and then retry eviction.
+resources have been propagated to the target cluster and then retry eviction. In some cases this can take a while or not
+happen at all, in that case the user should verify if rollout is stuck for `ClusterResourcePlacement` object.
 
 ### Eviction blocked by Invalid CRPDB
 
