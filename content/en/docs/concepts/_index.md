@@ -1,7 +1,7 @@
 ---
 title: Concepts
 description: Core concepts in Fleet
-weight: 2
+weight: 1
 ---
 
 {{% pageinfo %}}

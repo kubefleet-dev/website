@@ -1,7 +1,7 @@
 ---
 title: ClusterResourcePlacement
 description: Concept about the ClusterResourcePlacement API
-weight: 3
+weight: 4
 ---
 
 ## Overview
