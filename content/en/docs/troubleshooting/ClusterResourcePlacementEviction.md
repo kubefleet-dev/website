@@ -133,8 +133,14 @@ status:
 
 In this case the Eviction object reached a terminal state, its status has `Executed` condition set to `False`, because
 for the targeted `ClusterResourcePlacement` the corresponding `ClusterResourceBinding` object's spec is set to 
-`Scheduled` meaning the rollout of resources is not started yet. The user should check the status of the 
-`ClusterResourceBinding` to verify.
+`Scheduled` meaning the rollout of resources is not started yet.
+
+> **Note:** The user can find the corresponding `ClusterResourceBinding` object by listing all `ClusterResourceBinding`
+> objects for the `ClusterResourcePlacement` object
+> ```
+> kubectl get rb -l kubernetes-fleet.io/parent-CRP=<CRPName>
+> ```
+> The `ClusterResourceBinding` object name is formatted as `<CRPName>-<ClusterName>-randomsuffix`.
 
 ```
 spec:
