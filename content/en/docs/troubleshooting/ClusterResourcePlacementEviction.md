@@ -192,13 +192,13 @@ object,
 ```
 status:
   conditions:
-  - lastTransitionTime: "2025-04-21T22:01:57Z"
+  - lastTransitionTime: "2025-04-24T18:54:30Z"
     message: Eviction is valid
     observedGeneration: 1
     reason: ClusterResourcePlacementEvictionValid
     status: "True"
     type: Valid
-  - lastTransitionTime: "2025-04-21T22:01:57Z"
+  - lastTransitionTime: "2025-04-24T18:54:30Z"
     message: 'Eviction is blocked by specified ClusterResourcePlacementDisruptionBudget,
       availablePlacements: 2, totalPlacements: 2'
     observedGeneration: 1
@@ -208,23 +208,24 @@ status:
 ```
 
 In this cae the Eviction object reached a terminal state, its status has `Executed` condition set to `False`, because 
-the `ClusterResourcePlacementDisruptionBudget` object is blocking the eviction.
+the `ClusterResourcePlacementDisruptionBudget` object is blocking the eviction. The message from `Executed` condition
+reads available placements is 2 and total placements is 2, which means that the `ClusterResourcePlacementDisruptionBudget`
+is protecting all placements propagated by the `ClusterResourcePlacement` object.
 
 Taking a look at the `ClusterResourcePlacementDisruptionBudget` object,
 
 ```
-kubectl get crpdb pick-all-crp -o YAML
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacementDisruptionBudget
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
       {"apiVersion":"placement.kubernetes-fleet.io/v1beta1","kind":"ClusterResourcePlacementDisruptionBudget","metadata":{"annotations":{},"name":"pick-all-crp"},"spec":{"minAvailable":2}}
-  creationTimestamp: "2025-04-21T21:55:44Z"
+  creationTimestamp: "2025-04-24T18:47:22Z"
   generation: 1
   name: pick-all-crp
-  resourceVersion: "2748"
-  uid: efc73250-b6dd-4e2d-8387-e7d0e9b5328d
+  resourceVersion: "1749"
+  uid: 7d3a0ac5-0225-4fb6-b5e9-fc28d58cefdc
 spec:
   minAvailable: 2
 ```
@@ -232,28 +233,139 @@ spec:
 We can see that the `minAvailable` is set to `2`, which means that at least 2 placements should be available for the 
 `ClusterResourcePlacement` object.
 
-Taking a look at the clusters connected to the Fleet,
+Let's take a look at the `ClusterResourcePlacement` object's status to verify the list of available placements,
 
 ```
-kubectl get cluster -A
-NAME             JOINED   AGE   MEMBER-AGENT-LAST-SEEN   NODE-COUNT   AVAILABLE-CPU   AVAILABLE-MEMORY
-kind-cluster-1   True     32m   43s                      2            20750m          15440136Ki
-kind-cluster-2   True     32m   59s                      2            20750m          15440136Ki
+status:
+  conditions:
+  - lastTransitionTime: "2025-04-24T18:46:38Z"
+    message: found all cluster needed as specified by the scheduling policy, found
+      2 cluster(s)
+    observedGeneration: 1
+    reason: SchedulingPolicyFulfilled
+    status: "True"
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: "2025-04-24T18:50:19Z"
+    message: All 2 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: "True"
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: "2025-04-24T18:50:19Z"
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: "True"
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: "2025-04-24T18:50:19Z"
+    message: Works(s) are succcesfully created or updated in 2 target cluster(s)'
+      namespaces
+    observedGeneration: 1
+    reason: WorkSynchronized
+    status: "True"
+    type: ClusterResourcePlacementWorkSynchronized
+  - lastTransitionTime: "2025-04-24T18:50:19Z"
+    message: The selected resources are successfully applied to 2 cluster(s)
+    observedGeneration: 1
+    reason: ApplySucceeded
+    status: "True"
+    type: ClusterResourcePlacementApplied
+  - lastTransitionTime: "2025-04-24T18:50:19Z"
+    message: The selected resources in 2 cluster(s) are available now
+    observedGeneration: 1
+    reason: ResourceAvailable
+    status: "True"
+    type: ClusterResourcePlacementAvailable
+  observedResourceIndex: "0"
+  placementStatuses:
+  - clusterName: kind-cluster-1
+    conditions:
+    - lastTransitionTime: "2025-04-24T18:50:19Z"
+      message: 'Successfully scheduled resources for placement in "kind-cluster-1"
+        (affinity score: 0, topology spread score: 0): picked by scheduling policy'
+      observedGeneration: 1
+      reason: Scheduled
+      status: "True"
+      type: Scheduled
+    - lastTransitionTime: "2025-04-24T18:50:19Z"
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: "True"
+      type: RolloutStarted
+    - lastTransitionTime: "2025-04-24T18:50:19Z"
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: "True"
+      type: Overridden
+    - lastTransitionTime: "2025-04-24T18:50:19Z"
+      message: All of the works are synchronized to the latest
+      observedGeneration: 1
+      reason: AllWorkSynced
+      status: "True"
+      type: WorkSynchronized
+    - lastTransitionTime: "2025-04-24T18:50:19Z"
+      message: All corresponding work objects are applied
+      observedGeneration: 1
+      reason: AllWorkHaveBeenApplied
+      status: "True"
+      type: Applied
+    - lastTransitionTime: "2025-04-24T18:50:19Z"
+      message: All corresponding work objects are available
+      observedGeneration: 1
+      reason: AllWorkAreAvailable
+      status: "True"
+      type: Available
+  - clusterName: kind-cluster-2
+    conditions:
+    - lastTransitionTime: "2025-04-24T18:46:38Z"
+      message: 'Successfully scheduled resources for placement in "kind-cluster-2"
+        (affinity score: 0, topology spread score: 0): picked by scheduling policy'
+      observedGeneration: 1
+      reason: Scheduled
+      status: "True"
+      type: Scheduled
+    - lastTransitionTime: "2025-04-24T18:46:38Z"
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: "True"
+      type: RolloutStarted
+    - lastTransitionTime: "2025-04-24T18:46:38Z"
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: "True"
+      type: Overridden
+    - lastTransitionTime: "2025-04-24T18:46:38Z"
+      message: All of the works are synchronized to the latest
+      observedGeneration: 1
+      reason: AllWorkSynced
+      status: "True"
+      type: WorkSynchronized
+    - lastTransitionTime: "2025-04-24T18:46:38Z"
+      message: All corresponding work objects are applied
+      observedGeneration: 1
+      reason: AllWorkHaveBeenApplied
+      status: "True"
+      type: Applied
+    - lastTransitionTime: "2025-04-24T18:46:38Z"
+      message: All corresponding work objects are available
+      observedGeneration: 1
+      reason: AllWorkAreAvailable
+      status: "True"
+      type: Available
+  selectedResources:
+  - kind: Namespace
+    name: test-ns
+    version: v1
 ```
 
-We see that there are 2 clusters connected to the Fleet.
-
-Let's take a look at the `ClusterResourceBinding` objects for the `ClusterResourcePlacement` object,
-
-```
-kubectl get rb -l kubernetes-fleet.io/parent-CRP=pick-all-crp
-NAME                                   WORKSYNCHRONIZED   RESOURCESAPPLIED   AGE
-pick-all-crp-kind-cluster-1-a8a9e870   True               True               23m
-pick-all-crp-kind-cluster-2-5c5bf113   True               True               23m
-```
-
-We see that there are 2 Placements for the `ClusterResourcePlacement` object which are both protected by the
-`ClusterResourcePlacementDisruptionBudget` object specified.
+from the status we can see that the `ClusterResourcePlacement` object has 2 placements available, where resources have 
+been successfully applied and are available in kind-cluster-1 and kind-cluster-2. The users can check the individual
+member clusters to verify the resources are available but the users are recommended to check the`ClusterResourcePlacement` 
+object status to verify placement availability since the status is aggregated and updated by the controller.
 
 Here the user can either remove the `ClusterResourcePlacementDisruptionBudget` object or update the `minAvailable` to
 `1` to allow `ClusterResourcePlacementEviction` object to execute successfully.
