@@ -368,4 +368,6 @@ member clusters to verify the resources are available but the users are recommen
 object status to verify placement availability since the status is aggregated and updated by the controller.
 
 Here the user can either remove the `ClusterResourcePlacementDisruptionBudget` object or update the `minAvailable` to
-`1` to allow `ClusterResourcePlacementEviction` object to execute successfully.
+`1` to allow `ClusterResourcePlacementEviction` object to execute successfully. In general the user should carefully 
+check the availability of placements and act accordingly when changing the `ClusterResourcePlacementDisruptionBudget`
+object.
