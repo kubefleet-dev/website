@@ -1,0 +1,1 @@
+This repository is part of the KubeFleet project, a CNCF sandbox project. See the [KubeFleet Contributor Code of Conduct](https://github.com/kubefleet-dev/kubefleet/blob/main/CODE_OF_CONDUCT.md) for more information.
