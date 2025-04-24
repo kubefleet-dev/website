@@ -10,7 +10,7 @@ Majority of the `internal` resources and fleet reserved namespaces described bel
 
 The fleet reserved namespace are `fleet-system` and `fleet-member-{clusterName}` where clusterName is the name of each member cluster that has joined the fleet.
 
-* Fleet hub cluster internal resources:
+### Fleet hub cluster internal resources:
 | Resource                           |
 |------------------------------------|
 | `InternalMemberCluster`            |
@@ -19,7 +19,7 @@ The fleet reserved namespace are `fleet-system` and `fleet-member-{clusterName}`
 | `ClusterSchedulingPolicySnapshot`  |
 | `ClusterResourceBinding`           |
 
-*  Fleet member cluster internal resources:
+### Fleet member cluster internal resources:
 | Resource                |
 |-------------------------|
 | `InternalMemberCluster` |
@@ -27,7 +27,7 @@ The fleet reserved namespace are `fleet-system` and `fleet-member-{clusterName}`
 
 **Fleet APIs** are defined [here](https://github.com/Azure/fleet/tree/main/apis), **Fleet CRDs** are defined [here](https://github.com/Azure/fleet/tree/main/config/crd/bases).
 
-* Fleet Networking hub cluster internal resources:
+### Fleet Networking hub cluster internal resources:
 | Resource                |
 |-------------------------|
 | `EndpointSliceExport`   |
