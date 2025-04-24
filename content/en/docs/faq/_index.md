@@ -25,7 +25,7 @@ The fleet reserved namespace are `fleet-system` and `fleet-member-{clusterName}`
 | `InternalMemberCluster` |
 | `AppliedWork`           |
 
-**Fleet APIs** are defined [here](https://github.com/Azure/fleet/tree/main/apis), **Fleet CRDs** are defined [here](https://github.com/Azure/fleet/tree/main/config/crd/bases).
+**Fleet APIs** are defined [here](https://github.com/kubefleet-dev/kubefleet/tree/main/apis), **Fleet CRDs** are defined [here](https://github.com/kubefleet-dev/kubefleet/tree/main/config/crd/bases).
 
 ### Fleet Networking hub cluster internal resources:
 | Resource                |
