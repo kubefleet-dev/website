@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-22.04
     # Run only one build + deploy attempt at a time.
     concurrency:
@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           # Fetch all the submodules (e.g., docsy theme).
-          submodules: true
+          submodules: recursive
           # Fetch full git history for git integration features on the website. 
           fetch-depth: 0
 
