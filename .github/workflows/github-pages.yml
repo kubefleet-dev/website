@@ -8,7 +8,8 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-22.04
+    # The latest tag of the Ubuntu image points to the latest LTS version of Ubuntu, as specified on the Docker Hub.
+    runs-on: ubuntu-latest
     # Run only one build + deploy attempt at a time.
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
