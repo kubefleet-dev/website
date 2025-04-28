@@ -72,6 +72,8 @@ Often contributors would need to build and deploy the website locally to check t
 
 * Install [Hugo](https://gohugo.io).
     * Hugo is the static site generator KubeFleet uses to generate the website. It is recommended that you install the extended version.
+* Install a [Node.js runtime](https://nodejs.org/).
+    * It is recommended that you install a Node.js LTS version no earlier than Node.js v18.
 * Clone the `kubefleet-dev/website` repository.
 * Clone all the submodules in the `kubefleet-dev/website` repository:
 
@@ -87,6 +89,7 @@ Often contributors would need to build and deploy the website locally to check t
     
     These submodules are some of the fundamental building blocks used for generating the KubeFleet website.
 
+* Install the dependencies Hugo uses to build the website with the command `npm install`.
 * Run the Hugo built-in web server:
 
     ```sh
