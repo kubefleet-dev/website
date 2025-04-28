@@ -1,0 +1,1 @@
+This repository is part of the KubeFleet project, a CNCF sandbox project. See the [KubeFleet Governance Model](https://github.com/kubefleet-dev/kubefleet/blob/main/GOVERNANCE.md) for more information.
