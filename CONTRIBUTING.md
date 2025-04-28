@@ -72,15 +72,15 @@ Often contributors would need to build and deploy the website locally to check t
 
 * Install [Hugo](https://gohugo.io).
     * Hugo is the static site generator KubeFleet uses to generate the website. It is recommended that you install the extended version.
-* Clone the repository.
-* Clone all the submodules in this repository:
+* Clone the `kubefleet-dev/website` repository.
+* Clone all the submodules in the `kubefleet-dev/website` repository:
 
     ```sh
     git submodule update --init
     git pull --recurse-submodules
     ```
 
-    KubeFleet featuers the following submodules:
+    KubeFleet features the following submodules:
     * the `docsy` Hugo theme;
     * the FontAwesome lib;
     * Bootstrap CSS
