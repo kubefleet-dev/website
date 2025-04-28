@@ -47,3 +47,6 @@ package-lock.json
 # Hugo outputs
 public/
 docs/
+
+# Hugo pipeline stuff
+resources/
