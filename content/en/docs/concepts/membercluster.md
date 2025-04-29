@@ -1,7 +1,7 @@
 ---
 title: MemberCluster
 description: Concept about the MemberCluster API
-weight: 5
+weight: 2
 ---
 
 ## Overview
