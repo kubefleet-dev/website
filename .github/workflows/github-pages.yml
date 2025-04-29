@@ -1,0 +1,47 @@
+name: Build and Deploy KubeFleet Website to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-deploy:
+    # The latest tag of the Ubuntu image points to the latest LTS version of Ubuntu, as specified on the Docker Hub.
+    runs-on: ubuntu-latest
+    # Run only one build + deploy attempt at a time.
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Fetch all the submodules (e.g., docsy theme).
+          submodules: recursive
+          # Fetch full git history for git integration features on the website. 
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.145.0'
+          extended: true
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies from NPM
+        run: npm install 
+
+      - name: Build
+        run: hugo --minify
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        # Skip this step if it is triggered by a PR.
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
