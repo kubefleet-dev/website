@@ -44,5 +44,9 @@ __pycache__/
 node_modules/
 package-lock.json
 
+# Hugo outputs
+public/
+docs/
+
 # Hugo pipeline stuff
 resources/

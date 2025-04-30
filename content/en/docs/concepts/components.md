@@ -1,7 +1,7 @@
 ---
 title: Fleet components
 description: Concept about the Fleet components
-weight: 4
+weight: 1
 ---
 
 # Components
