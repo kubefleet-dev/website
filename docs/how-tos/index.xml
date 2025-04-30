@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>How-To Guides on KubeFleet</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/</link><description>Recent content in How-To Guides on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet-dev.github.io/website/docs/how-tos/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing clusters</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/clusters/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/clusters/</guid><description>&lt;p>This how-to guide discusses how to manage clusters in a fleet, specifically:&lt;/p>
+&lt;ul>
+&lt;li>how to join a cluster into a fleet; and&lt;/li>
+&lt;li>how to set a cluster to leave a fleet; and&lt;/li>
+&lt;li>how to add labels to a member cluster&lt;/li>
+&lt;/ul>
+&lt;h2 id="joining-a-cluster-into-a-fleet">Joining a cluster into a fleet&lt;/h2>
+&lt;p>A cluster can join in a fleet if:&lt;/p>
+&lt;ul>
+&lt;li>it runs a supported Kubernetes version; it is recommended that you use Kubernetes 1.24 or later
+versions, and&lt;/li>
+&lt;li>it has network connectivity to the hub cluster of the fleet.&lt;/li>
+&lt;/ul>
+&lt;p>For your convenience, Fleet provides a script that can automate the process of joining a cluster
+into a fleet. To use the script, run the commands below:&lt;/p></description></item><item><title>Using the ClusterResourcePlacement API</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/crp/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/crp/</guid><description>&lt;p>This guide provides an overview of how to use the Fleet &lt;code>ClusterResourcePlacement&lt;/code> (CRP) API to orchestrate workload distribution across your fleet.&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>The CRP API is a core Fleet API that facilitates the distribution of specific resources from the hub cluster to
+member clusters within a fleet. This API offers scheduling capabilities that allow you to target the most suitable
+group of clusters for a set of resources using a complex rule set. For example, you can distribute resources to
+clusters in specific regions (North America, East Asia, Europe, etc.) and/or release stages (production, canary, etc.).
+You can even distribute resources according to certain topology spread constraints.&lt;/p></description></item><item><title>Using Affinity to Pick Clusters</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/affinities/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/affinities/</guid><description>&lt;p>This how-to guide discusses how to use affinity settings to fine-tune how Fleet picks clusters
+for resource placement.&lt;/p>
+&lt;p>Affinities terms are featured in the &lt;code>ClusterResourcePlacement&lt;/code> API, specifically the scheduling
+policy section. Each affinity term is a particular requirement that Fleet will check against clusters;
+and the fulfillment of this requirement (or the lack of) would have certain effect on whether
+Fleet would pick a cluster for resource placement.&lt;/p>
+&lt;p>Fleet currently supports two types of affinity terms:&lt;/p></description></item><item><title>Using Topology Spread Constraints to Spread Resources</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/topology-spread-constraints/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/topology-spread-constraints/</guid><description>&lt;p>This how-to guide discusses how to use topology spread constraints to fine-tune how Fleet picks
+clusters for resource placement.&lt;/p>
+&lt;p>Topology spread constraints are features in the &lt;code>ClusterResourcePlacement&lt;/code> API, specifically
+the scheduling policy section. Generally speaking, these constraints can help you spread
+resources evenly across different groups of clusters in your fleet; or in other words, it
+assures that Fleet will not pick too many clusters from one group, and too little from another.
+You can use topology spread constraints to, for example:&lt;/p></description></item><item><title>Using Property-Based Scheduling</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/property-based-scheduling/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/property-based-scheduling/</guid><description>&lt;p>This how-to guide discusses how to use property-based scheduling to produce scheduling decisions
+based on cluster properties.&lt;/p>
+&lt;blockquote>
+&lt;p>Note&lt;/p>
+&lt;p>The availability of properties depend on which (and if) you have a property provider
+set up in your Fleet deployment. For more information, see the
+&lt;a href="https://kubefleet-dev.github.io/website/concepts/properties">Concept: Property Provider and Cluster Properties&lt;/a>
+documentation.&lt;/p>
+&lt;p>It is also recommended that you read the
+&lt;a href="https://kubefleet-dev.github.io/website/docs/how-tos/affinities/">How-To Guide: Using Affinity to Pick Clusters&lt;/a> first before following
+instructions in this document.&lt;/p></description></item><item><title>Using Taints and Tolerations</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/taints-tolerations/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/taints-tolerations/</guid><description>&lt;p>This how-to guide discusses how to add/remove taints on &lt;code>MemberCluster&lt;/code> and how to add tolerations on &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/p>
+&lt;h2 id="adding-taint-to-membercluster">Adding taint to MemberCluster&lt;/h2>
+&lt;p>In this example, we will add a taint to a &lt;code>MemberCluster&lt;/code>. Then try to propagate resources to the &lt;code>MemberCluster&lt;/code> using a &lt;code>ClusterResourcePlacement&lt;/code>
+with &lt;strong>PickAll&lt;/strong> placement policy. The resources should not be propagated to the &lt;code>MemberCluster&lt;/code> because of the taint.&lt;/p>
+&lt;p>We will first create a namespace that we will propagate to the member cluster,&lt;/p></description></item><item><title>Using the ClusterResourceOverride API</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/cluster-resource-override/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/cluster-resource-override/</guid><description>&lt;p>This guide provides an overview of how to use the Fleet &lt;code>ResourceOverride&lt;/code> API to override resources.&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>&lt;code>ResourceOverride&lt;/code> is a Fleet API that allows you to modify or override specific attributes of
+existing resources within your cluster. With ResourceOverride, you can define rules based on cluster
+labels or other criteria, specifying changes to be applied to resources such as Deployments, StatefulSets, ConfigMaps, or Secrets.
+These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters.&lt;/p></description></item><item><title>Using the ResourceOverride API</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/resource-override/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/resource-override/</guid><description>&lt;p>This guide provides an overview of how to use the Fleet &lt;code>ResourceOverride&lt;/code> API to override resources.&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>&lt;code>ResourceOverride&lt;/code> is a Fleet API that allows you to modify or override specific attributes of
+existing resources within your cluster. With ResourceOverride, you can define rules based on cluster
+labels or other criteria, specifying changes to be applied to resources such as Deployments, StatefulSets, ConfigMaps, or Secrets.
+These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters.&lt;/p></description></item><item><title>Using Envelope Objects to Place Resources</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/envelope-object/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/envelope-object/</guid><description>&lt;h2 id="propagating-resources-with-envelope-objects">Propagating Resources with Envelope Objects&lt;/h2>
+&lt;p>This guide provides instructions on propagating a set of resources from the hub cluster to joined member clusters within an envelope object.&lt;/p>
+&lt;h2 id="envelope-object-with-configmap">Envelope Object with ConfigMap&lt;/h2>
+&lt;p>Currently, we support using a &lt;code>ConfigMap&lt;/code> as an envelope object by leveraging a fleet-reserved annotation.&lt;/p>
+&lt;p>To designate a &lt;code>ConfigMap&lt;/code> as an envelope object, ensure that it contains the following annotation:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">annotations&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kubernetes-fleet.io/envelope-configmap&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;true&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="example-configmap-envelope-object">Example ConfigMap Envelope Object:&lt;/h3>
+&lt;pre tabindex="0">&lt;code>apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: envelope-configmap
+ namespace: app
+ annotations:
+ kubernetes-fleet.io/envelope-configmap: &amp;#34;true&amp;#34;
+data:
+ resourceQuota.yaml: |
+ apiVersion: v1
+ kind: ResourceQuota
+ metadata:
+ name: mem-cpu-demo
+ namespace: app
+ spec:
+ hard:
+ requests.cpu: &amp;#34;1&amp;#34;
+ requests.memory: 1Gi
+ limits.cpu: &amp;#34;2&amp;#34;
+ limits.memory: 2Gi
+ webhook.yaml: |
+ apiVersion: admissionregistration.k8s.io/v1
+ kind: MutatingWebhookConfiguration
+ metadata:
+ creationTimestamp: null
+ labels:
+ azure-workload-identity.io/system: &amp;#34;true&amp;#34;
+ name: azure-wi-webhook-mutating-webhook-configuration
+ webhooks:
+ - admissionReviewVersions:
+ - v1
+ - v1beta1
+ clientConfig:
+ service:
+ name: azure-wi-webhook-webhook-service
+ namespace: app
+ path: /mutate-v1-pod
+ failurePolicy: Fail
+ matchPolicy: Equivalent
+ name: mutation.azure-workload-identity.io
+ rules:
+ - apiGroups:
+ - &amp;#34;&amp;#34;
+ apiVersions:
+ - v1
+ operations:
+ - CREATE
+ - UPDATE
+ resources:
+ - pods
+ sideEffects: None
+&lt;/code>&lt;/pre>&lt;h2 id="propagating-an-envelope-configmap-from-hub-cluster-to-member-cluster">Propagating an Envelope ConfigMap from Hub cluster to Member cluster:&lt;/h2>
+&lt;p>We will now apply the example envelope object above on our hub cluster. Then we use a &lt;code>ClusterResourcePlacement&lt;/code> object to propagate the resource from hub to a member cluster named &lt;code>kind-cluster-1&lt;/code>.&lt;/p></description></item><item><title>Controlling How Fleet Handles Pre-Existing Resources</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/takeover/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/takeover/</guid><description>&lt;p>This guide provides an overview on how to set up Fleet&amp;rsquo;s takeover experience, which allows
+developers and admins to choose what will happen when Fleet encounters a pre-existing resource.
+This occurs most often in the Fleet adoption scenario, where a cluster just joins into a fleet and
+the system finds out that the resources to place onto the new member cluster via the CRP API have
+already been running there.&lt;/p></description></item><item><title>Enabling Drift Detection in Fleet</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/drift-detection/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/drift-detection/</guid><description>&lt;p>This guide provides an overview on how to enable drift detection in Fleet. This feature can help
+developers and admins identify (and act upon) configuration drifts in their KubeFleet system,
+which are often brought by temporary fixes, inadvertent changes, and failed automations.&lt;/p>
+&lt;blockquote>
+&lt;p>Before you begin&lt;/p>
+&lt;p>The new drift detection experience is currently in preview.&lt;/p>
+&lt;p>Note that the APIs for the new experience are only available in the Fleet v1beta1 API, not the v1 API. If you do not see the new APIs in command outputs, verify that you are explicitly requesting the v1beta1 API objects, as opposed to the v1 API objects (the default).&lt;/p></description></item><item><title>Using the ReportDiff Apply Mode</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/reportdiff/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/reportdiff/</guid><description>&lt;p>This guide provides an overview on how to use the &lt;code>ReportDiff&lt;/code> apply mode, which allows one to
+easily evaluate how things will change in the system without the risk of incurring unexpected
+changes. In this mode, Fleet will check for configuration differences between the hub cluster
+resource templates and their corresponding resources on the member clusters, but will not
+perform any apply op. This is most helpful in cases of experimentation and drift/diff analysis.&lt;/p></description></item><item><title>How to Roll Out and Roll Back Changes in Stage</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/staged-update/</guid><description>&lt;p>This how-to guide demonstrates how to use &lt;code>ClusterStagedUpdateRun&lt;/code> to rollout resources to member clusters in a staged manner and rollback resources to a previous version.&lt;/p>
+&lt;h2 id="prerequisite">Prerequisite&lt;/h2>
+&lt;p>&lt;code>ClusterStagedUpdateRun&lt;/code> CR is used to deploy resources from hub cluster to member clusters with &lt;code>ClusterResourcePlacement&lt;/code> (or CRP) in a stage by stage manner. This tutorial is based on a demo fleet environment with 3 member clusters:&lt;/p>
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th>cluster name&lt;/th>
+ &lt;th>labels&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td>member1&lt;/td>
+ &lt;td>environment=canary, order=2&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>member2&lt;/td>
+ &lt;td>environment=staging&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>member3&lt;/td>
+ &lt;td>environment=canary, order=1&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table>
+&lt;p>To demonstrate the rollout and rollback behavior, we create a demo namespace and a sample configmap with very simple data on the hub cluster. The namespace with configmap will be deployed to the member clusters.&lt;/p></description></item><item><title>Evicting Resources and Setting up Disruption Budgets</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/eviction-disruption-budget/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/eviction-disruption-budget/</guid><description>&lt;p>This how-to guide discusses how to create &lt;code>ClusterResourcePlacementEviction&lt;/code> objects and &lt;code>ClusterResourcePlacementDisruptionBudget&lt;/code> objects to evict resources from member clusters and protect resources on member clusters from voluntary disruption, respectively.&lt;/p>
+&lt;h2 id="evicting-resources-from-member-clusters-using-clusterresourceplacementeviction">Evicting Resources from Member Clusters using ClusterResourcePlacementEviction&lt;/h2>
+&lt;p>The &lt;code>ClusterResourcePlacementEviction&lt;/code> object is used to remove resources from a member cluster once the resources have already been propagated from the hub cluster.&lt;/p>
+&lt;p>To successfully evict resources from a cluster, the user needs to specify:&lt;/p></description></item></channel></rss>

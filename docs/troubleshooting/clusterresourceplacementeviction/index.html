@@ -1,0 +1,296 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=en class=no-js><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><link rel="shortcut icon" href=/website/favicons/favicon.ico><link rel=apple-touch-icon href=/website/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/website/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/website/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/website/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/website/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/website/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/website/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/website/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/website/favicons/android-192x192.png sizes=192x192><title>KubeFleet</title>
+<meta name=description content="Placement Eviction & Placement Disruption Budget Troubleshooting Guide This guide provides troubleshooting steps for issues related to placement eviction.
+An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states for eviction are:
+Eviction is Invalid Eviction is Valid, Eviction failed to Execute Eviction is Valid, Eviction executed successfully Note: If an eviction object doesn&rsquo;t reach a terminal state i.e. neither valid condition nor executed condition is set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server."><meta property="og:url" content="https://kubefleet-dev.github.io/website/docs/troubleshooting/clusterresourceplacementeviction/"><meta property="og:site_name" content="KubeFleet"><meta property="og:title" content="KubeFleet"><meta property="og:description" content="Placement Eviction & Placement Disruption Budget Troubleshooting Guide This guide provides troubleshooting steps for issues related to placement eviction.
+An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states for eviction are:
+Eviction is Invalid Eviction is Valid, Eviction failed to Execute Eviction is Valid, Eviction executed successfully Note: If an eviction object doesn’t reach a terminal state i.e. neither valid condition nor executed condition is set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta itemprop=name content="KubeFleet"><meta itemprop=description content="Placement Eviction & Placement Disruption Budget Troubleshooting Guide This guide provides troubleshooting steps for issues related to placement eviction.
+An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states for eviction are:
+Eviction is Invalid Eviction is Valid, Eviction failed to Execute Eviction is Valid, Eviction executed successfully Note: If an eviction object doesn’t reach a terminal state i.e. neither valid condition nor executed condition is set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server."><meta itemprop=wordCount content="1639"><meta name=twitter:card content="summary"><meta name=twitter:title content="KubeFleet"><meta name=twitter:description content="Placement Eviction & Placement Disruption Budget Troubleshooting Guide This guide provides troubleshooting steps for issues related to placement eviction.
+An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states for eviction are:
+Eviction is Invalid Eviction is Valid, Eviction failed to Execute Eviction is Valid, Eviction executed successfully Note: If an eviction object doesn’t reach a terminal state i.e. neither valid condition nor executed condition is set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server."><link rel=preload href=/website/scss/main.min.879d78706ddc3417bab47ec223b501bf207298e24a447bada63812f126e3e760.css as=style><link href=/website/scss/main.min.879d78706ddc3417bab47ec223b501bf207298e24a447bada63812f126e3e760.css rel=stylesheet integrity><script src=https://code.jquery.com/jquery-3.7.1.min.js integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin=anonymous></script><script defer src=https://unpkg.com/lunr@2.3.9/lunr.min.js integrity=sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli crossorigin=anonymous></script></head><body class=td-page><header><nav class="td-navbar js-navbar-scroll" data-bs-theme=dark><div class="container-fluid flex-column flex-md-row"><a class=navbar-brand href=/website/><span class="navbar-brand__logo navbar-logo"></span><span class=navbar-brand__name>KubeFleet</span></a><div class="td-navbar-nav-scroll ms-md-auto" id=main_navbar><ul class=navbar-nav><li class=nav-item><a class="nav-link active" href=/website/docs/><span>Docs</span></a></li><li class="nav-item dropdown d-none d-lg-block"><div class=dropdown><a class="nav-link dropdown-toggle" href=# role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><ul class=dropdown-menu><li><a class=dropdown-item href=/website/zh-cn/>中文（简体）</a></li></ul></div></li></ul></div><div class="d-none d-lg-block"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/website/offline-search-index.3462c77180604ebb39dffa597e85cc8e.json data-offline-search-base-href=/ data-offline-search-max-results=10></div></div></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none"><div id=td-sidebar-menu class=td-sidebar__inner><form class="td-sidebar__search d-flex align-items-center"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/website/offline-search-index.3462c77180604ebb39dffa597e85cc8e.json data-offline-search-base-href=/ data-offline-search-max-results=10></div><button class="btn btn-link td-sidebar__toggle d-md-none p-0 ms-3 fas fa-bars" type=button data-bs-toggle=collapse data-bs-target=#td-section-nav aria-controls=td-section-nav aria-expanded=false aria-label="Toggle section navigation"></button></form><nav class="td-sidebar-nav collapse" id=td-section-nav><div class="td-sidebar-nav__section nav-item dropdown d-block d-lg-none"><div class=dropdown><a class="nav-link dropdown-toggle" href=# role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><ul class=dropdown-menu><li><a class=dropdown-item href=/website/zh-cn/>中文（简体）</a></li></ul></div></div><ul class="td-sidebar-nav__section pe-md-3 ul-0"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id=m-websitedocs-li><a href=/website/docs/ title="Welcome to KubeFleet Documentation" class="align-left ps-0 td-sidebar-link td-sidebar-link__section tree-root" id=m-websitedocs><span>Docs</span></a><ul class=ul-1><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-websitedocsconcepts-li><a href=/website/docs/concepts/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocsconcepts><span>Concepts</span></a><ul class="ul-2 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptscomponents-li><a href=/website/docs/concepts/components/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptscomponents><span>Fleet components</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsmembercluster-li><a href=/website/docs/concepts/membercluster/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsmembercluster><span>MemberCluster</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptscrp-li><a href=/website/docs/concepts/crp/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptscrp><span>ClusterResourcePlacement</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsscheduler-li><a href=/website/docs/concepts/scheduler/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsscheduler><span>Scheduler</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsscheduling-framework-li><a href=/website/docs/concepts/scheduling-framework/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsscheduling-framework><span>Scheduling Framework</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsproperties-li><a href=/website/docs/concepts/properties/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsproperties><span>Properties and Property Provides</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptssafe-rollout-li><a href=/website/docs/concepts/safe-rollout/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptssafe-rollout><span>Safe Rollout</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsoverride-li><a href=/website/docs/concepts/override/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsoverride><span>Override</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsstaged-update-li><a href=/website/docs/concepts/staged-update/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsstaged-update><span>Staged Update</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptseviction-pdb-li><a href=/website/docs/concepts/eviction-pdb/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptseviction-pdb><span>Eviction and Placement Disruption Budget</span></a></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-websitedocsgetting-started-li><a href=/website/docs/getting-started/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocsgetting-started><span>Getting Started</span></a><ul class="ul-2 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsgetting-startedkind-li><a href=/website/docs/getting-started/kind/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsgetting-startedkind><span>Getting started with Fleet using KinD clusters</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsgetting-startedon-prem-li><a href=/website/docs/getting-started/on-prem/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsgetting-startedon-prem><span>Getting started with Fleet using on-premises clusters</span></a></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-websitedocshow-tos-li><a href=/website/docs/how-tos/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocshow-tos><span>How-To Guides</span></a><ul class="ul-2 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosclusters-li><a href=/website/docs/how-tos/clusters/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosclusters><span>Managing clusters</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-toscrp-li><a href=/website/docs/how-tos/crp/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-toscrp><span>Using the ClusterResourcePlacement API</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosaffinities-li><a href=/website/docs/how-tos/affinities/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosaffinities><span>Using Affinity to Pick Clusters</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tostopology-spread-constraints-li><a href=/website/docs/how-tos/topology-spread-constraints/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tostopology-spread-constraints><span>Using Topology Spread Constraints to Spread Resources</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosproperty-based-scheduling-li><a href=/website/docs/how-tos/property-based-scheduling/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosproperty-based-scheduling><span>Using Property-Based Scheduling</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tostaints-tolerations-li><a href=/website/docs/how-tos/taints-tolerations/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tostaints-tolerations><span>Using Taints and Tolerations</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-toscluster-resource-override-li><a href=/website/docs/how-tos/cluster-resource-override/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-toscluster-resource-override><span>Using the ClusterResourceOverride API</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosresource-override-li><a href=/website/docs/how-tos/resource-override/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosresource-override><span>Using the ResourceOverride API</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosenvelope-object-li><a href=/website/docs/how-tos/envelope-object/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosenvelope-object><span>Using Envelope Objects to Place Resources</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tostakeover-li><a href=/website/docs/how-tos/takeover/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tostakeover><span>Controlling How Fleet Handles Pre-Existing Resources</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosdrift-detection-li><a href=/website/docs/how-tos/drift-detection/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosdrift-detection><span>Enabling Drift Detection in Fleet</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosreportdiff-li><a href=/website/docs/how-tos/reportdiff/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosreportdiff><span>Using the ReportDiff Apply Mode</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosstaged-update-li><a href=/website/docs/how-tos/staged-update/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosstaged-update><span>How to Roll Out and Roll Back Changes in Stage</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-toseviction-disruption-budget-li><a href=/website/docs/how-tos/eviction-disruption-budget/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-toseviction-disruption-budget><span>Evicting Resources and Setting up Disruption Budgets</span></a></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsfaq-li><a href=/website/docs/faq/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocsfaq><span>Frequently Asked Questions</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsapi-reference-li><a href=/website/docs/api-reference/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocsapi-reference><span>API Reference</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id=m-websitedocstroubleshootingclusterresourceplacementeviction-li><a href=/website/docs/troubleshooting/clusterresourceplacementeviction/ class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id=m-websitedocstroubleshootingclusterresourceplacementeviction><span class=td-sidebar-nav-active-item></span></a></li></ul></li></ul></nav></div></aside><aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none"><div class="td-page-meta ms-2 pb-1 pt-2 mb-0"><a href=https://github.com/kubefleet-dev/website/tree/main/content/en/docs/troubleshooting/ClusterResourcePlacementEviction.md class="td-page-meta--view td-page-meta__view" target=_blank rel=noopener><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+<a href=https://github.com/kubefleet-dev/website/edit/main/content/en/docs/troubleshooting/ClusterResourcePlacementEviction.md class="td-page-meta--edit td-page-meta__edit" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+<a href="https://github.com/kubefleet-dev/website/new/main/content/en/docs/troubleshooting?filename=change-me.md&amp;value=---%0Atitle%3A+%22Long+Page+Title%22%0AlinkTitle%3A+%22Short+Nav+Title%22%0Aweight%3A+100%0Adescription%3A+%3E-%0A+++++Page+description+for+heading+and+indexes.%0A---%0A%0A%23%23+Heading%0A%0AEdit+this+template+to+create+your+new+page.%0A%0A%2A+Give+it+a+good+name%2C+ending+in+%60.md%60+-+e.g.+%60getting-started.md%60%0A%2A+Edit+the+%22front+matter%22+section+at+the+top+of+the+page+%28weight+controls+how+its+ordered+amongst+other+pages+in+the+same+directory%3B+lowest+number+first%29.%0A%2A+Add+a+good+commit+message+at+the+bottom+of+the+page+%28%3C80+characters%3B+use+the+extended+description+field+for+more+detail%29.%0A%2A+Create+a+new+branch+so+you+can+preview+your+new+file+and+request+a+review+via+Pull+Request.%0A" class="td-page-meta--child td-page-meta__child" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+<a href="https://github.com/kubefleet-dev/website/issues/new?title=" class="td-page-meta--issue td-page-meta__issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> Create documentation issue</a>
+<a href=https://github.com/kubefleet-dev/kubefleet/issues/new class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> Create project issue</a>
+<a id=print href=/website/docs/_print/><i class="fa-solid fa-print fa-fw"></i> Print entire section</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#invalid-eviction>Invalid eviction</a><ul><li><a href=#missingdeleting-crp-object>Missing/Deleting CRP object</a></li><li><a href=#missing-crb-object>Missing CRB object</a></li><li><a href=#multiple-crb-is-present>Multiple CRB is present</a></li><li><a href=#pickfixed-crp-is-targeted-by-crp-eviction>PickFixed CRP is targeted by CRP Eviction</a></li></ul></li><li><a href=#failed-to-execute-eviction>Failed to execute eviction</a><ul><li><a href=#eviction-blocked-because-placement-is-missing>Eviction blocked because placement is missing</a></li><li><a href=#eviction-blocked-by-invalid-crpdb>Eviction blocked by Invalid CRPDB</a></li><li><a href=#eviction-blocked-by-specified-crpdb>Eviction blocked by specified CRPDB</a></li></ul></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><nav aria-label=breadcrumb class=td-breadcrumbs><ol class=breadcrumb><li class=breadcrumb-item><a href=/website/docs/>Docs</a></li><li class="breadcrumb-item active" aria-current=page></li></ol></nav><div class=td-content><h1></h1><header class=article-meta></header><h1 id=placement-eviction--placement-disruption-budget-troubleshooting-guide>Placement Eviction & Placement Disruption Budget Troubleshooting Guide</h1><p>This guide provides troubleshooting steps for issues related to placement eviction.</p><p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
+for eviction are:</p><ul><li>Eviction is Invalid</li><li>Eviction is Valid, Eviction failed to Execute</li><li>Eviction is Valid, Eviction executed successfully</li></ul><blockquote><p><strong>Note:</strong> If an eviction object doesn&rsquo;t reach a terminal state i.e. neither valid condition nor executed condition is
+set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server.</p></blockquote><p>The first step in troubleshooting is to check the status of the eviction object to understand if the eviction reached
+a terminal state or not.</p><h2 id=invalid-eviction>Invalid eviction</h2><h3 id=missingdeleting-crp-object>Missing/Deleting CRP object</h3><p>Example status with missing <code>CRP</code> object:</p><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2025-04-17T22:16:59Z&#34;
+    message: Failed to find ClusterResourcePlacement targeted by eviction
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionInvalid
+    status: &#34;False&#34;
+    type: Valid
+</code></pre><p>Example status with deleting <code>CRP</code> object:</p><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2025-04-21T19:53:42Z&#34;
+    message: Found deleting ClusterResourcePlacement targeted by eviction
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionInvalid
+    status: &#34;False&#34;
+    type: Valid
+</code></pre><p>In both cases the Eviction object reached a terminal state, its status has <code>Valid</code> condition set to <code>False</code>.
+The user should verify if the <code>ClusterResourcePlacement</code> object is missing or if it is being deleted and recreate the
+<code>ClusterResourcePlacement</code> object if needed and retry eviction.</p><h3 id=missing-crb-object>Missing CRB object</h3><p>Example status with missing <code>CRB</code> object:</p><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2025-04-17T22:21:51Z&#34;
+    message: Failed to find scheduler decision for placement in cluster targeted by
+      eviction
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionInvalid
+    status: &#34;False&#34;
+    type: Valid
+</code></pre><blockquote><p><strong>Note:</strong> The user can find the corresponding <code>ClusterResourceBinding</code> object by listing all <code>ClusterResourceBinding</code>
+objects for the <code>ClusterResourcePlacement</code> object</p><pre tabindex=0><code>kubectl get rb -l kubernetes-fleet.io/parent-CRP=&lt;CRPName&gt;
+</code></pre><p>The <code>ClusterResourceBinding</code> object name is formatted as <code>&lt;CRPName>-&lt;ClusterName>-randomsuffix</code></p></blockquote><p>In this case the Eviction object reached a terminal state, its status has <code>Valid</code> condition set to <code>False</code>, because the
+<code>ClusterResourceBinding</code> object or Placement for target cluster is not found. The user should verify to see if the
+<code>ClusterResourcePlacement</code> object is propagating resources to the target cluster,</p><ul><li>If yes, the next step is to check if the <code>ClusterResourceBinding</code> object is present for the target cluster or why it
+was not created and try to create an eviction object once <code>ClusterResourceBinding</code> is created.</li><li>If no, the cluster is not picked by the scheduler and hence no need to retry eviction.</li></ul><h3 id=multiple-crb-is-present>Multiple CRB is present</h3><p>Example status with multiple <code>CRB</code> objects:</p><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2025-04-17T23:48:08Z&#34;
+    message: Found more than one scheduler decision for placement in cluster targeted
+      by eviction
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionInvalid
+    status: &#34;False&#34;
+    type: Valid
+</code></pre><p>In this case the Eviction object reached a terminal state, its status has <code>Valid</code> condition set to <code>False</code>, because
+there is more than one <code>ClusterResourceBinding</code> object or Placement present for the <code>ClusterResourcePlacement</code> object
+targeting the member cluster. This is a rare scenario, it&rsquo;s an in-between state where bindings are being-recreated due
+to the member cluster being selected again, and it will normally resolve quickly.</p><h3 id=pickfixed-crp-is-targeted-by-crp-eviction>PickFixed CRP is targeted by CRP Eviction</h3><p>Example status for <code>ClusterResourcePlacementEviction</code> object targeting a PickFixed <code>ClusterResourcePlacement</code> object:</p><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2025-04-21T23:19:06Z&#34;
+    message: Found ClusterResourcePlacement with PickFixed placement type targeted
+      by eviction
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionInvalid
+    status: &#34;False&#34;
+    type: Valid
+</code></pre><p>In this case the Eviction object reached a terminal state, its status has <code>Valid</code> condition set to <code>False</code>, because
+the <code>ClusterResourcePlacement</code> object is of type <code>PickFixed</code>. Users cannot use <code>ClusterResourcePlacementEviction</code>
+objects to evict resources propagated by <code>ClusterResourcePlacement</code> objects of type <code>PickFixed</code>. The user can instead
+remove the member cluster name from the <code>clusterNames</code> field in the policy of the <code>ClusterResourcePlacement</code> object.</p><h2 id=failed-to-execute-eviction>Failed to execute eviction</h2><h3 id=eviction-blocked-because-placement-is-missing>Eviction blocked because placement is missing</h3><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2025-04-23T23:54:03Z&#34;
+    message: Eviction is valid
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionValid
+    status: &#34;True&#34;
+    type: Valid
+  - lastTransitionTime: &#34;2025-04-23T23:54:03Z&#34;
+    message: Eviction is blocked, placement has not propagated resources to target
+      cluster yet
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionNotExecuted
+    status: &#34;False&#34;
+    type: Executed
+</code></pre><p>In this case the Eviction object reached a terminal state, its status has <code>Executed</code> condition set to <code>False</code>, because
+for the targeted <code>ClusterResourcePlacement</code> the corresponding <code>ClusterResourceBinding</code> object&rsquo;s spec is set to
+<code>Scheduled</code> meaning the rollout of resources is not started yet.</p><blockquote><p><strong>Note:</strong> The user can find the corresponding <code>ClusterResourceBinding</code> object by listing all <code>ClusterResourceBinding</code>
+objects for the <code>ClusterResourcePlacement</code> object</p><pre tabindex=0><code>kubectl get rb -l kubernetes-fleet.io/parent-CRP=&lt;CRPName&gt;
+</code></pre><p>The <code>ClusterResourceBinding</code> object name is formatted as <code>&lt;CRPName>-&lt;ClusterName>-randomsuffix</code>.</p></blockquote><pre tabindex=0><code>spec:
+  applyStrategy:
+    type: ClientSideApply
+  clusterDecision:
+    clusterName: kind-cluster-3
+    clusterScore:
+      affinityScore: 0
+      priorityScore: 0
+    reason: &#39;Successfully scheduled resources for placement in &#34;kind-cluster-3&#34; (affinity
+      score: 0, topology spread score: 0): picked by scheduling policy&#39;
+    selected: true
+  resourceSnapshotName: &#34;&#34;
+  schedulingPolicySnapshotName: test-crp-1
+  state: Scheduled
+  targetCluster: kind-cluster-3
+</code></pre><p>Here the user can wait for the <code>ClusterResourceBinding</code> object to be updated to <code>Bound</code> state which means that
+resources have been propagated to the target cluster and then retry eviction. In some cases this can take a while or not
+happen at all, in that case the user should verify if rollout is stuck for <code>ClusterResourcePlacement</code> object.</p><h3 id=eviction-blocked-by-invalid-crpdb>Eviction blocked by Invalid CRPDB</h3><p>Example status for <code>ClusterResourcePlacementEviction</code> object with invalid <code>ClusterResourcePlacementDisruptionBudget</code>,</p><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2025-04-21T23:39:42Z&#34;
+    message: Eviction is valid
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionValid
+    status: &#34;True&#34;
+    type: Valid
+  - lastTransitionTime: &#34;2025-04-21T23:39:42Z&#34;
+    message: Eviction is blocked by misconfigured ClusterResourcePlacementDisruptionBudget,
+      either MaxUnavailable is specified or MinAvailable is specified as a percentage
+      for PickAll ClusterResourcePlacement
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionNotExecuted
+    status: &#34;False&#34;
+    type: Executed
+</code></pre><p>In this cae the Eviction object reached a terminal state, its status has <code>Executed</code> condition set to <code>False</code>, because
+the <code>ClusterResourcePlacementDisruptionBudget</code> object is invalid. For <code>ClusterResourcePlacement</code> objects of type
+<code>PickAll</code>, when specifying a <code>ClusterResourcePlacementDisruptionBudget</code> the <code>minAvailable</code> field should be set to an
+absolute number and not a percentage and the <code>maxUnavailable</code> field should not be set since the total number of
+placements is non-deterministic.</p><h3 id=eviction-blocked-by-specified-crpdb>Eviction blocked by specified CRPDB</h3><p>Example status for <code>ClusterResourcePlacementEviction</code> object blocked by a <code>ClusterResourcePlacementDisruptionBudget</code>
+object,</p><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2025-04-24T18:54:30Z&#34;
+    message: Eviction is valid
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionValid
+    status: &#34;True&#34;
+    type: Valid
+  - lastTransitionTime: &#34;2025-04-24T18:54:30Z&#34;
+    message: &#39;Eviction is blocked by specified ClusterResourcePlacementDisruptionBudget,
+      availablePlacements: 2, totalPlacements: 2&#39;
+    observedGeneration: 1
+    reason: ClusterResourcePlacementEvictionNotExecuted
+    status: &#34;False&#34;
+    type: Executed
+</code></pre><p>In this cae the Eviction object reached a terminal state, its status has <code>Executed</code> condition set to <code>False</code>, because
+the <code>ClusterResourcePlacementDisruptionBudget</code> object is blocking the eviction. The message from <code>Executed</code> condition
+reads available placements is 2 and total placements is 2, which means that the <code>ClusterResourcePlacementDisruptionBudget</code>
+is protecting all placements propagated by the <code>ClusterResourcePlacement</code> object.</p><p>Taking a look at the <code>ClusterResourcePlacementDisruptionBudget</code> object,</p><pre tabindex=0><code>apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacementDisruptionBudget
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {&#34;apiVersion&#34;:&#34;placement.kubernetes-fleet.io/v1beta1&#34;,&#34;kind&#34;:&#34;ClusterResourcePlacementDisruptionBudget&#34;,&#34;metadata&#34;:{&#34;annotations&#34;:{},&#34;name&#34;:&#34;pick-all-crp&#34;},&#34;spec&#34;:{&#34;minAvailable&#34;:2}}
+  creationTimestamp: &#34;2025-04-24T18:47:22Z&#34;
+  generation: 1
+  name: pick-all-crp
+  resourceVersion: &#34;1749&#34;
+  uid: 7d3a0ac5-0225-4fb6-b5e9-fc28d58cefdc
+spec:
+  minAvailable: 2
+</code></pre><p>We can see that the <code>minAvailable</code> is set to <code>2</code>, which means that at least 2 placements should be available for the
+<code>ClusterResourcePlacement</code> object.</p><p>Let&rsquo;s take a look at the <code>ClusterResourcePlacement</code> object&rsquo;s status to verify the list of available placements,</p><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2025-04-24T18:46:38Z&#34;
+    message: found all cluster needed as specified by the scheduling policy, found
+      2 cluster(s)
+    observedGeneration: 1
+    reason: SchedulingPolicyFulfilled
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+    message: All 2 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+    message: Works(s) are succcesfully created or updated in 2 target cluster(s)&#39;
+      namespaces
+    observedGeneration: 1
+    reason: WorkSynchronized
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementWorkSynchronized
+  - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+    message: The selected resources are successfully applied to 2 cluster(s)
+    observedGeneration: 1
+    reason: ApplySucceeded
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementApplied
+  - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+    message: The selected resources in 2 cluster(s) are available now
+    observedGeneration: 1
+    reason: ResourceAvailable
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementAvailable
+  observedResourceIndex: &#34;0&#34;
+  placementStatuses:
+  - clusterName: kind-cluster-1
+    conditions:
+    - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+      message: &#39;Successfully scheduled resources for placement in &#34;kind-cluster-1&#34;
+        (affinity score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: &#34;True&#34;
+      type: RolloutStarted
+    - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: &#34;True&#34;
+      type: Overridden
+    - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+      message: All of the works are synchronized to the latest
+      observedGeneration: 1
+      reason: AllWorkSynced
+      status: &#34;True&#34;
+      type: WorkSynchronized
+    - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+      message: All corresponding work objects are applied
+      observedGeneration: 1
+      reason: AllWorkHaveBeenApplied
+      status: &#34;True&#34;
+      type: Applied
+    - lastTransitionTime: &#34;2025-04-24T18:50:19Z&#34;
+      message: All corresponding work objects are available
+      observedGeneration: 1
+      reason: AllWorkAreAvailable
+      status: &#34;True&#34;
+      type: Available
+  - clusterName: kind-cluster-2
+    conditions:
+    - lastTransitionTime: &#34;2025-04-24T18:46:38Z&#34;
+      message: &#39;Successfully scheduled resources for placement in &#34;kind-cluster-2&#34;
+        (affinity score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2025-04-24T18:46:38Z&#34;
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: &#34;True&#34;
+      type: RolloutStarted
+    - lastTransitionTime: &#34;2025-04-24T18:46:38Z&#34;
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: &#34;True&#34;
+      type: Overridden
+    - lastTransitionTime: &#34;2025-04-24T18:46:38Z&#34;
+      message: All of the works are synchronized to the latest
+      observedGeneration: 1
+      reason: AllWorkSynced
+      status: &#34;True&#34;
+      type: WorkSynchronized
+    - lastTransitionTime: &#34;2025-04-24T18:46:38Z&#34;
+      message: All corresponding work objects are applied
+      observedGeneration: 1
+      reason: AllWorkHaveBeenApplied
+      status: &#34;True&#34;
+      type: Applied
+    - lastTransitionTime: &#34;2025-04-24T18:46:38Z&#34;
+      message: All corresponding work objects are available
+      observedGeneration: 1
+      reason: AllWorkAreAvailable
+      status: &#34;True&#34;
+      type: Available
+  selectedResources:
+  - kind: Namespace
+    name: test-ns
+    version: v1
+</code></pre><p>from the status we can see that the <code>ClusterResourcePlacement</code> object has 2 placements available, where resources have
+been successfully applied and are available in kind-cluster-1 and kind-cluster-2. The users can check the individual
+member clusters to verify the resources are available but the users are recommended to check the<code>ClusterResourcePlacement</code>
+object status to verify placement availability since the status is aggregated and updated by the controller.</p><p>Here the user can either remove the <code>ClusterResourcePlacementDisruptionBudget</code> object or update the <code>minAvailable</code> to
+<code>1</code> to allow <code>ClusterResourcePlacementEviction</code> object to execute successfully. In general the user should carefully
+check the availability of placements and act accordingly when changing the <code>ClusterResourcePlacementDisruptionBudget</code>
+object.</p><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><div class=d-print-none><h2 class=feedback--title>Feedback</h2><p class=feedback--question>Was this page helpful?</p><button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">Yes</button>
+<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">No</button><p class="feedback--response feedback--response-yes">Glad to hear it! Please <a href=https://github.com/kubefleet-dev/website/issues/new>tell us how we can further improve</a>.</p><p class="feedback--response feedback--response-no">Sorry to hear that. Please <a href=hhttps://github.com/kubefleet-dev/website/issues/new>tell us how we can fix the experience for you</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof gtag!="function")return;gtag("event","page_helpful",{event_category:"Helpful",event_label:window.location.pathname,value:e})};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(100)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br></div></main></div></div><footer class="td-footer row d-print-none"><div class=container-fluid><div class="row mx-md-2"><div class="td-footer__left col-6 col-sm-4 order-sm-1"></div><div class="td-footer__right col-6 col-sm-4 order-sm-3"><ul class=td-footer__links-list><li class=td-footer__links-item data-bs-toggle=tooltip title=GitHub aria-label=GitHub><a target=_blank rel=noopener href=https://github.com/kubefleet-dev/kubefleet aria-label=GitHub><i class="fab fa-github"></i></a></li></ul></div><div class="td-footer__center col-12 col-sm-4 py-2 order-sm-2"><span class=td-footer__copyright>&copy;
+2025&ndash;2025
+<span class=td-footer__authors>KubeFleet Contributors | The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href=https://www.linuxfoundation.org/trademark-usage/>Trademark Usage</a> | <a href=https://creativecommons.org/licenses/by/4.0>CC BY 4.0</a> |</span></span><span class=td-footer__all_rights_reserved>All Rights Reserved</span><span class=ms-2><a href=https://github.com/kubefleet-dev/website/blob/main/PRIVACY_POLICY.md target=_blank rel=noopener>Privacy Policy</a></span></div></div></div></footer></div><script src=/website/js/main.min.032ba2ecbd3ce89b96bffcfec71c5da352125ee752e9873c3e0098f7c32a6497.js integrity="sha256-Ayui7L086JuWv/z+xxxdo1ISXudS6Yc8PgCY98MqZJc=" crossorigin=anonymous></script><script defer src=/website/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js integrity="sha256-c0eKfUgHaYrtfjVesj+YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin=anonymous></script><script src=/website/js/tabpane-persist.js></script></body></html>

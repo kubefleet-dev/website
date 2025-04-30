@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Concepts on KubeFleet</title><link>https://kubefleet-dev.github.io/website/docs/concepts/</link><description>Recent content in Concepts on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet-dev.github.io/website/docs/concepts/index.xml" rel="self" type="application/rss+xml"/><item><title>Fleet components</title><link>https://kubefleet-dev.github.io/website/docs/concepts/components/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/concepts/components/</guid><description>&lt;h1 id="components">Components&lt;/h1>
+&lt;p>This document provides an overview of the components required for a fully functional and operational Fleet setup.&lt;/p>
+&lt;p>&lt;img src="https://kubefleet-dev.github.io/website/images/en/docs/concepts/components/architecture.jpg" alt="">&lt;/p>
+&lt;p>The fleet consists of the following components:&lt;/p>
+&lt;ul>
+&lt;li>fleet-hub-agent is a Kubernetes controller that creates and reconciles all the fleet related CRs in the hub cluster.&lt;/li>
+&lt;li>fleet-member-agent is a Kubernetes controller that creates and reconciles all the fleet related CRs in the member cluster.
+The fleet-member-agent is pulling the latest CRs from the hub cluster and consistently reconciles the member clusters to
+the desired state.&lt;/li>
+&lt;/ul>
+&lt;p>The fleet implements agent-based pull mode. So that the working pressure can be distributed to the member clusters, and it
+helps to breach the bottleneck of scalability, by dividing the load into each member cluster. On the other hand, hub
+cluster does not need to directly access to the member clusters. Fleet can support the member clusters which only have
+the outbound network and no inbound network access.&lt;/p></description></item><item><title>MemberCluster</title><link>https://kubefleet-dev.github.io/website/docs/concepts/membercluster/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/concepts/membercluster/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>The fleet constitutes an implementation of a &lt;a href="https://multicluster.sigs.k8s.io/api-types/cluster-set/">&lt;code>ClusterSet&lt;/code>&lt;/a> and
+encompasses the following attributes:&lt;/p>
+&lt;ul>
+&lt;li>A collective of clusters managed by a centralized authority.&lt;/li>
+&lt;li>Typically characterized by a high level of mutual trust within the cluster set.&lt;/li>
+&lt;li>Embraces the principle of Namespace Sameness across clusters:
+&lt;ul>
+&lt;li>Ensures uniform permissions and characteristics for a given namespace across all clusters.&lt;/li>
+&lt;li>While not mandatory for every cluster, namespaces exhibit consistent behavior across those where they are present.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>The &lt;code>MemberCluster&lt;/code> represents a cluster-scoped API established within the hub cluster, serving as a representation of
+a cluster within the fleet. This API offers a dependable, uniform, and automated approach for multi-cluster applications
+(frameworks, toolsets) to identify registered clusters within a fleet. Additionally, it facilitates applications in querying
+a list of clusters managed by the fleet or observing cluster statuses for subsequent actions.&lt;/p></description></item><item><title>ClusterResourcePlacement</title><link>https://kubefleet-dev.github.io/website/docs/concepts/crp/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/concepts/crp/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>&lt;code>ClusterResourcePlacement&lt;/code> concept is used to dynamically select cluster scoped resources (especially namespaces and all
+objects within it) and control how they are propagated to all or a subset of the member clusters.
+A &lt;code>ClusterResourcePlacement&lt;/code> mainly consists of three parts:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Resource selection&lt;/strong>: select which cluster-scoped Kubernetes
+resource objects need to be propagated from the hub cluster to selected member clusters.&lt;/p>
+&lt;p>It supports the following forms of resource selection:&lt;/p>
+&lt;ul>
+&lt;li>Select resources by specifying just the &amp;lt;group, version, kind&amp;gt;. This selection propagates all resources with matching &amp;lt;group, version, kind&amp;gt;.&lt;/li>
+&lt;li>Select resources by specifying the &amp;lt;group, version, kind&amp;gt; and name. This selection propagates only one resource that matches the &amp;lt;group, version, kind&amp;gt; and name.&lt;/li>
+&lt;li>Select resources by specifying the &amp;lt;group, version, kind&amp;gt; and a set of labels using ClusterResourcePlacement -&amp;gt; LabelSelector.
+This selection propagates all resources that match the &amp;lt;group, version, kind&amp;gt; and label specified.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Note:&lt;/strong> When a namespace is selected, all the namespace-scoped objects under this namespace are propagated to the
+selected member clusters along with this namespace.&lt;/p></description></item><item><title>Scheduler</title><link>https://kubefleet-dev.github.io/website/docs/concepts/scheduler/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/concepts/scheduler/</guid><description>&lt;p>The scheduler component is a vital element in Fleet workload scheduling. Its primary responsibility is to determine the
+schedule decision for a bundle of resources based on the latest &lt;code>ClusterSchedulingPolicySnapshot&lt;/code>generated by the &lt;code>ClusterResourcePlacement&lt;/code>.
+By default, the scheduler operates in batch mode, which enhances performance. In this mode, it binds a &lt;code>ClusterResourceBinding&lt;/code>
+from a &lt;code>ClusterResourcePlacement&lt;/code> to multiple clusters whenever possible.&lt;/p>
+&lt;h2 id="batch-in-nature">Batch in nature&lt;/h2>
+&lt;p>Scheduling resources within a &lt;code>ClusterResourcePlacement&lt;/code> involves more dependencies compared with scheduling pods within
+a deployment in Kubernetes. There are two notable distinctions:&lt;/p></description></item><item><title>Scheduling Framework</title><link>https://kubefleet-dev.github.io/website/docs/concepts/scheduling-framework/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/concepts/scheduling-framework/</guid><description>&lt;p>The fleet scheduling framework closely aligns with the native &lt;a href="https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/">Kubernetes scheduling framework&lt;/a>,
+incorporating several modifications and tailored functionalities.&lt;/p>
+&lt;p>&lt;img src="https://kubefleet-dev.github.io/website/images/en/docs/concepts/scheduling-framework/scheduling-framework.jpg" alt="">&lt;/p>
+&lt;p>The primary advantage of this framework lies in its capability to compile plugins directly into the scheduler. Its API
+facilitates the implementation of diverse scheduling features as plugins, thereby ensuring a lightweight and maintainable
+core.&lt;/p>
+&lt;p>The fleet scheduler integrates three fundamental built-in plugin types:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Topology Spread Plugin&lt;/strong>: Supports the TopologySpreadConstraints stipulated in the placement policy.&lt;/li>
+&lt;li>&lt;strong>Cluster Affinity Plugin&lt;/strong>: Facilitates the Affinity clause of the placement policy.&lt;/li>
+&lt;li>&lt;strong>Same Placement Affinity Plugin&lt;/strong>: Uniquely designed for the fleet, preventing multiple replicas (selected resources) from
+being placed within the same cluster. This distinguishes it from Kubernetes, which allows multiple pods on a node.&lt;/li>
+&lt;li>&lt;strong>Cluster Eligibility Plugin&lt;/strong>: Enables cluster selection based on specific status criteria.&lt;/li>
+&lt;li>** Taint &amp;amp; Toleration Plugin**: Enables cluster selection based on taints on the cluster &amp;amp; tolerations on the ClusterResourcePlacement.&lt;/li>
+&lt;/ul>
+&lt;p>Compared to the Kubernetes scheduling framework, the fleet framework introduces additional stages for the pickN placement type:&lt;/p></description></item><item><title>Properties and Property Provides</title><link>https://kubefleet-dev.github.io/website/docs/concepts/properties/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/concepts/properties/</guid><description>&lt;p>This document explains the concepts of property provider and cluster properties in Fleet.&lt;/p>
+&lt;p>Fleet allows developers to implement a property provider to expose arbitrary properties about
+a member cluster, such as its node count and available resources for workload placement. Platforms
+could also enable their property providers to expose platform-specific properties via Fleet.
+These properties can be useful in a variety of cases: for example, administrators could monitor the
+health of a member cluster using related properties; Fleet also supports making scheduling
+decisions based on the property data.&lt;/p></description></item><item><title>Safe Rollout</title><link>https://kubefleet-dev.github.io/website/docs/concepts/safe-rollout/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/concepts/safe-rollout/</guid><description>&lt;p>One of the most important features of Fleet is the ability to safely rollout changes across multiple clusters. We do
+this by rolling out the changes in a controlled manner, ensuring that we only continue to propagate the changes to the
+next target clusters if the resources are successfully applied to the previous target clusters.&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>We automatically propagate any resource changes that are selected by a &lt;code>ClusterResourcePlacement&lt;/code> from the hub cluster
+to the target clusters based on the placement policy defined in the &lt;code>ClusterResourcePlacement&lt;/code>. In order to reduce the
+blast radius of such operation, we provide users a way to safely rollout the new changes so that a bad release
+won&amp;rsquo;t affect all the running instances all at once.&lt;/p></description></item><item><title>Override</title><link>https://kubefleet-dev.github.io/website/docs/concepts/override/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/concepts/override/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>The &lt;code>ClusterResourceOverride&lt;/code> and &lt;code>ResourceOverride&lt;/code> provides a way to customize resource configurations before they are propagated
+to the target cluster by the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/p>
+&lt;h2 id="difference-between-clusterresourceoverride-and-resourceoverride">Difference Between &lt;code>ClusterResourceOverride&lt;/code> And &lt;code>ResourceOverride&lt;/code>&lt;/h2>
+&lt;p>&lt;code>ClusterResourceOverride&lt;/code> represents the cluster-wide policy that overrides the cluster scoped resources to one or more
+clusters while &lt;code>ResourceOverride&lt;/code> will apply to resources in the same namespace as the namespace-wide policy.&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;strong>Note:&lt;/strong> If a namespace is selected by the &lt;code>ClusterResourceOverride&lt;/code>, ALL the resources under the namespace are selected
+automatically.&lt;/p></description></item><item><title>Staged Update</title><link>https://kubefleet-dev.github.io/website/docs/concepts/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/concepts/staged-update/</guid><description>&lt;p>While users rely on the &lt;code>RollingUpdate&lt;/code> rollout strategy to safely roll out their workloads,
+there is also a requirement for a staged rollout mechanism at the cluster level to enable more controlled and systematic continuous delivery (CD) across the fleet.
+Introducing a staged update run feature would address this need by enabling gradual deployments, reducing risk, and ensuring greater reliability and consistency in workload updates across clusters.&lt;/p>
+&lt;p>&lt;img src="https://kubefleet-dev.github.io/website/images/en/docs/concepts/staged-update/updaterun.jpg" alt="">&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>We introduce two new Custom Resources, &lt;code>ClusterStagedUpdateStrategy&lt;/code> and &lt;code>ClusterStagedUpdateRun&lt;/code>.&lt;/p></description></item><item><title>Eviction and Placement Disruption Budget</title><link>https://kubefleet-dev.github.io/website/docs/concepts/eviction-pdb/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/concepts/eviction-pdb/</guid><description>&lt;p>This document explains the concept of &lt;code>Eviction&lt;/code> and &lt;code>Placement Disruption Budget&lt;/code> in the context of the fleet.&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>&lt;code>Eviction&lt;/code> provides a way to force remove resources from a target cluster once the resources have already been propagated from the hub cluster by a &lt;code>Placement&lt;/code> object.
+&lt;code>Eviction&lt;/code> is considered as an voluntary disruption triggered by the user. &lt;code>Eviction&lt;/code> alone doesn&amp;rsquo;t guarantee that resources won&amp;rsquo;t be propagated to target cluster again by the scheduler.
+The users need to use &lt;a href="../howtos/taint-toleration.md">taints&lt;/a> in conjunction with &lt;code>Eviction&lt;/code> to prevent the scheduler from picking the target cluster again.&lt;/p></description></item></channel></rss>

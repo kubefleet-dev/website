@@ -1,0 +1,244 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=en class=no-js><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><link rel=canonical type=text/html href=https://kubefleet-dev.github.io/website/docs/getting-started/><link rel=alternate type=application/rss+xml href=https://kubefleet-dev.github.io/website/docs/getting-started/index.xml><meta name=robots content="noindex, nofollow"><link rel="shortcut icon" href=/website/favicons/favicon.ico><link rel=apple-touch-icon href=/website/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/website/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/website/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/website/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/website/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/website/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/website/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/website/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/website/favicons/android-192x192.png sizes=192x192><title>Getting Started | KubeFleet</title>
+<meta name=description content="Getting started with Fleet"><meta property="og:url" content="https://kubefleet-dev.github.io/website/docs/getting-started/"><meta property="og:site_name" content="KubeFleet"><meta property="og:title" content="Getting Started"><meta property="og:description" content="Getting started with Fleet"><meta property="og:locale" content="en"><meta property="og:type" content="website"><meta itemprop=name content="Getting Started"><meta itemprop=description content="Getting started with Fleet"><meta itemprop=wordCount content="56"><meta name=twitter:card content="summary"><meta name=twitter:title content="Getting Started"><meta name=twitter:description content="Getting started with Fleet"><link rel=preload href=/website/scss/main.min.879d78706ddc3417bab47ec223b501bf207298e24a447bada63812f126e3e760.css as=style><link href=/website/scss/main.min.879d78706ddc3417bab47ec223b501bf207298e24a447bada63812f126e3e760.css rel=stylesheet integrity><script src=https://code.jquery.com/jquery-3.7.1.min.js integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin=anonymous></script><script defer src=https://unpkg.com/lunr@2.3.9/lunr.min.js integrity=sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli crossorigin=anonymous></script></head><body class=td-section><header><nav class="td-navbar js-navbar-scroll" data-bs-theme=dark><div class="container-fluid flex-column flex-md-row"><a class=navbar-brand href=/website/><span class="navbar-brand__logo navbar-logo"></span><span class=navbar-brand__name>KubeFleet</span></a><div class="td-navbar-nav-scroll ms-md-auto" id=main_navbar><ul class=navbar-nav><li class=nav-item><a class="nav-link active" href=/website/docs/><span>Docs</span></a></li><li class="nav-item dropdown d-none d-lg-block"><div class=dropdown><a class="nav-link dropdown-toggle" href=# role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><ul class=dropdown-menu><li><a class=dropdown-item href=/website/zh-cn/>中文（简体）</a></li></ul></div></li></ul></div><div class="d-none d-lg-block"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/website/offline-search-index.3462c77180604ebb39dffa597e85cc8e.json data-offline-search-base-href=/ data-offline-search-max-results=10></div></div></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
+<a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/website/docs/getting-started/>Return to the regular view of this page</a>.</p></div><h1 class=title>Getting Started</h1><div class=lead>Getting started with Fleet</div><ul><li>1: <a href=#pg-b2dc1a1b66163662e5965b95ed325462>Getting started with Fleet using KinD clusters</a></li><li>2: <a href=#pg-7d7f0216d2307a9e20af121afa63dd3e>Getting started with Fleet using on-premises clusters</a></li></ul><div class=content><div class="pageinfo pageinfo-primary"><p>Fleet documentation features a number of getting started tutorials to help you learn
+about Fleet with an environment of your preference. Pick one below to proceed.</p><p>If you are not sure about which one is the best option, for simplicity reasons, it is
+recommended that you start with the
+<a href=/website/docs/getting-started/kind/>Getting started with Fleet using KinD clusters</a>.</p></div></div></div><div class=td-content style=page-break-before:always><h1 id=pg-b2dc1a1b66163662e5965b95ed325462>1 - Getting started with Fleet using KinD clusters</h1><div class=lead>Use KinD clusters to learn about Fleet</div><p>In this tutorial, you will try Fleet out using
+<a href=https://kind.sigs.k8s.io/>KinD</a> clusters, which are Kubernetes clusters running on your own
+local machine via <a href=https://docker.com>Docker</a> containers. This is the easiest way
+to get started with Fleet, which can help you understand how Fleet simiplify the day-to-day multi-cluster management experience with very little setup needed.</p><blockquote><p>Note</p><p>kind is a tool for setting up a Kubernetes environment for experimental purposes;
+some instructions below for running Fleet in the kind environment may not apply to other
+environments, and there might also be some minor differences in the Fleet
+experience.</p></blockquote><h2 id=before-you-begin>Before you begin</h2><p>To complete this tutorial, you will need:</p><ul><li>The following tools on your local machine:<ul><li><code>kind</code>, for running Kubernetes clusters on your local machine</li><li>Docker</li><li><code>git</code></li><li><code>curl</code></li><li><code>helm</code>, the Kubernetes package manager</li><li><code>jq</code></li><li><code>base64</code></li></ul></li></ul><h2 id=spin-up-a-few-kind-clusters>Spin up a few kind clusters</h2><p>The Fleet open-source project manages a multi-cluster environment using a hub-spoke pattern,
+which consists of one hub cluster and one or more member clusters:</p><ul><li>The hub cluster is the portal to which every member cluster connects; it also serves as an
+interface for centralized management, through which you can perform a number of tasks,
+primarily orchestrating workloads across different clusters.</li><li>A member cluster connects to the hub cluster and runs your workloads as orchestrated by the
+hub cluster.</li></ul><p>In this tutorial you will create two kind clusters; one of which serves as the Fleet
+hub cluster, and the other the Fleet member cluster. Run the commands below to create them:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Replace YOUR-KIND-IMAGE with a kind node image name of your</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># choice. It should match with the version of kind installed</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># on your system; for more information, see</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># [kind releases](https://github.com/kubernetes-sigs/kind/releases).</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>KIND_IMAGE</span><span style=color:#ce5c00;font-weight:700>=</span>YOUR-KIND-IMAGE
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Replace YOUR-KUBECONFIG-PATH with the path to a Kubernetes</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># configuration file of your own, typically $HOME/.kube/config.</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>KUBECONFIG_PATH</span><span style=color:#ce5c00;font-weight:700>=</span>YOUR-KUBECONFIG-PATH
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># The names of the kind clusters; you may use values of your own if you&#39;d like to.</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>HUB_CLUSTER</span><span style=color:#ce5c00;font-weight:700>=</span>hub
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>MEMBER_CLUSTER</span><span style=color:#ce5c00;font-weight:700>=</span>member-1
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kind create cluster --name <span style=color:#000>$HUB_CLUSTER</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --image<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$KIND_IMAGE</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --kubeconfig<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$KUBECONFIG_PATH</span>
+</span></span><span style=display:flex><span>kind create cluster --name <span style=color:#000>$MEMBER_CLUSTER</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --image<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$KIND_IMAGE</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --kubeconfig<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$KUBECONFIG_PATH</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Export the configurations for the kind clusters.</span>
+</span></span><span style=display:flex><span>kind <span style=color:#204a87>export</span> kubeconfig -n <span style=color:#000>$HUB_CLUSTER</span>
+</span></span><span style=display:flex><span>kind <span style=color:#204a87>export</span> kubeconfig -n <span style=color:#000>$MEMBER_CLUSTER</span>
+</span></span></code></pre></div><h1 id=set-up-the-fleet-hub-cluster>Set up the Fleet hub cluster</h1><p>To set up the hub cluster, run the commands below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>HUB_CLUSTER_CONTEXT</span><span style=color:#ce5c00;font-weight:700>=</span>kind-<span style=color:#000>$HUB_CLUSTER</span>
+</span></span><span style=display:flex><span>kubectl config use-context <span style=color:#000>$HUB_CLUSTER_CONTEXT</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># The variables below uses the Fleet images kept in the Microsoft Container Registry (MCR),</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># and will retrieve the latest version from the Fleet GitHub repository.</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic>#</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># You can, however, build the Fleet images of your own; see the repository README for</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># more information.</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>REGISTRY</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;mcr.microsoft.com/aks/fleet&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>FLEET_VERSION</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87;font-weight:700>$(</span>curl <span style=color:#4e9a06>&#34;https://api.github.com/repos/Azure/fleet/tags&#34;</span> <span style=color:#000;font-weight:700>|</span> jq -r <span style=color:#4e9a06>&#39;.[0].name&#39;</span><span style=color:#204a87;font-weight:700>)</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>HUB_AGENT_IMAGE</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;hub-agent&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Clone the Fleet repository from GitHub.</span>
+</span></span><span style=display:flex><span>git clone https://github.com/Azure/fleet.git
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Install the helm chart for running Fleet agents on the hub cluster.</span>
+</span></span><span style=display:flex><span>helm install hub-agent fleet/charts/hub-agent/ <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set image.pullPolicy<span style=color:#ce5c00;font-weight:700>=</span>Always <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set image.repository<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$REGISTRY</span>/<span style=color:#000>$HUB_AGENT_IMAGE</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set image.tag<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$FLEET_VERSION</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>logVerbosity</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#0000cf;font-weight:700>2</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>namespace</span><span style=color:#ce5c00;font-weight:700>=</span>fleet-system <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>enableWebhook</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>true</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>webhookClientConnectionType</span><span style=color:#ce5c00;font-weight:700>=</span>service <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>enableV1Alpha1APIs</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>false</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>enableV1Beta1APIs</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>true</span>
+</span></span></code></pre></div><p>It may take a few seconds for the installation to complete. Once it finishes, verify that
+the Fleet hub agents are up and running with the commands below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl get pods -n fleet-system
+</span></span></code></pre></div><p>You should see that all the pods are in the ready state.</p><h2 id=set-up-the-fleet-member-custer>Set up the Fleet member custer</h2><p>Next, you will set up the other kind cluster you created earlier as the Fleet
+member cluster, which requires that you install the Fleet member agent on
+the cluster and connect it to the Fleet hub cluster.</p><p>For your convenience, Fleet provides a script that can automate the process of joining a cluster
+into a fleet. To use the script, follow the steps below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Query the API server address of the hub cluster.</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>HUB_CLUSTER_ADDRESS</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;https://</span><span style=color:#204a87;font-weight:700>$(</span>docker inspect <span style=color:#000>$HUB_CLUSTER</span>-control-plane --format<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#39;{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}&#39;</span><span style=color:#204a87;font-weight:700>)</span><span style=color:#4e9a06>:6443&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>MEMBER_CLUSTER_CONTEXT</span><span style=color:#ce5c00;font-weight:700>=</span>kind-<span style=color:#000>$MEMBER_CLUSTER</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Run the script.</span>
+</span></span><span style=display:flex><span>chmod +x fleet/hack/membership/join.sh
+</span></span><span style=display:flex><span>./fleet/hack/membership/join.sh
+</span></span></code></pre></div><p>It may take a few minutes for the script to finish running. Once it is completed, verify
+that the cluster has joined successfully with the command below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl config use-context <span style=color:#000>$HUB_CLUSTER_CONTEXT</span>
+</span></span><span style=display:flex><span>kubectl get membercluster <span style=color:#000>$MEMBER_CLUSTER</span>
+</span></span></code></pre></div><p>The newly joined cluster should have the <code>JOINED</code> status field set to <code>True</code>. If you see that
+the cluster is still in an unknown state, it might be that the member cluster
+is still connecting to the hub cluster. Should this state persist for a prolonged
+period, refer to the <a href=/docs/troubleshooting>Troubleshooting Guide</a> for
+more information.</p><blockquote><p>Note</p><p>If you would like to know more about the steps the script runs, or would like to join
+a cluster into a fleet manually, refer to the <a href=/website/docs/how-tos/clusters/>Managing Clusters</a> How-To
+Guide.</p></blockquote><h2 id=use-the-clusterresourceplacement-api-to-orchestrate-resources-among-member-clusters>Use the <code>ClusterResourcePlacement</code> API to orchestrate resources among member clusters.</h2><p>Fleet offers an API, <code>ClusterResourcePlacement</code>, which helps orchestrate workloads, i.e., any group
+Kubernetes resources, among all member clusters. In this last part of the tutorial, you will use
+this API to place some Kubernetes resources automatically into the member clusters via the hub
+cluster, saving the trouble of having to create them one by one in each member cluster.</p><h3 id=create-the-resources-for-placement>Create the resources for placement</h3><p>Run the commands below to create a namespace and a config map, which will be placed onto the
+member clusters.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl create namespace work
+</span></span><span style=display:flex><span>kubectl create configmap app -n work --from-literal<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>test</span>
+</span></span></code></pre></div><p>It may take a few seconds for the commands to complete.</p><h3 id=create-the-clusterresourceplacement-api-object>Create the <code>ClusterResourcePlacement</code> API object</h3><p>Next, create a <code>ClusterResourcePlacement</code> API object in the hub cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl apply -f - <span style=color:#4e9a06>&lt;&lt;EOF
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>apiVersion: placement.kubernetes-fleet.io/v1beta1
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>kind: ClusterResourcePlacement
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  name: crp
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>spec:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  resourceSelectors:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    - group: &#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      kind: Namespace
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      version: v1          
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      name: work
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  policy:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    placementType: PickAll
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>EOF</span>
+</span></span></code></pre></div><p>Note that the CRP object features a resource selector, which targets the <code>work</code> namespace you
+just created. This will instruct the CRP to place the namespace itself, and all resources
+registered under the namespace, such as the config map, to the target clusters. Also, in the <code>policy</code>
+field, a <code>PickAll</code> placement type has been specified. This allows the CRP to automatically perform
+the placement on all member clusters in the fleet, including those that join after the CRP object
+is created.</p><p>It may take a few seconds for Fleet to successfully place the resources. To check up on the
+progress, run the commands below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl get clusterresourceplacement crp
+</span></span></code></pre></div><p>Verify that the placement has been completed successfully; you should see that the <code>APPLIED</code> status
+field has been set to <code>True</code>. You may need to repeat the commands a few times to wait for
+the completion.</p><h3 id=confirm-the-placement>Confirm the placement</h3><p>Now, log into the member clusters to confirm that the placement has been completed.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl config use-context <span style=color:#000>$MEMBER_CLUSTER_CONTEXT</span>
+</span></span><span style=display:flex><span>kubectl get ns
+</span></span><span style=display:flex><span>kubectl get configmap -n work
+</span></span></code></pre></div><p>You should see the namespace <code>work</code> and the config map <code>app</code> listed in the output.</p><h2 id=clean-things-up>Clean things up</h2><p>To remove all the resources you just created, run the commands below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#8f5902;font-style:italic># This would also remove the namespace and config map placed in all member clusters.</span>
+</span></span><span style=display:flex><span>kubectl delete crp crp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl delete ns work
+</span></span><span style=display:flex><span>kubectl delete configmap app -n work
+</span></span></code></pre></div><p>To uninstall Fleet, run the commands below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl config use-context <span style=color:#000>$HUB_CLUSTER_CONTEXT</span>
+</span></span><span style=display:flex><span>helm uninstall hub-agent
+</span></span><span style=display:flex><span>kubectl config use-context <span style=color:#000>$MEMBER_CLUSTER_CONTEXT</span>
+</span></span><span style=display:flex><span>helm uninstall member-agent
+</span></span></code></pre></div><h2 id=whats-next>What&rsquo;s next</h2><p>Congratulations! You have completed the getting started tutorial for Fleet. To learn more about
+Fleet:</p><ul><li><a href=/website/docs/concepts/>Read about Fleet concepts</a></li><li><a href=/website/docs/how-tos/crp/>Read about the ClusterResourcePlacement API</a></li><li><a href=/website/docs/api-reference/>Read the Fleet API reference</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-7d7f0216d2307a9e20af121afa63dd3e>2 - Getting started with Fleet using on-premises clusters</h1><div class=lead>Use on-premises clusters of your own to learn about Fleet</div><p>In this tutorial, you will try Fleet out using a few of your own Kubernetes clusters; Fleet can
+help you manage workloads seamlessly across these clusters, greatly simplifying the experience
+of day-to-day Kubernetes management.</p><blockquote><p>Note</p><p>This tutorial assumes that you have some experience of performing administrative tasks for
+Kubernetes clusters. If you are just gettings started with Kubernetes, or do not have much
+experience of setting up a Kubernetes cluster, it is recommended that you follow the
+<a href=/website/docs/getting-started/kind/>Getting started with Fleet using Kind clusters</a> tutorial instead.</p></blockquote><h2 id=before-you-begin>Before you begin</h2><p>To complete this tutorial, you will need:</p><ul><li>At least two Kubernetes clusters of your own.<ul><li>Note that one of these clusters will serve as your hub cluster; other clusters must be able
+to reach it via the network.</li></ul></li><li>The following tools on your local machine:<ul><li><code>kubectl</code>, the Kubernetes CLI tool.</li><li><code>git</code></li><li><code>curl</code></li><li><code>helm</code>, the Kubernetes package manager</li><li><code>jq</code></li><li><code>base64</code></li></ul></li></ul><h2 id=set-up-a-fleet-hub-cluster>Set up a Fleet hub cluster</h2><p>The Fleet open-source project manages a multi-cluster environment using a hub-spoke pattern,
+which consists of one hub cluster and one or more member clusters:</p><ul><li>The hub cluster is the portal to which every member cluster connects; it also serves as an
+interface for centralized management, through which you can perform a number of tasks,
+primarily orchestrating workloads across different clusters.</li><li>A member cluster connects to the hub cluster and runs your workloads as orchestrated by the
+hub cluster.</li></ul><p>Any Kubernetes cluster running a supported version of Kubernetes can serve as the hub cluster;
+it is recommended that you reserve a cluster
+specifically for this responsibility, and do not run other workloads on it. For the best
+experience, consider disabling the built-in <code>kube-controller-manager</code> controllers for the
+cluster: you could achieve this by setting the <code>--controllers</code> CLI argument; for more information,
+see the <a href=https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/><code>kube-controller-manager</code> documentation</a>.</p><p>To set up the hub cluster, run the commands below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Replace YOUR-HUB-CLUSTER-CONTEXT with the name of the kubeconfig context for your hub cluster.</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>HUB_CLUSTER_CONTEXT</span><span style=color:#ce5c00;font-weight:700>=</span>YOUR-HUB-CLUSTER-CONTEXT
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl config use-context <span style=color:#000>$HUB_CLUSTER_CONTEXT</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># The variables below uses the Fleet images kept in the Microsoft Container Registry (MCR),</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># and will retrieve the latest version from the Fleet GitHub repository.</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic>#</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># You can, however, build the Fleet images of your own; see the repository README for</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># more information.</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>REGISTRY</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;mcr.microsoft.com/aks/fleet&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>FLEET_VERSION</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87;font-weight:700>$(</span>curl <span style=color:#4e9a06>&#34;https://api.github.com/repos/Azure/fleet/tags&#34;</span> <span style=color:#000;font-weight:700>|</span> jq -r <span style=color:#4e9a06>&#39;.[0].name&#39;</span><span style=color:#204a87;font-weight:700>)</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>HUB_AGENT_IMAGE</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;hub-agent&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Clone the Fleet repository from GitHub.</span>
+</span></span><span style=display:flex><span>git clone https://github.com/Azure/fleet.git
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Install the helm chart for running Fleet agents on the hub cluster.</span>
+</span></span><span style=display:flex><span>helm install hub-agent fleet/charts/hub-agent/ <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set image.pullPolicy<span style=color:#ce5c00;font-weight:700>=</span>Always <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set image.repository<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$REGISTRY</span>/<span style=color:#000>$HUB_AGENT_IMAGE</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set image.tag<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$FLEET_VERSION</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>logVerbosity</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#0000cf;font-weight:700>2</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>namespace</span><span style=color:#ce5c00;font-weight:700>=</span>fleet-system <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>enableWebhook</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>true</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>webhookClientConnectionType</span><span style=color:#ce5c00;font-weight:700>=</span>service <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>enableV1Alpha1APIs</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>false</span> <span style=color:#4e9a06>\
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06></span>    --set <span style=color:#000>enableV1Beta1APIs</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>true</span>
+</span></span></code></pre></div><p>It may take a few seconds for the installation to complete. Once it finishes, verify that
+the Fleet hub agents are up and running with the commands below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl get pods -n fleet-system
+</span></span></code></pre></div><p>You should see that all the pods are in the ready state.</p><h2 id=connect-a-member-cluster-to-the-hub-cluster>Connect a member cluster to the hub cluster</h2><p>Next, you will set up a cluster as the member cluster for your fleet. This cluster should
+run a supported version of Kubernetes and be able to connect to the hub cluster via the network.</p><p>For your convenience, Fleet provides a script that can automate the process of joining a cluster
+into a fleet. To use the script, follow the steps below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Replace the value of HUB_CLUSTER_ADDRESS with the address of your hub cluster API server.</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>HUB_CLUSTER_ADDRESS</span><span style=color:#ce5c00;font-weight:700>=</span>YOUR-HUB-CLUSTER-ADDRESS
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Replace the value of MEMBER_CLUSTER with the name you would like to assign to the new member</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># cluster.</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic>#</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Note that Fleet will recognize your cluster with this name once it joins.</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>MEMBER_CLUSTER</span><span style=color:#ce5c00;font-weight:700>=</span>YOUR-MEMBER-CLUSTER
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Replace the value of MEMBER_CLUSTER_CONTEXT with the name of the kubeconfig context you use</span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># for accessing your member cluster.</span>
+</span></span><span style=display:flex><span><span style=color:#204a87>export</span> <span style=color:#000>MEMBER_CLUSTER_CONTEXT</span><span style=color:#ce5c00;font-weight:700>=</span>YOUR-MEMBER-CLUSTER-CONTEXT
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># Run the script.</span>
+</span></span><span style=display:flex><span>chmod +x fleet/hack/membership/join.sh
+</span></span><span style=display:flex><span>./fleet/hack/membership/join.sh
+</span></span></code></pre></div><p>It may take a few minutes for the script to finish running. Once it is completed, verify
+that the cluster has joined successfully with the command below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl config use-context <span style=color:#000>$HUB_CLUSTER_CONTEXT</span>
+</span></span><span style=display:flex><span>kubectl get membercluster <span style=color:#000>$MEMBER_CLUSTER</span>
+</span></span></code></pre></div><p>The newly joined cluster should have the <code>JOINED</code> status field set to <code>True</code>. If you see that
+the cluster is still in an unknown state, it might be that the member cluster
+is still connecting to the hub cluster. Should this state persist for a prolonged
+period, refer to the <a href=/docs/troubleshooting>Troubleshooting Guide</a> for
+more information.</p><blockquote><p>Note</p><p>If you would like to know more about the steps the script runs, or would like to join
+a cluster into a fleet manually, refer to the <a href=/dpcs/howtos/clusters>Managing Clusters</a> How-To
+Guide.</p></blockquote><p>Repeat the steps above to join more clusters into your fleet.</p><h2 id=use-the-clusterresourceplacement-api-to-orchestrate-resources-among-member-clusters>Use the <code>ClusterResourcePlacement</code> API to orchestrate resources among member clusters.</h2><p>Fleet offers an API, <code>ClusterResourcePlacement</code>, which helps orchestrate workloads, i.e., any group
+Kubernetes resources, among all member clusters. In this last part of the tutorial, you will use
+this API to place some Kubernetes resources automatically into the member clusters via the hub
+cluster, saving the trouble of having to create them one by one in each member cluster.</p><h3 id=create-the-resources-for-placement>Create the resources for placement</h3><p>Run the commands below to create a namespace and a config map, which will be placed onto the
+member clusters.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl create namespace work
+</span></span><span style=display:flex><span>kubectl create configmap app -n work --from-literal<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>test</span>
+</span></span></code></pre></div><p>It may take a few seconds for the commands to complete.</p><h3 id=create-the-clusterresourceplacement-api-object>Create the <code>ClusterResourcePlacement</code> API object</h3><p>Next, create a <code>ClusterResourcePlacement</code> API object in the hub cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl apply -f - <span style=color:#4e9a06>&lt;&lt;EOF
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>apiVersion: placement.kubernetes-fleet.io/v1beta1
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>kind: ClusterResourcePlacement
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  name: crp
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>spec:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  resourceSelectors:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    - group: &#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      kind: Namespace
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      version: v1          
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      name: work
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  policy:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    placementType: PickAll
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>EOF</span>
+</span></span></code></pre></div><p>Note that the CRP object features a resource selector, which targets the <code>work</code> namespace you
+just created. This will instruct the CRP to place the namespace itself, and all resources
+registered under the namespace, such as the config map, to the target clusters. Also, in the <code>policy</code>
+field, a <code>PickAll</code> placement type has been specified. This allows the CRP to automatically perform
+the placement on all member clusters in the fleet, including those that join after the CRP object
+is created.</p><p>It may take a few seconds for Fleet to successfully place the resources. To check up on the
+progress, run the commands below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl get clusterresourceplacement crp
+</span></span></code></pre></div><p>Verify that the placement has been completed successfully; you should see that the <code>APPLIED</code> status
+field has been set to <code>True</code>. You may need to repeat the commands a few times to wait for
+the completion.</p><h3 id=confirm-the-placement>Confirm the placement</h3><p>Now, log into the member clusters to confirm that the placement has been completed.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl config use-context <span style=color:#000>$MEMBER_CLUSTER_CONTEXT</span>
+</span></span><span style=display:flex><span>kubectl get ns
+</span></span><span style=display:flex><span>kubectl get configmap -n work
+</span></span></code></pre></div><p>You should see the namespace <code>work</code> and the config map <code>app</code> listed in the output.</p><h2 id=clean-things-up>Clean things up</h2><p>To remove all the resources you just created, run the commands below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#8f5902;font-style:italic># This would also remove the namespace and config map placed in all member clusters.</span>
+</span></span><span style=display:flex><span>kubectl delete crp crp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl delete ns work
+</span></span><span style=display:flex><span>kubectl delete configmap app -n work
+</span></span></code></pre></div><p>To uninstall Fleet, run the commands below:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>kubectl config use-context <span style=color:#000>$HUB_CLUSTER_CONTEXT</span>
+</span></span><span style=display:flex><span>helm uninstall hub-agent
+</span></span><span style=display:flex><span>kubectl config use-context <span style=color:#000>$MEMBER_CLUSTER_CONTEXT</span>
+</span></span><span style=display:flex><span>helm uninstall member-agent
+</span></span></code></pre></div><h2 id=whats-next>What&rsquo;s next</h2><p>Congratulations! You have completed the getting started tutorial for Fleet. To learn more about
+Fleet:</p><ul><li><a href=/website/docs/concepts/>Read about Fleet concepts</a></li><li><a href=/website/docs/how-tos/crp/>Read about the ClusterResourcePlacement API</a></li><li><a href=/website/docs/api-reference/>Read the Fleet API reference</a></li></ul></div></main></div></div><footer class="td-footer row d-print-none"><div class=container-fluid><div class="row mx-md-2"><div class="td-footer__left col-6 col-sm-4 order-sm-1"></div><div class="td-footer__right col-6 col-sm-4 order-sm-3"><ul class=td-footer__links-list><li class=td-footer__links-item data-bs-toggle=tooltip title=GitHub aria-label=GitHub><a target=_blank rel=noopener href=https://github.com/kubefleet-dev/kubefleet aria-label=GitHub><i class="fab fa-github"></i></a></li></ul></div><div class="td-footer__center col-12 col-sm-4 py-2 order-sm-2"><span class=td-footer__copyright>&copy;
+2025&ndash;2025
+<span class=td-footer__authors>KubeFleet Contributors | The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href=https://www.linuxfoundation.org/trademark-usage/>Trademark Usage</a> | <a href=https://creativecommons.org/licenses/by/4.0>CC BY 4.0</a> |</span></span><span class=td-footer__all_rights_reserved>All Rights Reserved</span><span class=ms-2><a href=https://github.com/kubefleet-dev/website/blob/main/PRIVACY_POLICY.md target=_blank rel=noopener>Privacy Policy</a></span></div></div></div></footer></div><script src=/website/js/main.min.032ba2ecbd3ce89b96bffcfec71c5da352125ee752e9873c3e0098f7c32a6497.js integrity="sha256-Ayui7L086JuWv/z+xxxdo1ISXudS6Yc8PgCY98MqZJc=" crossorigin=anonymous></script><script defer src=/website/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js integrity="sha256-c0eKfUgHaYrtfjVesj+YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin=anonymous></script><script src=/website/js/tabpane-persist.js></script></body></html>
