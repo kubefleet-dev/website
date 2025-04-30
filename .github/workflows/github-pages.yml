@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     # The latest tag of the Ubuntu image points to the latest LTS version of Ubuntu, as specified on the Docker Hub.
