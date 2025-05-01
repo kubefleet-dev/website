@@ -45,8 +45,8 @@ node_modules/
 package-lock.json
 
 # Hugo outputs
-public/
-docs/
+/public/
+/docs/
 
 # Hugo pipeline stuff
-resources/
+/resources/
