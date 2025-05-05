@@ -1,4 +1,8 @@
-# Placement Eviction & Placement Disruption Budget Troubleshooting Guide
+---
+title: How to Troubleshoot Eviction Related Issues
+description: Identify and fix KubeFleet issues associated with the the Eviction API
+weight: 1
+---
 
 This guide provides troubleshooting steps for issues related to placement eviction.
 
