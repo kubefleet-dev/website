@@ -1,12 +1,1 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Welcome to KubeFleet Documentation on KubeFleet</title><link>https://kubefleet-dev.github.io/website/docs/</link><description>Recent content in Welcome to KubeFleet Documentation on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet-dev.github.io/website/docs/index.xml" rel="self" type="application/rss+xml"/><item><title/><link>https://kubefleet-dev.github.io/website/docs/troubleshooting/clusterresourceplacementeviction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/troubleshooting/clusterresourceplacementeviction/</guid><description>&lt;h1 id="placement-eviction--placement-disruption-budget-troubleshooting-guide">Placement Eviction &amp;amp; Placement Disruption Budget Troubleshooting Guide&lt;/h1>
-&lt;p>This guide provides troubleshooting steps for issues related to placement eviction.&lt;/p>
-&lt;p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
-for eviction are:&lt;/p>
-&lt;ul>
-&lt;li>Eviction is Invalid&lt;/li>
-&lt;li>Eviction is Valid, Eviction failed to Execute&lt;/li>
-&lt;li>Eviction is Valid, Eviction executed successfully&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>&lt;strong>Note:&lt;/strong> If an eviction object doesn&amp;rsquo;t reach a terminal state i.e. neither valid condition nor executed condition is
-set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Welcome to KubeFleet Documentation on KubeFleet</title><link>https://kubefleet-dev.github.io/website/docs/</link><description>Recent content in Welcome to KubeFleet Documentation on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet-dev.github.io/website/docs/index.xml" rel="self" type="application/rss+xml"/></channel></rss>

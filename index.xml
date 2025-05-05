@@ -11,7 +11,17 @@ the desired state.&lt;/li>
 &lt;p>The fleet implements agent-based pull mode. So that the working pressure can be distributed to the member clusters, and it
 helps to breach the bottleneck of scalability, by dividing the load into each member cluster. On the other hand, hub
 cluster does not need to directly access to the member clusters. Fleet can support the member clusters which only have
-the outbound network and no inbound network access.&lt;/p></description></item><item><title>Managing clusters</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/clusters/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/clusters/</guid><description>&lt;p>This how-to guide discusses how to manage clusters in a fleet, specifically:&lt;/p>
+the outbound network and no inbound network access.&lt;/p></description></item><item><title>How to Troubleshoot Eviction Related Issues</title><link>https://kubefleet-dev.github.io/website/docs/troubleshooting/clusterresourceplacementeviction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/troubleshooting/clusterresourceplacementeviction/</guid><description>&lt;p>This guide provides troubleshooting steps for issues related to placement eviction.&lt;/p>
+&lt;p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
+for eviction are:&lt;/p>
+&lt;ul>
+&lt;li>Eviction is Invalid&lt;/li>
+&lt;li>Eviction is Valid, Eviction failed to Execute&lt;/li>
+&lt;li>Eviction is Valid, Eviction executed successfully&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>&lt;strong>Note:&lt;/strong> If an eviction object doesn&amp;rsquo;t reach a terminal state i.e. neither valid condition nor executed condition is
+set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server.&lt;/p></description></item><item><title>Managing clusters</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/clusters/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/clusters/</guid><description>&lt;p>This how-to guide discusses how to manage clusters in a fleet, specifically:&lt;/p>
 &lt;ul>
 &lt;li>how to join a cluster into a fleet; and&lt;/li>
 &lt;li>how to set a cluster to leave a fleet; and&lt;/li>
@@ -270,15 +280,4 @@ Introducing a staged update run feature would address this need by enabling grad
 The users need to use &lt;a href="../howtos/taint-toleration.md">taints&lt;/a> in conjunction with &lt;code>Eviction&lt;/code> to prevent the scheduler from picking the target cluster again.&lt;/p></description></item><item><title>Evicting Resources and Setting up Disruption Budgets</title><link>https://kubefleet-dev.github.io/website/docs/how-tos/eviction-disruption-budget/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/how-tos/eviction-disruption-budget/</guid><description>&lt;p>This how-to guide discusses how to create &lt;code>ClusterResourcePlacementEviction&lt;/code> objects and &lt;code>ClusterResourcePlacementDisruptionBudget&lt;/code> objects to evict resources from member clusters and protect resources on member clusters from voluntary disruption, respectively.&lt;/p>
 &lt;h2 id="evicting-resources-from-member-clusters-using-clusterresourceplacementeviction">Evicting Resources from Member Clusters using ClusterResourcePlacementEviction&lt;/h2>
 &lt;p>The &lt;code>ClusterResourcePlacementEviction&lt;/code> object is used to remove resources from a member cluster once the resources have already been propagated from the hub cluster.&lt;/p>
-&lt;p>To successfully evict resources from a cluster, the user needs to specify:&lt;/p></description></item><item><title/><link>https://kubefleet-dev.github.io/website/docs/troubleshooting/clusterresourceplacementeviction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/troubleshooting/clusterresourceplacementeviction/</guid><description>&lt;h1 id="placement-eviction--placement-disruption-budget-troubleshooting-guide">Placement Eviction &amp;amp; Placement Disruption Budget Troubleshooting Guide&lt;/h1>
-&lt;p>This guide provides troubleshooting steps for issues related to placement eviction.&lt;/p>
-&lt;p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
-for eviction are:&lt;/p>
-&lt;ul>
-&lt;li>Eviction is Invalid&lt;/li>
-&lt;li>Eviction is Valid, Eviction failed to Execute&lt;/li>
-&lt;li>Eviction is Valid, Eviction executed successfully&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>&lt;strong>Note:&lt;/strong> If an eviction object doesn&amp;rsquo;t reach a terminal state i.e. neither valid condition nor executed condition is
-set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server.&lt;/p></description></item></channel></rss>
+&lt;p>To successfully evict resources from a cluster, the user needs to specify:&lt;/p></description></item></channel></rss>
