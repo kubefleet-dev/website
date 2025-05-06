@@ -19,8 +19,8 @@ title: KubeFleet
 
 
 {{% blocks/custom-showcase color="primary" %}}
-KubeFleet is an cloud-native platform for<span class="text-white bg-dark"><b>
-multi-cluster application management</b></span>. Use Fleet to schedule workloads smartly,
+KubeFleet is a cloud-native solution for<span class="text-white bg-dark"><b>
+multi-cluster application management</b></span>. Use KubeFleet to schedule workloads smartly,
 roll out changes progressively, and perform administrative tasks easily, 
 across a group of Kubernetes clusters
 <span class="text-white bg-dark"><b>on any cloud or on-premises</b></span>.
