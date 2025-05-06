@@ -1,7 +1,1070 @@
 <!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=en class=no-js><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><link rel=canonical type=text/html href=https://kubefleet-dev.github.io/website/docs/troubleshooting/><link rel=alternate type=application/rss+xml href=https://kubefleet-dev.github.io/website/docs/troubleshooting/index.xml><meta name=robots content="noindex, nofollow"><link rel="shortcut icon" href=/website/favicons/favicon.ico><link rel=apple-touch-icon href=/website/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/website/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/website/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/website/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/website/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/website/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/website/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/website/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/website/favicons/android-192x192.png sizes=192x192><title>Troubleshooting Guides | KubeFleet</title>
-<meta name=description content="Guides for identifying and fixing common KubeFleet issues"><meta property="og:url" content="https://kubefleet-dev.github.io/website/docs/troubleshooting/"><meta property="og:site_name" content="KubeFleet"><meta property="og:title" content="Troubleshooting Guides"><meta property="og:description" content="Guides for identifying and fixing common KubeFleet issues"><meta property="og:locale" content="en"><meta property="og:type" content="website"><meta itemprop=name content="Troubleshooting Guides"><meta itemprop=description content="Guides for identifying and fixing common KubeFleet issues"><meta itemprop=wordCount content="23"><meta name=twitter:card content="summary"><meta name=twitter:title content="Troubleshooting Guides"><meta name=twitter:description content="Guides for identifying and fixing common KubeFleet issues"><link rel=preload href=/website/scss/main.min.879d78706ddc3417bab47ec223b501bf207298e24a447bada63812f126e3e760.css as=style><link href=/website/scss/main.min.879d78706ddc3417bab47ec223b501bf207298e24a447bada63812f126e3e760.css rel=stylesheet integrity><script src=https://code.jquery.com/jquery-3.7.1.min.js integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin=anonymous></script><script defer src=https://unpkg.com/lunr@2.3.9/lunr.min.js integrity=sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli crossorigin=anonymous></script></head><body class=td-section><header><nav class="td-navbar js-navbar-scroll" data-bs-theme=dark><div class="container-fluid flex-column flex-md-row"><a class=navbar-brand href=/website/><span class="navbar-brand__logo navbar-logo"></span><span class=navbar-brand__name>KubeFleet</span></a><div class="td-navbar-nav-scroll ms-md-auto" id=main_navbar><ul class=navbar-nav><li class=nav-item><a class="nav-link active" href=/website/docs/><span>Docs</span></a></li><li class="nav-item dropdown d-none d-lg-block"><div class=dropdown><a class="nav-link dropdown-toggle" href=# role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><ul class=dropdown-menu><li><a class=dropdown-item href=/website/zh-cn/>中文（简体）</a></li></ul></div></li></ul></div><div class="d-none d-lg-block"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/website/offline-search-index.54f412bfc26046742722ee0d28a9eddb.json data-offline-search-base-href=/ data-offline-search-max-results=10></div></div></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
-<a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/website/docs/troubleshooting/>Return to the regular view of this page</a>.</p></div><h1 class=title>Troubleshooting Guides</h1><div class=lead>Guides for identifying and fixing common KubeFleet issues</div><ul><li>1: <a href=#pg-d9ce62896f60f2efcc2db9da011ba5cf>How to Troubleshoot Eviction Related Issues</a></li></ul><div class=content><div class="pageinfo pageinfo-primary"><p>KubeFleet documentation features a number of troubleshooting guides to help you identify and fix
-KubeFleet issues you encounter. Pick one below to proceed.</p></div></div></div><div class=td-content><h1 id=pg-d9ce62896f60f2efcc2db9da011ba5cf>1 - How to Troubleshoot Eviction Related Issues</h1><div class=lead>Identify and fix KubeFleet issues associated with the the Eviction API</div><p>This guide provides troubleshooting steps for issues related to placement eviction.</p><p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
+<meta name=description content="Guides for identifying and fixing common KubeFleet issues"><meta property="og:url" content="https://kubefleet-dev.github.io/website/docs/troubleshooting/"><meta property="og:site_name" content="KubeFleet"><meta property="og:title" content="Troubleshooting Guides"><meta property="og:description" content="Guides for identifying and fixing common KubeFleet issues"><meta property="og:locale" content="en"><meta property="og:type" content="website"><meta itemprop=name content="Troubleshooting Guides"><meta itemprop=description content="Guides for identifying and fixing common KubeFleet issues"><meta itemprop=wordCount content="23"><meta name=twitter:card content="summary"><meta name=twitter:title content="Troubleshooting Guides"><meta name=twitter:description content="Guides for identifying and fixing common KubeFleet issues"><link rel=preload href=/website/scss/main.min.879d78706ddc3417bab47ec223b501bf207298e24a447bada63812f126e3e760.css as=style><link href=/website/scss/main.min.879d78706ddc3417bab47ec223b501bf207298e24a447bada63812f126e3e760.css rel=stylesheet integrity><script src=https://code.jquery.com/jquery-3.7.1.min.js integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin=anonymous></script><script defer src=https://unpkg.com/lunr@2.3.9/lunr.min.js integrity=sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli crossorigin=anonymous></script></head><body class=td-section><header><nav class="td-navbar js-navbar-scroll" data-bs-theme=dark><div class="container-fluid flex-column flex-md-row"><a class=navbar-brand href=/website/><span class="navbar-brand__logo navbar-logo"></span><span class=navbar-brand__name>KubeFleet</span></a><div class="td-navbar-nav-scroll ms-md-auto" id=main_navbar><ul class=navbar-nav><li class=nav-item><a class="nav-link active" href=/website/docs/><span>Docs</span></a></li><li class="nav-item dropdown d-none d-lg-block"><div class=dropdown><a class="nav-link dropdown-toggle" href=# role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><ul class=dropdown-menu><li><a class=dropdown-item href=/website/zh-cn/>中文（简体）</a></li></ul></div></li></ul></div><div class="d-none d-lg-block"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/website/offline-search-index.a5a427c7f19059d9036f869dc83ad622.json data-offline-search-base-href=/ data-offline-search-max-results=10></div></div></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
+<a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/website/docs/troubleshooting/>Return to the regular view of this page</a>.</p></div><h1 class=title>Troubleshooting Guides</h1><div class=lead>Guides for identifying and fixing common KubeFleet issues</div><ul><li>1: <a href=#pg-894ce2920918d9ff68e739cf22ea5092>ClusterResourcePlacement TSG</a></li><li>2: <a href=#pg-93d68ffad9a5f65589e402107316e989>CRP Schedule Failure TSG</a></li><li>3: <a href=#pg-2ebda7b0ab75a3e1b8f7d1d152615e0c>CRP Rollout Failure TSG</a></li><li>4: <a href=#pg-a7815b1d1edbdbce187363a1b343e478>CRP Override Failure TSG</a></li><li>5: <a href=#pg-ac0342e775af869b5b77d564fc4c06f6>CRP Work-Synchronization Failure TSG</a></li><li>6: <a href=#pg-30aa6ed7a74d1614da0b3480e7ecabb3>CRP Work-Application Failure TSG</a></li><li>7: <a href=#pg-fb92aca0b03cf16b130b482b254a8889>CRP Availability Failure TSG</a></li><li>8: <a href=#pg-d9ce62896f60f2efcc2db9da011ba5cf>ClusterResourcePlacementEviction TSG</a></li><li>9: <a href=#pg-990af4229853bd1afee4be94624f26e1>ClusterStagedUpdateRun TSG</a></li></ul><div class=content><div class="pageinfo pageinfo-primary"><p>KubeFleet documentation features a number of troubleshooting guides to help you identify and fix
+KubeFleet issues you encounter. Pick one below to proceed.</p></div></div></div><div class=td-content><h1 id=pg-894ce2920918d9ff68e739cf22ea5092>1 - ClusterResourcePlacement TSG</h1><div class=lead>Identify and fix KubeFleet issues associated with the ClusterResourcePlacement API</div><p>This TSG is meant to help you troubleshoot issues with the ClusterResourcePlacement API in Fleet.</p><h2 id=cluster-resource-placement>Cluster Resource Placement</h2><p>Internal Objects to keep in mind when troubleshooting CRP related errors on the hub cluster:</p><ul><li><code>ClusterResourceSnapshot</code></li><li><code>ClusterSchedulingPolicySnapshot</code></li><li><code>ClusterResourceBinding</code></li><li><code>Work</code></li></ul><p>Please read the <a href=/website/docs/api-reference/>Fleet API reference</a> for more details about each object.</p><h2 id=complete-progress-of-the-clusterresourceplacement>Complete Progress of the ClusterResourcePlacement</h2><p>Understanding the progression and the status of the <code>ClusterResourcePlacement</code> custom resource is crucial for diagnosing and identifying failures.
+You can view the status of the <code>ClusterResourcePlacement</code> custom resource by using the following command:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl describe clusterresourceplacement &lt;name&gt;
+</span></span></code></pre></div><p>The complete progression of <code>ClusterResourcePlacement</code> is as follows:</p><ol><li><code>ClusterResourcePlacementScheduled</code>: Indicates a resource has been scheduled for placement..<ul><li>If this condition is false, refer to <a href=/website/docs/troubleshooting/clusterresourceplacementscheduled/>CRP Schedule Failure TSG</a>.</li></ul></li><li><code>ClusterResourcePlacementRolloutStarted</code>: Indicates the rollout process has begun.<ul><li>If this condition is false refer to <a href=/website/docs/troubleshooting/clusterresourceplacementrolloutstarted/>CRP Rollout Failure TSG</a></li><li>If you are triggering a rollout with a staged update run, refer to <a href=/website/docs/troubleshooting/clusterstagedupdaterun/>ClusterStagedUpdateRun TSG</a>.</li></ul></li><li><code>ClusterResourcePlacementOverridden</code>: Indicates the resource has been overridden.<ul><li>If this condition is false, refer to <a href=/website/docs/troubleshooting/clusterresourceplacementoverridden/>CRP Override Failure TSG</a></li></ul></li><li><code>ClusterResourcePlacementWorkSynchronized</code>: Indicates the work objects have been synchronized.<ul><li>If this condition is false, refer to <a href=/website/docs/troubleshooting/clusterresourceplacementworksynchronized/>CRP Work-Synchronization Failure TSG</a></li></ul></li><li><code>ClusterResourcePlacementApplied</code>: Indicates the resource has been applied.<ul><li>If this condition is false, refer to <a href=/website/docs/troubleshooting/clusterresourceplacementapplied/>CRP Work-Application Failure TSG</a></li></ul></li><li><code>ClusterResourcePlacementAvailable</code>: Indicates the resource is available.<ul><li>If this condition is false, refer to <a href=/website/docs/troubleshooting/clusterresourceplacementavailable/>CRP Availability Failure TSG</a></li></ul></li></ol><h2 id=how-can-i-debug-if-some-clusters-are-not-selected-as-expected>How can I debug if some clusters are not selected as expected?</h2><p>Check the status of the <code>ClusterSchedulingPolicySnapshot</code> to determine which clusters were selected along with the reason.</p><h2 id=how-can-i-debug-if-a-selected-cluster-does-not-have-the-expected-resources-on-it-or-if-crp-doesnt-pick-up-the-latest-changes>How can I debug if a selected cluster does not have the expected resources on it or if CRP doesn&rsquo;t pick up the latest changes?</h2><p>Please check the following cases,</p><ul><li>Check whether the <code>ClusterResourcePlacementRolloutStarted</code> condition in <code>ClusterResourcePlacement</code> status is set to <strong>true</strong> or <strong>false</strong>.</li><li>If <code>false</code>, see <a href=/website/docs/troubleshooting/clusterresourceplacementscheduled/>CRP Schedule Failure TSG</a>.</li><li>If <code>true</code>,<ul><li>Check to see if <code>ClusterResourcePlacementApplied</code> condition is set to <strong>unknown</strong>, <strong>false</strong> or <strong>true</strong>.</li><li>If <code>unknown</code>, wait for the process to finish, as the resources are still being applied to the member cluster. If the state remains unknown for a while, create a <a href=https://github.com/kubefleet-dev/kubefleet/issues>issue</a>, as this is an unusual behavior.</li><li>If <code>false</code>, refer to <a href=/website/docs/troubleshooting/clusterresourceplacementapplied/>CRP Work-Application Failure TSG</a>.</li><li>If <code>true</code>, verify that the resource exists on the hub cluster.</li></ul></li></ul><p>We can also take a look at the <code>placementStatuses</code> section in <code>ClusterResourcePlacement</code> status for that particular cluster. In <code>placementStatuses</code> we would find <code>failedPlacements</code> section which should have the reasons as to why resources failed to apply.</p><h2 id=how-can-i-find-and-verify-the-latest-clusterschedulingpolicysnapshot-for-a-clusterresourceplacement>How can I find and verify the latest ClusterSchedulingPolicySnapshot for a ClusterResourcePlacement?</h2><p>To find the latest <code>ClusterSchedulingPolicySnapshot</code> for a <code>ClusterResourcePlacement</code> resource, run the following command:</p><pre tabindex=0><code>kubectl get clusterschedulingpolicysnapshot -l kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP={CRPName}
+</code></pre><blockquote><p>NOTE: In this command, replace <code>{CRPName}</code> with your <code>ClusterResourcePlacement</code> name.</p></blockquote><p>Then, compare the <code>ClusterSchedulingPolicySnapshot</code> with the <code>ClusterResourcePlacement</code> policy to make sure that they match, excluding the <code>numberOfClusters</code> field from the <code>ClusterResourcePlacement</code> spec.</p><p>If the placement type is <code>PickN</code>, check whether the number of clusters that&rsquo;s requested in the <code>ClusterResourcePlacement</code> policy matches the value of the number-of-clusters label.</p><h2 id=how-can-i-find-the-latest-clusterresourcebinding-resource>How can I find the latest ClusterResourceBinding resource?</h2><p>The following command lists all <code>ClusterResourceBindings</code> instances that are associated with <code>ClusterResourcePlacement</code>:</p><pre tabindex=0><code>kubectl get clusterresourcebinding -l kubernetes-fleet.io/parent-CRP={CRPName}
+</code></pre><blockquote><p>NOTE: In this command, replace <code>{CRPName}</code> with your <code>ClusterResourcePlacement</code> name.</p></blockquote><h3 id=example>Example</h3><p>In this case we have <code>ClusterResourcePlacement</code> called test-crp.</p><ol><li>List the <code>ClusterResourcePlacement</code> to get the name of the CRP,</li></ol><pre tabindex=0><code>kubectl get crp test-crp
+NAME       GEN   SCHEDULED   SCHEDULEDGEN   APPLIED   APPLIEDGEN   AGE
+test-crp   1     True        1              True      1            15s
+</code></pre><ol start=2><li>The following command is run to view the status of the <code>ClusterResourcePlacement</code> deployment.</li></ol><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl describe clusterresourceplacement test-crp
+</span></span></code></pre></div><ol start=3><li>Here&rsquo;s an example output. From the <code>placementStatuses</code> section of the <code>test-crp</code> status, notice that it has distributed
+resources to two member clusters and, therefore, has two <code>ClusterResourceBindings</code> instances:</li></ol><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2023-11-23T00:49:29Z&#34;
+    ...
+  placementStatuses:
+  - clusterName: kind-cluster-1
+    conditions:
+      ...
+      type: ResourceApplied
+  - clusterName: kind-cluster-2
+    conditions:
+      ...
+      reason: ApplySucceeded
+      status: &#34;True&#34;
+      type: ResourceApplied
+</code></pre><ol start=3><li>To get the <code>ClusterResourceBindings</code> value, run the following command:</li></ol><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>    kubectl get clusterresourcebinding -l kubernetes-fleet.io/parent-CRP<span style=color:#ce5c00;font-weight:700>=</span>test-crp 
+</span></span></code></pre></div><ol start=4><li>The output lists all <code>ClusterResourceBindings</code> instances that are associated with <code>test-crp</code>.</li></ol><pre tabindex=0><code>kubectl get clusterresourcebinding -l kubernetes-fleet.io/parent-CRP=test-crp 
+NAME                               WORKCREATED   RESOURCESAPPLIED   AGE
+test-crp-kind-cluster-1-be990c3e   True          True               33s
+test-crp-kind-cluster-2-ec4d953c   True          True               33s
+</code></pre><p>The <code>ClusterResourceBinding</code> resource name uses the following format: <code>{CRPName}-{clusterName}-{suffix}</code>.
+Find the <code>ClusterResourceBinding</code> for the target cluster you are looking for based on the <code>clusterName</code>.</p><h2 id=how-can-i-find-the-latest-clusterresourcesnapshot-resource>How can I find the latest ClusterResourceSnapshot resource?</h2><p>To find the latest ClusterResourceSnapshot resource, run the following command:</p><pre tabindex=0><code>kubectl get clusterresourcesnapshot -l kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP={CRPName}
+</code></pre><blockquote><p>NOTE: In this command, replace <code>{CRPName}</code> with your <code>ClusterResourcePlacement</code> name.</p></blockquote><h2 id=how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement>How can I find the correct work resource that&rsquo;s associated with ClusterResourcePlacement?</h2><p>To find the correct work resource, follow these steps:</p><ol><li>Identify the member cluster namespace and the <code>ClusterResourcePlacement</code> name. The format for the namespace is <code>fleet-member-{clusterName}</code>.</li><li>To get the work resource, run the following command:</li></ol><pre tabindex=0><code>kubectl get work -n fleet-member-{clusterName} -l kubernetes-fleet.io/parent-CRP={CRPName}
+</code></pre><blockquote><p>NOTE: In this command, replace <code>{clusterName}</code> and <code>{CRPName}</code> with the names that you identified in the first step.</p></blockquote></div><div class=td-content style=page-break-before:always><h1 id=pg-93d68ffad9a5f65589e402107316e989>2 - CRP Schedule Failure TSG</h1><div class=lead>Troubleshooting guide for CRP status &ldquo;ClusterResourcePlacementScheduled&rdquo; condition set to false</div><p>The <code>ClusterResourcePlacementScheduled</code> condition is set to <code>false</code> when the scheduler cannot find all the clusters needed as specified by the scheduling policy.</p><blockquote><p>Note: To get more information about why the scheduling fails, you can check the <a href=https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/scheduler/scheduler.go>scheduler</a> logs.</p></blockquote><h2 id=common-scenarios>Common scenarios</h2><p>Instances where this condition may arise:</p><ul><li>When the placement policy is set to <code>PickFixed</code>, but the specified cluster names do not match any joined member cluster name in the fleet, or the specified cluster is no longer connected to the fleet.</li><li>When the placement policy is set to <code>PickN</code>, and N clusters are specified, but there are fewer than N clusters that have joined the fleet or satisfy the placement policy.</li><li>When the <code>ClusterResourcePlacement</code> resource selector selects a reserved namespace.</li></ul><blockquote><p>Note: When the placement policy is set to <code>PickAll</code>, the <code>ClusterResourcePlacementScheduled</code> condition is always set to <code>true</code>.</p></blockquote><h2 id=case-study>Case Study</h2><p>In the following example, the <code>ClusterResourcePlacement</code> with a <code>PickN</code> placement policy is trying to propagate resources to two clusters labeled <code>env:prod</code>.
+The two clusters, named <code>kind-cluster-1</code> and <code>kind-cluster-2</code>, have joined the fleet. However, only one member cluster, <code>kind-cluster-1</code>, has the label <code>env:prod</code>.</p><h3 id=crp-spec>CRP spec:</h3><pre tabindex=0><code>spec:
+  policy:
+    affinity:
+      clusterAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          clusterSelectorTerms:
+          - labelSelector:
+              matchLabels:
+                env: prod
+    numberOfClusters: 2
+    placementType: PickN
+  resourceSelectors:
+  ...
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+</code></pre><h3 id=clusterresourceplacement-status>ClusterResourcePlacement status</h3><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+    message: could not find all the clusters needed as specified by the scheduling
+      policy
+    observedGeneration: 1
+    reason: SchedulingPolicyUnfulfilled
+    status: &#34;False&#34;
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+    message: All 1 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+    message: Works(s) are succcesfully created or updated in the 1 target clusters&#39;
+      namespaces
+    observedGeneration: 1
+    reason: WorkSynchronized
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementWorkSynchronized
+  - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+    message: The selected resources are successfully applied to 1 clusters
+    observedGeneration: 1
+    reason: ApplySucceeded
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementApplied
+  - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+    message: The selected resources in 1 cluster are available now
+    observedGeneration: 1
+    reason: ResourceAvailable
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementAvailable
+  observedResourceIndex: &#34;0&#34;
+  placementStatuses:
+  - clusterName: kind-cluster-1
+    conditions:
+    - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+      message: &#39;Successfully scheduled resources for placement in kind-cluster-1 (affinity
+        score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: &#34;True&#34;
+      type: RolloutStarted
+    - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: &#34;True&#34;
+      type: Overridden
+    - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+      message: All of the works are synchronized to the latest
+      observedGeneration: 1
+      reason: AllWorkSynced
+      status: &#34;True&#34;
+      type: WorkSynchronized
+    - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+      message: All corresponding work objects are applied
+      observedGeneration: 1
+      reason: AllWorkHaveBeenApplied
+      status: &#34;True&#34;
+      type: Applied
+    - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+      message: All corresponding work objects are available
+      observedGeneration: 1
+      reason: AllWorkAreAvailable
+      status: &#34;True&#34;
+      type: Available
+  - conditions:
+    - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+      message: &#39;kind-cluster-2 is not selected: ClusterUnschedulable, cluster does not
+        match with any of the required cluster affinity terms&#39;
+      observedGeneration: 1
+      reason: ScheduleFailed
+      status: &#34;False&#34;
+      type: Scheduled
+  selectedResources:
+  ...
+</code></pre><p>The <code>ClusterResourcePlacementScheduled</code> condition is set to <code>false</code>, the goal is to select two clusters with the label <code>env:prod</code>, but only one member cluster possesses the correct label as specified in <code>clusterAffinity</code>.</p><p>We can also take a look at the <code>ClusterSchedulingPolicySnapshot</code> status to figure out why the scheduler could not schedule the resource for the placement policy specified.
+To learn how to get the latest <code>ClusterSchedulingPolicySnapshot</code>, see <a href=/website/docs/troubleshooting/clusterresourceplacement/#how-can-i-find-and-verify-the-latest-clusterschedulingpolicysnapshot-for-a-clusterresourceplacement>How can I find and verify the latest ClusterSchedulingPolicySnapshot for a ClusterResourcePlacement deployment?</a> to learn how to get the latest <code>ClusterSchedulingPolicySnapshot</code>.</p><p>The corresponding <code>ClusterSchedulingPolicySnapshot</code> spec and status gives us even more information on why scheduling failed.</p><h3 id=latest-clusterschedulingpolicysnapshot>Latest ClusterSchedulingPolicySnapshot</h3><pre tabindex=0><code>apiVersion: placement.kubernetes-fleet.io/v1
+kind: ClusterSchedulingPolicySnapshot
+metadata:
+  annotations:
+    kubernetes-fleet.io/CRP-generation: &#34;1&#34;
+    kubernetes-fleet.io/number-of-clusters: &#34;2&#34;
+  creationTimestamp: &#34;2024-05-07T22:36:33Z&#34;
+  generation: 1
+  labels:
+    kubernetes-fleet.io/is-latest-snapshot: &#34;true&#34;
+    kubernetes-fleet.io/parent-CRP: crp-2
+    kubernetes-fleet.io/policy-index: &#34;0&#34;
+  name: crp-2-0
+  ownerReferences:
+  - apiVersion: placement.kubernetes-fleet.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ClusterResourcePlacement
+    name: crp-2
+    uid: 48bc1e92-a8b9-4450-a2d5-c6905df2cbf0
+  resourceVersion: &#34;10090&#34;
+  uid: 2137887e-45fd-4f52-bbb7-b96f39854625
+spec:
+  policy:
+    affinity:
+      clusterAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          clusterSelectorTerms:
+          - labelSelector:
+              matchLabels:
+                env: prod
+    placementType: PickN
+  policyHash: ZjE0Yjk4YjYyMTVjY2U3NzQ1MTZkNWRhZjRiNjQ1NzQ4NjllNTUyMzZkODBkYzkyYmRkMGU3OTI3MWEwOTkyNQ==
+status:
+  conditions:
+  - lastTransitionTime: &#34;2024-05-07T22:36:33Z&#34;
+    message: could not find all the clusters needed as specified by the scheduling
+      policy
+    observedGeneration: 1
+    reason: SchedulingPolicyUnfulfilled
+    status: &#34;False&#34;
+    type: Scheduled
+  observedCRPGeneration: 1
+  targetClusters:
+  - clusterName: kind-cluster-1
+    clusterScore:
+      affinityScore: 0
+      priorityScore: 0
+    reason: picked by scheduling policy
+    selected: true
+  - clusterName: kind-cluster-2
+    reason: ClusterUnschedulable, cluster does not match with any of the required
+      cluster affinity terms
+    selected: false
+</code></pre><h3 id=resolution>Resolution:</h3><p>The solution here is to add the <code>env:prod</code> label to the member cluster resource for <code>kind-cluster-2</code> as well, so that the scheduler can select the cluster to propagate resources.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-2ebda7b0ab75a3e1b8f7d1d152615e0c>3 - CRP Rollout Failure TSG</h1><div class=lead>Troubleshooting guide for CRP status &ldquo;ClusterResourcePlacementRolloutStarted&rdquo; condition set to false</div><p>When using the <code>ClusterResourcePlacement</code> API object in Azure Kubernetes Fleet Manager to propagate resources, the selected resources aren&rsquo;t rolled out in all scheduled clusters and the <code>ClusterResourcePlacementRolloutStarted</code> condition status shows as <code>False</code>.</p><p><em>This TSG only applies to the <code>RollingUpdate</code> rollout strategy, which is the default strategy if you don&rsquo;t specify in the <code>ClusterResourcePlacement</code>.</em>
+<em>To troubleshoot the update run strategy as you specify <code>External</code> in the <code>ClusterResourcePlacement</code>, please refer to the <a href=/website/docs/troubleshooting/clusterstagedupdaterun/>Staged Update Run Troubleshooting Guide</a>.</em></p><blockquote><p>Note: To get more information about why the rollout doesn&rsquo;t start, you can check the <a href=https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/rollout/controller.go>rollout controller</a> to get more information on why the rollout did not start.</p></blockquote><h2 id=common-scenarios>Common scenarios</h2><p>Instances where this condition may arise:</p><ul><li>The Cluster Resource Placement rollout strategy is blocked because the <code>RollingUpdate</code> configuration is too strict.</li></ul><h2 id=troubleshooting-steps>Troubleshooting Steps</h2><ol><li>In the <code>ClusterResourcePlacement</code> status section, check the <code>placementStatuses</code> to identify clusters with the <code>RolloutStarted</code> status set to <code>False</code>.</li><li>Locate the corresponding <code>ClusterResourceBinding</code> for the identified cluster. For more information, see <a href=README.md#how-can-i-find-the-latest-clusterresourcebinding-resource>How can I find the latest ClusterResourceBinding resource?</a>.
+This resource should indicate the status of the <code>Work</code> whether it was created or updated.</li><li>Verify the values of <code>maxUnavailable</code> and <code>maxSurge</code> to ensure they align with your expectations.</li></ol><h2 id=case-study>Case Study</h2><p>In the following example, the <code>ClusterResourcePlacement</code> is trying to propagate a namespace to three member clusters.
+However, during the initial creation of the <code>ClusterResourcePlacement</code>, the namespace didn&rsquo;t exist on the hub cluster,
+and the fleet currently comprises two member clusters named <code>kind-cluster-1</code> and <code>kind-cluster-2</code>.</p><h3 id=clusterresourceplacement-spec>ClusterResourcePlacement spec</h3><pre tabindex=0><code>spec:
+  policy:
+    numberOfClusters: 3
+    placementType: PickN
+  resourceSelectors:
+  - group: &#34;&#34;
+    kind: Namespace
+    name: test-ns
+    version: v1
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+</code></pre><h3 id=clusterresourceplacement-status>ClusterResourcePlacement status</h3><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: could not find all the clusters needed as specified by the scheduling
+      policy
+    observedGeneration: 1
+    reason: SchedulingPolicyUnfulfilled
+    status: &#34;False&#34;
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: All 2 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: Works(s) are succcesfully created or updated in the 2 target clusters&#39;
+      namespaces
+    observedGeneration: 1
+    reason: WorkSynchronized
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementWorkSynchronized
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: The selected resources are successfully applied to 2 clusters
+    observedGeneration: 1
+    reason: ApplySucceeded
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementApplied
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: The selected resources in 2 cluster are available now
+    observedGeneration: 1
+    reason: ResourceAvailable
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementAvailable
+  observedResourceIndex: &#34;0&#34;
+  placementStatuses:
+  - clusterName: kind-cluster-2
+    conditions:
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: &#39;Successfully scheduled resources for placement in kind-cluster-2 (affinity
+        score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: &#34;True&#34;
+      type: RolloutStarted
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: &#34;True&#34;
+      type: Overridden
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: All of the works are synchronized to the latest
+      observedGeneration: 1
+      reason: AllWorkSynced
+      status: &#34;True&#34;
+      type: WorkSynchronized
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: All corresponding work objects are applied
+      observedGeneration: 1
+      reason: AllWorkHaveBeenApplied
+      status: &#34;True&#34;
+      type: Applied
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: All corresponding work objects are available
+      observedGeneration: 1
+      reason: AllWorkAreAvailable
+      status: &#34;True&#34;
+      type: Available
+  - clusterName: kind-cluster-1
+    conditions:
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: &#39;Successfully scheduled resources for placement in kind-cluster-1 (affinity
+        score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: &#34;True&#34;
+      type: RolloutStarted
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: &#34;True&#34;
+      type: Overridden
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: All of the works are synchronized to the latest
+      observedGeneration: 1
+      reason: AllWorkSynced
+      status: &#34;True&#34;
+      type: WorkSynchronized
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: All corresponding work objects are applied
+      observedGeneration: 1
+      reason: AllWorkHaveBeenApplied
+      status: &#34;True&#34;
+      type: Applied
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: All corresponding work objects are available
+      observedGeneration: 1
+      reason: AllWorkAreAvailable
+      status: &#34;True&#34;
+      type: Available
+</code></pre><p>The previous output indicates that the resource <code>test-ns</code> namespace never exists on the hub cluster and shows the following <code>ClusterResourcePlacement</code> condition statuses:</p><ul><li><code>ClusterResourcePlacementScheduled</code> is set to <code>False</code>, as the specified policy aims to pick three clusters, but the scheduler can only accommodate placement in two currently available and joined clusters.</li><li><code>ClusterResourcePlacementRolloutStarted</code> is set to <code>True</code>, as the rollout process has commenced with 2 clusters being selected.</li><li><code>ClusterResourcePlacementOverridden</code> is set to <code>True</code>, as no override rules are configured for the selected resources.</li><li><code>ClusterResourcePlacementWorkSynchronized</code> is set to <code>True</code>.</li><li><code>ClusterResourcePlacementApplied</code> is set to <code>True</code>.</li><li><code>ClusterResourcePlacementAvailable</code> is set to <code>True</code>.</li></ul><p>To ensure seamless propagation of the namespace across the relevant clusters, proceed to create the <code>test-ns</code> namespace on the hub cluster.</p><h3 id=clusterresourceplacement-status-after-namespace-test-ns-is-created-on-the-hub-cluster>ClusterResourcePlacement status after namespace test-ns is created on the hub cluster</h3><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: could not find all the clusters needed as specified by the scheduling
+      policy
+    observedGeneration: 1
+    reason: SchedulingPolicyUnfulfilled
+    status: &#34;False&#34;
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: &#34;2024-05-07T23:13:51Z&#34;
+    message: The rollout is being blocked by the rollout strategy in 2 cluster(s)
+    observedGeneration: 1
+    reason: RolloutNotStartedYet
+    status: &#34;False&#34;
+    type: ClusterResourcePlacementRolloutStarted
+  observedResourceIndex: &#34;1&#34;
+  placementStatuses:
+  - clusterName: kind-cluster-2
+    conditions:
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: &#39;Successfully scheduled resources for placement in kind-cluster-2 (affinity
+        score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2024-05-07T23:13:51Z&#34;
+      message: The rollout is being blocked by the rollout strategy
+      observedGeneration: 1
+      reason: RolloutNotStartedYet
+      status: &#34;False&#34;
+      type: RolloutStarted
+  - clusterName: kind-cluster-1
+    conditions:
+    - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+      message: &#39;Successfully scheduled resources for placement in kind-cluster-1 (affinity
+        score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2024-05-07T23:13:51Z&#34;
+      message: The rollout is being blocked by the rollout strategy
+      observedGeneration: 1
+      reason: RolloutNotStartedYet
+      status: &#34;False&#34;
+      type: RolloutStarted
+  selectedResources:
+  - kind: Namespace
+    name: test-ns
+    version: v1
+</code></pre><p>Upon examination, the <code>ClusterResourcePlacementScheduled</code> condition status is shown as <code>False</code>.
+The <code>ClusterResourcePlacementRolloutStarted</code> status is also shown as <code>False</code> with the message <code>The rollout is being blocked by the rollout strategy in 2 cluster(s)</code>.</p><p>Let&rsquo;s check the latest <code>ClusterResourceSnapshot</code>.</p><p>Check the latest <code>ClusterResourceSnapshot</code> by running the command in <a href=README.md#how-can-I-find-the-latest-ClusterResourceSnapshot-resource>How can I find the latest ClusterResourceSnapshot resource?</a>.</p><h3 id=latest-clusterresourcesnapshot>Latest ClusterResourceSnapshot</h3><pre tabindex=0><code>apiVersion: placement.kubernetes-fleet.io/v1
+kind: ClusterResourceSnapshot
+metadata:
+  annotations:
+    kubernetes-fleet.io/number-of-enveloped-object: &#34;0&#34;
+    kubernetes-fleet.io/number-of-resource-snapshots: &#34;1&#34;
+    kubernetes-fleet.io/resource-hash: 72344be6e268bc7af29d75b7f0aad588d341c228801aab50d6f9f5fc33dd9c7c
+  creationTimestamp: &#34;2024-05-07T23:13:51Z&#34;
+  generation: 1
+  labels:
+    kubernetes-fleet.io/is-latest-snapshot: &#34;true&#34;
+    kubernetes-fleet.io/parent-CRP: crp-3
+    kubernetes-fleet.io/resource-index: &#34;1&#34;
+  name: crp-3-1-snapshot
+  ownerReferences:
+  - apiVersion: placement.kubernetes-fleet.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ClusterResourcePlacement
+    name: crp-3
+    uid: b4f31b9a-971a-480d-93ac-93f093ee661f
+  resourceVersion: &#34;14434&#34;
+  uid: 85ee0e81-92c9-4362-932b-b0bf57d78e3f
+spec:
+  selectedResources:
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      labels:
+        kubernetes.io/metadata.name: test-ns
+      name: test-ns
+    spec:
+      finalizers:
+      - kubernetes
+</code></pre><p>Upon inspecting <code>ClusterResourceSnapshot</code> spec, the <code>selectedResources</code> section now shows the namespace <code>test-ns</code>.</p><p>Let&rsquo;s check the <code>ClusterResourceBinding</code> for <code>kind-cluster-1</code> to see if it was updated after the namespace <code>test-ns</code> was created.
+Check the <code>ClusterResourceBinding</code> for <code>kind-cluster-1</code> by running the command in <a href=README.md#how-can-i-find-the-latest-clusterresourcebinding-resource>How can I find the latest ClusterResourceBinding resource?</a>.</p><h3 id=clusterresourcebinding-for-kind-cluster-1>ClusterResourceBinding for kind-cluster-1</h3><pre tabindex=0><code>apiVersion: placement.kubernetes-fleet.io/v1
+kind: ClusterResourceBinding
+metadata:
+  creationTimestamp: &#34;2024-05-07T23:08:53Z&#34;
+  finalizers:
+  - kubernetes-fleet.io/work-cleanup
+  generation: 2
+  labels:
+    kubernetes-fleet.io/parent-CRP: crp-3
+  name: crp-3-kind-cluster-1-7114c253
+  resourceVersion: &#34;14438&#34;
+  uid: 0db4e480-8599-4b40-a1cc-f33bcb24b1a7
+spec:
+  applyStrategy:
+    type: ClientSideApply
+  clusterDecision:
+    clusterName: kind-cluster-1
+    clusterScore:
+      affinityScore: 0
+      priorityScore: 0
+    reason: picked by scheduling policy
+    selected: true
+  resourceSnapshotName: crp-3-0-snapshot
+  schedulingPolicySnapshotName: crp-3-0
+  state: Bound
+  targetCluster: kind-cluster-1
+status:
+  conditions:
+  - lastTransitionTime: &#34;2024-05-07T23:13:51Z&#34;
+    message: The resources cannot be updated to the latest because of the rollout
+      strategy
+    observedGeneration: 2
+    reason: RolloutNotStartedYet
+    status: &#34;False&#34;
+    type: RolloutStarted
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: No override rules are configured for the selected resources
+    observedGeneration: 2
+    reason: NoOverrideSpecified
+    status: &#34;True&#34;
+    type: Overridden
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: All of the works are synchronized to the latest
+    observedGeneration: 2
+    reason: AllWorkSynced
+    status: &#34;True&#34;
+    type: WorkSynchronized
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: All corresponding work objects are applied
+    observedGeneration: 2
+    reason: AllWorkHaveBeenApplied
+    status: &#34;True&#34;
+    type: Applied
+  - lastTransitionTime: &#34;2024-05-07T23:08:53Z&#34;
+    message: All corresponding work objects are available
+    observedGeneration: 2
+    reason: AllWorkAreAvailable
+    status: &#34;True&#34;
+    type: Available
+</code></pre><p>Upon inspection, it is observed that the <code>ClusterResourceBinding</code> remains unchanged. Notably, in the spec, the <code>resourceSnapshotName</code> still references the old <code>ClusterResourceSnapshot</code> name.</p><p>This issue arises due to the absence of explicit <code>rollingUpdate</code> input from the user. Consequently, the default values are applied:</p><ul><li>The <code>maxUnavailable</code> value is configured to 25% x 3 (desired number), rounded to <code>1</code></li><li>The <code>maxSurge</code> value is configured to 25% x 3 (desired number), rounded to <code>1</code></li></ul><h3 id=why-clusterresourcebinding-isnt-updated>Why ClusterResourceBinding isn&rsquo;t updated?</h3><p>Initially, when the <code>ClusterResourcePlacement</code> was created, two <code>ClusterResourceBindings</code> were generated.
+However, since the rollout didn&rsquo;t apply to the initial phase, the <code>ClusterResourcePlacementRolloutStarted</code> condition was set to <code>True</code>.</p><p>Upon creating the <code>test-ns</code> namespace on the hub cluster, the rollout controller attempted to update the two existing <code>ClusterResourceBindings</code>.
+However, <code>maxUnavailable</code> was set to <code>1</code> due to the lack of member clusters, which caused the <code>RollingUpdate</code> configuration to be too strict.</p><blockquote><p>NOTE: During the update, if one of the bindings fails to apply, it will also violate the <code>RollingUpdate</code> configuration, which causes <code>maxUnavailable</code> to be set to <code>1</code>.</p></blockquote><h3 id=resolution>Resolution</h3><p>In this situation, to address this issue, consider manually setting <code>maxUnavailable</code> to a value greater than <code>1</code> to relax the <code>RollingUpdate</code> configuration.
+Alternatively, you can join a third member cluster.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-a7815b1d1edbdbce187363a1b343e478>4 - CRP Override Failure TSG</h1><div class=lead>Troubleshooting guide for CRP status &ldquo;ClusterResourcePlacementOverridden&rdquo; condition set to false</div><p>The status of the <code>ClusterResourcePlacementOverridden</code> condition is set to <code>false</code> when there is an Override API related issue.</p><blockquote><p>Note: To get more information, look into the logs for the overrider controller (includes
+controller for <a href=https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/overrider/clusterresource_controller.go>ClusterResourceOverride</a> and
+<a href=https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/overrider/resource_controller.go>ResourceOverride</a>).</p></blockquote><h2 id=common-scenarios>Common scenarios</h2><p>Instances where this condition may arise:</p><ul><li>The <code>ClusterResourceOverride</code> or <code>ResourceOverride</code> is created with an invalid field path for the resource.</li></ul><h2 id=case-study>Case Study</h2><p>In the following example, an attempt is made to override the cluster role <code>secret-reader</code> that is being propagated by the <code>ClusterResourcePlacement</code> to the selected clusters.
+However, the <code>ClusterResourceOverride</code> is created with an invalid path for the field within resource.</p><h3 id=clusterrole>ClusterRole</h3><pre tabindex=0><code>apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+    creationTimestamp: &#34;2024-05-14T15:36:48Z&#34;
+    name: secret-reader
+    resourceVersion: &#34;81334&#34;
+    uid: 108e6312-3416-49be-aa3d-a665c5df58b4
+rules:
+- apiGroups:
+  - &#34;&#34;
+    resources:
+  - secrets
+    verbs:
+  - get
+  - watch
+  - list
+</code></pre><p>The <code>ClusterRole</code> <code>secret-reader</code> that is being propagated to the member clusters by the <code>ClusterResourcePlacement</code>.</p><h3 id=clusterresourceoverride-spec>ClusterResourceOverride spec</h3><pre tabindex=0><code>spec:
+  clusterResourceSelectors:
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: secret-reader
+    version: v1
+  policy:
+    overrideRules:
+    - clusterSelector:
+        clusterSelectorTerms:
+        - labelSelector:
+            matchLabels:
+              env: canary
+      jsonPatchOverrides:
+      - op: add
+        path: /metadata/labels/new-label
+        value: new-value
+</code></pre><p>The <code>ClusterResourceOverride</code> is created to override the <code>ClusterRole</code> <code>secret-reader</code> by adding a new label (<code>new-label</code>)
+that has the value <code>new-value</code> for the clusters with the label <code>env: canary</code>.</p><h3 id=clusterresourceplacement-spec>ClusterResourcePlacement Spec</h3><pre tabindex=0><code>spec:
+  resourceSelectors:
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: secret-reader
+      version: v1
+  policy:
+    placementType: PickN
+    numberOfClusters: 1
+    affinity:
+      clusterAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  env: canary
+  strategy:
+    type: RollingUpdate
+    applyStrategy:
+      allowCoOwnership: true
+</code></pre><h3 id=clusterresourceplacement-status>ClusterResourcePlacement Status</h3><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2024-05-14T16:16:18Z&#34;
+    message: found all cluster needed as specified by the scheduling policy, found
+      1 cluster(s)
+    observedGeneration: 1
+    reason: SchedulingPolicyFulfilled
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: &#34;2024-05-14T16:16:18Z&#34;
+    message: All 1 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: &#34;2024-05-14T16:16:18Z&#34;
+    message: Failed to override resources in 1 cluster(s)
+    observedGeneration: 1
+    reason: OverriddenFailed
+    status: &#34;False&#34;
+    type: ClusterResourcePlacementOverridden
+  observedResourceIndex: &#34;0&#34;
+  placementStatuses:
+  - applicableClusterResourceOverrides:
+    - cro-1-0
+    clusterName: kind-cluster-1
+    conditions:
+    - lastTransitionTime: &#34;2024-05-14T16:16:18Z&#34;
+      message: &#39;Successfully scheduled resources for placement in kind-cluster-1 (affinity
+        score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2024-05-14T16:16:18Z&#34;
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: &#34;True&#34;
+      type: RolloutStarted
+    - lastTransitionTime: &#34;2024-05-14T16:16:18Z&#34;
+      message: &#39;Failed to apply the override rules on the resources: add operation
+        does not apply: doc is missing path: &#34;/metadata/labels/new-label&#34;: missing
+        value&#39;
+      observedGeneration: 1
+      reason: OverriddenFailed
+      status: &#34;False&#34;
+      type: Overridden
+  selectedResources:
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: secret-reader
+    version: v1
+</code></pre><p>The CRP attempted to override a propagated resource utilizing an applicable <code>ClusterResourceOverrideSnapshot</code>.
+However, as the <code>ClusterResourcePlacementOverridden</code> condition remains false, looking at the placement status for the cluster
+where the condition <code>Overridden</code> failed will offer insights into the exact cause of the failure.</p><p>In this situation, the message indicates that the override failed because the path <code>/metadata/labels/new-label</code> and its corresponding value are missing.
+Based on the previous example of the cluster role <code>secret-reader</code>, you can see that the path <code>/metadata/labels/</code> doesn&rsquo;t exist. This means that <code>labels</code> doesn&rsquo;t exist.
+Therefore, a new label can&rsquo;t be added.</p><h3 id=resolution>Resolution</h3><p>To successfully override the cluster role <code>secret-reader</code>, correct the path and value in <code>ClusterResourceOverride</code>, as shown in the following code:</p><pre tabindex=0><code>jsonPatchOverrides:
+  - op: add
+    path: /metadata/labels
+    value: 
+      newlabel: new-value
+</code></pre><p>This will successfully add the new label <code>newlabel</code> with the value <code>new-value</code> to the <code>ClusterRole</code> <code>secret-reader</code>, as we are creating the <code>labels</code> field and adding a new value <code>newlabel: new-value</code> to it.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-ac0342e775af869b5b77d564fc4c06f6>5 - CRP Work-Synchronization Failure TSG</h1><div class=lead>Troubleshooting guide for CRP status &ldquo;ClusterResourcePlacementWorkSynchronized&rdquo; condition set to false</div><p>The <code>ClusterResourcePlacementWorkSynchronized</code> condition is false when the CRP has been recently updated but the associated work objects have not yet been synchronized with the changes.</p><blockquote><p>Note: In addition, it may be helpful to look into the logs for the <a href=https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workgenerator/controller.go>work generator controller</a> to get more information on why the work synchronization failed.</p></blockquote><h2 id=common-scenarios>Common Scenarios</h2><p>Instances where this condition may arise:</p><ul><li>The controller encounters an error while trying to generate the corresponding <code>work</code> object.</li><li>The enveloped object is not well formatted.</li></ul><h3 id=case-study>Case Study</h3><p>The CRP is attempting to propagate a resource to a selected cluster, but the work object has not been updated to reflect the latest changes due to the selected cluster has been terminated.</p><h3 id=clusterresourceplacement-spec>ClusterResourcePlacement Spec</h3><pre tabindex=0><code>spec:
+  resourceSelectors:
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: secret-reader
+      version: v1
+  policy:
+    placementType: PickN
+    numberOfClusters: 1
+  strategy:
+    type: RollingUpdate
+</code></pre><h3 id=clusterresourceplacement-status>ClusterResourcePlacement Status</h3><pre tabindex=0><code>spec:
+  policy:
+    numberOfClusters: 1
+    placementType: PickN
+  resourceSelectors:
+  - group: &#34;&#34;
+    kind: Namespace
+    name: test-ns
+    version: v1
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+status:
+  conditions:
+  - lastTransitionTime: &#34;2024-05-14T18:05:04Z&#34;
+    message: found all cluster needed as specified by the scheduling policy, found
+      1 cluster(s)
+    observedGeneration: 1
+    reason: SchedulingPolicyFulfilled
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: &#34;2024-05-14T18:05:05Z&#34;
+    message: All 1 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: &#34;2024-05-14T18:05:05Z&#34;
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: &#34;2024-05-14T18:05:05Z&#34;
+    message: There are 1 cluster(s) which have not finished creating or updating work(s)
+      yet
+    observedGeneration: 1
+    reason: WorkNotSynchronizedYet
+    status: &#34;False&#34;
+    type: ClusterResourcePlacementWorkSynchronized
+  observedResourceIndex: &#34;0&#34;
+  placementStatuses:
+  - clusterName: kind-cluster-1
+    conditions:
+    - lastTransitionTime: &#34;2024-05-14T18:05:04Z&#34;
+      message: &#39;Successfully scheduled resources for placement in kind-cluster-1 (affinity
+        score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2024-05-14T18:05:05Z&#34;
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: &#34;True&#34;
+      type: RolloutStarted
+    - lastTransitionTime: &#34;2024-05-14T18:05:05Z&#34;
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: &#34;True&#34;
+      type: Overridden
+    - lastTransitionTime: &#34;2024-05-14T18:05:05Z&#34;
+      message: &#39;Failed to synchronize the work to the latest: works.placement.kubernetes-fleet.io
+        &#34;crp1-work&#34; is forbidden: unable to create new content in namespace fleet-member-kind-cluster-1
+        because it is being terminated&#39;
+      observedGeneration: 1
+      reason: SyncWorkFailed
+      status: &#34;False&#34;
+      type: WorkSynchronized
+  selectedResources:
+  - kind: Namespace
+    name: test-ns
+    version: v1
+</code></pre><p>In the <code>ClusterResourcePlacement</code> status, the <code>ClusterResourcePlacementWorkSynchronized</code> condition status shows as <code>False</code>.
+The message for it indicates that the work object <code>crp1-work</code> is prohibited from generating new content within the namespace <code>fleet-member-kind-cluster-1</code> because it&rsquo;s currently terminating.</p><h3 id=resolution>Resolution</h3><p>To address the issue at hand, there are several potential solutions:</p><ul><li>Modify the <code>ClusterResourcePlacement</code> with a newly selected cluster.</li><li>Delete the <code>ClusterResourcePlacement</code> to remove work through garbage collection.</li><li>Rejoin the member cluster. The namespace can only be regenerated after rejoining the cluster.</li></ul><p>In other situations, you might opt to wait for the work to finish propagating.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-30aa6ed7a74d1614da0b3480e7ecabb3>6 - CRP Work-Application Failure TSG</h1><div class=lead>Troubleshooting guide for CRP status &ldquo;ClusterResourcePlacementApplied&rdquo; condition set to false</div><p>The <code>ClusterResourcePlacementApplied</code> condition is set to <code>false</code> when the deployment fails.</p><blockquote><p>Note: To get more information about why the resources are not applied, you can check the <a href=https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/work/apply_controller.go>apply work controller</a> logs.</p></blockquote><h2 id=common-scenarios>Common scenarios</h2><p>Instances where this condition may arise:</p><ul><li>The resource already exists on the cluster and isn&rsquo;t managed by the fleet controller.</li><li>Another <code>ClusterResourcePlacement</code> deployment is already managing the resource for the selected cluster by using a different apply strategy.</li><li>The <code>ClusterResourcePlacement</code> deployment doesn&rsquo;t apply the manifest because of syntax errors or invalid resource configurations. This might also occur if a resource is propagated through an envelope object.</li></ul><h2 id=investigation-steps>Investigation steps</h2><ol><li>Check <code>placementStatuses</code>: In the <code>ClusterResourcePlacement</code> status section, inspect the <code>placementStatuses</code> to identify which clusters have the <code>ResourceApplied</code> condition set to <code>false</code> and note down their <code>clusterName</code>.</li><li>Locate the <code>Work</code> Object in Hub Cluster: Use the identified <code>clusterName</code> to locate the <code>Work</code> object associated with the member cluster. Please refer to this <a href=/website/docs/troubleshooting/clusterresourceplacement/#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement>section</a> to learn how to get the correct <code>Work</code> resource.</li><li>Check <code>Work</code> object status: Inspect the status of the <code>Work</code> object to understand the specific issues preventing successful resource application.</li></ol><h2 id=case-study>Case Study</h2><p>In the following example, <code>ClusterResourcePlacement</code> is trying to propagate a namespace that contains a deployment to two member clusters. However, the namespace already exists on one member cluster, specifically <code>kind-cluster-1</code>.</p><h3 id=clusterresourceplacement-spec>ClusterResourcePlacement spec</h3><pre tabindex=0><code>  policy:
+    clusterNames:
+    - kind-cluster-1
+    - kind-cluster-2
+    placementType: PickFixed
+  resourceSelectors:
+  - group: &#34;&#34;
+    kind: Namespace
+    name: test-ns
+    version: v1
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+</code></pre><h3 id=clusterresourceplacement-status>ClusterResourcePlacement status</h3><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+    message: could not find all the clusters needed as specified by the scheduling
+      policy
+    observedGeneration: 1
+    reason: SchedulingPolicyUnfulfilled
+    status: &#34;False&#34;
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+    message: All 2 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+    message: Works(s) are succcesfully created or updated in the 2 target clusters&#39;
+      namespaces
+    observedGeneration: 1
+    reason: WorkSynchronized
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementWorkSynchronized
+  - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+    message: Failed to apply resources to 1 clusters, please check the `failedPlacements`
+      status
+    observedGeneration: 1
+    reason: ApplyFailed
+    status: &#34;False&#34;
+    type: ClusterResourcePlacementApplied
+  observedResourceIndex: &#34;0&#34;
+  placementStatuses:
+  - clusterName: kind-cluster-2
+    conditions:
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: &#39;Successfully scheduled resources for placement in kind-cluster-2 (affinity
+        score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: &#34;True&#34;
+      type: RolloutStarted
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: &#34;True&#34;
+      type: Overridden
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: All of the works are synchronized to the latest
+      observedGeneration: 1
+      reason: AllWorkSynced
+      status: &#34;True&#34;
+      type: WorkSynchronized
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: All corresponding work objects are applied
+      observedGeneration: 1
+      reason: AllWorkHaveBeenApplied
+      status: &#34;True&#34;
+      type: Applied
+    - lastTransitionTime: &#34;2024-05-07T23:32:49Z&#34;
+      message: The availability of work object crp-4-work is not trackable
+      observedGeneration: 1
+      reason: WorkNotTrackable
+      status: &#34;True&#34;
+      type: Available
+  - clusterName: kind-cluster-1
+    conditions:
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: &#39;Successfully scheduled resources for placement in kind-cluster-1 (affinity
+        score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: &#34;True&#34;
+      type: RolloutStarted
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: &#34;True&#34;
+      type: Overridden
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: All of the works are synchronized to the latest
+      observedGeneration: 1
+      reason: AllWorkSynced
+      status: &#34;True&#34;
+      type: WorkSynchronized
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: Work object crp-4-work is not applied
+      observedGeneration: 1
+      reason: NotAllWorkHaveBeenApplied
+      status: &#34;False&#34;
+      type: Applied
+    failedPlacements:
+    - condition:
+        lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+        message: &#39;Failed to apply manifest: failed to process the request due to a
+          client error: resource exists and is not managed by the fleet controller
+          and co-ownernship is disallowed&#39;
+        reason: ManifestsAlreadyOwnedByOthers
+        status: &#34;False&#34;
+        type: Applied
+      kind: Namespace
+      name: test-ns
+      version: v1
+  selectedResources:
+  - kind: Namespace
+    name: test-ns
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: test-nginx
+    namespace: test-ns
+    version: v1
+</code></pre><p>In the <code>ClusterResourcePlacement</code> status, within the <code>failedPlacements</code> section for <code>kind-cluster-1</code>, we get a clear message
+as to why the resource failed to apply on the member cluster. In the preceding <code>conditions</code> section,
+the <code>Applied</code> condition for <code>kind-cluster-1</code> is flagged as false and shows the <code>NotAllWorkHaveBeenApplied</code> reason.
+This indicates that the Work object intended for the member cluster <code>kind-cluster-1</code> has not been applied.</p><p>For more information, see this <a href=/website/docs/troubleshooting/clusterresourceplacementapplied/#how-and-where-to-find-the-correct-work-resource>section</a>.</p><h3 id=work-status-of-kind-cluster-1>Work status of kind-cluster-1</h3><pre tabindex=0><code> status:
+  conditions:
+  - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+    message: &#39;Apply manifest {Ordinal:0 Group: Version:v1 Kind:Namespace Resource:namespaces
+      Namespace: Name:test-ns} failed&#39;
+    observedGeneration: 1
+    reason: WorkAppliedFailed
+    status: &#34;False&#34;
+    type: Applied
+  - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+    message: &#34;&#34;
+    observedGeneration: 1
+    reason: WorkAppliedFailed
+    status: Unknown
+    type: Available
+  manifestConditions:
+  - conditions:
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: &#39;Failed to apply manifest: failed to process the request due to a client
+        error: resource exists and is not managed by the fleet controller and co-ownernship
+        is disallowed&#39;
+      reason: ManifestsAlreadyOwnedByOthers
+      status: &#34;False&#34;
+      type: Applied
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: Manifest is not applied yet
+      reason: ManifestApplyFailed
+      status: Unknown
+      type: Available
+    identifier:
+      kind: Namespace
+      name: test-ns
+      ordinal: 0
+      resource: namespaces
+      version: v1
+  - conditions:
+    - lastTransitionTime: &#34;2024-05-07T23:32:40Z&#34;
+      message: Manifest is already up to date
+      observedGeneration: 1
+      reason: ManifestAlreadyUpToDate
+      status: &#34;True&#34;
+      type: Applied
+    - lastTransitionTime: &#34;2024-05-07T23:32:51Z&#34;
+      message: Manifest is trackable and available now
+      observedGeneration: 1
+      reason: ManifestAvailable
+      status: &#34;True&#34;
+      type: Available
+    identifier:
+      group: apps
+      kind: Deployment
+      name: test-nginx
+      namespace: test-ns
+      ordinal: 1
+      resource: deployments
+      version: v1
+</code></pre><p>From looking at the <code>Work</code> status, specifically the <code>manifestConditions</code> section, you can see that the namespace could not be applied but the deployment within the namespace got propagated from the hub to the member cluster.</p><h3 id=resolution>Resolution</h3><p>In this situation, a potential solution is to set the <code>AllowCoOwnership</code> to <code>true</code> in the ApplyStrategy policy. However, it&rsquo;s important to notice that this decision should be made by the user because the resources might not be shared.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-fb92aca0b03cf16b130b482b254a8889>7 - CRP Availability Failure TSG</h1><div class=lead>Troubleshooting guide for CRP status &ldquo;ClusterResourcePlacementAvailable&rdquo; condition set to false</div><p>The <code>ClusterResourcePlacementAvailable</code> condition is <code>false</code> when some of the resources are not available yet. We will place some of the detailed failure in the <code>FailedResourcePlacement</code> array.</p><blockquote><p>Note: To get more information about why resources are unavailable check <a href=https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/work/apply_controller.go>apply work controller</a> logs.</p></blockquote><h2 id=common-scenarios>Common scenarios</h2><p>Instances where this condition may arise:</p><ul><li>The member cluster doesn&rsquo;t have enough resource availability.</li><li>The deployment contains an invalid image name.</li></ul><h2 id=case-study>Case Study</h2><p>The example output below demonstrates a scenario where the CRP is unable to propagate a deployment to a member cluster due to the deployment having a bad image name.</p><h3 id=clusterresourceplacement-spec>ClusterResourcePlacement spec</h3><pre tabindex=0><code>spec:
+  resourceSelectors:
+    - group: &#34;&#34;
+      kind: Namespace
+      name: test-ns
+      version: v1
+  policy:
+    placementType: PickN
+    numberOfClusters: 1
+  strategy:
+    type: RollingUpdate
+</code></pre><h3 id=clusterresourceplacement-status>ClusterResourcePlacement status</h3><pre tabindex=0><code>status:
+  conditions:
+  - lastTransitionTime: &#34;2024-05-14T18:52:30Z&#34;
+    message: found all cluster needed as specified by the scheduling policy, found
+      1 cluster(s)
+    observedGeneration: 1
+    reason: SchedulingPolicyFulfilled
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+    message: All 1 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+    message: Works(s) are succcesfully created or updated in 1 target cluster(s)&#39;
+      namespaces
+    observedGeneration: 1
+    reason: WorkSynchronized
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementWorkSynchronized
+  - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+    message: The selected resources are successfully applied to 1 cluster(s)
+    observedGeneration: 1
+    reason: ApplySucceeded
+    status: &#34;True&#34;
+    type: ClusterResourcePlacementApplied
+  - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+    message: The selected resources in 1 cluster(s) are still not available yet
+    observedGeneration: 1
+    reason: ResourceNotAvailableYet
+    status: &#34;False&#34;
+    type: ClusterResourcePlacementAvailable
+  observedResourceIndex: &#34;0&#34;
+  placementStatuses:
+  - clusterName: kind-cluster-1
+    conditions:
+    - lastTransitionTime: &#34;2024-05-14T18:52:30Z&#34;
+      message: &#39;Successfully scheduled resources for placement in kind-cluster-1 (affinity
+        score: 0, topology spread score: 0): picked by scheduling policy&#39;
+      observedGeneration: 1
+      reason: Scheduled
+      status: &#34;True&#34;
+      type: Scheduled
+    - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+      message: Detected the new changes on the resources and started the rollout process
+      observedGeneration: 1
+      reason: RolloutStarted
+      status: &#34;True&#34;
+      type: RolloutStarted
+    - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+      message: No override rules are configured for the selected resources
+      observedGeneration: 1
+      reason: NoOverrideSpecified
+      status: &#34;True&#34;
+      type: Overridden
+    - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+      message: All of the works are synchronized to the latest
+      observedGeneration: 1
+      reason: AllWorkSynced
+      status: &#34;True&#34;
+      type: WorkSynchronized
+    - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+      message: All corresponding work objects are applied
+      observedGeneration: 1
+      reason: AllWorkHaveBeenApplied
+      status: &#34;True&#34;
+      type: Applied
+    - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+      message: Work object crp1-work is not available
+      observedGeneration: 1
+      reason: NotAllWorkAreAvailable
+      status: &#34;False&#34;
+      type: Available
+    failedPlacements:
+    - condition:
+        lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+        message: Manifest is trackable but not available yet
+        observedGeneration: 1
+        reason: ManifestNotAvailableYet
+        status: &#34;False&#34;
+        type: Available
+      group: apps
+      kind: Deployment
+      name: my-deployment
+      namespace: test-ns
+      version: v1
+  selectedResources:
+  - kind: Namespace
+    name: test-ns
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: my-deployment
+    namespace: test-ns
+    version: v1
+</code></pre><p>In the <code>ClusterResourcePlacement</code> status, within the <code>failedPlacements</code> section for <code>kind-cluster-1</code>, we get a clear message
+as to why the resource failed to apply on the member cluster. In the preceding <code>conditions</code> section,
+the <code>Available</code> condition for <code>kind-cluster-1</code> is flagged as <code>false</code> and shows <code>NotAllWorkAreAvailable</code> reason.
+This signifies that the Work object intended for the member cluster <code>kind-cluster-1</code> is not yet available.</p><p>For more information, see this <a href=/website/docs/troubleshooting/clusterresourceplacement/#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement>section</a>.</p><h3 id=work-status-of-kind-cluster-1>Work status of kind-cluster-1</h3><pre tabindex=0><code>status:
+conditions:
+- lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+  message: Work is applied successfully
+  observedGeneration: 1
+  reason: WorkAppliedCompleted
+  status: &#34;True&#34;
+  type: Applied
+- lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+  message: Manifest {Ordinal:1 Group:apps Version:v1 Kind:Deployment Resource:deployments
+  Namespace:test-ns Name:my-deployment} is not available yet
+  observedGeneration: 1
+  reason: WorkNotAvailableYet
+  status: &#34;False&#34;
+  type: Available
+  manifestConditions:
+- conditions:
+  - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+    message: Manifest is already up to date
+    reason: ManifestAlreadyUpToDate
+    status: &#34;True&#34;
+    type: Applied
+  - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+    message: Manifest is trackable and available now
+    reason: ManifestAvailable
+    status: &#34;True&#34;
+    type: Available
+    identifier:
+    kind: Namespace
+    name: test-ns
+    ordinal: 0
+    resource: namespaces
+    version: v1
+- conditions:
+  - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+    message: Manifest is already up to date
+    observedGeneration: 1
+    reason: ManifestAlreadyUpToDate
+    status: &#34;True&#34;
+    type: Applied
+  - lastTransitionTime: &#34;2024-05-14T18:52:31Z&#34;
+    message: Manifest is trackable but not available yet
+    observedGeneration: 1
+    reason: ManifestNotAvailableYet
+    status: &#34;False&#34;
+    type: Available
+    identifier:
+    group: apps
+    kind: Deployment
+    name: my-deployment
+    namespace: test-ns
+    ordinal: 1
+    resource: deployments
+    version: v1
+</code></pre><p>Check the <code>Available</code> status for <code>kind-cluster-1</code>. You can see that the <code>my-deployment</code> deployment isn&rsquo;t yet available on the member cluster.
+This suggests that an issue might be affecting the deployment manifest.</p><h3 id=resolution>Resolution</h3><p>In this situation, a potential solution is to check the deployment in the member cluster because the message indicates that the root cause of the issue is a bad image name.
+After this image name is identified, you can correct the deployment manifest and update it.
+After you fix and update the resource manifest, the <code>ClusterResourcePlacement</code> object API automatically propagates the corrected resource to the member cluster.</p><p>For all other situations, make sure that the propagated resource is configured correctly.
+Additionally, verify that the selected cluster has sufficient available capacity to accommodate the new resources.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-d9ce62896f60f2efcc2db9da011ba5cf>8 - ClusterResourcePlacementEviction TSG</h1><div class=lead>Identify and fix KubeFleet issues associated with the ClusterResourcePlacementEviction API</div><p>This guide provides troubleshooting steps for issues related to placement eviction.</p><p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
 for eviction are:</p><ul><li>Eviction is Invalid</li><li>Eviction is Valid, Eviction failed to Execute</li><li>Eviction is Valid, Eviction executed successfully</li></ul><blockquote><p><strong>Note:</strong> If an eviction object doesn&rsquo;t reach a terminal state i.e. neither valid condition nor executed condition is
 set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server.</p></blockquote><p>The first step in troubleshooting is to check the status of the eviction object to understand if the eviction reached
 a terminal state or not.</p><h2 id=invalid-eviction>Invalid eviction</h2><h3 id=missingdeleting-crp-object>Missing/Deleting CRP object</h3><p>Example status with missing <code>CRP</code> object:</p><pre tabindex=0><code>status:
@@ -279,6 +1342,162 @@ member clusters to verify the resources are available but the users are recommen
 object status to verify placement availability since the status is aggregated and updated by the controller.</p><p>Here the user can either remove the <code>ClusterResourcePlacementDisruptionBudget</code> object or update the <code>minAvailable</code> to
 <code>1</code> to allow <code>ClusterResourcePlacementEviction</code> object to execute successfully. In general the user should carefully
 check the availability of placements and act accordingly when changing the <code>ClusterResourcePlacementDisruptionBudget</code>
-object.</p></div></main></div></div><footer class="td-footer row d-print-none"><div class=container-fluid><div class="row mx-md-2"><div class="td-footer__left col-6 col-sm-4 order-sm-1"></div><div class="td-footer__right col-6 col-sm-4 order-sm-3"><ul class=td-footer__links-list><li class=td-footer__links-item data-bs-toggle=tooltip title=GitHub aria-label=GitHub><a target=_blank rel=noopener href=https://github.com/kubefleet-dev/kubefleet aria-label=GitHub><i class="fab fa-github"></i></a></li></ul></div><div class="td-footer__center col-12 col-sm-4 py-2 order-sm-2"><span class=td-footer__copyright>&copy;
+object.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-990af4229853bd1afee4be94624f26e1>9 - ClusterStagedUpdateRun TSG</h1><div class=lead>Identify and fix KubeFleet issues associated with the ClusterStagedUpdateRun API</div><p>This guide provides troubleshooting steps for common issues related to Staged Update Run.</p><blockquote><p>Note: To get more information about why the scheduling fails, you can check the <a href=https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/updaterun/controller.go>updateRun controller</a> logs.</p></blockquote><h2 id=crp-status-without-staged-update-run>CRP status without Staged Update Run</h2><p>When a <code>ClusterResourcePlacement</code> is created with <code>spec.strategy.type</code> set to <code>External</code>, the rollout does not start immediately.</p><p>A sample status of such <code>ClusterResourcePlacement</code> is as follows:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ kubectl describe crp example-placement
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>Status:
+</span></span><span style=display:flex><span>  Conditions:
+</span></span><span style=display:flex><span>    Last Transition Time:   2025-03-12T23:01:32Z
+</span></span><span style=display:flex><span>    Message:                found all cluster needed as specified by the scheduling policy, found <span style=color:#0000cf;font-weight:700>2</span> cluster<span style=color:#ce5c00;font-weight:700>(</span>s<span style=color:#ce5c00;font-weight:700>)</span>
+</span></span><span style=display:flex><span>    Observed Generation:    <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>    Reason:                 SchedulingPolicyFulfilled
+</span></span><span style=display:flex><span>    Status:                 True
+</span></span><span style=display:flex><span>    Type:                   ClusterResourcePlacementScheduled
+</span></span><span style=display:flex><span>    Last Transition Time:   2025-03-12T23:01:32Z
+</span></span><span style=display:flex><span>    Message:                There are still <span style=color:#0000cf;font-weight:700>2</span> cluster<span style=color:#ce5c00;font-weight:700>(</span>s<span style=color:#ce5c00;font-weight:700>)</span> in the process of deciding whether to roll out the latest resources or not
+</span></span><span style=display:flex><span>    Observed Generation:    <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>    Reason:                 RolloutStartedUnknown
+</span></span><span style=display:flex><span>    Status:                 Unknown
+</span></span><span style=display:flex><span>    Type:                   ClusterResourcePlacementRolloutStarted
+</span></span><span style=display:flex><span>  Observed Resource Index:  <span style=color:#0000cf;font-weight:700>0</span>
+</span></span><span style=display:flex><span>  Placement Statuses:
+</span></span><span style=display:flex><span>    Cluster Name:  member1
+</span></span><span style=display:flex><span>    Conditions:
+</span></span><span style=display:flex><span>      Last Transition Time:  2025-03-12T23:01:32Z
+</span></span><span style=display:flex><span>      Message:               Successfully scheduled resources <span style=color:#204a87;font-weight:700>for</span> placement in <span style=color:#4e9a06>&#34;member1&#34;</span> <span style=color:#ce5c00;font-weight:700>(</span>affinity score: 0, topology spread score: 0<span style=color:#ce5c00;font-weight:700>)</span>: picked by scheduling policy
+</span></span><span style=display:flex><span>      Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      Reason:                Scheduled
+</span></span><span style=display:flex><span>      Status:                True
+</span></span><span style=display:flex><span>      Type:                  Scheduled
+</span></span><span style=display:flex><span>      Last Transition Time:  2025-03-12T23:01:32Z
+</span></span><span style=display:flex><span>      Message:               In the process of deciding whether to roll out the latest resources or not
+</span></span><span style=display:flex><span>      Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      Reason:                RolloutStartedUnknown
+</span></span><span style=display:flex><span>      Status:                Unknown
+</span></span><span style=display:flex><span>      Type:                  RolloutStarted
+</span></span><span style=display:flex><span>    Cluster Name:            member2
+</span></span><span style=display:flex><span>    Conditions:
+</span></span><span style=display:flex><span>      Last Transition Time:  2025-03-12T23:01:32Z
+</span></span><span style=display:flex><span>      Message:               Successfully scheduled resources <span style=color:#204a87;font-weight:700>for</span> placement in <span style=color:#4e9a06>&#34;member2&#34;</span> <span style=color:#ce5c00;font-weight:700>(</span>affinity score: 0, topology spread score: 0<span style=color:#ce5c00;font-weight:700>)</span>: picked by scheduling policy
+</span></span><span style=display:flex><span>      Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      Reason:                Scheduled
+</span></span><span style=display:flex><span>      Status:                True
+</span></span><span style=display:flex><span>      Type:                  Scheduled
+</span></span><span style=display:flex><span>      Last Transition Time:  2025-03-12T23:01:32Z
+</span></span><span style=display:flex><span>      Message:               In the process of deciding whether to roll out the latest resources or not
+</span></span><span style=display:flex><span>      Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      Reason:                RolloutStartedUnknown
+</span></span><span style=display:flex><span>      Status:                Unknown
+</span></span><span style=display:flex><span>      Type:                  RolloutStarted
+</span></span><span style=display:flex><span>  Selected Resources:
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>Events:         &lt;none&gt;
+</span></span></code></pre></div><p><code>SchedulingPolicyFulfilled</code> condition indicates the CRP has been fully scheduled, while <code>RolloutStartedUnknown</code> condition shows that the rollout has not started.</p><p>In the <code>Placement Statuses</code> section, it displays the detailed status of each cluster. Both selected clusters are in the <code>Scheduled</code> state, but the <code>RolloutStarted</code> condition is still <code>Unknown</code> because the rollout has not kicked off yet.</p><h2 id=investigate-clusterstagedupdaterun-initialization-failure>Investigate ClusterStagedUpdateRun initialization failure</h2><p>An updateRun initialization failure can be easily detected by getting the resource:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ kubectl get csur example-run 
+</span></span><span style=display:flex><span>NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+</span></span><span style=display:flex><span>example-run   example-placement   <span style=color:#0000cf;font-weight:700>1</span>                         <span style=color:#0000cf;font-weight:700>0</span>                       False                     2s
+</span></span></code></pre></div><p>The <code>INITIALIZED</code> field is <code>False</code>, indicating the initialization failed.</p><p>Describe the updateRun to get more details:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ kubectl describe csur example-run
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>Status:
+</span></span><span style=display:flex><span>  Conditions:
+</span></span><span style=display:flex><span>    Last Transition Time:  2025-03-13T07:28:29Z
+</span></span><span style=display:flex><span>    Message:               cannot <span style=color:#204a87;font-weight:700>continue</span> the ClusterStagedUpdateRun: failed to initialize the clusterStagedUpdateRun: failed to process the request due to a client error: no clusterResourceSnapshots with index <span style=color:#4e9a06>`</span>1<span style=color:#4e9a06>`</span> found <span style=color:#204a87;font-weight:700>for</span> clusterResourcePlacement <span style=color:#4e9a06>`</span>example-placement<span style=color:#4e9a06>`</span>
+</span></span><span style=display:flex><span>    Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>    Reason:                UpdateRunInitializedFailed
+</span></span><span style=display:flex><span>    Status:                False
+</span></span><span style=display:flex><span>    Type:                  Initialized
+</span></span><span style=display:flex><span>  Deletion Stage Status:
+</span></span><span style=display:flex><span>    Clusters:
+</span></span><span style=display:flex><span>    Stage Name:                   kubernetes-fleet.io/deleteStage
+</span></span><span style=display:flex><span>  Policy Observed Cluster Count:  <span style=color:#0000cf;font-weight:700>2</span>
+</span></span><span style=display:flex><span>  Policy Snapshot Index Used:     <span style=color:#0000cf;font-weight:700>0</span>
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><p>The condition clearly indicates the initialization failed. And the condition message gives more details about the failure.
+In this case, I used a not-existing resource snapshot index <code>1</code> for the updateRun.</p><h2 id=investigate-clusterstagedupdaterun-rollout-stuck>Investigate ClusterStagedUpdateRun rollout stuck</h2><p>A <code>ClusterStagedUpdateRun</code> can get stuck when resource placement fails on some clusters. Describing the updateRun will show some cluster is stuck in <code>ClusterUpdatingStarted</code> condition:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ date<span style=color:#000;font-weight:700>;</span> kubectl describe csur example-run
+</span></span><span style=display:flex><span>Thu Mar <span style=color:#0000cf;font-weight:700>13</span> 07:44:28 UTC <span style=color:#0000cf;font-weight:700>2025</span>
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>Stages Status:
+</span></span><span style=display:flex><span>    After Stage Task Status:
+</span></span><span style=display:flex><span>      Approval Request Name:  example-run-staging
+</span></span><span style=display:flex><span>      Type:                   Approval
+</span></span><span style=display:flex><span>      Type:                   TimedWait
+</span></span><span style=display:flex><span>    Clusters:
+</span></span><span style=display:flex><span>      Cluster Name:  member1
+</span></span><span style=display:flex><span>      Conditions:
+</span></span><span style=display:flex><span>        Last Transition Time:  2025-03-13T07:37:36Z
+</span></span><span style=display:flex><span>        Message:               
+</span></span><span style=display:flex><span>        Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>        Reason:                ClusterUpdatingStarted
+</span></span><span style=display:flex><span>        Status:                True
+</span></span><span style=display:flex><span>        Type:                  Started
+</span></span><span style=display:flex><span>    Conditions:
+</span></span><span style=display:flex><span>      Last Transition Time:  2025-03-13T07:37:36Z
+</span></span><span style=display:flex><span>      Message:               
+</span></span><span style=display:flex><span>      Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      Reason:                StageUpdatingStarted
+</span></span><span style=display:flex><span>      Status:                True
+</span></span><span style=display:flex><span>      Type:                  Progressing
+</span></span><span style=display:flex><span>    Stage Name:              staging
+</span></span><span style=display:flex><span>    Start Time:              2025-03-13T07:37:36Z
+</span></span></code></pre></div><p>As you can see, the cluster updating has started about 7 minutes ago, but the <code>ClusterUpdatingSucceeded</code> condition is still not set yet.
+This usually indicates something wrong happened on the cluster. To further investigate, you can check the <code>ClusterResourcePlacement</code> status:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ kubectl describe crp example-placement
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>Placement Statuses:
+</span></span><span style=display:flex><span>    Cluster Name:  member1
+</span></span><span style=display:flex><span>    Conditions:
+</span></span><span style=display:flex><span>      Last Transition Time:  2025-03-12T23:01:32Z
+</span></span><span style=display:flex><span>      Message:               Successfully scheduled resources <span style=color:#204a87;font-weight:700>for</span> placement in <span style=color:#4e9a06>&#34;member1&#34;</span> <span style=color:#ce5c00;font-weight:700>(</span>affinity score: 0, topology spread score: 0<span style=color:#ce5c00;font-weight:700>)</span>: picked by scheduling policy
+</span></span><span style=display:flex><span>      Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      Reason:                Scheduled
+</span></span><span style=display:flex><span>      Status:                True
+</span></span><span style=display:flex><span>      Type:                  Scheduled
+</span></span><span style=display:flex><span>      Last Transition Time:  2025-03-13T07:37:36Z
+</span></span><span style=display:flex><span>      Message:               Detected the new changes on the resources and started the rollout process, resourceSnapshotIndex: 3, clusterStagedUpdateRun: example-run
+</span></span><span style=display:flex><span>      Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      Reason:                RolloutStarted
+</span></span><span style=display:flex><span>      Status:                True
+</span></span><span style=display:flex><span>      Type:                  RolloutStarted
+</span></span><span style=display:flex><span>      Last Transition Time:  2025-03-13T07:37:36Z
+</span></span><span style=display:flex><span>      Message:               No override rules are configured <span style=color:#204a87;font-weight:700>for</span> the selected resources
+</span></span><span style=display:flex><span>      Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      Reason:                NoOverrideSpecified
+</span></span><span style=display:flex><span>      Status:                True
+</span></span><span style=display:flex><span>      Type:                  Overridden
+</span></span><span style=display:flex><span>      Last Transition Time:  2025-03-13T07:37:36Z
+</span></span><span style=display:flex><span>      Message:               All of the works are synchronized to the latest
+</span></span><span style=display:flex><span>      Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      Reason:                AllWorkSynced
+</span></span><span style=display:flex><span>      Status:                True
+</span></span><span style=display:flex><span>      Type:                  WorkSynchronized
+</span></span><span style=display:flex><span>      Last Transition Time:  2025-03-13T07:37:39Z
+</span></span><span style=display:flex><span>      Message:               Work object example-placement-work has failed to apply
+</span></span><span style=display:flex><span>      Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      Reason:                NotAllWorkHaveBeenApplied
+</span></span><span style=display:flex><span>      Status:                False
+</span></span><span style=display:flex><span>      Type:                  Applied
+</span></span><span style=display:flex><span>    Failed Placements:
+</span></span><span style=display:flex><span>      Condition:
+</span></span><span style=display:flex><span>        Last Transition Time:  2025-03-13T07:37:36Z
+</span></span><span style=display:flex><span>        Message:               Manifest is trackable but not available yet
+</span></span><span style=display:flex><span>        Observed Generation:   <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>        Reason:                ManifestNotAvailableYet
+</span></span><span style=display:flex><span>        Status:                False
+</span></span><span style=display:flex><span>        Type:                  Available
+</span></span><span style=display:flex><span>      Group:                   apps
+</span></span><span style=display:flex><span>      Kind:                    Deployment
+</span></span><span style=display:flex><span>      Name:                    nginx
+</span></span><span style=display:flex><span>      Namespace:               test-namespace
+</span></span><span style=display:flex><span>      Version:                 v1
+</span></span><span style=display:flex><span>      Condition:
+</span></span><span style=display:flex><span>        Last Transition Time:  2025-03-13T07:37:39Z
+</span></span><span style=display:flex><span>        Message:               Failed to apply manifest: failed to process the request due to a client error: resource exists and is not managed by the fleet controller and co-ownernship is disallowed
+</span></span><span style=display:flex><span>        Reason:                ManifestsAlreadyOwnedByOthers
+</span></span><span style=display:flex><span>        Status:                False
+</span></span><span style=display:flex><span>        Type:                  Applied
+</span></span><span style=display:flex><span>      Group:                   apps
+</span></span><span style=display:flex><span>      Kind:                    ReplicaSet
+</span></span><span style=display:flex><span>      Name:                    nginx-7b6df7c758
+</span></span><span style=display:flex><span>      Namespace:               test-namespace
+</span></span><span style=display:flex><span>      Version:                 v1
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><p>The <code>Applied</code> condition is <code>False</code> and says not all work have been applied. And in the &ldquo;failed placements&rdquo; section, it shows the detailed failure. For more debugging instructions, you can refer to <a href=/website/docs/troubleshooting/clusterresourceplacement/>ClusterResourcePlacement TSG</a>.</p><p>After resolving the issue, you can create always create a new updateRun to restart the rollout. Stuck updateRuns can be deleted.</p></div></main></div></div><footer class="td-footer row d-print-none"><div class=container-fluid><div class="row mx-md-2"><div class="td-footer__left col-6 col-sm-4 order-sm-1"></div><div class="td-footer__right col-6 col-sm-4 order-sm-3"><ul class=td-footer__links-list><li class=td-footer__links-item data-bs-toggle=tooltip title=GitHub aria-label=GitHub><a target=_blank rel=noopener href=https://github.com/kubefleet-dev/kubefleet aria-label=GitHub><i class="fab fa-github"></i></a></li></ul></div><div class="td-footer__center col-12 col-sm-4 py-2 order-sm-2"><span class=td-footer__copyright>&copy;
 2025&ndash;2025
 <span class=td-footer__authors>KubeFleet Contributors | The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href=https://www.linuxfoundation.org/trademark-usage/>Trademark Usage</a> | <a href=https://creativecommons.org/licenses/by/4.0>CC BY 4.0</a> |</span></span><span class=td-footer__all_rights_reserved>All Rights Reserved</span><span class=ms-2><a href=https://github.com/kubefleet-dev/website/blob/main/PRIVACY_POLICY.md target=_blank rel=noopener>Privacy Policy</a></span></div></div></div></footer></div><script src=/website/js/main.min.032ba2ecbd3ce89b96bffcfec71c5da352125ee752e9873c3e0098f7c32a6497.js integrity="sha256-Ayui7L086JuWv/z+xxxdo1ISXudS6Yc8PgCY98MqZJc=" crossorigin=anonymous></script><script defer src=/website/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js integrity="sha256-c0eKfUgHaYrtfjVesj+YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin=anonymous></script><script src=/website/js/tabpane-persist.js></script></body></html>
