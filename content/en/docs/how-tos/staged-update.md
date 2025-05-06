@@ -50,7 +50,7 @@ example-placement   1     True        1                                         
 
 ## Check resource snapshot versions
 
-Fleet keeps a list of resource snapshots for version control and audit, (for more details, please refer to [api-references](../api-references.md)).
+Fleet keeps a list of resource snapshots for version control and audit, (for more details, please refer to [api-reference](docs/api-reference)).
 
 To check current resource snapshots:
 ```bash
@@ -165,7 +165,7 @@ EOF
 
 The staged update run is initialized and running:
 ```bash
-kubectl get crsur example-run
+kubectl get csur example-run
 NAME          PLACEMENT           RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   SUCCEEDED   AGE
 example-run   example-placement   1                   0                 True                      44s
 ```
@@ -333,7 +333,7 @@ example-run-canary   example-run   canary   True       True               2m30s
 ```
 The updateRun now is able to proceed and complete:
 ```bash
-kubectl get crsur example-run
+kubectl get csur example-run
 NAME          PLACEMENT           RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   SUCCEEDED   AGE
 example-run   example-placement   1                   0                 True          True        4m22s
 ```

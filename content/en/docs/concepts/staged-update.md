@@ -118,7 +118,7 @@ spec:
   resourceSnapshotIndex: "0"
   stagedRolloutStrategyName: example-strategy
 ```
-This cluster-scoped resource requires three key parameters: the `placementName` specifying the target `ClusterResourcePlacement`, the `resourceSnapshotIndex` identifying which version of resources to deploy (learn how to find resourceSnapshotIndex [here](../howtos/updaterun.md)), and the `stagedRolloutStrategyName` indicating the `ClusterStagedUpdateStrategy` to follow.
+This cluster-scoped resource requires three key parameters: the `placementName` specifying the target `ClusterResourcePlacement`, the `resourceSnapshotIndex` identifying which version of resources to deploy (learn how to find resourceSnapshotIndex [here](docs/how-tos/staged-update#check-resource-snapshot-versions)), and the `stagedRolloutStrategyName` indicating the `ClusterStagedUpdateStrategy` to follow.
 
 An updateRun executes in two phases. During the initialization phase, the controller performs a one-time setup where it captures a snapshot of the updateRun strategy, collects scheduled and to-be-deleted `ClusterResourceBindings`, generates the cluster update sequence, and records all this information in the updateRun status.
 
@@ -129,7 +129,7 @@ In the execution phase, the controller processes each stage sequentially, update
 Let's take a deep look into the status of a completed `ClusterStagedUpdateRun`. It displays details about the rollout status for every clusters and stages.
 
 ```bash
-$ kubectl describe crsur run example-run
+$ kubectl describe csur run example-run
 ...
 Status:
   Conditions:
@@ -392,7 +392,7 @@ A `ClusterStagedUpdateRun` serves as the trigger mechanism for rolling out a `Cl
 
 For example, below is the status of an in-progress `ClusterStagedUpdateRun`:
 ```bash
-kubectl describe crsur example-run
+kubectl describe csur example-run
 Name:         example-run
 ...
 Status:
@@ -549,7 +549,7 @@ In the condition message, we print the `ClusterStagedUpdateRun` name, which is `
 It also displays the detailed update status: the works are synced and applied and are detected available. As a comparison, member2 is still in `Scheduled` state only.
 
 When troubleshooting a stalled updateRun, examining the `ClusterResourcePlacement` status offers valuable diagnostic information that can help identify the root cause. 
-For comprehensive troubleshooting steps, refer to the [troubleshooting guide](../troubleshooting/updaterun.md).
+For comprehensive troubleshooting steps, refer to the [troubleshooting guide](docs/troubleshooting/ClusterStagedUpdateRun).
 
 ## Concurrent updateRuns
 
@@ -558,5 +558,5 @@ Multiple concurrent `ClusterStagedUpdateRun`s can be created for the same `Clust
 This strategy consistency requirement is validated during the initialization phase of each updateRun. This validation ensures predictable rollout behavior and prevents configuration drift across your cluster fleet, even when multiple updates are in progress.
 
 ## Next Steps
-* Learn how to [rollout and rollback CRP resources with Staged Update Run](../howtos/updaterun.md)
-* Learn how to [troubleshoot a Staged Update Run](../troubleshooting/updaterun.md)
+* Learn how to [rollout and rollback CRP resources with Staged Update Run](docs/how-tos/staged-update)
+* Learn how to [troubleshoot a Staged Update Run](docs/troubleshooting/ClusterStagedUpdateRun)
