@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook-app
+  namespace: guestbook # the application is created in guestbook namespace
+spec:
+  destination:
+    namespace: guestbook # the target manifests will be deployed in guestbook namespace
+    server: https://kubernetes.default.svc
+  project: guestbook-project
+  source:
+    path: content/en/docs/tutorials/ArgoCD/manifests/guestbook # manifest path, we are going to override this path
+    repoURL: https://github.com/kubefleet-dev/website.git # source repo, replace with your own
+    targetRevision: main # source branch
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - PruneLast=true
+    - PrunePropagationPolicy=foreground
+    - CreateNamespace=true
+    - ApplyOutOfSyncOnly=true
