@@ -1,7 +1,7 @@
 ---
-title: How to Troubleshoot Eviction Related Issues
-description: Identify and fix KubeFleet issues associated with the the Eviction API
-weight: 1
+title: ClusterResourcePlacementEviction TSG
+description: Identify and fix KubeFleet issues associated with the ClusterResourcePlacementEviction API
+weight: 8
 ---
 
 This guide provides troubleshooting steps for issues related to placement eviction.
