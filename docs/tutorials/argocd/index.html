@@ -1,0 +1,513 @@
+<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=en class=no-js><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><link rel="shortcut icon" href=/website/favicons/favicon.ico><link rel=apple-touch-icon href=/website/favicons/apple-touch-icon-180x180.png sizes=180x180><link rel=icon type=image/png href=/website/favicons/favicon-16x16.png sizes=16x16><link rel=icon type=image/png href=/website/favicons/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/website/favicons/android-36x36.png sizes=36x36><link rel=icon type=image/png href=/website/favicons/android-48x48.png sizes=48x48><link rel=icon type=image/png href=/website/favicons/android-72x72.png sizes=72x72><link rel=icon type=image/png href=/website/favicons/android-96x96.png sizes=96x96><link rel=icon type=image/png href=/website/favicons/android-144x144.png sizes=144x144><link rel=icon type=image/png href=/website/favicons/android-192x192.png sizes=192x192><title>KubeFleet and ArgoCD Integration | KubeFleet</title>
+<meta name=description content="See KubeFleet and ArgoCD working together to efficiently manage Gitops promotion"><meta property="og:url" content="https://kubefleet-dev.github.io/website/docs/tutorials/argocd/"><meta property="og:site_name" content="KubeFleet"><meta property="og:title" content="KubeFleet and ArgoCD Integration"><meta property="og:description" content="See KubeFleet and ArgoCD working together to efficiently manage Gitops promotion"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta itemprop=name content="KubeFleet and ArgoCD Integration"><meta itemprop=description content="See KubeFleet and ArgoCD working together to efficiently manage Gitops promotion"><meta itemprop=wordCount content="2827"><meta name=twitter:card content="summary"><meta name=twitter:title content="KubeFleet and ArgoCD Integration"><meta name=twitter:description content="See KubeFleet and ArgoCD working together to efficiently manage Gitops promotion"><link rel=preload href=/website/scss/main.min.879d78706ddc3417bab47ec223b501bf207298e24a447bada63812f126e3e760.css as=style><link href=/website/scss/main.min.879d78706ddc3417bab47ec223b501bf207298e24a447bada63812f126e3e760.css rel=stylesheet integrity><script src=https://code.jquery.com/jquery-3.7.1.min.js integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin=anonymous></script><script defer src=https://unpkg.com/lunr@2.3.9/lunr.min.js integrity=sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli crossorigin=anonymous></script></head><body class=td-page><header><nav class="td-navbar js-navbar-scroll" data-bs-theme=dark><div class="container-fluid flex-column flex-md-row"><a class=navbar-brand href=/website/><span class="navbar-brand__logo navbar-logo"></span><span class=navbar-brand__name>KubeFleet</span></a><div class="td-navbar-nav-scroll ms-md-auto" id=main_navbar><ul class=navbar-nav><li class=nav-item><a class="nav-link active" href=/website/docs/><span>Docs</span></a></li><li class="nav-item dropdown d-none d-lg-block"><div class=dropdown><a class="nav-link dropdown-toggle" href=# role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><ul class=dropdown-menu><li><a class=dropdown-item href=/website/zh-cn/>中文（简体）</a></li></ul></div></li></ul></div><div class="d-none d-lg-block"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/website/offline-search-index.1f87ed608e08e16ac4b7f918ff8f63d7.json data-offline-search-base-href=/ data-offline-search-max-results=10></div></div></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none"><div id=td-sidebar-menu class=td-sidebar__inner><form class="td-sidebar__search d-flex align-items-center"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/website/offline-search-index.1f87ed608e08e16ac4b7f918ff8f63d7.json data-offline-search-base-href=/ data-offline-search-max-results=10></div><button class="btn btn-link td-sidebar__toggle d-md-none p-0 ms-3 fas fa-bars" type=button data-bs-toggle=collapse data-bs-target=#td-section-nav aria-controls=td-section-nav aria-expanded=false aria-label="Toggle section navigation"></button></form><nav class="td-sidebar-nav collapse" id=td-section-nav><div class="td-sidebar-nav__section nav-item dropdown d-block d-lg-none"><div class=dropdown><a class="nav-link dropdown-toggle" href=# role=button data-bs-toggle=dropdown aria-haspopup=true aria-expanded=false>English</a><ul class=dropdown-menu><li><a class=dropdown-item href=/website/zh-cn/>中文（简体）</a></li></ul></div></div><ul class="td-sidebar-nav__section pe-md-3 ul-0"><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id=m-websitedocs-li><a href=/website/docs/ title="Welcome to KubeFleet Documentation" class="align-left ps-0 td-sidebar-link td-sidebar-link__section tree-root" id=m-websitedocs><span>Docs</span></a><ul class=ul-1><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-websitedocsconcepts-li><a href=/website/docs/concepts/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocsconcepts><span>Concepts</span></a><ul class="ul-2 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptscomponents-li><a href=/website/docs/concepts/components/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptscomponents><span>Fleet components</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsmembercluster-li><a href=/website/docs/concepts/membercluster/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsmembercluster><span>MemberCluster</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptscrp-li><a href=/website/docs/concepts/crp/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptscrp><span>ClusterResourcePlacement</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsscheduler-li><a href=/website/docs/concepts/scheduler/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsscheduler><span>Scheduler</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsscheduling-framework-li><a href=/website/docs/concepts/scheduling-framework/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsscheduling-framework><span>Scheduling Framework</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsproperties-li><a href=/website/docs/concepts/properties/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsproperties><span>Properties and Property Provides</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptssafe-rollout-li><a href=/website/docs/concepts/safe-rollout/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptssafe-rollout><span>Safe Rollout</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsoverride-li><a href=/website/docs/concepts/override/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsoverride><span>Override</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptsstaged-update-li><a href=/website/docs/concepts/staged-update/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptsstaged-update><span>Staged Update</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsconceptseviction-pdb-li><a href=/website/docs/concepts/eviction-pdb/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsconceptseviction-pdb><span>Eviction and Placement Disruption Budget</span></a></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-websitedocsgetting-started-li><a href=/website/docs/getting-started/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocsgetting-started><span>Getting Started</span></a><ul class="ul-2 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsgetting-startedkind-li><a href=/website/docs/getting-started/kind/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsgetting-startedkind><span>Getting started with Fleet using KinD clusters</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsgetting-startedon-prem-li><a href=/website/docs/getting-started/on-prem/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocsgetting-startedon-prem><span>Getting started with Fleet using on-premises clusters</span></a></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-websitedocshow-tos-li><a href=/website/docs/how-tos/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocshow-tos><span>How-To Guides</span></a><ul class="ul-2 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosclusters-li><a href=/website/docs/how-tos/clusters/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosclusters><span>Managing clusters</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-toscrp-li><a href=/website/docs/how-tos/crp/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-toscrp><span>Using the ClusterResourcePlacement API</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosaffinities-li><a href=/website/docs/how-tos/affinities/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosaffinities><span>Using Affinity to Pick Clusters</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tostopology-spread-constraints-li><a href=/website/docs/how-tos/topology-spread-constraints/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tostopology-spread-constraints><span>Using Topology Spread Constraints to Spread Resources</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosproperty-based-scheduling-li><a href=/website/docs/how-tos/property-based-scheduling/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosproperty-based-scheduling><span>Using Property-Based Scheduling</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tostaints-tolerations-li><a href=/website/docs/how-tos/taints-tolerations/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tostaints-tolerations><span>Using Taints and Tolerations</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-toscluster-resource-override-li><a href=/website/docs/how-tos/cluster-resource-override/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-toscluster-resource-override><span>Using the ClusterResourceOverride API</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosresource-override-li><a href=/website/docs/how-tos/resource-override/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosresource-override><span>Using the ResourceOverride API</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosenvelope-object-li><a href=/website/docs/how-tos/envelope-object/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosenvelope-object><span>Using Envelope Objects to Place Resources</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tostakeover-li><a href=/website/docs/how-tos/takeover/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tostakeover><span>Controlling How Fleet Handles Pre-Existing Resources</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosdrift-detection-li><a href=/website/docs/how-tos/drift-detection/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosdrift-detection><span>Enabling Drift Detection in Fleet</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosreportdiff-li><a href=/website/docs/how-tos/reportdiff/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosreportdiff><span>Using the ReportDiff Apply Mode</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-tosstaged-update-li><a href=/website/docs/how-tos/staged-update/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-tosstaged-update><span>How to Roll Out and Roll Back Changes in Stage</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocshow-toseviction-disruption-budget-li><a href=/website/docs/how-tos/eviction-disruption-budget/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocshow-toseviction-disruption-budget><span>Evicting Resources and Setting up Disruption Budgets</span></a></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id=m-websitedocstutorials-li><a href=/website/docs/tutorials/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocstutorials><span>Tutorials</span></a><ul class="ul-2 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstutorialsclustermigrationdr-li><a href=/website/docs/tutorials/clustermigrationdr/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstutorialsclustermigrationdr><span>Resource Migration Across Clusters</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstutorialsmigrationwithoverridedr-li><a href=/website/docs/tutorials/migrationwithoverridedr/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstutorialsmigrationwithoverridedr><span>Resource Migration With Overrides</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id=m-websitedocstutorialsargocd-li><a href=/website/docs/tutorials/argocd/ class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id=m-websitedocstutorialsargocd><span class=td-sidebar-nav-active-item>KubeFleet and ArgoCD Integration</span></a></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id=m-websitedocstroubleshooting-li><a href=/website/docs/troubleshooting/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocstroubleshooting><span>Troubleshooting Guides</span></a><ul class="ul-2 foldable"><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstroubleshootingclusterresourceplacement-li><a href=/website/docs/troubleshooting/clusterresourceplacement/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstroubleshootingclusterresourceplacement><span>ClusterResourcePlacement TSG</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstroubleshootingclusterresourceplacementscheduled-li><a href=/website/docs/troubleshooting/clusterresourceplacementscheduled/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstroubleshootingclusterresourceplacementscheduled><span>CRP Schedule Failure TSG</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstroubleshootingclusterresourceplacementrolloutstarted-li><a href=/website/docs/troubleshooting/clusterresourceplacementrolloutstarted/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstroubleshootingclusterresourceplacementrolloutstarted><span>CRP Rollout Failure TSG</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstroubleshootingclusterresourceplacementoverridden-li><a href=/website/docs/troubleshooting/clusterresourceplacementoverridden/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstroubleshootingclusterresourceplacementoverridden><span>CRP Override Failure TSG</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstroubleshootingclusterresourceplacementworksynchronized-li><a href=/website/docs/troubleshooting/clusterresourceplacementworksynchronized/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstroubleshootingclusterresourceplacementworksynchronized><span>CRP Work-Synchronization Failure TSG</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstroubleshootingclusterresourceplacementapplied-li><a href=/website/docs/troubleshooting/clusterresourceplacementapplied/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstroubleshootingclusterresourceplacementapplied><span>CRP Work-Application Failure TSG</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstroubleshootingclusterresourceplacementavailable-li><a href=/website/docs/troubleshooting/clusterresourceplacementavailable/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstroubleshootingclusterresourceplacementavailable><span>CRP Availability Failure TSG</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstroubleshootingclusterresourceplacementeviction-li><a href=/website/docs/troubleshooting/clusterresourceplacementeviction/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstroubleshootingclusterresourceplacementeviction><span>ClusterResourcePlacementEviction TSG</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocstroubleshootingclusterstagedupdaterun-li><a href=/website/docs/troubleshooting/clusterstagedupdaterun/ class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id=m-websitedocstroubleshootingclusterstagedupdaterun><span>ClusterStagedUpdateRun TSG</span></a></li></ul></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsfaq-li><a href=/website/docs/faq/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocsfaq><span>Frequently Asked Questions</span></a></li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id=m-websitedocsapi-reference-li><a href=/website/docs/api-reference/ class="align-left ps-0 td-sidebar-link td-sidebar-link__section" id=m-websitedocsapi-reference><span>API Reference</span></a></li></ul></li></ul></nav></div></aside><aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none"><div class="td-page-meta ms-2 pb-1 pt-2 mb-0"><a href=https://github.com/kubefleet-dev/website/tree/main/content/en/docs/tutorials/ArgoCD/index.md class="td-page-meta--view td-page-meta__view" target=_blank rel=noopener><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+<a href=https://github.com/kubefleet-dev/website/edit/main/content/en/docs/tutorials/ArgoCD/index.md class="td-page-meta--edit td-page-meta__edit" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+<a href="https://github.com/kubefleet-dev/website/new/main/content/en/docs/tutorials/ArgoCD?filename=change-me.md&amp;value=---%0Atitle%3A+%22Long+Page+Title%22%0AlinkTitle%3A+%22Short+Nav+Title%22%0Aweight%3A+100%0Adescription%3A+%3E-%0A+++++Page+description+for+heading+and+indexes.%0A---%0A%0A%23%23+Heading%0A%0AEdit+this+template+to+create+your+new+page.%0A%0A%2A+Give+it+a+good+name%2C+ending+in+%60.md%60+-+e.g.+%60getting-started.md%60%0A%2A+Edit+the+%22front+matter%22+section+at+the+top+of+the+page+%28weight+controls+how+its+ordered+amongst+other+pages+in+the+same+directory%3B+lowest+number+first%29.%0A%2A+Add+a+good+commit+message+at+the+bottom+of+the+page+%28%3C80+characters%3B+use+the+extended+description+field+for+more+detail%29.%0A%2A+Create+a+new+branch+so+you+can+preview+your+new+file+and+request+a+review+via+Pull+Request.%0A" class="td-page-meta--child td-page-meta__child" target=_blank rel=noopener><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+<a href="https://github.com/kubefleet-dev/website/issues/new?title=KubeFleet%20and%20ArgoCD%20Integration" class="td-page-meta--issue td-page-meta__issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> Create documentation issue</a>
+<a href=https://github.com/kubefleet-dev/kubefleet/issues/new class="td-page-meta--project td-page-meta__project-issue" target=_blank rel=noopener><i class="fa-solid fa-list-check fa-fw"></i> Create project issue</a>
+<a id=print href=/website/docs/tutorials/_print/><i class="fa-solid fa-print fa-fw"></i> Print entire section</a></div><div class=td-toc><nav id=TableOfContents><ul><li><a href=#prerequisites>Prerequisites</a><ul><li><a href=#kubefleet-environment>KubeFleet environment</a></li><li><a href=#install-argocd>Install ArgoCD</a></li><li><a href=#enable-applications-in-any-namespace-in-argocd>Enable &ldquo;Applications in any namespace&rdquo; in ArgoCD</a></li></ul></li><li><a href=#deploy-resources-to-clusters-using-argocd-application-orchestrated-by-kubefleet>Deploy resources to clusters using ArgoCD Application orchestrated by KubeFleet</a><ul><li><a href=#deploy-an-argocd-application-for-gitops-continuous-delivery>Deploy an ArgoCD Application for gitops continuous delivery</a></li><li><a href=#place-argocd-application-to-member-clusters-with-crp>Place ArgoCD Application to member clusters with CRP</a></li><li><a href=#override-path-for-different-member-clusters-with-resourceoverride>Override path for different member clusters with ResourceOverride</a></li><li><a href=#trigger-crp-progressive-rollout-with-clusterstagedupdaterun>Trigger CRP progressive rollout with clusterStagedUpdateRun</a></li><li><a href=#verify-the-application-on-member-clusters>Verify the Application on member clusters</a></li></ul></li><li><a href=#release-a-new-version>Release a new version</a></li><li><a href=#summary>Summary</a></li><li><a href=#next-steps>Next steps</a></li></ul></nav></div></aside><main class="col-12 col-md-9 col-xl-8 ps-md-5" role=main><nav aria-label=breadcrumb class=td-breadcrumbs><ol class=breadcrumb><li class=breadcrumb-item><a href=/website/docs/>Docs</a></li><li class=breadcrumb-item><a href=/website/docs/tutorials/>Tutorials</a></li><li class="breadcrumb-item active" aria-current=page>KubeFleet and ArgoCD Integration</li></ol></nav><div class=td-content><h1>KubeFleet and ArgoCD Integration</h1><div class=lead>See KubeFleet and ArgoCD working together to efficiently manage Gitops promotion</div><header class=article-meta></header><p>This hands-on guide of KubeFleet and ArgoCD integration shows how these powerful tools work in concert to revolutionize multi-cluster application management.
+Discover how KubeFleet&rsquo;s intelligent orchestration capabilities complement ArgoCD&rsquo;s popular GitOps approach, enabling seamless deployments across diverse environments while maintaining consistency and control.
+This tutorial illuminates practical strategies for targeted deployments, environment-specific configurations, and safe, controlled rollouts.
+Follow along to transform your multi-cluster challenges into streamlined, automated workflows that enhance both developer productivity and operational reliability.</p><p>Suppose in a multi-cluster, multi-tenant organization, team A wants to deploy the resources ONLY to the clusters they own.
+They want to make sure each cluster receives the correct configuration, and they want to ensure safe deployment by rolling out to their staging environment first, then to canary if staging is healthy, and lastly to the production.
+Our tutorial will walk you through a hands-on experience of how to achieve this. Below image demonstrates the major components and their interactions.</p><p><img src=/website/images/en/docs/tutorials/ArgoCD/fleet-argocd-integration.png alt></p><h2 id=prerequisites>Prerequisites</h2><h3 id=kubefleet-environment>KubeFleet environment</h3><p>In this tutorial, we prepare a fleet environment with one hub cluster and four member clusters.
+The member clusters are labeled to indicate their environment and team ownership.
+From the hub cluster, we can verify the clustermembership and their labels:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl get memberclusters --show-labels
+</span></span><span style=display:flex><span>NAME      JOINED   AGE    MEMBER-AGENT-LAST-SEEN   NODE-COUNT   AVAILABLE-CPU   AVAILABLE-MEMORY   LABELS
+</span></span><span style=display:flex><span>member1   True     84d    10s                      <span style=color:#0000cf;font-weight:700>3</span>            4036m           13339148Ki         <span style=color:#000>environment</span><span style=color:#ce5c00;font-weight:700>=</span>staging,team<span style=color:#ce5c00;font-weight:700>=</span>A,...
+</span></span><span style=display:flex><span>member2   True     84d    14s                      <span style=color:#0000cf;font-weight:700>3</span>            4038m           13354748Ki         <span style=color:#000>environment</span><span style=color:#ce5c00;font-weight:700>=</span>canary,team<span style=color:#ce5c00;font-weight:700>=</span>A,...
+</span></span><span style=display:flex><span>member3   True     144m   6s                       <span style=color:#0000cf;font-weight:700>3</span>            3676m           12458504Ki         <span style=color:#000>environment</span><span style=color:#ce5c00;font-weight:700>=</span>production,team<span style=color:#ce5c00;font-weight:700>=</span>A,...
+</span></span><span style=display:flex><span>member4   True     6m7s   15s                      <span style=color:#0000cf;font-weight:700>3</span>            4036m           13347336Ki         <span style=color:#000>team</span><span style=color:#ce5c00;font-weight:700>=</span>B,...
+</span></span></code></pre></div><p>From above output, we can see that:</p><ul><li><code>member1</code> is in <code>staging</code> environment and owned by team <code>A</code>.</li><li><code>member2</code> is in <code>canary</code> environment and owned by team <code>A</code>.</li><li><code>member3</code> is in <code>production</code> environment and owned by team <code>A</code>.</li><li><code>member4</code> is owned by team <code>B</code>.</li></ul><h3 id=install-argocd>Install ArgoCD</h3><p>In this tutorial, we expect ArgoCD controllers to be installed on each member cluster. Only ArgoCD CRDs need to be installed on the hub cluster so that ArgoCD <code>Applications</code> can be created.</p><ul><li><p><strong>Option 1: Install ArgoCD on each member cluster directly (RECOMMENDED)</strong></p><p>It&rsquo;s straightforward to install ArgoCD on each member cluster. You can follow the instructions in <a href=https://argo-cd.readthedocs.io/en/stable/getting_started/>ArgoCD Getting Started</a>.<br>To install only CRDs on the hub cluster, you can run the following command:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds?ref<span style=color:#ce5c00;font-weight:700>=</span>stable --server-side<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>true</span>
+</span></span></code></pre></div></li><li><p><strong>Option 2: Use KubeFleet ClusterResourcePlacement (CRP) to install ArgoCD on member clusters (Experimental)</strong></p><p>Alternatively, you can first install all the ArgoCD manifests on the hub cluster, and then use KubeFleet <code>ClusterResourcePlacement</code> to populate to the member clusters.
+Install the CRDs on the hub cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds?ref<span style=color:#ce5c00;font-weight:700>=</span>stable --server-side<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>true</span>
+</span></span></code></pre></div><p>Then apply the resource manifest we prepared (<a href=/website/docs/tutorials/argocd/manifests/argocd-install.yaml>argocd-install.yaml</a>) to the hub cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl create ns argocd <span style=color:#ce5c00;font-weight:700>&amp;&amp;</span> kubectl apply -f ./manifests/argocd-install.yaml -n argocd --server-side<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87>true</span>
+</span></span></code></pre></div><p>We then use a <code>ClusterResourcePlacement</code> (refer to <a href=/website/docs/tutorials/argocd/manifests/argocd-crp.yaml>argocd-crp.yaml</a>) to populate the manifests to the member clusters:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl apply -f ./manifests/argocd-crp.yaml
+</span></span></code></pre></div><p>Verify the CRP becomes available:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl get crp
+</span></span><span style=display:flex><span>NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+</span></span><span style=display:flex><span>crp-argocd          <span style=color:#0000cf;font-weight:700>1</span>     True        <span style=color:#0000cf;font-weight:700>1</span>               True        <span style=color:#0000cf;font-weight:700>1</span>               79m
+</span></span></code></pre></div></li></ul><h3 id=enable-applications-in-any-namespace-in-argocd>Enable &ldquo;Applications in any namespace&rdquo; in ArgoCD</h3><p>In this tutorial, we are going to deploy an ArgoCD <code>Application</code> in the guestbook namespace.
+Enabling &ldquo;Applications in any namespace&rdquo; feature, application teams can manage their applications in a more flexible way without the risk of a privilege escalation. In this tutorial, we need to enable <code>Applications</code> to be created in the <code>guestbook</code> namespace.</p><ul><li><p><strong>Option 1: Enable on each member cluster manually</strong></p><p>You can follow the instructions in <a href=https://argo-cd.readthedocs.io/en/latest/operator-manual/app-any-namespace/>ArgoCD Applications-in-any-namespace</a> documentation to enable this feature on each member cluster manually.<br>It generally involves updating the <code>argocd-cmd-params-cm</code> configmap and restarting the <code>argocd-application-controller</code> statefulset and <code>argocd-server</code> deployment.<br>You will also want to create an ArgoCD <code>AppProject</code> in the <code>argocd</code> namespace for <code>Applications</code> to refer to. You can find the manifest at <a href=/website/docs/tutorials/argocd/manifests/guestbook-appproject.yaml>guestbook-appproject.yaml</a>.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat ./manifests/guestbook-appproject.yaml
+</span></span><span style=display:flex><span>apiVersion: argoproj.io/v1alpha1
+</span></span><span style=display:flex><span>kind: AppProject
+</span></span><span style=display:flex><span>metadata:
+</span></span><span style=display:flex><span>  name: guestbook-project
+</span></span><span style=display:flex><span>  namespace: argocd
+</span></span><span style=display:flex><span>spec:
+</span></span><span style=display:flex><span>  sourceNamespaces:
+</span></span><span style=display:flex><span>  - guestbook
+</span></span><span style=display:flex><span>  destinations:
+</span></span><span style=display:flex><span>  - namespace: <span style=color:#4e9a06>&#39;*&#39;</span>
+</span></span><span style=display:flex><span>    server: https://kubernetes.default.svc
+</span></span><span style=display:flex><span>  sourceRepos:
+</span></span><span style=display:flex><span>  - <span style=color:#4e9a06>&#39;*&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl config use-context member&lt;*&gt;
+</span></span><span style=display:flex><span>kubectl apply -f ./manifests/guestbook-appproject.yaml
+</span></span></code></pre></div></li><li><p><strong>Option 2: Populate ArgoCD AppProject to member clusters with CRP (Experimental)</strong></p><p>If you tried above Option 2 to install ArgoCD from hub cluster to member clusters, you gain the flexibility by just updating the <code>argocd-cmd-params-cm</code> configmap, and adding the <a href=/website/docs/tutorials/argocd/manifests/guestbook-appproject.yaml>guestbook-appproject</a> to the <code>argocd</code> namespace, and <a href=/website/docs/tutorials/argocd/manifests/argocd-crp.yaml>existing CRP</a> will populate the resources automatically to the member clusters. <em>Note: you probably also want to update the <code>argocd-application-controller</code> and <code>argocd-server</code> a bit to trigger pod restarts.</em></p></li></ul><h2 id=deploy-resources-to-clusters-using-argocd-application-orchestrated-by-kubefleet>Deploy resources to clusters using ArgoCD Application orchestrated by KubeFleet</h2><p>We have prepared one <code>guestbook-ui</code> deployment with corresponding service for each environment.
+The deployments are same except for the replica count. This simulates different configurations for different clusters. You may find the manifests <a href=/website/docs/tutorials/argocd/manifests/guestbook/production/guestbook-ui.yaml>here</a>.</p><pre tabindex=0><code>guestbook  
+│
+└───staging
+│   │   guestbook-ui.yaml
+|
+└───canary
+|   │   guestbook-ui.yaml
+|
+└───production
+    │   guestbook-ui.yaml
+</code></pre><h3 id=deploy-an-argocd-application-for-gitops-continuous-delivery>Deploy an ArgoCD Application for gitops continuous delivery</h3><p>Team A want to create an ArgoCD <code>Application</code> to automatically sync the manifests from git repository to the member clusters.
+The <code>Application</code> should be created on the hub cluster and placed onto the member clusters team A owns. The <code>Application</code> example can be found at <a href=/website/docs/tutorials/argocd/manifests/guestbook-app.yaml>guestbook-app.yaml</a>.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl create ns guestbook
+</span></span><span style=display:flex><span>kubectl apply of - <span style=color:#4e9a06>&lt;&lt; EOF
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>apiVersion: argoproj.io/v1alpha1
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>kind: Application
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  name: guestbook-app
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  namespace: guestbook 
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>spec:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  destination:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    namespace: guestbook
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    server: https://kubernetes.default.svc
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  project: guestbook-project
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  source:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    path: content/en/docs/tutorials/ArgoCD/manifests/guestbook
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    repoURL: https://github.com/kubefleet-dev/website.git
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    targetRevision: main
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  syncPolicy:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    automated:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      prune: true
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      selfHeal: true
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    retry:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      backoff:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        duration: 5s
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        factor: 2
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        maxDuration: 3m0s
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      limit: 10
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    syncOptions:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    - PruneLast=true
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    - PrunePropagationPolicy=foreground
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    - CreateNamespace=true
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    - ApplyOutOfSyncOnly=true
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>EOF</span>
+</span></span></code></pre></div><h3 id=place-argocd-application-to-member-clusters-with-crp>Place ArgoCD Application to member clusters with CRP</h3><p>A <code>ClusterResourcePlacement</code> (CRP) is used to place resources on the hub cluster to member clusters.
+Team A is able to select their own member clusters by specifying cluster labels.
+In <code>spec.resourceSelectors</code>, specifying <code>guestbook</code> namespace includes all resources in it including the <code>Application</code> just deployed.
+The <code>spec.strategy.type</code> is set to <code>External</code> so that CRP is not rolled out immediately. Instead, rollout will be triggered separately in next steps.
+The CRP resource can be found at <a href=/website/docs/tutorials/argocd/manifests/guestbook-crp.yaml>guestbook-crp.yaml</a>.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl apply -f - <span style=color:#4e9a06>&lt;&lt; EOF
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>apiVersion: placement.kubernetes-fleet.io/v1beta1
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>kind: ClusterResourcePlacement
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  name: guestbook-crp
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>spec:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  policy:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    placementType: PickAll # select all member clusters with label team=A
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    affinity:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      clusterAffinity:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        requiredDuringSchedulingIgnoredDuringExecution:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>          clusterSelectorTerms:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>            - labelSelector:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>                matchLabels:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>                  team: A # label selectors
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  resourceSelectors:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  - group: &#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    kind: Namespace
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    name: guestbook # select guestbook namespace with all resources in it
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    version: v1
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  revisionHistoryLimit: 10
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  strategy:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    type: External # will use an updateRun to trigger the rollout
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>EOF</span>
+</span></span></code></pre></div><p>Verify the CRP status and it&rsquo;s clear that only <code>member1</code>, <code>member2</code>, and <code>member3</code> are selected with <code>team=A</code> label are selected, and rollout has not started yet.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl get crp guestbook-crp -o yaml
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>status:
+</span></span><span style=display:flex><span>  conditions:
+</span></span><span style=display:flex><span>  - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-23T23:46:56Z&#34;</span>
+</span></span><span style=display:flex><span>    message: found all cluster needed as specified by the scheduling policy, found
+</span></span><span style=display:flex><span>      <span style=color:#0000cf;font-weight:700>3</span> cluster<span style=color:#ce5c00;font-weight:700>(</span>s<span style=color:#ce5c00;font-weight:700>)</span>
+</span></span><span style=display:flex><span>    observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>    reason: SchedulingPolicyFulfilled
+</span></span><span style=display:flex><span>    status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>    type: ClusterResourcePlacementScheduled
+</span></span><span style=display:flex><span>  - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-23T23:46:56Z&#34;</span>
+</span></span><span style=display:flex><span>    message: There are still <span style=color:#0000cf;font-weight:700>3</span> cluster<span style=color:#ce5c00;font-weight:700>(</span>s<span style=color:#ce5c00;font-weight:700>)</span> in the process of deciding whether to roll
+</span></span><span style=display:flex><span>      out the latest resources or not
+</span></span><span style=display:flex><span>    observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>    reason: RolloutStartedUnknown
+</span></span><span style=display:flex><span>    status: Unknown
+</span></span><span style=display:flex><span>    type: ClusterResourcePlacementRolloutStarted
+</span></span><span style=display:flex><span>  observedResourceIndex: <span style=color:#4e9a06>&#34;0&#34;</span>
+</span></span><span style=display:flex><span>  placementStatuses:
+</span></span><span style=display:flex><span>  - clusterName: member1
+</span></span><span style=display:flex><span>    conditions:
+</span></span><span style=display:flex><span>    - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:22:22Z&#34;</span>
+</span></span><span style=display:flex><span>      message: <span style=color:#4e9a06>&#39;Successfully scheduled resources for placement in &#34;member1&#34; (affinity
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        score: 0, topology spread score: 0): picked by scheduling policy&#39;</span>
+</span></span><span style=display:flex><span>      observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      reason: Scheduled
+</span></span><span style=display:flex><span>      status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>      type: Scheduled
+</span></span><span style=display:flex><span>    - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:22:22Z&#34;</span>
+</span></span><span style=display:flex><span>      message: In the process of deciding whether to roll out the latest resources
+</span></span><span style=display:flex><span>        or not
+</span></span><span style=display:flex><span>      observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      reason: RolloutStartedUnknown
+</span></span><span style=display:flex><span>      status: Unknown
+</span></span><span style=display:flex><span>      type: RolloutStarted
+</span></span><span style=display:flex><span>  - clusterName: member2
+</span></span><span style=display:flex><span>    conditions:
+</span></span><span style=display:flex><span>    - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-23T23:46:56Z&#34;</span>
+</span></span><span style=display:flex><span>      message: <span style=color:#4e9a06>&#39;Successfully scheduled resources for placement in &#34;member2&#34; (affinity
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        score: 0, topology spread score: 0): picked by scheduling policy&#39;</span>
+</span></span><span style=display:flex><span>      observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      reason: Scheduled
+</span></span><span style=display:flex><span>      status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>      type: Scheduled
+</span></span><span style=display:flex><span>    - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-23T23:46:56Z&#34;</span>
+</span></span><span style=display:flex><span>      message: In the process of deciding whether to roll out the latest resources
+</span></span><span style=display:flex><span>        or not
+</span></span><span style=display:flex><span>      observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      reason: RolloutStartedUnknown
+</span></span><span style=display:flex><span>      status: Unknown
+</span></span><span style=display:flex><span>      type: RolloutStarted
+</span></span><span style=display:flex><span>  - clusterName: member3
+</span></span><span style=display:flex><span>    conditions:
+</span></span><span style=display:flex><span>    - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-23T23:46:56Z&#34;</span>
+</span></span><span style=display:flex><span>      message: <span style=color:#4e9a06>&#39;Successfully scheduled resources for placement in &#34;member3&#34; (affinity
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        score: 0, topology spread score: 0): picked by scheduling policy&#39;</span>
+</span></span><span style=display:flex><span>      observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      reason: Scheduled
+</span></span><span style=display:flex><span>      status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>      type: Scheduled
+</span></span><span style=display:flex><span>    - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-23T23:46:56Z&#34;</span>
+</span></span><span style=display:flex><span>      message: In the process of deciding whether to roll out the latest resources
+</span></span><span style=display:flex><span>        or not
+</span></span><span style=display:flex><span>      observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      reason: RolloutStartedUnknown
+</span></span><span style=display:flex><span>      status: Unknown
+</span></span><span style=display:flex><span>      type: RolloutStarted
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><h3 id=override-path-for-different-member-clusters-with-resourceoverride>Override path for different member clusters with ResourceOverride</h3><p>Above <code>Application</code> specifies <code>spec.source.path</code> as <code>content/en/docs/tutorials/ArgoCD/manifests/guestbook</code>.
+By default, every member cluster selected receives the same <code>Application</code> resource.
+In this tutorial, member clusters from different environments should receive different manifests, as configured in different folders in the git repo.
+To achieve this, a <code>ResourceOverride</code> is used to override the <code>Application</code> resource for each member cluster.
+The <code>ResourceOverride</code> resource can be found at <a href=/website/docs/tutorials/argocd/manifests/guestbook-ro.yaml>guestbook-ro.yaml</a>.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl apply -f - <span style=color:#4e9a06>&lt;&lt; EOF
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>apiVersion: placement.kubernetes-fleet.io/v1alpha1
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>kind: ResourceOverride
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  name: guestbook-app-ro
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  namespace: guestbook # ro needs to be created in the same namespace as the resource it overrides
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>spec:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  placement:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    name: guestbook-crp # specify the CRP name
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  policy:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    overrideRules:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    - clusterSelector:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        clusterSelectorTerms:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        - labelSelector: 
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>            matchExpressions:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>            - key: environment
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>              operator: Exists
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      jsonPatchOverrides:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      - op: replace
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        path: /spec/source/path # spec.source.path is overridden
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        value: &#34;content/en/docs/tutorials/ArgoCD/manifests/guestbook/${MEMBER-CLUSTER-LABEL-KEY-environment}&#34;
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      overrideType: JSONPatch
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  resourceSelectors:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  - group: argoproj.io
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    kind: Application
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    name: guestbook-app # name of the Application
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    version: v1alpha1
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>EOF</span>
+</span></span></code></pre></div><h3 id=trigger-crp-progressive-rollout-with-clusterstagedupdaterun>Trigger CRP progressive rollout with clusterStagedUpdateRun</h3><p>A <code>ClusterStagedUpdateRun</code> (or updateRun for short) is used to trigger the rollout of the CRP in a progressive, stage-by-stage manner by following a pre-defined rollout strategy, namely <code>ClusterStagedUpdateStrategy</code>.</p><p>A <code>ClusterStagedUpdateStrategy</code> is provided at <a href=/website/docs/tutorials/argocd/manifests/teamA-strategy.yaml>teamA-strategy.yaml</a>.
+It defines 3 stages: staging, canary, and production. Clusters are grouped by label <code>environment</code> into different stages.
+The <code>TimedWait</code> after-stage task in <code>staging</code> stageis used to pause the rollout for 1 minute before moving to <code>canary</code> stage.s
+The <code>Approval</code> after-stage task in <code>canary</code> stage waits for manual approval before moving to <code>production</code> stage.
+After applying the strategy, a <code>ClusterStagedUpdateRun</code> can then reference it to generate the concrete test plan.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl apply -f - <span style=color:#4e9a06>&lt;&lt; EOF
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>apiVersion: placement.kubernetes-fleet.io/v1beta1
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>kind: ClusterStagedUpdateStrategy
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  name: team-a-strategy
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>spec:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  stages: # 3 stages: staging, canary, production
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  - afterStageTasks:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    - type: TimedWait
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      waitTime: 1m # wait 1 minute before moving to canary stage
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    labelSelector:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      matchLabels:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        environment: staging
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    name: staging
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  - afterStageTasks:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    - type: Approval # wait for manual approval before moving to production stage
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    labelSelector:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      matchLabels:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        environment: canary
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    name: canary
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  - labelSelector:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>      matchLabels:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>        environment: production
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>    name: production
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>EOF</span>
+</span></span></code></pre></div><p>Now it&rsquo;s time to trigger the rollout. A sample <code>ClusterStagedUpdateRun</code> can be found at <a href=/website/docs/tutorials/argocd/manifests/guestbook-updaterun.yaml>guestbook-updaterun.yaml</a>.
+It&rsquo;s pretty straightforward, just specifying the CRP resource name, the strategy name, and resource version.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl apply -f - <span style=color:#4e9a06>&lt;&lt; EOF
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>apiVersion: placement.kubernetes-fleet.io/v1beta1
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>kind: ClusterStagedUpdateRun
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  name: guestbook-updaterun
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>spec:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  placementName: guestbook-crp
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  resourceSnapshotIndex: &#34;0&#34;
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  stagedRolloutStrategyName: team-a-strategy
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>EOF</span>
+</span></span></code></pre></div><p>Checking the updateRun status to see the rollout progress, <code>member1</code> in <code>staging</code> stage has been updated, and it&rsquo;s pausing at the <code>after-stage</code> task before moving to <code>canary</code> stage.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl get crsur gestbook-updaterun -o yaml
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>stagesStatus:
+</span></span><span style=display:flex><span>  - afterStageTaskStatus:
+</span></span><span style=display:flex><span>    - type: TimedWait
+</span></span><span style=display:flex><span>    clusters:
+</span></span><span style=display:flex><span>    - clusterName: member1
+</span></span><span style=display:flex><span>      conditions:
+</span></span><span style=display:flex><span>      - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:47:41Z&#34;</span>
+</span></span><span style=display:flex><span>        message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>        observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>        reason: ClusterUpdatingStarted
+</span></span><span style=display:flex><span>        status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>        type: Started
+</span></span><span style=display:flex><span>      - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:47:56Z&#34;</span>
+</span></span><span style=display:flex><span>        message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>        observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>        reason: ClusterUpdatingSucceeded
+</span></span><span style=display:flex><span>        status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>        type: Succeeded
+</span></span><span style=display:flex><span>      resourceOverrideSnapshots:
+</span></span><span style=display:flex><span>      - name: guestbook-app-ro-0
+</span></span><span style=display:flex><span>        namespace: guestbook
+</span></span><span style=display:flex><span>    conditions:
+</span></span><span style=display:flex><span>    - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:47:56Z&#34;</span>
+</span></span><span style=display:flex><span>      message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>      observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      reason: StageUpdatingWaiting
+</span></span><span style=display:flex><span>      status: <span style=color:#4e9a06>&#34;False&#34;</span>
+</span></span><span style=display:flex><span>      type: Progressing
+</span></span><span style=display:flex><span>    stageName: staging
+</span></span><span style=display:flex><span>    startTime: <span style=color:#4e9a06>&#34;2025-03-24T00:47:41Z&#34;</span>
+</span></span><span style=display:flex><span>  - afterStageTaskStatus:
+</span></span><span style=display:flex><span>    - approvalRequestName: guestbook-updaterun-canary
+</span></span><span style=display:flex><span>      type: Approval
+</span></span><span style=display:flex><span>    clusters:
+</span></span><span style=display:flex><span>    - clusterName: member2
+</span></span><span style=display:flex><span>      resourceOverrideSnapshots:
+</span></span><span style=display:flex><span>      - name: guestbook-app-ro-0
+</span></span><span style=display:flex><span>        namespace: guestbook
+</span></span><span style=display:flex><span>    stageName: canary
+</span></span><span style=display:flex><span>  - clusters:
+</span></span><span style=display:flex><span>    - clusterName: member3
+</span></span><span style=display:flex><span>      resourceOverrideSnapshots:
+</span></span><span style=display:flex><span>      - name: guestbook-app-ro-0
+</span></span><span style=display:flex><span>        namespace: guestbook
+</span></span><span style=display:flex><span>    stageName: production
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><p>Checking the <code>Application</code> status on each member cluster, and it&rsquo;s synced and healthy:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context member1
+</span></span><span style=display:flex><span>kubectl get Applications -n guestbook
+</span></span><span style=display:flex><span>NAMESPACE   NAME            SYNC STATUS   HEALTH STATUS
+</span></span><span style=display:flex><span>guestbook   guestbook-app   Synced        Healthy
+</span></span></code></pre></div><p>At the same time, there&rsquo;s no <code>Application</code> in <code>member2</code> or <code>member3</code> as they are not rolled out yet.</p><p>After 1 minute, the <code>staging</code> stage is completed, and <code>member2</code> in <code>canary</code> stage is updated.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl get crsur guestbook-updaterun -o yaml
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>- afterStageTaskStatus:
+</span></span><span style=display:flex><span>    - approvalRequestName: guestbook-updaterun-canary
+</span></span><span style=display:flex><span>      conditions:
+</span></span><span style=display:flex><span>      - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:49:11Z&#34;</span>
+</span></span><span style=display:flex><span>        message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>        observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>        reason: AfterStageTaskApprovalRequestCreated
+</span></span><span style=display:flex><span>        status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>        type: ApprovalRequestCreated
+</span></span><span style=display:flex><span>      type: Approval
+</span></span><span style=display:flex><span>    clusters:
+</span></span><span style=display:flex><span>    - clusterName: member2
+</span></span><span style=display:flex><span>      conditions:
+</span></span><span style=display:flex><span>      - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:48:56Z&#34;</span>
+</span></span><span style=display:flex><span>        message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>        observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>        reason: ClusterUpdatingStarted
+</span></span><span style=display:flex><span>        status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>        type: Started
+</span></span><span style=display:flex><span>      - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:49:11Z&#34;</span>
+</span></span><span style=display:flex><span>        message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>        observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>        reason: ClusterUpdatingSucceeded
+</span></span><span style=display:flex><span>        status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>        type: Succeeded
+</span></span><span style=display:flex><span>      resourceOverrideSnapshots:
+</span></span><span style=display:flex><span>      - name: guestbook-app-ro-0
+</span></span><span style=display:flex><span>        namespace: guestbook
+</span></span><span style=display:flex><span>    conditions:
+</span></span><span style=display:flex><span>    - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:49:11Z&#34;</span>
+</span></span><span style=display:flex><span>      message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>      observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      reason: StageUpdatingWaiting
+</span></span><span style=display:flex><span>      status: <span style=color:#4e9a06>&#34;False&#34;</span>
+</span></span><span style=display:flex><span>      type: Progressing
+</span></span><span style=display:flex><span>    stageName: canary
+</span></span><span style=display:flex><span>    startTime: <span style=color:#4e9a06>&#34;2025-03-24T00:48:56Z&#34;</span>
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><p><code>canary</code> stage requires manual approval to complete. The controller generates a <code>ClusterApprovalRequest</code> object for user to approve.
+The name is included in the updateRun status, as shown above, <code>approvalRequestName: guestbook-updaterun-canary</code>.
+Team A can verify everything works properly and then approve the request to proceed to <code>production</code> stage:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl get clusterapprovalrequests
+</span></span><span style=display:flex><span>NAME                         UPDATE-RUN            STAGE    APPROVED   APPROVALACCEPTED   AGE
+</span></span><span style=display:flex><span>guestbook-updaterun-canary   guestbook-updaterun   canary                                 21m
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl patch clusterapprovalrequests guestbook-updaterun-canary --type<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#39;merge&#39;</span> -p <span style=color:#4e9a06>&#39;{&#34;status&#34;:{&#34;conditions&#34;:[{&#34;type&#34;:&#34;Approved&#34;,&#34;status&#34;:&#34;True&#34;,&#34;reason&#34;:&#34;lgtm&#34;,&#34;message&#34;:&#34;lgtm&#34;,&#34;lastTransitionTime&#34;:&#34;&#39;</span><span style=color:#204a87;font-weight:700>$(</span>date -u +%Y-%m-%dT%H:%M:%SZ<span style=color:#204a87;font-weight:700>)</span><span style=color:#4e9a06>&#39;&#34;,&#34;observedGeneration&#34;:1}]}}&#39;</span> --subresource<span style=color:#ce5c00;font-weight:700>=</span>status
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl get clusterapprovalrequests
+</span></span><span style=display:flex><span>NAME                         UPDATE-RUN            STAGE    APPROVED   APPROVALACCEPTED   AGE
+</span></span><span style=display:flex><span>guestbook-updaterun-canary   guestbook-updaterun   canary   True       True               22m
+</span></span></code></pre></div><p>Not the updateRun moves on to <code>production</code> stage, and <code>member3</code> is updated. The whole updateRun is completed:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl get crsur guestbook-updaterun -o yaml
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>status:
+</span></span><span style=display:flex><span>  conditions:
+</span></span><span style=display:flex><span>  - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:47:41Z&#34;</span>
+</span></span><span style=display:flex><span>    message: ClusterStagedUpdateRun initialized successfully
+</span></span><span style=display:flex><span>    observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>    reason: UpdateRunInitializedSuccessfully
+</span></span><span style=display:flex><span>    status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>    type: Initialized
+</span></span><span style=display:flex><span>  - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T00:47:41Z&#34;</span>
+</span></span><span style=display:flex><span>    message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>    observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>    reason: UpdateRunStarted
+</span></span><span style=display:flex><span>    status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>    type: Progressing
+</span></span><span style=display:flex><span>  - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T01:11:45Z&#34;</span>
+</span></span><span style=display:flex><span>    message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>    observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>    reason: UpdateRunSucceeded
+</span></span><span style=display:flex><span>    status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>    type: Succeeded
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>  stagesStatus:
+</span></span><span style=display:flex><span>  ...
+</span></span><span style=display:flex><span>  - clusters:
+</span></span><span style=display:flex><span>    - clusterName: member3
+</span></span><span style=display:flex><span>      conditions:
+</span></span><span style=display:flex><span>      - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T01:11:30Z&#34;</span>
+</span></span><span style=display:flex><span>        message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>        observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>        reason: ClusterUpdatingStarted
+</span></span><span style=display:flex><span>        status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>        type: Started
+</span></span><span style=display:flex><span>      - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T01:11:45Z&#34;</span>
+</span></span><span style=display:flex><span>        message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>        observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>        reason: ClusterUpdatingSucceeded
+</span></span><span style=display:flex><span>        status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>        type: Succeeded
+</span></span><span style=display:flex><span>      resourceOverrideSnapshots:
+</span></span><span style=display:flex><span>      - name: guestbook-app-ro-0
+</span></span><span style=display:flex><span>        namespace: guestbook
+</span></span><span style=display:flex><span>    conditions:
+</span></span><span style=display:flex><span>    - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T01:11:45Z&#34;</span>
+</span></span><span style=display:flex><span>      message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>      observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      reason: StageUpdatingWaiting
+</span></span><span style=display:flex><span>      status: <span style=color:#4e9a06>&#34;False&#34;</span>
+</span></span><span style=display:flex><span>      type: Progressing
+</span></span><span style=display:flex><span>    - lastTransitionTime: <span style=color:#4e9a06>&#34;2025-03-24T01:11:45Z&#34;</span>
+</span></span><span style=display:flex><span>      message: <span style=color:#4e9a06>&#34;&#34;</span>
+</span></span><span style=display:flex><span>      observedGeneration: <span style=color:#0000cf;font-weight:700>1</span>
+</span></span><span style=display:flex><span>      reason: StageUpdatingSucceeded
+</span></span><span style=display:flex><span>      status: <span style=color:#4e9a06>&#34;True&#34;</span>
+</span></span><span style=display:flex><span>      type: Succeeded
+</span></span><span style=display:flex><span>    endTime: <span style=color:#4e9a06>&#34;2025-03-24T01:11:45Z&#34;</span>
+</span></span><span style=display:flex><span>    stageName: production
+</span></span><span style=display:flex><span>    startTime: <span style=color:#4e9a06>&#34;2025-03-24T01:11:30Z&#34;</span>
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><h3 id=verify-the-application-on-member-clusters>Verify the Application on member clusters</h3><p>Now we are able to see the <code>Application</code> is created, synced, and healthy on all member clusters except <code>member4</code> as it does not belong to team A.
+We can also verify that the configMaps synced from git repo are different for each member cluster:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context member1
+</span></span><span style=display:flex><span>kubectl get app -n guestbook
+</span></span><span style=display:flex><span>NAMESPACE   NAME            SYNC STATUS   HEALTH STATUS
+</span></span><span style=display:flex><span>guestbook   guestbook-app   Synced        Healthy
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl get deploy,svc -n guestbook
+</span></span><span style=display:flex><span>NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+</span></span><span style=display:flex><span>deployment.apps/guestbook-ui   1/1     <span style=color:#0000cf;font-weight:700>1</span>            <span style=color:#0000cf;font-weight:700>1</span>           80s <span style=color:#8f5902;font-style:italic># 1 replica in staging env</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT<span style=color:#ce5c00;font-weight:700>(</span>S<span style=color:#ce5c00;font-weight:700>)</span>   AGE
+</span></span><span style=display:flex><span>service/guestbook-ui   ClusterIP   10.0.20.139   &lt;none&gt;        80/TCP    79s
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># verify member2</span>
+</span></span><span style=display:flex><span>kubectl config use-context member2
+</span></span><span style=display:flex><span>kubectl get app -n guestbook
+</span></span><span style=display:flex><span>NAMESPACE   NAME            SYNC STATUS   HEALTH STATUS
+</span></span><span style=display:flex><span>guestbook   guestbook-app   Synced        Healthy
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl get deploy,svc -n guestbook
+</span></span><span style=display:flex><span>NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+</span></span><span style=display:flex><span>deployment.apps/guestbook-ui   2/2     <span style=color:#0000cf;font-weight:700>2</span>            <span style=color:#0000cf;font-weight:700>2</span>           54s <span style=color:#8f5902;font-style:italic># 2 replicas in canary env</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT<span style=color:#ce5c00;font-weight:700>(</span>S<span style=color:#ce5c00;font-weight:700>)</span>   AGE
+</span></span><span style=display:flex><span>service/guestbook-ui   ClusterIP   10.0.20.139   &lt;none&gt;        80/TCP    54s
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># verify member3</span>
+</span></span><span style=display:flex><span>kubectl config use-context member3
+</span></span><span style=display:flex><span>kubectl get app -n guestbook
+</span></span><span style=display:flex><span>NAMESPACE   NAME            SYNC STATUS   HEALTH STATUS
+</span></span><span style=display:flex><span>guestbook   guestbook-app   Synced        Healthy
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>kubectl get deploy,svc -n guestbook
+</span></span><span style=display:flex><span>NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+</span></span><span style=display:flex><span>deployment.apps/guestbook-ui   4/4     <span style=color:#0000cf;font-weight:700>4</span>            <span style=color:#0000cf;font-weight:700>4</span>           18s <span style=color:#8f5902;font-style:italic># 4 replicas in production env</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT<span style=color:#ce5c00;font-weight:700>(</span>S<span style=color:#ce5c00;font-weight:700>)</span>   AGE
+</span></span><span style=display:flex><span>service/guestbook-ui   ClusterIP   10.0.20.139   &lt;none&gt;        80/TCP    17s
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8f5902;font-style:italic># verify member4</span>
+</span></span><span style=display:flex><span>kubectl config use-context member4
+</span></span><span style=display:flex><span>kubectl get app -A
+</span></span><span style=display:flex><span>No resources found
+</span></span></code></pre></div><h2 id=release-a-new-version>Release a new version</h2><p>When team A makes some changes and decides to release a new version, they can cut a new branch or tag in the git repo.
+To rollout this new version progressively, they can simply:</p><ol><li>Update the <code>targetRevision</code> in the <code>Application</code> resource to the new branch or tag on the hub cluster.</li><li>Create a new <code>ClusterStagedUpdateRun</code> with the new resource snapshot index.</li></ol><p>Suppose now we cut a new release on branch <code>v0.0.1</code>.
+Updating the <code>spec.source.targetRevision</code> in the <code>Application</code> resource to <code>v0.0.1</code> will not trigger rollout instantly.</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl edit app guestbook-app -n guestbook
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>spec:
+</span></span><span style=display:flex><span>  source:
+</span></span><span style=display:flex><span>    targetRevision: v0.0.1 <span style=color:#8f5902;font-style:italic># &lt;- replace with your release branch</span>
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><p>Checking the crp, and it&rsquo;s clear that the new <code>Application</code> is not available yet:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl get crp
+</span></span><span style=display:flex><span>NAME            GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+</span></span><span style=display:flex><span>guestbook-crp   <span style=color:#0000cf;font-weight:700>1</span>     True        <span style=color:#0000cf;font-weight:700>1</span>                                           130m
+</span></span></code></pre></div><p>Check a new version of <code>ClusterResourceSnapshot</code> is generated:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl get clusterresourcesnapshots --show-labels
+</span></span><span style=display:flex><span>NAME                       GEN   AGE     LABELS
+</span></span><span style=display:flex><span>guestbook-crp-0-snapshot   <span style=color:#0000cf;font-weight:700>1</span>     133m    kubernetes-fleet.io/is-latest-snapshot<span style=color:#ce5c00;font-weight:700>=</span>false,kubernetes-fleet.io/parent-CRP<span style=color:#ce5c00;font-weight:700>=</span>guestbook-crp,kubernetes-fleet.io/resource-index<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#0000cf;font-weight:700>0</span>
+</span></span><span style=display:flex><span>guestbook-crp-1-snapshot   <span style=color:#0000cf;font-weight:700>1</span>     3m46s   kubernetes-fleet.io/is-latest-snapshot<span style=color:#ce5c00;font-weight:700>=</span>true,kubernetes-fleet.io/parent-CRP<span style=color:#ce5c00;font-weight:700>=</span>guestbook-crp,kubernetes-fleet.io/resource-index<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#0000cf;font-weight:700>1</span>
+</span></span></code></pre></div><p>Notice that <code>guestbook-crp-1-snapshot</code> is latest with <code>resource-index</code> set to <code>1</code>.</p><p>Create a new <code>ClusterStagedUpdateRun</code> with the new resource snapshot index:</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kubectl config use-context hub
+</span></span><span style=display:flex><span>kubectl apply -f - <span style=color:#4e9a06>&lt;&lt; EOF
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>apiVersion: placement.kubernetes-fleet.io/v1beta1
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>kind: ClusterStagedUpdateRun
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>metadata:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  name: guestbook-updaterun
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>spec:
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  placementName: guestbook-crp
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  resourceSnapshotIndex: &#34;1&#34;
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>  stagedRolloutStrategyName: team-a-strategy
+</span></span></span><span style=display:flex><span><span style=color:#4e9a06>EOF</span>
+</span></span></code></pre></div><p>Following the same steps as before, we can see the new version is rolled out progressively to all member clusters.</p><h2 id=summary>Summary</h2><p>KubeFleet and ArgoCD integration offers a powerful solution for multi-cluster application management, combining KubeFleet&rsquo;s intelligent orchestration with ArgoCD&rsquo;s popular GitOps approach. This tutorial showcased how teams can deploy applications across diverse environments with cluster-specific configurations while maintaining complete control over the rollout process. Through practical examples, we demonstrated targeted deployments using cluster labels, environment-specific configurations via overrides, and safe, controlled rollouts with staged update runs. This integration enables teams to transform multi-cluster challenges into streamlined, automated workflows that enhance both developer productivity and operational reliability.</p><h2 id=next-steps>Next steps</h2><ul><li>Learn more about <a href=/website/docs/concepts/crp/>ClusterResourcePlacements</a>.</li><li>Learn more about <a href=/website/docs/concepts/override/>ClusterResourceOverrides and ResourceOverrides</a>.</li><li>Learn more about <a href=/website/docs/concepts/staged-update/>ClusterStagedUpdateRun</a>.</li></ul><style>.feedback--answer{display:inline-block}.feedback--answer-no{margin-left:1em}.feedback--response{display:none;margin-top:1em}.feedback--response__visible{display:block}</style><div class=d-print-none><h2 class=feedback--title>Feedback</h2><p class=feedback--question>Was this page helpful?</p><button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">Yes</button>
+<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">No</button><p class="feedback--response feedback--response-yes">Glad to hear it! Please <a href=https://github.com/kubefleet-dev/website/issues/new>tell us how we can further improve</a>.</p><p class="feedback--response feedback--response-no">Sorry to hear that. Please <a href=hhttps://github.com/kubefleet-dev/website/issues/new>tell us how we can fix the experience for you</a>.</p></div><script>const yesButton=document.querySelector(".feedback--answer-yes"),noButton=document.querySelector(".feedback--answer-no"),yesResponse=document.querySelector(".feedback--response-yes"),noResponse=document.querySelector(".feedback--response-no"),disableButtons=()=>{yesButton.disabled=!0,noButton.disabled=!0},sendFeedback=e=>{if(typeof gtag!="function")return;gtag("event","page_helpful",{event_category:"Helpful",event_label:window.location.pathname,value:e})};yesButton.addEventListener("click",()=>{yesResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(100)}),noButton.addEventListener("click",()=>{noResponse.classList.add("feedback--response__visible"),disableButtons(),sendFeedback(0)})</script><br></div></main></div></div><footer class="td-footer row d-print-none"><div class=container-fluid><div class="row mx-md-2"><div class="td-footer__left col-6 col-sm-4 order-sm-1"></div><div class="td-footer__right col-6 col-sm-4 order-sm-3"><ul class=td-footer__links-list><li class=td-footer__links-item data-bs-toggle=tooltip title=GitHub aria-label=GitHub><a target=_blank rel=noopener href=https://github.com/kubefleet-dev/kubefleet aria-label=GitHub><i class="fab fa-github"></i></a></li></ul></div><div class="td-footer__center col-12 col-sm-4 py-2 order-sm-2"><span class=td-footer__copyright>&copy;
+2025&ndash;2025
+<span class=td-footer__authors>KubeFleet Contributors | The Linux Foundation® (TLF) has registered trademarks and uses trademarks. For a list of TLF trademarks, see <a href=https://www.linuxfoundation.org/trademark-usage/>Trademark Usage</a> | <a href=https://creativecommons.org/licenses/by/4.0>CC BY 4.0</a> |</span></span><span class=td-footer__all_rights_reserved>All Rights Reserved</span><span class=ms-2><a href=https://github.com/kubefleet-dev/website/blob/main/PRIVACY_POLICY.md target=_blank rel=noopener>Privacy Policy</a></span></div></div></div></footer></div><script src=/website/js/main.min.032ba2ecbd3ce89b96bffcfec71c5da352125ee752e9873c3e0098f7c32a6497.js integrity="sha256-Ayui7L086JuWv/z+xxxdo1ISXudS6Yc8PgCY98MqZJc=" crossorigin=anonymous></script><script defer src=/website/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js integrity="sha256-c0eKfUgHaYrtfjVesj+YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin=anonymous></script><script src=/website/js/tabpane-persist.js></script></body></html>
