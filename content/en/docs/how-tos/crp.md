@@ -32,7 +32,7 @@ specifying which resources to select for placement. To add a resource selector, 
 the `resourceSelectors` field in the `ClusterResourcePlacement` spec:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
@@ -152,7 +152,7 @@ which clusters to place resources at. To use this placement type, specify the ta
 names in the `clusterNames` field, such as
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
@@ -193,7 +193,7 @@ of a label.
 > Guide.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
@@ -216,7 +216,7 @@ The `ClusterResourcePlacement` object above will pick all the clusters with the 
 
 Fleet is forward-looking with the `PickAll` placement type: any cluster that satisfies the
 affinity terms of a `ClusterResourcePlacement` object, even if it joins after the
- `ClsuterResourcePlacement` object is created, will be picked.
+ `ClusterResourcePlacement` object is created, will be picked.
 
 > Note
 >
@@ -250,7 +250,7 @@ to enable high-availability.
 > [Using Topology Spread Constraints to Pick Clusters](topology-spread-constraints) How-To Guide.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
@@ -441,7 +441,7 @@ placement type and a target number of clusters of 10, with the default rollout s
 shown in the example below,
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
@@ -488,7 +488,7 @@ of the history (i.e., how many snapshot objects Fleet will keep for a `ClusterRe
 configure the `revisionHistoryLimit` field:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
