@@ -6,9 +6,11 @@ weight: 6
 
 ## What are the KubeFleet-owned resources on the hub and member clusters? Can these KubeFleet-owned resources be modified by the user?
 
-KubeFleet reserves namespaces `fleet-system` and `fleet-member-[YOUR-CLUSTER-NAME]` where `YOUR-CLUSTER-NAME` are names of member clusters that have joined the fleet.
+KubeFleet reserves all namespaces with the prefix `fleet-`, such as `fleet-system` and `fleet-member-YOUR-CLUSTER-NAME` where
+`YOUR-CLUSTER-NAME` are names of member clusters that have joined the fleet. Additionally, KubeFleet will skip resources
+under namespaces with the prefix `kube-`.
 
-The following resources are the KubeFleet-owned internal resources on the hub cluster side:
+KubeFleet-owned **internal** resources on the hub cluster side include:
 
 | Resource                           |
 |------------------------------------|
@@ -17,8 +19,25 @@ The following resources are the KubeFleet-owned internal resources on the hub cl
 | `ClusterResourceSnapshot`          |
 | `ClusterSchedulingPolicySnapshot`  |
 | `ClusterResourceBinding`           |
+| `ResourceOverrideSnapshots`        |
+| `ClusterResourceOverrideSnapshots` |
 
-The following resources are the KubeFleet-owned internal resources on the member cluster side:
+And the public APIs exposed by KubeFleet are:
+
+| Resource                                    |
+|---------------------------------------------|
+| `ClusterResourcePlacement`                  |
+| `ClusterResourceEnvelope`                   |
+| `ResourceEnvelope`                          |
+| `ClusterStagedUpdateRun`                    |
+| `ClusterStagedUpdateRunStrategy`            |
+| `ClusterApprovalRequests`                   |
+| `ClusterResourceOverrides`                  |
+| `ResourceOverrides`                         |
+| `ClusterResourcePlacementDisruptionBudgets` |
+| `ClusterResourcePlacementEvictions`         |
+
+The following resources are the KubeFleet-owned **internal** resources on the member cluster side:
 
 | Resource                |
 |-------------------------|
@@ -28,7 +47,6 @@ See the [KubeFleet source code](https://github.com/kubefleet-dev/kubefleet/tree/
 
 Depending on your setup, your environment might feature a few KubeFleet provided webhooks that help safeguard
 the KubeFleet internal resources and the KubeFleet reserved namespaces.
-
 
 ## Which kinds of resources can be propagated from the hub cluster to the member clusters? How can I control the list?
 
@@ -61,7 +79,7 @@ applies a manifest. For more information, see the KubeFleet documentation on tak
 
 ## What happens if I modify a resource on the hub cluster that has been placed to member clusters? What happens if I modify a resource on the member cluster that is managed by KubeFleet?
 
-If you write a resource on the hub cluster end, KubeFleet will synchronize your changes to all member clusters automatically.
+If you write a resource on the hub cluster end, KubeFleet will synchronize your changes to all selected member clusters automatically.
 Specifically, when you update a resource, your changes will be applied to all member clusters; should you choose to delete a
 resource, it will be removed from all member clusters as well.
 
