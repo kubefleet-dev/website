@@ -1,16 +1,17 @@
 ---
 title: Frequently Asked Questions
-description: Frequently Asked Questions about Fleet
+description: Frequently Asked Questions about KubeFleet
 weight: 6
 ---
 
-## What are fleet-owned resources on the hub and member clusters? Can these fleet-owned resources be modified by the user?
+## What are the KubeFleet-owned resources on the hub and member clusters? Can these KubeFleet-owned resources be modified by the user?
 
-Majority of the `internal` resources and fleet reserved namespaces described below are safeguarded by a series of validating webhooks, serving as a preventive measure to restrict users from making modifications to them.
+KubeFleet reserves all namespaces with the prefix `fleet-`, such as `fleet-system` and `fleet-member-YOUR-CLUSTER-NAME` where
+`YOUR-CLUSTER-NAME` are names of member clusters that have joined the fleet. Additionally, KubeFleet will skip resources
+under namespaces with the prefix `kube-`.
 
-The fleet reserved namespace are `fleet-system` and `fleet-member-{clusterName}` where clusterName is the name of each member cluster that has joined the fleet.
+KubeFleet-owned **internal** resources on the hub cluster side include:
 
-* Fleet hub cluster internal resources:
 | Resource                           |
 |------------------------------------|
 | `InternalMemberCluster`            |
@@ -18,51 +19,71 @@ The fleet reserved namespace are `fleet-system` and `fleet-member-{clusterName}`
 | `ClusterResourceSnapshot`          |
 | `ClusterSchedulingPolicySnapshot`  |
 | `ClusterResourceBinding`           |
+| `ResourceOverrideSnapshots`        |
+| `ClusterResourceOverrideSnapshots` |
 
-*  Fleet member cluster internal resources:
+And the public APIs exposed by KubeFleet are:
+
+| Resource                                    |
+|---------------------------------------------|
+| `ClusterResourcePlacement`                  |
+| `ClusterResourceEnvelope`                   |
+| `ResourceEnvelope`                          |
+| `ClusterStagedUpdateRun`                    |
+| `ClusterStagedUpdateRunStrategy`            |
+| `ClusterApprovalRequests`                   |
+| `ClusterResourceOverrides`                  |
+| `ResourceOverrides`                         |
+| `ClusterResourcePlacementDisruptionBudgets` |
+| `ClusterResourcePlacementEvictions`         |
+
+The following resources are the KubeFleet-owned **internal** resources on the member cluster side:
+
 | Resource                |
 |-------------------------|
-| `InternalMemberCluster` |
 | `AppliedWork`           |
 
-**Fleet APIs** are defined [here](https://github.com/Azure/fleet/tree/main/apis), **Fleet CRDs** are defined [here](https://github.com/Azure/fleet/tree/main/config/crd/bases).
+See the [KubeFleet source code](https://github.com/kubefleet-dev/kubefleet/tree/main/apis) for the definitions of these APIs.
 
-* Fleet Networking hub cluster internal resources:
-| Resource                |
-|-------------------------|
-| `EndpointSliceExport`   |
-| `EndpointSliceImport`   |
-| `InternalServiceExport` |
-| `InternalServiceImport` |
-| `ServiceImport`         |
+Depending on your setup, your environment might feature a few KubeFleet provided webhooks that help safeguard
+the KubeFleet internal resources and the KubeFleet reserved namespaces.
 
-**Fleet Networking APIs** are defined [here](https://github.com/Azure/fleet-networking/tree/main/api/v1alpha1), **Fleet Networking CRDs** are defined [here](https://github.com/Azure/fleet-networking/tree/main/config/crd/bases).
+## Which kinds of resources can be propagated from the hub cluster to the member clusters? How can I control the list?
 
-## What kind of the resources are allowed to be propagated from the hub cluster to the member clusters? How can I control the list?
+When you use the `ClusterResourcePlacement` API to select resources for placement, KubeFleet will automatically ignore
+certain Kubernetes resource groups and/or GVKs. The resources exempted from placement include:
 
-The resources to be propagated from the hub cluster to the member clusters can be controlled by either an exclude/skip list or an include/allow list which are mutually exclusive.
+- Pods and Nodes
+- All resources in the `events.k8s.io` resource group.
+- All resources in the `coordination.k8s.io` resource group.
+- All resources in the `metrics.k8s.io` resource group.
+- All KubeFleet internal resources.
 
-`ClusterResourcePlacement` excludes certain groups/resources when propagating the resources by default. They are defined [here](https://github.com/Azure/fleet/blob/main/pkg/utils/apiresources.go).
-- `k8s.io/api/events/v1` (group)
-- `k8s.io/api/coordination/v1` (group)
-- `k8s.io/metrics/pkg/apis/metrics/v1beta1` (group)
-- `k8s.io/api/core/v1` (pod, node)
-- `networking.fleet.azure.com` (service import resource)
-- any resources in the "default" namespace
+Refer to the [KubeFleet source code](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/utils/apiresources.go) for more
+information. In addition, KubeFleet will refuse to place the `default` namespace on the hub cluster to member clusters.
 
-You can use `skipped-propagating-apis` and `skipped-propagating-namespaces` flag when installing the hub-agent to skip resources from being propagated by specifying their group/group-version/group-version-kind and namespaces.
+If you would like to enforce additional restrictions, set up the `skipped-propagating-apis` and/or the `skipped-propagating-namespaces` flag on the KubeFleet hub agent, which blocks a specific resource type or a specific
+namespace for placement respectively.
 
-You can use `allowed-propagating-apis` flag on the hub-agent to only allow propagation of desired set of resources specified in the form of group/group-version/group-version-kind. This flag is mutually exclusive with `skipped-propagating-apis`.
+You may also specify the `allowed-propagating-apis` flag on the KubeFleet hub agent to explicitly dictate
+a number of resource types that can be placed via KubeFleet; all resource types not on the whitelist will not be
+selected by KubeFleet for placement. Note that this flag is mutually exclusive with the `skipped-propagating-apis` flag.
 
-## What happens to existing resources in member clusters when their definitions conflict with the desired resources in the hub cluster?
+## What happens to existing resources in member clusters when their configuration is in conflict from their hub cluster counterparts?
 
-In case of a conflict, where a resource already exists on the member cluster, the apply operation fails when trying to propagate the same resource from the hub cluster.
+By default, when KubeFleet encounters a pre-existing resource on the member cluster side, it will attempt to assume
+ownership of the resource and overwrite its configuration with values from the hub cluster. You may use apply strategies
+to fine-tune this behavior: for example, you may choose to let KubeFleet ignore all pre-existing resources, or let
+KubeFleet check if the configuration is consistent between the hub cluster end and the member cluster end before KubeFleet
+applies a manifest. For more information, see the KubeFleet documentation on takeover policies.
 
-## What happens if modifies resources that were placed from hub to member clusters?
+## What happens if I modify a resource on the hub cluster that has been placed to member clusters? What happens if I modify a resource on the member cluster that is managed by KubeFleet?
 
-Possible scenarios:
+If you write a resource on the hub cluster end, KubeFleet will synchronize your changes to all selected member clusters automatically.
+Specifically, when you update a resource, your changes will be applied to all member clusters; should you choose to delete a
+resource, it will be removed from all member clusters as well.
 
-- If the user `updates` the resource on the hub cluster, the update is propagated to all member clusters where the resource exists.
-- If the user `deletes` the resource on the hub cluster, the resource is deleted on all clusters to which it was propagated.
-- If the user `updates` the resource on the member cluster, no automatic action occurs as it's a user-made modification.
-- If the user `deletes` the resource on the member cluster, the resource is automatically created again on the member cluster after reconciliation.
+By default, KubeFleet will attempt to overwrite changes made on the member cluster side if the modified fields are managed by KubeFleet. If you choose to delete a KubeFleet-managed resource, KubeFleet will re-create it shortly. You can fine-tune this
+behavior via KubeFleet apply strategies: KubeFleet can help you detect such changes (often known as configuration drifts),
+preserve them as necessary, or overwrite them to keep the resources in sync. For more information, see the KubeFleet documentation
+on drift detection capabilities.
