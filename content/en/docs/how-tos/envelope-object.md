@@ -118,6 +118,10 @@ We apply our envelope objects on the hub cluster and then use a `ClusterResource
 ### Example CRP spec for propagating a ResourceEnvelope:
 
 ```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: crp-with-envelop
 spec:
   policy:
     clusterNames:
@@ -128,11 +132,6 @@ spec:
     kind: Namespace
     name: app
     version: v1
-  - group: placement.kubernetes-fleet.io
-    kind: ResourceEnvelope
-    name: example
-    namespace: app
-    version: v1beta1
   revisionHistoryLimit: 10
   strategy:
     type: RollingUpdate
@@ -141,6 +140,10 @@ spec:
 ### Example CRP spec for propagating a ClusterResourceEnvelope:
 
 ```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: crp-with-cluster-envelop
 spec:
   policy:
     clusterNames:
