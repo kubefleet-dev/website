@@ -18,7 +18,7 @@ When propagating resources to member clusters using Fleet, it's important to und
 
 2. **Security Risks**: RBAC resources (Roles, ClusterRoles, RoleBindings, ClusterRoleBindings) intended for member clusters could grant unintended permissions on the hub cluster.
 
-3. **Resource Limitations**: ResourceQuotas, FlowScheam or LimitRanges defined for member clusters would take effect on the hub cluster. While this is generally not a critical issue, there may be cases where you want to avoid these constraints on the hub.
+3. **Resource Limitations**: ResourceQuotas, FlowSchema or LimitRanges defined for member clusters would take effect on the hub cluster. While this is generally not a critical issue, there may be cases where you want to avoid these constraints on the hub.
 
 Envelope objects solve these problems by allowing you to define resources that should be propagated without actually deploying their contents on the hub cluster. The envelope object itself is applied to the hub, but the resources it contains are only extracted and applied when they reach the member clusters.
 
