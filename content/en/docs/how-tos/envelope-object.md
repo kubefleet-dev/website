@@ -111,7 +111,7 @@ data:
             image: nginx
 ```
 
-## Propagating Envelope Objects from Hub cluster to Member cluster
+## Propagating envelope objects from hub cluster to member cluster
 
 We apply our envelope objects on the hub cluster and then use a `ClusterResourcePlacement` object to propagate these resources from the hub to member clusters.
 
