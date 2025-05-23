@@ -5,7 +5,7 @@ weight: 7
 ---
 
 The `ClusterResourcePlacementAvailable` condition is `false` when some of the resources are not available yet. We will place some of the detailed failure in the `FailedResourcePlacement` array.
-> Note: To get more information about why resources are unavailable check [apply work controller](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/work/apply_controller.go) logs.
+> Note: To get more information about why resources are unavailable check [work applier](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier) logs.
 
 ## Common scenarios
 Instances where this condition may arise:
