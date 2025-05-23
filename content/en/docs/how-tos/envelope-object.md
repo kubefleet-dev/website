@@ -121,7 +121,7 @@ We apply our envelope objects on the hub cluster and then use a `ClusterResource
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacement
 metadata:
-  name: crp-with-envelop
+  name: crp-with-envelope
 spec:
   policy:
     clusterNames:
