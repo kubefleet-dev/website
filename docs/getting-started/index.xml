@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Getting Started on KubeFleet</title><link>https://kubefleet-dev.github.io/website/docs/getting-started/</link><description>Recent content in Getting Started on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet-dev.github.io/website/docs/getting-started/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting started with Fleet using KinD clusters</title><link>https://kubefleet-dev.github.io/website/docs/getting-started/kind/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/getting-started/kind/</guid><description>&lt;p>In this tutorial, you will try Fleet out using
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Getting Started on KubeFleet</title><link>https://kubefleet.dev/docs/getting-started/</link><description>Recent content in Getting Started on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet.dev/docs/getting-started/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting started with Fleet using KinD clusters</title><link>https://kubefleet.dev/docs/getting-started/kind/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/getting-started/kind/</guid><description>&lt;p>In this tutorial, you will try Fleet out using
 &lt;a href="https://kind.sigs.k8s.io/">KinD&lt;/a> clusters, which are Kubernetes clusters running on your own
 local machine via &lt;a href="https://docker.com">Docker&lt;/a> containers. This is the easiest way
 to get started with Fleet, which can help you understand how Fleet simiplify the day-to-day multi-cluster management experience with very little setup needed.&lt;/p>
@@ -7,7 +7,7 @@ to get started with Fleet, which can help you understand how Fleet simiplify the
 &lt;p>kind is a tool for setting up a Kubernetes environment for experimental purposes;
 some instructions below for running Fleet in the kind environment may not apply to other
 environments, and there might also be some minor differences in the Fleet
-experience.&lt;/p></description></item><item><title>Getting started with Fleet using on-premises clusters</title><link>https://kubefleet-dev.github.io/website/docs/getting-started/on-prem/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet-dev.github.io/website/docs/getting-started/on-prem/</guid><description>&lt;p>In this tutorial, you will try Fleet out using a few of your own Kubernetes clusters; Fleet can
+experience.&lt;/p></description></item><item><title>Getting started with Fleet using on-premises clusters</title><link>https://kubefleet.dev/docs/getting-started/on-prem/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/getting-started/on-prem/</guid><description>&lt;p>In this tutorial, you will try Fleet out using a few of your own Kubernetes clusters; Fleet can
 help you manage workloads seamlessly across these clusters, greatly simplifying the experience
 of day-to-day Kubernetes management.&lt;/p>
 &lt;blockquote>
@@ -15,4 +15,4 @@ of day-to-day Kubernetes management.&lt;/p>
 &lt;p>This tutorial assumes that you have some experience of performing administrative tasks for
 Kubernetes clusters. If you are just gettings started with Kubernetes, or do not have much
 experience of setting up a Kubernetes cluster, it is recommended that you follow the
-&lt;a href="https://kubefleet-dev.github.io/website/docs/getting-started/kind/">Getting started with Fleet using Kind clusters&lt;/a> tutorial instead.&lt;/p></description></item></channel></rss>
+&lt;a href="https://kubefleet.dev/docs/getting-started/kind/">Getting started with Fleet using Kind clusters&lt;/a> tutorial instead.&lt;/p></description></item></channel></rss>
