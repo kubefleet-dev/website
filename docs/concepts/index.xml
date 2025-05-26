@@ -51,7 +51,7 @@ from a &lt;code>ClusterResourcePlacement&lt;/code> to multiple clusters whenever
 &lt;p>Scheduling resources within a &lt;code>ClusterResourcePlacement&lt;/code> involves more dependencies compared with scheduling pods within
 a deployment in Kubernetes. There are two notable distinctions:&lt;/p></description></item><item><title>Scheduling Framework</title><link>https://kubefleet.dev/docs/concepts/scheduling-framework/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/scheduling-framework/</guid><description>&lt;p>The fleet scheduling framework closely aligns with the native &lt;a href="https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/">Kubernetes scheduling framework&lt;/a>,
 incorporating several modifications and tailored functionalities.&lt;/p>
-&lt;p>&lt;img src="https://kubefleet.dev/website/images/en/docs/concepts/scheduling-framework/scheduling-framework.jpg" alt="">&lt;/p>
+&lt;p>&lt;img src="https://kubefleet.dev/images/en/docs/concepts/scheduling-framework/scheduling-framework.jpg" alt="">&lt;/p>
 &lt;p>The primary advantage of this framework lies in its capability to compile plugins directly into the scheduler. Its API
 facilitates the implementation of diverse scheduling features as plugins, thereby ensuring a lightweight and maintainable
 core.&lt;/p>
@@ -88,7 +88,7 @@ clusters while &lt;code>ResourceOverride&lt;/code> will apply to resources in th
 automatically.&lt;/p></description></item><item><title>Staged Update</title><link>https://kubefleet.dev/docs/concepts/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/staged-update/</guid><description>&lt;p>While users rely on the &lt;code>RollingUpdate&lt;/code> rollout strategy to safely roll out their workloads,
 there is also a requirement for a staged rollout mechanism at the cluster level to enable more controlled and systematic continuous delivery (CD) across the fleet.
 Introducing a staged update run feature would address this need by enabling gradual deployments, reducing risk, and ensuring greater reliability and consistency in workload updates across clusters.&lt;/p>
-&lt;p>&lt;img src="https://kubefleet.dev/website/images/en/docs/concepts/staged-update/updaterun.jpg" alt="">&lt;/p>
+&lt;p>&lt;img src="https://kubefleet.dev/images/en/docs/concepts/staged-update/updaterun.jpg" alt="">&lt;/p>
 &lt;h2 id="overview">Overview&lt;/h2>
 &lt;p>We introduce two new Custom Resources, &lt;code>ClusterStagedUpdateStrategy&lt;/code> and &lt;code>ClusterStagedUpdateRun&lt;/code>.&lt;/p></description></item><item><title>Eviction and Placement Disruption Budget</title><link>https://kubefleet.dev/docs/concepts/eviction-pdb/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/eviction-pdb/</guid><description>&lt;p>This document explains the concept of &lt;code>Eviction&lt;/code> and &lt;code>Placement Disruption Budget&lt;/code> in the context of the fleet.&lt;/p>
 &lt;h2 id="overview">Overview&lt;/h2>
