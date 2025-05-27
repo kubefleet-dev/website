@@ -13,7 +13,7 @@ Suppose in a multi-cluster, multi-tenant organization, team A wants to deploy th
 They want to make sure each cluster receives the correct configuration, and they want to ensure safe deployment by rolling out to their staging environment first, then to canary if staging is healthy, and lastly to the production.
 Our tutorial will walk you through a hands-on experience of how to achieve this. Below image demonstrates the major components and their interactions.
 
-![](/website/images/en/docs/tutorials/ArgoCD/fleet-argocd-integration.png)
+![](/images/en/docs/tutorials/ArgoCD/fleet-argocd-integration.png)
 
 ## Prerequisites
 

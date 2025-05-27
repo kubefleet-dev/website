@@ -7,7 +7,7 @@ title: KubeFleet
 <br>
 <p class="h3">KubeFleet is a CNCF sandbox project.</p>
 <br>
-<a class="btn btn-lg btn-dark me-3 mb-4" href="/website/docs/">
+<a class="btn btn-lg btn-dark me-3 mb-4" href="/docs/">
   Documentation <i class="fas fa-arrow-alt-circle-right ms-2"></i>
 </a>
 <a class="btn btn-lg btn-secondary me-3 mb-4" href="https://github.com/kubefleet-dev/kubefleet">

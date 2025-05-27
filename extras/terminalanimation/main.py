@@ -116,7 +116,7 @@ s = "Learn more about " + \
     Back.CYAN + "KubeFleet" + Style.RESET_ALL + " " + \
     "at "
 print_char_by_char(s)
-rainbow_print("https://kubefleet-dev.github.io/website/")
+rainbow_print("https://kubefleet.dev")
 print_char_by_char(", or check out the source code at ")
 rainbow_print("github.com/kubefleet-dev/kubefleet")
 print_char_by_char(" ✨.\n")

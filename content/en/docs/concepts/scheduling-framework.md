@@ -7,7 +7,7 @@ weight: 7
 The fleet scheduling framework closely aligns with the native [Kubernetes scheduling framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/),
 incorporating several modifications and tailored functionalities.
 
-![](/website/images/en/docs/concepts/scheduling-framework/scheduling-framework.jpg)
+![](/images/en/docs/concepts/scheduling-framework/scheduling-framework.jpg)
 
 The primary advantage of this framework lies in its capability to compile plugins directly into the scheduler. Its API 
 facilitates the implementation of diverse scheduling features as plugins, thereby ensuring a lightweight and maintainable

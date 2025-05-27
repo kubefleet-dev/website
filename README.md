@@ -1,6 +1,6 @@
 # KubeFleet Website
 
-This repository contains the assets used to build [the KubeFleet website and documentation](https://kubefleet-dev.github.io/website/). 
+This repository contains the assets used to build [the KubeFleet website and documentation](https://kubefleet.dev). 
 
 KubeFleet is a sandbox project of the [Cloud Native Computing Foundation](https://cncf.io/) (CNCF) that helps developers manage multiple Kubernetes clusters in a unified manner. See also the [KubeFleet](https://github.com/kubefleet-dev/kubefleet) repository for more information.
 
