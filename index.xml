@@ -317,68 +317,11 @@ to the target cluster by the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/p>
 clusters while &lt;code>ResourceOverride&lt;/code> will apply to resources in the same namespace as the namespace-wide policy.&lt;/p>
 &lt;blockquote>
 &lt;p>&lt;strong>Note:&lt;/strong> If a namespace is selected by the &lt;code>ClusterResourceOverride&lt;/code>, ALL the resources under the namespace are selected
-automatically.&lt;/p></description></item><item><title>Using Envelope Objects to Place Resources</title><link>https://kubefleet.dev/docs/how-tos/envelope-object/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/envelope-object/</guid><description>&lt;h2 id="propagating-resources-with-envelope-objects">Propagating Resources with Envelope Objects&lt;/h2>
+automatically.&lt;/p></description></item><item><title>Using Envelope Objects to Place Resources</title><link>https://kubefleet.dev/docs/how-tos/envelope-object/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/envelope-object/</guid><description>&lt;h1 id="how-to-guide-to-propagate-resources-using-clusterresourceplacement-api-without-unintended-side-effects-on-the-hub-cluster">How-to Guide: To propagate resources using ClusterResourcePlacement API without unintended side effects on the hub cluster&lt;/h1>
+&lt;h2 id="propagating-resources-with-envelope-objects">Propagating Resources with Envelope Objects&lt;/h2>
 &lt;p>This guide provides instructions on propagating a set of resources from the hub cluster to joined member clusters within an envelope object.&lt;/p>
-&lt;h2 id="envelope-object-with-configmap">Envelope Object with ConfigMap&lt;/h2>
-&lt;p>Currently, we support using a &lt;code>ConfigMap&lt;/code> as an envelope object by leveraging a fleet-reserved annotation.&lt;/p>
-&lt;p>To designate a &lt;code>ConfigMap&lt;/code> as an envelope object, ensure that it contains the following annotation:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">metadata&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">annotations&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">kubernetes-fleet.io/envelope-configmap&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;true&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="example-configmap-envelope-object">Example ConfigMap Envelope Object:&lt;/h3>
-&lt;pre tabindex="0">&lt;code>apiVersion: v1
-kind: ConfigMap
-metadata:
- name: envelope-configmap
- namespace: app
- annotations:
- kubernetes-fleet.io/envelope-configmap: &amp;#34;true&amp;#34;
-data:
- resourceQuota.yaml: |
- apiVersion: v1
- kind: ResourceQuota
- metadata:
- name: mem-cpu-demo
- namespace: app
- spec:
- hard:
- requests.cpu: &amp;#34;1&amp;#34;
- requests.memory: 1Gi
- limits.cpu: &amp;#34;2&amp;#34;
- limits.memory: 2Gi
- webhook.yaml: |
- apiVersion: admissionregistration.k8s.io/v1
- kind: MutatingWebhookConfiguration
- metadata:
- creationTimestamp: null
- labels:
- azure-workload-identity.io/system: &amp;#34;true&amp;#34;
- name: azure-wi-webhook-mutating-webhook-configuration
- webhooks:
- - admissionReviewVersions:
- - v1
- - v1beta1
- clientConfig:
- service:
- name: azure-wi-webhook-webhook-service
- namespace: app
- path: /mutate-v1-pod
- failurePolicy: Fail
- matchPolicy: Equivalent
- name: mutation.azure-workload-identity.io
- rules:
- - apiGroups:
- - &amp;#34;&amp;#34;
- apiVersions:
- - v1
- operations:
- - CREATE
- - UPDATE
- resources:
- - pods
- sideEffects: None
-&lt;/code>&lt;/pre>&lt;h2 id="propagating-an-envelope-configmap-from-hub-cluster-to-member-cluster">Propagating an Envelope ConfigMap from Hub cluster to Member cluster:&lt;/h2>
-&lt;p>We will now apply the example envelope object above on our hub cluster. Then we use a &lt;code>ClusterResourcePlacement&lt;/code> object to propagate the resource from hub to a member cluster named &lt;code>kind-cluster-1&lt;/code>.&lt;/p></description></item><item><title>Controlling How Fleet Handles Pre-Existing Resources</title><link>https://kubefleet.dev/docs/how-tos/takeover/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/takeover/</guid><description>&lt;p>This guide provides an overview on how to set up Fleet&amp;rsquo;s takeover experience, which allows
+&lt;h2 id="why-use-envelope-objects">Why Use Envelope Objects?&lt;/h2>
+&lt;p>When propagating resources to member clusters using Fleet, it&amp;rsquo;s important to understand that the hub cluster itself is also a Kubernetes cluster. Without envelope objects, any resource you want to propagate would first be applied directly to the hub cluster, which can lead to some potential side effects:&lt;/p></description></item><item><title>Controlling How Fleet Handles Pre-Existing Resources</title><link>https://kubefleet.dev/docs/how-tos/takeover/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/takeover/</guid><description>&lt;p>This guide provides an overview on how to set up Fleet&amp;rsquo;s takeover experience, which allows
 developers and admins to choose what will happen when Fleet encounters a pre-existing resource.
 This occurs most often in the Fleet adoption scenario, where a cluster just joins into a fleet and
 the system finds out that the resources to place onto the new member cluster via the CRP API have
