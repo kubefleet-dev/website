@@ -4,8 +4,6 @@ description: How to use envelope objects with the ClusterResourcePlacement API
 weight: 10
 ---
 
-# How-to Guide: To propagate resources using ClusterResourcePlacement API without unintended side effects on the hub cluster
-
 ## Propagating Resources with Envelope Objects
 
 This guide provides instructions on propagating a set of resources from the hub cluster to joined member clusters within an envelope object.
