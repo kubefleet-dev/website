@@ -47,7 +47,7 @@ However, the &lt;code>ClusterResourceOverride&lt;/code> is created with an inval
 &lt;h3 id="case-study">Case Study&lt;/h3>
 &lt;p>The CRP is attempting to propagate a resource to a selected cluster, but the work object has not been updated to reflect the latest changes due to the selected cluster has been terminated.&lt;/p></description></item><item><title>CRP Work-Application Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementApplied&lt;/code> condition is set to &lt;code>false&lt;/code> when the deployment fails.&lt;/p>
 &lt;blockquote>
-&lt;p>Note: To get more information about why the resources are not applied, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/work/apply_controller.go">apply work controller&lt;/a> logs.&lt;/p>&lt;/blockquote>
+&lt;p>Note: To get more information about why the resources are not applied, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier">work applier&lt;/a> logs.&lt;/p>&lt;/blockquote>
 &lt;h2 id="common-scenarios">Common scenarios&lt;/h2>
 &lt;p>Instances where this condition may arise:&lt;/p>
 &lt;ul>
@@ -64,7 +64,7 @@ However, the &lt;code>ClusterResourceOverride&lt;/code> is created with an inval
 &lt;h2 id="case-study">Case Study&lt;/h2>
 &lt;p>In the following example, &lt;code>ClusterResourcePlacement&lt;/code> is trying to propagate a namespace that contains a deployment to two member clusters. However, the namespace already exists on one member cluster, specifically &lt;code>kind-cluster-1&lt;/code>.&lt;/p></description></item><item><title>CRP Availability Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementavailable/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementavailable/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementAvailable&lt;/code> condition is &lt;code>false&lt;/code> when some of the resources are not available yet. We will place some of the detailed failure in the &lt;code>FailedResourcePlacement&lt;/code> array.&lt;/p>
 &lt;blockquote>
-&lt;p>Note: To get more information about why resources are unavailable check &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/work/apply_controller.go">apply work controller&lt;/a> logs.&lt;/p>&lt;/blockquote>
+&lt;p>Note: To get more information about why resources are unavailable check &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier">work applier&lt;/a> logs.&lt;/p>&lt;/blockquote>
 &lt;h2 id="common-scenarios">Common scenarios&lt;/h2>
 &lt;p>Instances where this condition may arise:&lt;/p>
 &lt;ul>
@@ -72,17 +72,34 @@ However, the &lt;code>ClusterResourceOverride&lt;/code> is created with an inval
 &lt;li>The deployment contains an invalid image name.&lt;/li>
 &lt;/ul>
 &lt;h2 id="case-study">Case Study&lt;/h2>
-&lt;p>The example output below demonstrates a scenario where the CRP is unable to propagate a deployment to a member cluster due to the deployment having a bad image name.&lt;/p></description></item><item><title>ClusterResourcePlacementEviction TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</guid><description>&lt;p>This guide provides troubleshooting steps for issues related to placement eviction.&lt;/p>
-&lt;p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
-for eviction are:&lt;/p>
-&lt;ul>
-&lt;li>Eviction is Invalid&lt;/li>
-&lt;li>Eviction is Valid, Eviction failed to Execute&lt;/li>
-&lt;li>Eviction is Valid, Eviction executed successfully&lt;/li>
-&lt;/ul>
+&lt;p>The example output below demonstrates a scenario where the CRP is unable to propagate a deployment to a member cluster due to the deployment having a bad image name.&lt;/p></description></item><item><title>CRP Drift Detection and Configuration Difference Check Unexpected Result TSG</title><link>https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/</guid><description>&lt;p>This document helps you troubleshoot unexpected drift and configuration difference
+detection results when using the KubeFleet CRP API.&lt;/p>
 &lt;blockquote>
-&lt;p>&lt;strong>Note:&lt;/strong> If an eviction object doesn&amp;rsquo;t reach a terminal state i.e. neither valid condition nor executed condition is
-set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server.&lt;/p></description></item><item><title>ClusterStagedUpdateRun TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterstagedupdaterun/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterstagedupdaterun/</guid><description>&lt;p>This guide provides troubleshooting steps for common issues related to Staged Update Run.&lt;/p>
+&lt;p>Note&lt;/p>
+&lt;p>If you are looking for troubleshooting steps on diff reporting failures, i.e., when
+the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> condition on your CRP object is set to
+&lt;code>False&lt;/code>, see the &lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/">CRP Diff Reporting Failure TSG&lt;/a>
+instead.&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>Note&lt;/p>
+&lt;p>This document focuses on unexpected drift and configuration difference detection
+results. If you have encountered drift and configuration difference detection
+failures (e.g., no detection results at all with the &lt;code>ClusterResourcePlacementApplied&lt;/code>
+condition being set to &lt;code>False&lt;/code> with a detection related error), see the
+&lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/">CRP Apply Op Failure TSG&lt;/a> instead.&lt;/p></description></item><item><title>CRP Diff Reporting Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</guid><description>&lt;p>This document helps you troubleshoot diff reporting failures when using the KubeFleet CRP API,
+specifically when you find that the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> status condition has been
+set to &lt;code>False&lt;/code> in the CRP status.&lt;/p>
+&lt;blockquote>
+&lt;p>Note&lt;/p>
+&lt;p>If you are looking for troubleshooting steps on unexpected drift detection and/or configuration
+difference detection results, see the &lt;a href="https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/">Drift Detection and Configuration Difference Detection Failure TSG&lt;/a>
+instead.&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>Note&lt;/p>
+&lt;p>The &lt;code>ClusterResourcePlacementDiffReported&lt;/code> status condition will only be set if the CRP has
+an apply strategy of the &lt;code>ReportDiff&lt;/code> type. If your CRP uses &lt;code>ClientSideApply&lt;/code> (default) or
+&lt;code>ServerSideApply&lt;/code> typed apply strategies, it is perfectly normal if the &lt;code>ClusterResourcePlacementDiffReported&lt;/code>
+status condition is absent in the CRP status.&lt;/p></description></item><item><title>ClusterStagedUpdateRun TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterstagedupdaterun/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterstagedupdaterun/</guid><description>&lt;p>This guide provides troubleshooting steps for common issues related to Staged Update Run.&lt;/p>
 &lt;blockquote>
 &lt;p>Note: To get more information about why the scheduling fails, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/updaterun/controller.go">updateRun controller&lt;/a> logs.&lt;/p>&lt;/blockquote>
 &lt;h2 id="crp-status-without-staged-update-run">CRP status without Staged Update Run&lt;/h2>
@@ -137,4 +154,14 @@ set it is likely due to a failure in the reconciliation process where the contro
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Selected Resources:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Events: &amp;lt;none&amp;gt;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>SchedulingPolicyFulfilled&lt;/code> condition indicates the CRP has been fully scheduled, while &lt;code>RolloutStartedUnknown&lt;/code> condition shows that the rollout has not started.&lt;/p></description></item></channel></rss>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>SchedulingPolicyFulfilled&lt;/code> condition indicates the CRP has been fully scheduled, while &lt;code>RolloutStartedUnknown&lt;/code> condition shows that the rollout has not started.&lt;/p></description></item><item><title>ClusterResourcePlacementEviction TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</guid><description>&lt;p>This guide provides troubleshooting steps for issues related to placement eviction.&lt;/p>
+&lt;p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
+for eviction are:&lt;/p>
+&lt;ul>
+&lt;li>Eviction is Invalid&lt;/li>
+&lt;li>Eviction is Valid, Eviction failed to Execute&lt;/li>
+&lt;li>Eviction is Valid, Eviction executed successfully&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>&lt;strong>Note:&lt;/strong> If an eviction object doesn&amp;rsquo;t reach a terminal state i.e. neither valid condition nor executed condition is
+set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server.&lt;/p></description></item></channel></rss>

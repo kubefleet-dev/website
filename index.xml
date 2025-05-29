@@ -161,7 +161,7 @@ resources evenly across different groups of clusters in your fleet; or in other 
 assures that Fleet will not pick too many clusters from one group, and too little from another.
 You can use topology spread constraints to, for example:&lt;/p></description></item><item><title>CRP Work-Application Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementApplied&lt;/code> condition is set to &lt;code>false&lt;/code> when the deployment fails.&lt;/p>
 &lt;blockquote>
-&lt;p>Note: To get more information about why the resources are not applied, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/work/apply_controller.go">apply work controller&lt;/a> logs.&lt;/p>&lt;/blockquote>
+&lt;p>Note: To get more information about why the resources are not applied, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier">work applier&lt;/a> logs.&lt;/p>&lt;/blockquote>
 &lt;h2 id="common-scenarios">Common scenarios&lt;/h2>
 &lt;p>Instances where this condition may arise:&lt;/p>
 &lt;ul>
@@ -194,7 +194,7 @@ documentation.&lt;/p>
 &lt;a href="https://kubefleet.dev/docs/how-tos/affinities/">How-To Guide: Using Affinity to Pick Clusters&lt;/a> first before following
 instructions in this document.&lt;/p></description></item><item><title>CRP Availability Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementavailable/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementavailable/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementAvailable&lt;/code> condition is &lt;code>false&lt;/code> when some of the resources are not available yet. We will place some of the detailed failure in the &lt;code>FailedResourcePlacement&lt;/code> array.&lt;/p>
 &lt;blockquote>
-&lt;p>Note: To get more information about why resources are unavailable check &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/work/apply_controller.go">apply work controller&lt;/a> logs.&lt;/p>&lt;/blockquote>
+&lt;p>Note: To get more information about why resources are unavailable check &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier">work applier&lt;/a> logs.&lt;/p>&lt;/blockquote>
 &lt;h2 id="common-scenarios">Common scenarios&lt;/h2>
 &lt;p>Instances where this condition may arise:&lt;/p>
 &lt;ul>
@@ -221,23 +221,52 @@ being placed within the same cluster. This distinguishes it from Kubernetes, whi
 &lt;h2 id="adding-taint-to-membercluster">Adding taint to MemberCluster&lt;/h2>
 &lt;p>In this example, we will add a taint to a &lt;code>MemberCluster&lt;/code>. Then try to propagate resources to the &lt;code>MemberCluster&lt;/code> using a &lt;code>ClusterResourcePlacement&lt;/code>
 with &lt;strong>PickAll&lt;/strong> placement policy. The resources should not be propagated to the &lt;code>MemberCluster&lt;/code> because of the taint.&lt;/p>
-&lt;p>We will first create a namespace that we will propagate to the member cluster,&lt;/p></description></item><item><title>ClusterResourcePlacementEviction TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</guid><description>&lt;p>This guide provides troubleshooting steps for issues related to placement eviction.&lt;/p>
-&lt;p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
-for eviction are:&lt;/p>
-&lt;ul>
-&lt;li>Eviction is Invalid&lt;/li>
-&lt;li>Eviction is Valid, Eviction failed to Execute&lt;/li>
-&lt;li>Eviction is Valid, Eviction executed successfully&lt;/li>
-&lt;/ul>
+&lt;p>We will first create a namespace that we will propagate to the member cluster,&lt;/p></description></item><item><title>CRP Drift Detection and Configuration Difference Check Unexpected Result TSG</title><link>https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/</guid><description>&lt;p>This document helps you troubleshoot unexpected drift and configuration difference
+detection results when using the KubeFleet CRP API.&lt;/p>
 &lt;blockquote>
-&lt;p>&lt;strong>Note:&lt;/strong> If an eviction object doesn&amp;rsquo;t reach a terminal state i.e. neither valid condition nor executed condition is
-set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server.&lt;/p></description></item><item><title>Properties and Property Provides</title><link>https://kubefleet.dev/docs/concepts/properties/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/properties/</guid><description>&lt;p>This document explains the concepts of property provider and cluster properties in Fleet.&lt;/p>
+&lt;p>Note&lt;/p>
+&lt;p>If you are looking for troubleshooting steps on diff reporting failures, i.e., when
+the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> condition on your CRP object is set to
+&lt;code>False&lt;/code>, see the &lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/">CRP Diff Reporting Failure TSG&lt;/a>
+instead.&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>Note&lt;/p>
+&lt;p>This document focuses on unexpected drift and configuration difference detection
+results. If you have encountered drift and configuration difference detection
+failures (e.g., no detection results at all with the &lt;code>ClusterResourcePlacementApplied&lt;/code>
+condition being set to &lt;code>False&lt;/code> with a detection related error), see the
+&lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/">CRP Apply Op Failure TSG&lt;/a> instead.&lt;/p></description></item><item><title>Properties and Property Provides</title><link>https://kubefleet.dev/docs/concepts/properties/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/properties/</guid><description>&lt;p>This document explains the concepts of property provider and cluster properties in Fleet.&lt;/p>
 &lt;p>Fleet allows developers to implement a property provider to expose arbitrary properties about
 a member cluster, such as its node count and available resources for workload placement. Platforms
 could also enable their property providers to expose platform-specific properties via Fleet.
 These properties can be useful in a variety of cases: for example, administrators could monitor the
 health of a member cluster using related properties; Fleet also supports making scheduling
 decisions based on the property data.&lt;/p></description></item><item><title>Using the ClusterResourceOverride API</title><link>https://kubefleet.dev/docs/how-tos/cluster-resource-override/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/cluster-resource-override/</guid><description>&lt;p>This guide provides an overview of how to use the Fleet &lt;code>ResourceOverride&lt;/code> API to override resources.&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>&lt;code>ResourceOverride&lt;/code> is a Fleet API that allows you to modify or override specific attributes of
+existing resources within your cluster. With ResourceOverride, you can define rules based on cluster
+labels or other criteria, specifying changes to be applied to resources such as Deployments, StatefulSets, ConfigMaps, or Secrets.
+These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters.&lt;/p></description></item><item><title>CRP Diff Reporting Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</guid><description>&lt;p>This document helps you troubleshoot diff reporting failures when using the KubeFleet CRP API,
+specifically when you find that the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> status condition has been
+set to &lt;code>False&lt;/code> in the CRP status.&lt;/p>
+&lt;blockquote>
+&lt;p>Note&lt;/p>
+&lt;p>If you are looking for troubleshooting steps on unexpected drift detection and/or configuration
+difference detection results, see the &lt;a href="https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/">Drift Detection and Configuration Difference Detection Failure TSG&lt;/a>
+instead.&lt;/p>&lt;/blockquote>
+&lt;blockquote>
+&lt;p>Note&lt;/p>
+&lt;p>The &lt;code>ClusterResourcePlacementDiffReported&lt;/code> status condition will only be set if the CRP has
+an apply strategy of the &lt;code>ReportDiff&lt;/code> type. If your CRP uses &lt;code>ClientSideApply&lt;/code> (default) or
+&lt;code>ServerSideApply&lt;/code> typed apply strategies, it is perfectly normal if the &lt;code>ClusterResourcePlacementDiffReported&lt;/code>
+status condition is absent in the CRP status.&lt;/p></description></item><item><title>Safe Rollout</title><link>https://kubefleet.dev/docs/concepts/safe-rollout/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/safe-rollout/</guid><description>&lt;p>One of the most important features of Fleet is the ability to safely rollout changes across multiple clusters. We do
+this by rolling out the changes in a controlled manner, ensuring that we only continue to propagate the changes to the
+next target clusters if the resources are successfully applied to the previous target clusters.&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>We automatically propagate any resource changes that are selected by a &lt;code>ClusterResourcePlacement&lt;/code> from the hub cluster
+to the target clusters based on the placement policy defined in the &lt;code>ClusterResourcePlacement&lt;/code>. In order to reduce the
+blast radius of such operation, we provide users a way to safely rollout the new changes so that a bad release
+won&amp;rsquo;t affect all the running instances all at once.&lt;/p></description></item><item><title>Using the ResourceOverride API</title><link>https://kubefleet.dev/docs/how-tos/resource-override/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/resource-override/</guid><description>&lt;p>This guide provides an overview of how to use the Fleet &lt;code>ResourceOverride&lt;/code> API to override resources.&lt;/p>
 &lt;h2 id="overview">Overview&lt;/h2>
 &lt;p>&lt;code>ResourceOverride&lt;/code> is a Fleet API that allows you to modify or override specific attributes of
 existing resources within your cluster. With ResourceOverride, you can define rules based on cluster
@@ -297,19 +326,7 @@ These changes can include updates to container images, environment variables, re
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Selected Resources:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Events: &amp;lt;none&amp;gt;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>SchedulingPolicyFulfilled&lt;/code> condition indicates the CRP has been fully scheduled, while &lt;code>RolloutStartedUnknown&lt;/code> condition shows that the rollout has not started.&lt;/p></description></item><item><title>Safe Rollout</title><link>https://kubefleet.dev/docs/concepts/safe-rollout/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/safe-rollout/</guid><description>&lt;p>One of the most important features of Fleet is the ability to safely rollout changes across multiple clusters. We do
-this by rolling out the changes in a controlled manner, ensuring that we only continue to propagate the changes to the
-next target clusters if the resources are successfully applied to the previous target clusters.&lt;/p>
-&lt;h2 id="overview">Overview&lt;/h2>
-&lt;p>We automatically propagate any resource changes that are selected by a &lt;code>ClusterResourcePlacement&lt;/code> from the hub cluster
-to the target clusters based on the placement policy defined in the &lt;code>ClusterResourcePlacement&lt;/code>. In order to reduce the
-blast radius of such operation, we provide users a way to safely rollout the new changes so that a bad release
-won&amp;rsquo;t affect all the running instances all at once.&lt;/p></description></item><item><title>Using the ResourceOverride API</title><link>https://kubefleet.dev/docs/how-tos/resource-override/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/resource-override/</guid><description>&lt;p>This guide provides an overview of how to use the Fleet &lt;code>ResourceOverride&lt;/code> API to override resources.&lt;/p>
-&lt;h2 id="overview">Overview&lt;/h2>
-&lt;p>&lt;code>ResourceOverride&lt;/code> is a Fleet API that allows you to modify or override specific attributes of
-existing resources within your cluster. With ResourceOverride, you can define rules based on cluster
-labels or other criteria, specifying changes to be applied to resources such as Deployments, StatefulSets, ConfigMaps, or Secrets.
-These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters.&lt;/p></description></item><item><title>Override</title><link>https://kubefleet.dev/docs/concepts/override/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/override/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>SchedulingPolicyFulfilled&lt;/code> condition indicates the CRP has been fully scheduled, while &lt;code>RolloutStartedUnknown&lt;/code> condition shows that the rollout has not started.&lt;/p></description></item><item><title>Override</title><link>https://kubefleet.dev/docs/concepts/override/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/override/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
 &lt;p>The &lt;code>ClusterResourceOverride&lt;/code> and &lt;code>ResourceOverride&lt;/code> provides a way to customize resource configurations before they are propagated
 to the target cluster by the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/p>
 &lt;h2 id="difference-between-clusterresourceoverride-and-resourceoverride">Difference Between &lt;code>ClusterResourceOverride&lt;/code> And &lt;code>ResourceOverride&lt;/code>&lt;/h2>
@@ -320,7 +337,17 @@ clusters while &lt;code>ResourceOverride&lt;/code> will apply to resources in th
 automatically.&lt;/p></description></item><item><title>Using Envelope Objects to Place Resources</title><link>https://kubefleet.dev/docs/how-tos/envelope-object/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/envelope-object/</guid><description>&lt;h2 id="propagating-resources-with-envelope-objects">Propagating Resources with Envelope Objects&lt;/h2>
 &lt;p>This guide provides instructions on propagating a set of resources from the hub cluster to joined member clusters within an envelope object.&lt;/p>
 &lt;h2 id="why-use-envelope-objects">Why Use Envelope Objects?&lt;/h2>
-&lt;p>When propagating resources to member clusters using Fleet, it&amp;rsquo;s important to understand that the hub cluster itself is also a Kubernetes cluster. Without envelope objects, any resource you want to propagate would first be applied directly to the hub cluster, which can lead to some potential side effects:&lt;/p></description></item><item><title>Controlling How Fleet Handles Pre-Existing Resources</title><link>https://kubefleet.dev/docs/how-tos/takeover/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/takeover/</guid><description>&lt;p>This guide provides an overview on how to set up Fleet&amp;rsquo;s takeover experience, which allows
+&lt;p>When propagating resources to member clusters using Fleet, it&amp;rsquo;s important to understand that the hub cluster itself is also a Kubernetes cluster. Without envelope objects, any resource you want to propagate would first be applied directly to the hub cluster, which can lead to some potential side effects:&lt;/p></description></item><item><title>ClusterResourcePlacementEviction TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</guid><description>&lt;p>This guide provides troubleshooting steps for issues related to placement eviction.&lt;/p>
+&lt;p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
+for eviction are:&lt;/p>
+&lt;ul>
+&lt;li>Eviction is Invalid&lt;/li>
+&lt;li>Eviction is Valid, Eviction failed to Execute&lt;/li>
+&lt;li>Eviction is Valid, Eviction executed successfully&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>&lt;strong>Note:&lt;/strong> If an eviction object doesn&amp;rsquo;t reach a terminal state i.e. neither valid condition nor executed condition is
+set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server.&lt;/p></description></item><item><title>Controlling How Fleet Handles Pre-Existing Resources</title><link>https://kubefleet.dev/docs/how-tos/takeover/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/takeover/</guid><description>&lt;p>This guide provides an overview on how to set up Fleet&amp;rsquo;s takeover experience, which allows
 developers and admins to choose what will happen when Fleet encounters a pre-existing resource.
 This occurs most often in the Fleet adoption scenario, where a cluster just joins into a fleet and
 the system finds out that the resources to place onto the new member cluster via the CRP API have
