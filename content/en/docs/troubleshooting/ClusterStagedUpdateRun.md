@@ -1,7 +1,7 @@
 ---
 title: ClusterStagedUpdateRun TSG
 description: Identify and fix KubeFleet issues associated with the ClusterStagedUpdateRun API
-weight: 9
+weight: 10
 ---
 
 This guide provides troubleshooting steps for common issues related to Staged Update Run.
