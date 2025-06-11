@@ -117,6 +117,9 @@ The `clusterSelector` field supports the following fields:
 - `clusterSelectorTerms`: A list of terms that are used to select clusters.
     * Each term in the list is used to select clusters based on the label selector.
 
+> IMPORTANT:
+> Only `labelSelector` is supported in the `clusterSelectorTerms` field.
+
 ### Override Type
 To specify the type of override to be applied, you can use the overrideType field in the OverrideRule spec.
 The default value is `JSONPatch`.
@@ -127,7 +130,7 @@ The default value is `JSONPatch`.
 To specify the changes to be applied to the selected resources, you can use the jsonPatchOverrides field in the OverrideRule spec.
 The jsonPatchOverrides field supports the following fields:
 
->JSONPatchOverride applies a JSON patch on the selected resources following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
+> JSONPatchOverride applies a JSON patch on the selected resources following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
 > All the fields defined follow this RFC.
 
 The `jsonPatchOverrides` field supports the following fields:
@@ -402,7 +405,6 @@ Status:
     Cluster Name:  member-50
     Conditions:
       ...
-      Last Transition Time:  2024-04-26T22:57:14Z
       Message:               Successfully applied the override rules on the resources
       Observed Generation:   1
       Reason:                OverriddenSucceeded

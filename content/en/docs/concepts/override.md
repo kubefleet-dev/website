@@ -72,6 +72,8 @@ Each override rule contains the following fields:
   - Select clusters by specifying the cluster labels.
   - An empty selector selects ALL the clusters.
   - A nil selector selects NO target cluster.
+  > IMPORTANT:
+  > Only `labelSelector` is supported in the `clusterSelectorTerms` field.
 - `OverrideType`: which type of the override should be applied to the selected resources. The default type is `JSONPatch`.
   - `JSONPatch`: applies the JSON patch to the selected resources using [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
   - `Delete`: deletes the selected resources on the target cluster.

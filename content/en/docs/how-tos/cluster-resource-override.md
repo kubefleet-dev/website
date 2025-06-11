@@ -83,6 +83,9 @@ The `clusterSelector` field supports the following fields:
 - `clusterSelectorTerms`: A list of terms that are used to select clusters.
     * Each term in the list is used to select clusters based on the label selector.
 
+> IMPORTANT:
+> Only `labelSelector` is supported in the `clusterSelectorTerms` field.
+
 ### Override Type
 
 To specify the type of override to be applied, you can use the overrideType field in the OverrideRule spec.
@@ -95,7 +98,7 @@ The default value is `JSONPatch`.
 To specify the changes to be applied to the selected resources, you can use the jsonPatchOverrides field in the OverrideRule spec. 
 The jsonPatchOverrides field supports the following fields:
 
->JSONPatchOverride applies a JSON patch on the selected resources following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902). 
+> JSONPatchOverride applies a JSON patch on the selected resources following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902). 
 > All the fields defined follow this RFC.
 
 - `op`: The operation to be performed. The supported operations are `add`, `remove`, and `replace`.
@@ -324,7 +327,6 @@ status by running `kubectl describe crp crp-example` command:
 Status:
   Conditions:
     ...
-    Last Transition Time:   2024-04-27T04:18:00Z
     Message:                The selected resources are successfully overridden in the 10 clusters
     Observed Generation:    1
     Reason:                 OverriddenSucceeded
@@ -360,8 +362,8 @@ check resources in the selected clusters:
 2. Get the `ClusterRole` object in the selected cluster:
    `kubectl --context=<member-cluster-context>  get clusterrole secret-reader -o yaml`
 
-Upon inspecting the described ClusterRole object, it becomes apparent that the verbs "watch" and "list" have been 
-removed from the permissions list within the ClusterRole named "secret-reader" on the prod clusters.
+Upon inspecting the described `ClusterRole` object, it becomes apparent that the verbs "watch" and "list" have been 
+removed from the permissions list within the `ClusterRole` named "secret-reader" on the prod clusters.
    ```
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
