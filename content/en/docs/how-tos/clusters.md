@@ -47,11 +47,11 @@ export MEMBER_CLUSTER=YOUR-MEMBER-CLUSTER
 export MEMBER_CLUSTER_CONTEXT=YOUR-MEMBER-CLUSTER-CONTEXT
 
 # Clone the Fleet GitHub repository.
-git clone https://github.com/Azure/fleet.git
+git clone https://github.com/kubefleet-dev/kubefleet.git
 
 # Run the script.
-chmod +x fleet/hack/membership/join.sh
-./fleet/hack/membership/join.sh
+chmod +x kubefleet/hack/membership/joinMC.sh
+./kubefleet/hack/membership/joinMC.sh
 ```
 
 It may take a few minutes for the script to finish running. Once it is completed, verify
@@ -159,7 +159,7 @@ Fleet connection:
 
     ```sh
     # Clone the Fleet repository from GitHub.
-    git clone https://github.com/Azure/fleet.git
+    git clone https://github.com/kubefleet-dev/kubefleet.git
 
     # Install the member agent helm chart on the member cluster.
 
@@ -170,11 +170,13 @@ Fleet connection:
     # Replace the value of HUB_CLUSTER_ADDRESS with the address of the hub cluster API server.
     export HUB_CLUSTER_ADDRESS="YOUR-HUB-CLUSTER-ADDRESS"
 
-    # The variables below uses the Fleet images kept in the Microsoft Container Registry (MCR),
-    # and will retrieve the latest version from the Fleet GitHub repository.
+    # The variables below uses the Fleet images kept in the Microsoft Container
+    # Registry (MCR) and will retrieve the latest version from the Fleet GitHub
+    # repository. This pulls from the Azure Fleet repository while the kubefleet
+    # containers are being developed.
     #
-    # You can, however, build the Fleet images of your own; see the repository README for
-    # more information.
+    # You can also build the Fleet images of your own; see the repository README
+    # for more information.
     export REGISTRY="mcr.microsoft.com/aks/fleet"
     export FLEET_VERSION=$(curl "https://api.github.com/repos/Azure/fleet/tags" | jq -r '.[0].name')
     export MEMBER_AGENT_IMAGE="member-agent"
@@ -183,7 +185,7 @@ Fleet connection:
     kubectl config use-context $MEMBER_CLUSTER_CONTEXT
     # Create the secret with the token extracted previously for member agent to use.
     kubectl create secret generic hub-kubeconfig-secret --from-literal=token=$TOKEN
-    helm install member-agent fleet/charts/member-agent/ \
+    helm install member-agent kubefleet/charts/member-agent/ \
         --set config.hubURL=$HUB_CLUSTER_ADDRESS \
         --set image.repository=$REGISTRY/$MEMBER_AGENT_IMAGE \
         --set image.tag=$FLEET_VERSION \
