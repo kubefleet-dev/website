@@ -105,7 +105,7 @@ changes can occur without directly affecting the `ResourceSnapshot` itself.
 The total amount of selected resources may exceed the 1MB limit for a single Kubernetes object. As a result, the controller 
 may produce more than one `ResourceSnapshot` for all the selected resources.
 
-`ClusterResourceSnapshot` sample:
+`ResourceSnapshot` sample:
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourceSnapshot
@@ -222,7 +222,7 @@ spec:
 generated whenever policy changes are made to the `ResourcePlacement` that require a new scheduling. Similar to
 `ResourceSnapshot`, its spec is immutable.
 
-`ClusterSchedulingPolicySnapshot` sample:
+`SchedulingPolicySnapshot` sample:
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: SchedulingPolicySnapshot
@@ -549,12 +549,5 @@ In essence, the objective is not to apply or create resources on the hub cluster
 
 Certain resources, when created or applied on the hub cluster, may lead to unintended side effects. These include:
 
-- Validating/Mutating Webhook Configurations
-- Cluster Role Bindings
 - Resource Quotas
-- Storage Classes
-- Flow Schemas
-- Priority Classes
-- Ingress Classes
-- Ingresses
 - Network Policies
