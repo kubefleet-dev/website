@@ -61,7 +61,7 @@ spec:
 
 ## When To Use `ResourcePlacement`
 
-`ResourcePlacement` is useful when you want for a general way of managing and running workloads across multiple clusters. 
+`ResourcePlacement` is useful when you want a general way of managing and running workloads across multiple clusters. 
 Some example scenarios include the following:
 -  As a platform operator, I want to place my namespace-scoped resources to a cluster that resides in the us-east-1.
 -  As a platform operator, I want to spread my namespace-scoped resources evenly across the different regions/zones.
@@ -94,7 +94,7 @@ contains the (overridden) manifest workload to be deployed on the member cluster
 ## Resource Selection
 
 Resource selectors identify objects to include based on standard Kubernetes identifiers - namely, the `group`, 
-`kind`, `version`, and `name` of the object. The example `ResourcePlacement` above would include the all the `ConfigMap` objects that were created in that namespace.
+`kind`, `version`, and `name` of the object. The example `ResourcePlacement` above would include all the `ConfigMap` objects that were created in that namespace.
 
 The placement controller creates the `ResourceSnapshot` to store a snapshot of selected resources
 selected by the placement. The `ResourceSnapshot` spec is immutable. Each time when the selected resources are updated,
@@ -103,7 +103,7 @@ that resources can change independently of any modifications to the `ResourceSna
 changes can occur without directly affecting the `ResourceSnapshot` itself.
 
 The total amount of selected resources may exceed the 1MB limit for a single Kubernetes object. As a result, the controller 
-may produce more than one `ResourceSnapshot`s for all the selected resources.
+may produce more than one `ResourceSnapshot` for all the selected resources.
 
 `ClusterResourceSnapshot` sample:
 ```yaml
@@ -360,7 +360,7 @@ Status:
     Status:                 True
     Type:                   ResourcePlacementOverridden
     Last Transition Time:   2025-09-18T14:57:22Z
-    Message:                Works(s) are succcesfully created or updated in the 3 target clusters' namespaces
+    Message:                Works(s) are successfully created or updated in the 3 target clusters' namespaces
     Observed Generation:    1
     Reason:                 WorkSynchronized
     Status:                 True
