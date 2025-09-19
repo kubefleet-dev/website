@@ -30,6 +30,8 @@ In multi-cluster environments, workloads often consist of both cluster-scoped an
 - **Operational flexibility**: Allow different teams to manage different resources within the same namespace independently
 - **Complementary functionality**: Work alongside CRP to provide a complete multi-cluster resource management solution
 
+**Note**: `ResourcePlacement` can be used together with `ClusterResourcePlacement` in namespace-only mode. For example, you can use CRP to deploy the namespace, while using RP for fine-grained management of specific resources like environment-specific ConfigMaps or Secrets within that namespace.
+
 ### Key Differences Between ResourcePlacement and ClusterResourcePlacement
 
 | Aspect | ResourcePlacement (RP) | ClusterResourcePlacement (CRP) |
