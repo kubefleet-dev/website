@@ -6,548 +6,115 @@ weight: 4
 
 ## Overview
 
-`ResourcePlacement` concept is used to dynamically select namespace scoped resources and control how they are propagated to all or a subset of the member clusters.
-  **Note:** `ResourcePlacement` is a namespace-scoped resource. Therefore, it only selects namespace-scoped resources within the same namespace the `ResourcePlacement` resides in.
+`ResourcePlacement` is a namespace-scoped API that enables dynamic selection and multi-cluster propagation of namespace-scoped resources. It provides fine-grained control over how specific resources within a namespace are distributed across member clusters in a fleet.
 
-A `ResourcePlacement` mainly consists of three parts:
-- **Resource selection**: select which namespace-scoped Kubernetes
-resource objects need to be propagated from the hub cluster to selected member clusters. 
-  
-  It supports the following forms of resource selection:
-  - Select resources by specifying just the <group, version, kind>. This selection propagates all resources with matching <group, version, kind>. 
-  - Select resources by specifying the <group, version, kind> and name. This selection propagates only one resource that matches the <group, version, kind> and name. 
-  - Select resources by specifying the <group, version, kind> and a set of labels using ResourcePlacement -> LabelSelector. 
-This selection propagates all resources that match the <group, version, kind> and label specified.
+**Key Characteristics:**
+- **Namespace-scoped**: Both the ResourcePlacement object and the resources it manages exist within the same namespace
+- **Selective**: Can target specific resources by type, name, or labels rather than entire namespaces
+- **Declarative**: Uses the same placement patterns as ClusterResourcePlacement for consistent behavior
 
+A ResourcePlacement consists of three core components:
+- **Resource Selectors**: Define which namespace-scoped resources to include
+- **Placement Policy**: Determine target clusters using PickAll, PickFixed, or PickN strategies  
+- **Rollout Strategy**: Control how changes propagate across selected clusters
 
+For detailed examples and implementation guidance, see the [ResourcePlacement How-To Guide](/docs/how-tos/resource-placement).
 
-- **Placement policy**: limit propagation of selected resources to a specific subset of member clusters.
-  The following types of target cluster selection are supported:
-    - **PickAll (Default)**: select any member clusters with matching cluster `Affinity` scheduling rules. If the `Affinity` 
-is not specified, it will select all joined and healthy member clusters.
-    - **PickFixed**: select a fixed list of member clusters defined in the `ClusterNames`.
-    - **PickN**: select a `NumberOfClusters` of member clusters with optional matching cluster `Affinity` scheduling rules or topology spread constraints `TopologySpreadConstraints`.
+## Motivation
 
-- **Rollout strategy**: how to propagate new changes to the selected member clusters.
+In multi-cluster environments, workloads often consist of both cluster-scoped and namespace-scoped resources that need to be distributed across different clusters. While `ClusterResourcePlacement` (CRP) handles cluster-scoped resources effectively, particularly entire namespaces and their contents, there are scenarios where you need more granular control over namespace-scoped resources within existing namespaces.
 
-A simple `ResourcePlacement` looks like this:
+`ResourcePlacement` (RP) was designed to address this gap by providing:
 
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ResourcePlacement
-metadata:
-  name: rp-1
-  namespace: test-ns
-spec:
-  policy:
-    placementType: PickN
-    numberOfClusters: 2
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: "env"
-        whenUnsatisfiable: DoNotSchedule
-  resourceSelectors:
-    - group: ""
-      kind: ConfigMap
-      version: v1
-  revisionHistoryLimit: 100
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-      unavailablePeriodSeconds: 5
-    type: RollingUpdate
-```
+- **Namespace-scoped resource management**: Target specific resources within a namespace without affecting the entire namespace
+- **Operational flexibility**: Allow different teams to manage different resources within the same namespace independently
+- **Complementary functionality**: Work alongside CRP to provide a complete multi-cluster resource management solution
 
-## When To Use `ResourcePlacement`
+### Key Differences Between ResourcePlacement and ClusterResourcePlacement
 
-`ResourcePlacement` is useful when you want a general way of managing and running workloads across multiple clusters. 
-Some example scenarios include the following:
--  As a platform operator, I want to place my namespace-scoped resources to a cluster that resides in the us-east-1.
--  As a platform operator, I want to spread my namespace-scoped resources evenly across the different regions/zones.
-- As a platform operator, I prefer to place my test resources into the staging AKS cluster.
-- As a platform operator, I would like to separate the workloads for compliance or policy reasons.
-- As a developer, I want to run my namespace-scoped resources on 3 clusters. 
-In addition, each time I update my workloads, the updates take place with zero downtime by rolling out to these three clusters incrementally.
+| Aspect | ResourcePlacement (RP) | ClusterResourcePlacement (CRP) |
+|--------|------------------------|--------------------------------|
+| **Scope** | Namespace-scoped resources only | Cluster-scoped resources (especially namespaces and their contents) |
+| **Resource** | Namespace-scoped API object | Cluster-scoped API object |
+| **Selection Boundary** | Limited to resources within the same namespace as the RP | Can select any cluster-scoped resource |
+| **Typical Use Cases** | Individual ConfigMaps, Secrets, Services within existing namespaces | Entire namespaces, ClusterRoles, cluster-wide policies |
+| **Team Ownership** | Can be managed by namespace owners/developers | Typically managed by platform operators |
 
-## Placement Workflow
+### Similarities Between ResourcePlacement and ClusterResourcePlacement
+
+Both RP and CRP share the same core concepts and capabilities:
+
+- **Placement Policies**: Same three placement types (PickAll, PickFixed, PickN) with identical scheduling logic
+- **Resource Selection**: Both support selection by group/version/kind, name, and label selectors
+- **Rollout Strategy**: Identical rolling update mechanisms for zero-downtime deployments
+- **Scheduling Framework**: Use the same multi-cluster scheduler with filtering, scoring, and binding phases
+- **Override Support**: Both integrate with ClusterResourceOverride and ResourceOverride for resource customization
+- **Status Reporting**: Similar status structures and condition types for placement tracking
+- **Tolerations**: Same taints and tolerations mechanism for cluster selection
+- **Snapshot Architecture**: Both use immutable snapshots (ResourceSnapshot vs ClusterResourceSnapshot) for resource and policy tracking
+
+This design allows teams familiar with one placement object to easily understand and use the other, while providing the appropriate level of control for different resource scopes.
+
+## When To Use ResourcePlacement
+
+ResourcePlacement is ideal for scenarios requiring granular control over namespace-scoped resources:
+
+- **Selective Resource Distribution**: Deploy specific ConfigMaps, Secrets, or Services without affecting the entire namespace
+- **Multi-tenant Environments**: Allow different teams to manage their resources independently within shared namespaces
+- **Configuration Management**: Distribute environment-specific configurations across different cluster environments
+- **Compliance and Governance**: Apply different policies to different resource types within the same namespace
+- **Progressive Rollouts**: Safely deploy resource updates across clusters with zero-downtime strategies
+
+For practical examples and step-by-step instructions, see the [ResourcePlacement How-To Guide](/docs/how-tos/resource-placement).
+
+## Core Concepts
+
+ResourcePlacement orchestrates multi-cluster resource distribution through a coordinated system of controllers and snapshots that work together to ensure consistent, reliable deployments.
+
+### The Complete Flow
 
 ![](/images/en/docs/concepts/crpc/placement-concept-overview.jpg)
 
-The placement controller will create `SchedulingPolicySnapshot` and `ResourceSnapshot` snapshots by watching
-the `ResourcePlacement` object. So that it can trigger the scheduling and resource rollout process whenever needed.
+When you create a ResourcePlacement, the system initiates a multi-stage process:
 
-The override controller will create the corresponding snapshots by watching the `ClusterResourceOverride` and `ResourceOverride`
-which captures the snapshot of the overrides.
+1. **Resource Selection & Snapshotting**: The placement controller identifies resources matching your selectors and creates immutable `ResourceSnapshot` objects capturing their current state
+2. **Policy Evaluation & Snapshotting**: Placement policies are evaluated and captured in `SchedulingPolicySnapshot` objects to ensure stable scheduling decisions
+3. **Multi-Cluster Scheduling**: The scheduler processes policy snapshots to determine target clusters through filtering, scoring, and selection
+4. **Resource Binding**: Selected clusters are bound to specific resource snapshots via `ResourceBinding` objects
+5. **Rollout Execution**: The rollout controller applies resources to target clusters according to the rollout strategy
+6. **Override Processing**: Environment-specific customizations are applied through override controllers
+7. **Work Generation**: Individual `Work` objects are created for each target cluster containing the final resource manifests
+8. **Cluster Application**: Work controllers on member clusters apply the resources locally and report status back
 
-The placement workflow will be divided into several stages:
-1. Scheduling: multi-cluster scheduler makes the schedule decision by creating  the `ResourceBinding` for a bundle
-of resources based on the latest `SchedulingPolicySnapshot`generated by the `ResourcePlacement`.
-2. Rolling out resources: rollout controller applies the resources to the selected member clusters based on the rollout strategy.
-3. Overriding: work generator applies the override rules defined by `ClusterResourceOverride` and `ResourceOverride` to 
-the selected resources on the target clusters.
-4. Creating or updating works:  work generator creates the work on the corresponding member cluster namespace. Each work
-contains the (overridden) manifest workload to be deployed on the member clusters.
-5. Applying resources on target clusters: apply work controller applies the manifest workload on the member clusters.
-6. Checking resource availability: apply work controller checks the resource availability on the target clusters.
+### Status and Observability
 
-## Resource Selection
+ResourcePlacement provides comprehensive status reporting to track deployment progress:
 
-Resource selectors identify objects to include based on standard Kubernetes identifiers - namely, the `group`, 
-`kind`, `version`, and `name` of the object. The example `ResourcePlacement` above would include all the `ConfigMap` objects that were created in that namespace.
+- **Overall Status**: High-level conditions indicating scheduling, rollout, and availability states
+- **Per-Cluster Status**: Individual status for each target cluster showing detailed progress
+- **Events**: Timeline of placement activities and any issues encountered
 
-The placement controller creates the `ResourceSnapshot` to store a snapshot of selected resources
-selected by the placement. The `ResourceSnapshot` spec is immutable. Each time when the selected resources are updated,
-the clusterResourcePlacement controller will detect the resource changes and create a new `ResourceSnapshot`. It implies
-that resources can change independently of any modifications to the `ResourceSnapshot`. In other words, resource
-changes can occur without directly affecting the `ResourceSnapshot` itself.
+Status information helps operators understand deployment progress, troubleshoot issues, and ensure resources are successfully propagated across the fleet.
 
-The total amount of selected resources may exceed the 1MB limit for a single Kubernetes object. As a result, the controller 
-may produce more than one `ResourceSnapshot` for all the selected resources.
+For detailed troubleshooting guidance, see the [ResourcePlacement Troubleshooting Guide](/docs/troubleshooting/ResourcePlacement).
 
-`ResourceSnapshot` sample:
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ResourceSnapshot
-metadata:
-  annotations:
-    kubernetes-fleet.io/number-of-enveloped-object: "0"
-    kubernetes-fleet.io/number-of-resource-snapshots: "1"
-    kubernetes-fleet.io/resource-hash: ea0d9d0c99ac174fa991a0982b717009a8dd716b1c17dcdea6d49a323619f1b6
-  creationTimestamp: "2025-09-17T17:57:22Z"
-  generation: 1
-  labels:
-    kubernetes-fleet.io/is-latest-snapshot: "true"
-    kubernetes-fleet.io/parent-CRP: rp-1
-    kubernetes-fleet.io/resource-index: "1"
-  name: rp-1-1-snapshot
-  namespace: test-ns
-  ownerReferences:
-    - apiVersion: placement.kubernetes-fleet.io/v1beta1
-      blockOwnerDeletion: true
-      controller: true
-      kind: ResourcePlacement
-      name: rp-1
-      uid: 47c24be5-94a1-464e-8099-434cf0b85aaa
-  resourceVersion: "22125887"
-  uid: 2d8bc451-1da8-498b-ba9e-6d3e84cce9ae
-spec:
-  selectedResources:
-    - apiVersion: v1
-      data:
-        v1.html: |
-          <!doctype html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <title>Docker Nginx</title>
-          </head>
-          <body>
-            <h2>Hello from Nginx container v1</h2>
-          </body>
-          </html>
-        v2.html: |
-          <!doctype html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <title>Fleet Nginx</title>
-          </head>
-          <body>
-            <h2>Hello from Nginx container v2</h2>
-          </body>
-      kind: ConfigMap
-      metadata:
-        name: index
-        namespace: test-ns
-    - apiVersion: v1
-      data:
-        v1.html: |
-          <!doctype html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <title>Docker Nginx</title>
-          </head>
-          <body>
-            <h2>Hello from Nginx container v1</h2>
-          </body>
-          </html>
-        v2.html: |
-          <!doctype html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <title>Fleet Nginx</title>
-          </head>
-          <body>
-            <h2>Hello from Nginx container v2</h2>
-          </body>
-      kind: ConfigMap
-      metadata:
-        name: index-1
-        namespace: test-ns
-    - apiVersion: v1
-      data:
-        v1.html: |
-          <!doctype html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <title>Docker Nginx</title>
-          </head>
-          <body>
-            <h2>Hello from Nginx container v1</h2>
-          </body>
-          </html>
-        v2.html: |
-          <!doctype html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <title>Fleet Nginx</title>
-          </head>
-          <body>
-            <h2>Hello from Nginx container v2</h2>
-          </body>
-      kind: ConfigMap
-      metadata:
-        name: index-2
-        namespace: test-ns
-```
+## Advanced Features
 
-## Placement Policy
+### Tolerations
 
-`ResourcePlacement` supports three types of policy as mentioned above. `SchedulingPolicySnapshot` will be
-generated whenever policy changes are made to the `ResourcePlacement` that require a new scheduling. Similar to
-`ResourceSnapshot`, its spec is immutable.
+ResourcePlacement supports Kubernetes-style taints and tolerations for advanced cluster selection. This enables:
+- **Cluster Specialization**: Reserve clusters for specific workload types
+- **Compliance Requirements**: Ensure resources only deploy to compliant clusters  
+- **Resource Isolation**: Separate different classes of workloads
 
-`SchedulingPolicySnapshot` sample:
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: SchedulingPolicySnapshot
-metadata:
-  annotations:
-    kubernetes-fleet.io/CRP-generation: "2"
-  creationTimestamp: "2025-09-17T17:55:35Z"
-  generation: 1
-  labels:
-    kubernetes-fleet.io/is-latest-snapshot: "true"
-    kubernetes-fleet.io/parent-CRP: rp-1
-    kubernetes-fleet.io/policy-index: "0"
-  name: rp-1-0
-  namespace: test-ns
-  ownerReferences:
-    - apiVersion: placement.kubernetes-fleet.io/v1beta1
-      blockOwnerDeletion: true
-      controller: true
-      kind: ResourcePlacement
-      name: rp-1
-      uid: 47c24be5-94a1-464e-8099-434cf0b85aaa
-  resourceVersion: "22125796"
-  uid: 09ab4eea-a088-4bdd-b42e-c8844549bf91
-spec:
-  policy:
-    placementType: PickAll
-  policyHash: OGNjNTdkZWU1OTY4NGZmODg3NjZlMjY5MzZjOGZiMTI1ZjRiZGUyMzRhMmJlYjVjNTRhZGVkNDU2OWRiMGQ1YQ==
-status:
-  conditions:
-  - lastTransitionTime: "2025-09-17T17:55:35Z"
-    message: found all the clusters needed as specified by the scheduling policy
-    observedGeneration: 1
-    reason: SchedulingPolicyFulfilled
-    status: "True"
-    type: Scheduled
-  observedCRPGeneration: 5
-  targetClusters:
-  - clusterName: aks-member-1
-    clusterScore:
-      affinityScore: 0
-      priorityScore: 0
-    reason: picked by scheduling policy
-    selected: true
-  - clusterName: aks-member-2
-    clusterScore:
-      affinityScore: 0
-      priorityScore: 0
-    reason: picked by scheduling policy
-    selected: true
-```
+Tolerations allow ResourcePlacement to target clusters with specific taints, providing fine-grained control over placement decisions.
 
+For detailed configuration examples, see the [Taints and Tolerations How-To Guide](/docs/how-tos/taints-tolerations).
 
-![](/images/en/docs/concepts/crpc/scheduling.jpg)
+### Envelope Objects
 
-In contrast to the original scheduler framework in Kubernetes, the multi-cluster scheduling process involves selecting a cluster for placement through a structured 5-step operation:
-1. Batch & PostBatch
-2. Filter 
-3. Score
-4. Sort
-5. Bind
+ResourcePlacement treats the hub cluster as a staging environment where resources are prepared for distribution rather than local execution. For resources that might cause unintended side effects when created on the hub cluster, envelope objects provide a safe encapsulation mechanism.
 
-The _batch & postBatch_ step is to define the batch size according to the desired and current `ResourceBinding`. 
-The postBatch is to adjust the batch size if needed.
+This approach ensures that resources like Network Policies or Resource Quotas don't interfere with hub cluster operations while still being properly distributed to target clusters.
 
-The _filter_ step finds the set of clusters where it's feasible to schedule the placement, for example, whether the cluster
-is matching required `Affinity` scheduling rules specified in the `Policy`. It also filters out any clusters which are 
-leaving the fleet or no longer connected to the fleet, for example, its heartbeat has been stopped for a prolonged period of time.
-
-In the _score_ step (only applied to the pickN type), the scheduler assigns a score to each cluster that survived filtering.
-Each cluster is given a topology spread score (how much a cluster would satisfy the topology spread
-constraints specified by the user), and an affinity score (how much a cluster would satisfy the preferred affinity terms
-specified by the user). 
-
-In the _sort_ step (only applied to the pickN type), it sorts all eligible clusters by their scores, sorting first by topology 
-spread score and breaking ties based on the affinity score.
-
-The _bind_ step is to create/update/delete the `ResourceBinding` based on the desired and current member cluster list.
-
-## Rollout Strategy
-Update strategy determines how changes to the `ClusterWorkloadPlacement` will be rolled out across member clusters. 
-The only supported update strategy is `RollingUpdate` and it replaces the old placed resource using rolling update, i.e. 
-gradually create the new one while replace the old ones.
-
-## Placement status
-
-After a `ResourcePlacement` is created, details on current status can be seen by performing a `kubectl describe rp <name> -n <namespace>`.
-The status output will indicate both placement conditions and individual placement statuses on each member cluster that was selected.
-The list of resources that are selected for placement will also be included in the describe output. 
-
-Sample output:
-
-```yaml
-Name:         rp-1
-Namespace:
-Labels:       <none>
-Annotations:  <none>
-API Version:  placement.kubernetes-fleet.io/v1beta1
-Kind:         ResourcePlacement
-Metadata:
-  ...
-Spec:
-  Policy:
-    Placement Type:  PickAll
-  Resource Selectors:
-    Group:
-    Kind:                  ConfigMap
-    SelectionScope:        NamespaceWithResources
-    Version:               v1
-  Revision History Limit:  10
-  Status Reporting Scope:  ClusterScopeOnly
-  Strategy:
-    Rolling Update:
-      Max Surge:                   1
-      Max Unavailable:             1
-      Unavailable Period Seconds:  60
-    Type:                          RollingUpdate
-Status:
-  Conditions:
-    Last Transition Time:   2025-09-18T14:57:22Z
-    Message:                found all the clusters needed as specified by the scheduling policy
-    Observed Generation:    1
-    Reason:                 SchedulingPolicyFulfilled
-    Status:                 True
-    Type:                   ResourcePlacementScheduled
-    Last Transition Time:   2025-09-18T14:57:22Z
-    Message:                All 3 cluster(s) start rolling out the latest resource
-    Observed Generation:    1
-    Reason:                 RolloutStarted
-    Status:                 True
-    Type:                   ResourcePlacementRolloutStarted
-    Last Transition Time:   2025-09-18T14:57:22Z
-    Message:                No override rules are configured for the selected resources
-    Observed Generation:    1
-    Reason:                 NoOverrideSpecified
-    Status:                 True
-    Type:                   ResourcePlacementOverridden
-    Last Transition Time:   2025-09-18T14:57:22Z
-    Message:                Works(s) are successfully created or updated in the 3 target clusters' namespaces
-    Observed Generation:    1
-    Reason:                 WorkSynchronized
-    Status:                 True
-    Type:                   ResourcePlacementWorkSynchronized
-    Last Transition Time:   2025-09-18T14:57:22Z
-    Message:                The selected resources are successfully applied to 3 clusters
-    Observed Generation:    1
-    Reason:                 ApplySucceeded
-    Status:                 True
-    Type:                   ResourcePlacementApplied
-    Last Transition Time:   2025-09-18T14:57:22Z
-    Message:                The selected resources in 3 cluster are available now
-    Observed Generation:    1
-    Reason:                 ResourceAvailable
-    Status:                 True
-    Type:                   ResourcePlacementAvailable
-  Observed Resource Index:  0
-  Placement Statuses:
-    Cluster Name:  kind-cluster-1
-    Conditions:
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               Successfully scheduled resources for placement in kind-cluster-1 (affinity score: 0, topology spread score: 0): picked by scheduling policy
-      Observed Generation:   1
-      Reason:                Scheduled
-      Status:                True
-      Type:                  Scheduled
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               Detected the new changes on the resources and started the rollout process
-      Observed Generation:   1
-      Reason:                RolloutStarted
-      Status:                True
-      Type:                  RolloutStarted
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               No override rules are configured for the selected resources
-      Observed Generation:   1
-      Reason:                NoOverrideSpecified
-      Status:                True
-      Type:                  Overridden
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               All of the works are synchronized to the latest
-      Observed Generation:   1
-      Reason:                AllWorkSynced
-      Status:                True
-      Type:                  WorkSynchronized
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               All corresponding work objects are applied
-      Observed Generation:   1
-      Reason:                AllWorkHaveBeenApplied
-      Status:                True
-      Type:                  Applied
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               All corresponding work objects are available
-      Observed Generation:   1
-      Reason:                WorkAvailable
-      Status:                True
-      Type:                  Available
-    Cluster Name:            kind-cluster-2
-    Conditions:
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               Successfully scheduled resources for placement in kind-cluster-2 (affinity score: 0, topology spread score: 0): picked by scheduling policy
-      Observed Generation:   1
-      Reason:                Scheduled
-      Status:                True
-      Type:                  Scheduled
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               Detected the new changes on the resources and started the rollout process
-      Observed Generation:   1
-      Reason:                RolloutStarted
-      Status:                True
-      Type:                  RolloutStarted
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               No override rules are configured for the selected resources
-      Observed Generation:   1
-      Reason:                NoOverrideSpecified
-      Status:                True
-      Type:                  Overridden
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               All of the works are synchronized to the latest
-      Observed Generation:   1
-      Reason:                AllWorkSynced
-      Status:                True
-      Type:                  WorkSynchronized
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               All corresponding work objects are applied
-      Observed Generation:   1
-      Reason:                AllWorkHaveBeenApplied
-      Status:                True
-      Type:                  Applied
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               All corresponding work objects are available
-      Observed Generation:   1
-      Reason:                WorkAvailable
-      Status:                True
-      Type:                  Available
-    Cluster Name:            kind-cluster-3
-    Conditions:
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               Successfully scheduled resources for placement in kind-cluster-3 (affinity score: 0, topology spread score: 0): picked by scheduling policy
-      Observed Generation:   1
-      Reason:                Scheduled
-      Status:                True
-      Type:                  Scheduled
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               Detected the new changes on the resources and started the rollout process
-      Observed Generation:   1
-      Reason:                RolloutStarted
-      Status:                True
-      Type:                  RolloutStarted
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               No override rules are configured for the selected resources
-      Observed Generation:   1
-      Reason:                NoOverrideSpecified
-      Status:                True
-      Type:                  Overridden
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               All of the works are synchronized to the latest
-      Observed Generation:   1
-      Reason:                AllWorkSynced
-      Status:                True
-      Type:                  WorkSynchronized
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               All corresponding work objects are applied
-      Observed Generation:   1
-      Reason:                AllWorkHaveBeenApplied
-      Status:                True
-      Type:                  Applied
-      Last Transition Time:  2025-09-18T14:57:22Z
-      Message:               All corresponding work objects are available
-      Observed Generation:   1
-      Reason:                WorkAvailable
-      Status:                True
-      Type:                  Available
-    Selected Resources:
-      Kind:       ConfigMap
-      Name:       index
-      Namespace:  test-ns
-      Version:    v1
-      Kind:       ConfigMap
-      Name:       index-1
-      Namespace:  test-ns
-      Version:    v1
-      Kind:       ConfigMap
-      Name:       index-2
-      Namespace:  test-ns
-      Version:    v1
-
-Events:
-  Type    Reason                        Age    From                           Message
-  ----    ------                        ----   ----                           -------
-  Normal  PlacementRolloutStarted       3m46s  resource-placement-controller  Started rolling out the latest resources
-  Normal  PlacementOverriddenSucceeded  3m46s  resource-placement-controller  Placement has been successfully overridden
-  Normal  PlacementWorkSynchronized     3m46s  resource-placement-controller  Work(s) have been created or updated successfully for the selected cluster(s)
-  Normal  PlacementApplied              3m46s  resource-placement-controller  Resources have been applied to the selected cluster(s)
-  Normal  PlacementRolloutCompleted     3m46s  resource-placement-controller  Resources are available in the selected clusters
-```
-> NOTE: Within the `Spec` section, `SelectionScope` and `StatusReportingScope` fields are to be ignored for `ResourcePlacement` as they are only applicable to `ClusterResourcePlacement`.
-
-## Tolerations
-
-Tolerations are a mechanism to allow the Fleet Scheduler to schedule resources to a `MemberCluster` that has taints specified on it.
-We adopt the concept of [taints & tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) 
-introduced in Kubernetes to the multi-cluster use case.
-
-The `ResourcePlacement` CR supports the specification of list of tolerations, which are applied to the `ResourcePlacement`
-object. Each Toleration object comprises the following fields:
-- `key`: The key of the toleration.
-- `value`: The value of the toleration.
-- `effect`: The effect of the toleration, which can be `NoSchedule` for now.
-- `operator`: The operator of the toleration, which can be `Exists` or `Equal`.
-
-Each toleration is used to tolerate one or more specific taints applied on the `MemberCluster`. Once all taints on a `MemberCluster`
-are tolerated by tolerations on a `ResourcePlacement`, resources can be propagated to the `MemberCluster` by the scheduler for that
-`ResourcePlacement` resource.
-
-Tolerations cannot be updated or removed from a `ResourcePlacement`. If there is a need to update toleration a better approach is to
-add another toleration. If we absolutely need to update or remove existing tolerations, the only option is to delete the existing `ResourcePlacement`
-and create a new object with the updated tolerations.
-
-For detailed instructions, please refer to this [document](/docs/how-tos/taints-tolerations).
-
-## Envelope Object
-
-The `ResourcePlacement` leverages the fleet hub cluster as a staging environment for customer resources. These resources are then propagated to member clusters that are part of the fleet, based on the `ResourcePlacement` spec.
-
-In essence, the objective is not to apply or create resources on the hub cluster for local use but to propagate these resources to other member clusters within the fleet.
-
-Certain resources, when created or applied on the hub cluster, may lead to unintended side effects. These include:
-
-- Resource Quotas
-- Network Policies
+For implementation details, see the [Envelope Object How-To Guide](/docs/how-tos/envelope-object).
