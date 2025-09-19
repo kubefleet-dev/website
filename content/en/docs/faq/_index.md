@@ -41,6 +41,12 @@ And the public APIs exposed by KubeFleet are:
 | `ClusterResourcePlacementEvictions`         |
 | `ResourcePlacement`                         |
 
+The following resources are the KubeFleet-owned **internal** resources on the member cluster side:
+
+| Resource                |
+|-------------------------|
+| `AppliedWork`           |
+
 See the [KubeFleet source code](https://github.com/kubefleet-dev/kubefleet/tree/main/apis) for the definitions of these APIs.
 
 Depending on your setup, your environment might feature a few KubeFleet provided webhooks that help safeguard
