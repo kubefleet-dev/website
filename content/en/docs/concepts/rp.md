@@ -27,10 +27,32 @@ In multi-cluster environments, workloads often consist of both cluster-scoped an
 `ResourcePlacement` (RP) was designed to address this gap by providing:
 
 - **Namespace-scoped resource management**: Target specific resources within a namespace without affecting the entire namespace
-- **Operational flexibility**: Allow different teams to manage different resources within the same namespace independently
+- **Operational flexibility**: Allow a team to manage different resources within the same namespace independently
 - **Complementary functionality**: Work alongside CRP to provide a complete multi-cluster resource management solution
 
 **Note**: `ResourcePlacement` can be used together with `ClusterResourcePlacement` in namespace-only mode. For example, you can use CRP to deploy the namespace, while using RP for fine-grained management of specific resources like environment-specific ConfigMaps or Secrets within that namespace.
+
+### Addressing Real-World Namespace Usage Patterns
+
+While CRP assumes that namespaces represent application boundaries, real-world usage patterns are often more complex. Organizations frequently use namespaces as team boundaries rather than application boundaries, leading to several challenges that ResourcePlacement directly addresses:
+
+**Multi-Application Namespaces**: In many organizations, a single namespace contains multiple independent applications owned by the same team. These applications may have:
+- Different lifecycle requirements (one application may need frequent updates while another remains stable)
+- Different cluster placement needs (development vs. production applications)
+- Independent scaling and resource requirements
+- Separate compliance or governance requirements
+
+**Individual Scheduling Decisions**: Many workloads, particularly AI/ML jobs, require individual scheduling decisions:
+- **AI Jobs**: Machine learning workloads often consist of short-lived, resource-intensive jobs that need to be scheduled based on cluster resource availability, GPU availability, or data locality
+- **Batch Workloads**: Different batch jobs within the same namespace may target different cluster types based on computational requirements
+
+
+**Complete Application Team Control**: ResourcePlacement provides application teams with direct control over their resource placement without requiring platform team intervention:
+- **Self-Service Operations**: Teams can manage their own resource distribution strategies
+- **Independent Deployment Cycles**: Different applications within a namespace can have completely independent rollout schedules
+- **Granular Override Capabilities**: Teams can customize resource configurations per cluster without affecting other applications in the namespace
+
+This granular approach ensures that ResourcePlacement can adapt to diverse organizational structures and workload patterns while maintaining the simplicity and power of the Fleet scheduling framework.
 
 ### Key Differences Between ResourcePlacement and ClusterResourcePlacement
 
@@ -39,7 +61,7 @@ In multi-cluster environments, workloads often consist of both cluster-scoped an
 | **Scope** | Namespace-scoped resources only | Cluster-scoped resources (especially namespaces and their contents) |
 | **Resource** | Namespace-scoped API object | Cluster-scoped API object |
 | **Selection Boundary** | Limited to resources within the same namespace as the RP | Can select any cluster-scoped resource |
-| **Typical Use Cases** | Individual ConfigMaps, Secrets, Services within existing namespaces | Entire namespaces, ClusterRoles, cluster-wide policies |
+| **Typical Use Cases** | AI/ML Jobs, individual workloads, specific ConfigMaps/Secrets that need independent placement decisions | Application bundles, entire namespaces, cluster-wide policies |
 | **Team Ownership** | Can be managed by namespace owners/developers | Typically managed by platform operators |
 
 ### Similarities Between ResourcePlacement and ClusterResourcePlacement
@@ -68,6 +90,62 @@ ResourcePlacement is ideal for scenarios requiring granular control over namespa
 - **Progressive Rollouts**: Safely deploy resource updates across clusters with zero-downtime strategies
 
 For practical examples and step-by-step instructions, see the [ResourcePlacement How-To Guide](/docs/how-tos/resource-placement).
+
+## Working with ClusterResourcePlacement
+
+ResourcePlacement is designed to work in coordination with ClusterResourcePlacement (CRP) to provide a complete multi-cluster resource management solution. Understanding this relationship is crucial for effective fleet management.
+
+### Namespace Prerequisites
+
+**Important**: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace. This creates a fundamental dependency on ClusterResourcePlacement for namespace establishment.
+
+**Typical Workflow**:
+1. **Fleet Admin**: Uses ClusterResourcePlacement to deploy namespaces across the fleet
+2. **Application Teams**: Use ResourcePlacement to manage specific resources within those established namespaces
+
+
+```yaml
+# Fleet admin creates namespace using CRP
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: ClusterResourcePlacement
+metadata:
+  name: app-namespace-crp
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: my-app
+      version: v1
+  policy:
+    placementType: PickAll
+---
+# Application team manages resources using RP
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: ResourcePlacement
+metadata:
+  name: app-configs-rp
+  namespace: my-app
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: ConfigMap
+      version: v1
+      labelSelector:
+        matchLabels:
+          app: my-application
+  policy:
+    placementType: PickFixed
+    clusterNames: ["prod-cluster-1", "prod-cluster-2"]
+```
+
+### Best Practices
+
+- **Establish Namespaces First**: Always ensure namespaces are deployed via CRP before creating ResourcePlacement objects
+- **Monitor Dependencies**: Use Fleet monitoring to ensure namespace-level CRPs are healthy before deploying dependent RPs
+- **Coordinate Policies**: Align CRP and RP placement policies to avoid conflicts (e.g., if CRP places namespace on clusters A,B,C, RP can target any subset of those clusters)
+- **Team Boundaries**: Use CRP for platform-managed resources (namespaces, RBAC) and RP for application-managed resources (app configs, secrets)
+
+This coordinated approach ensures that ResourcePlacement provides the flexibility teams need while maintaining the foundational infrastructure managed by platform operators.
 
 ## Core Concepts
 
@@ -102,21 +180,5 @@ For detailed troubleshooting guidance, see the [ResourcePlacement Troubleshootin
 
 ## Advanced Features
 
-### Tolerations
+ResourcePlacement supports the same advanced features as ClusterResourcePlacement. For detailed documentation on these features, see the corresponding sections in the [ClusterResourcePlacement Concept Guide - Advanced Features](crp.md#advanced-features).
 
-ResourcePlacement supports Kubernetes-style taints and tolerations for advanced cluster selection. This enables:
-- **Cluster Specialization**: Reserve clusters for specific workload types
-- **Compliance Requirements**: Ensure resources only deploy to compliant clusters  
-- **Resource Isolation**: Separate different classes of workloads
-
-Tolerations allow ResourcePlacement to target clusters with specific taints, providing fine-grained control over placement decisions.
-
-For detailed configuration examples, see the [Taints and Tolerations How-To Guide](/docs/how-tos/taints-tolerations).
-
-### Envelope Objects
-
-ResourcePlacement treats the hub cluster as a staging environment where resources are prepared for distribution rather than local execution. For resources that might cause unintended side effects when created on the hub cluster, envelope objects provide a safe encapsulation mechanism.
-
-This approach ensures that resources like Network Policies or Resource Quotas don't interfere with hub cluster operations while still being properly distributed to target clusters.
-
-For implementation details, see the [Envelope Object How-To Guide](/docs/how-tos/envelope-object).
