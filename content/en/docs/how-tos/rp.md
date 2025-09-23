@@ -129,7 +129,7 @@ In the example above, Fleet will pick the deployment `work` and the role `secret
 
 Each scheduling policy is associated with a placement type, which determines how KubeFleet will
 pick clusters. The `ResourcePlacement` API supports the same placement types as `ClusterResourcePlacement`; 
-for more information about placement types, see the [ClusterResourcePlacement - Scheduling Policy](/content/en/docs/how-tos/crp.md#scheduling-policy) How-To Guide.
+for more information about placement types, see the [ClusterResourcePlacement - Scheduling Policy](crp.md#scheduling-policy) How-To Guide.
 
 ## Rollout strategy
-The rollout strategy controls how KubeFleet rolls out changes; for more information, see the [ClusterResourcePlacement-Rollout Strategy](/content/en/docs/how-tos/crp.md#rollout-strategy) How-To Guide.
+The rollout strategy controls how KubeFleet rolls out changes; for more information, see the [ClusterResourcePlacement-Rollout Strategy](crp.md#rollout-strategy) How-To Guide.
