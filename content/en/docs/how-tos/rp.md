@@ -132,4 +132,4 @@ pick clusters. The `ResourcePlacement` API supports the same placement types as 
 for more information about placement types, see the [ClusterResourcePlacement - Scheduling Policy](crp.md#scheduling-policy) How-To Guide.
 
 ## Rollout strategy
-The rollout strategy controls how KubeFleet rolls out changes; for more information, see the [ClusterResourcePlacement-Rollout Strategy](crp.md#rollout-strategy) How-To Guide.
+The rollout strategy controls how KubeFleet rolls out changes; for more information, see the [ClusterResourcePlacement - Rollout Strategy](crp.md#rollout-strategy) How-To Guide.
