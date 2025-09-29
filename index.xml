@@ -137,7 +137,15 @@ of day-to-day Kubernetes management.&lt;/p>
 &lt;p>This tutorial assumes that you have some experience of performing administrative tasks for
 Kubernetes clusters. If you are just gettings started with Kubernetes, or do not have much
 experience of setting up a Kubernetes cluster, it is recommended that you follow the
-&lt;a href="https://kubefleet.dev/docs/getting-started/kind/">Getting started with Fleet using Kind clusters&lt;/a> tutorial instead.&lt;/p></description></item><item><title>Using Affinity to Pick Clusters</title><link>https://kubefleet.dev/docs/how-tos/affinities/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/affinities/</guid><description>&lt;p>This how-to guide discusses how to use affinity settings to fine-tune how Fleet picks clusters
+&lt;a href="https://kubefleet.dev/docs/getting-started/kind/">Getting started with Fleet using Kind clusters&lt;/a> tutorial instead.&lt;/p></description></item><item><title>ResourcePlacement</title><link>https://kubefleet.dev/docs/concepts/rp/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/rp/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>&lt;code>ResourcePlacement&lt;/code> is a namespace-scoped API that enables dynamic selection and multi-cluster propagation of namespace-scoped resources. It provides fine-grained control over how specific resources within a namespace are distributed across member clusters in a fleet.&lt;/p>
+&lt;p>&lt;strong>Key Characteristics:&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Namespace-scoped&lt;/strong>: Both the ResourcePlacement object and the resources it manages exist within the same namespace&lt;/li>
+&lt;li>&lt;strong>Selective&lt;/strong>: Can target specific resources by type, name, or labels rather than entire namespaces&lt;/li>
+&lt;li>&lt;strong>Declarative&lt;/strong>: Uses the same placement patterns as ClusterResourcePlacement for consistent behavior&lt;/li>
+&lt;/ul>
+&lt;p>A ResourcePlacement consists of three core components:&lt;/p></description></item><item><title>Using Affinity to Pick Clusters</title><link>https://kubefleet.dev/docs/how-tos/affinities/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/affinities/</guid><description>&lt;p>This how-to guide discusses how to use affinity settings to fine-tune how Fleet picks clusters
 for resource placement.&lt;/p>
 &lt;p>Affinities terms are featured in the &lt;code>ClusterResourcePlacement&lt;/code> API, specifically the scheduling
 policy section. Each affinity term is a particular requirement that Fleet will check against clusters;
