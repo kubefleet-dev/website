@@ -21,6 +21,9 @@ KubeFleet-owned **internal** resources on the hub cluster side include:
 | `ClusterResourceBinding`           |
 | `ResourceOverrideSnapshots`        |
 | `ClusterResourceOverrideSnapshots` |
+| `ResourceSnapshot`                 |
+| `SchedulingPolicySnapshot`         |
+| `ResourceBinding`                  |
 
 And the public APIs exposed by KubeFleet are:
 
@@ -36,6 +39,7 @@ And the public APIs exposed by KubeFleet are:
 | `ResourceOverrides`                         |
 | `ClusterResourcePlacementDisruptionBudgets` |
 | `ClusterResourcePlacementEvictions`         |
+| `ResourcePlacement`                         |
 
 The following resources are the KubeFleet-owned **internal** resources on the member cluster side:
 
@@ -50,7 +54,7 @@ the KubeFleet internal resources and the KubeFleet reserved namespaces.
 
 ## Which kinds of resources can be propagated from the hub cluster to the member clusters? How can I control the list?
 
-When you use the `ClusterResourcePlacement` API to select resources for placement, KubeFleet will automatically ignore
+When you use the `ClusterResourcePlacement` or `ResourcePlacement` API to select resources for placement, KubeFleet will automatically ignore
 certain Kubernetes resource groups and/or GVKs. The resources exempted from placement include:
 
 - Pods and Nodes
