@@ -4,7 +4,7 @@ title: KubeFleet
 
 {{< blocks/custom-cover covertitle="轻松管理多Kubernetes集群" coversubtitle="简洁 快速 高度可伸缩" image_anchor="top" height="full" >}}
 <p class="h5">KubeFleet是一个帮助您高效管理多Kubernetes集群的CNCF沙箱项目项目。</p><br>
-<a class="btn btn-lg btn-dark me-3 mb-4" href="/website/zh-cn/docs/">
+<a class="btn btn-lg btn-dark me-3 mb-4" href="/zh-cn/docs/">
   技术文档 <i class="fas fa-arrow-alt-circle-right ms-2"></i>
 </a>
 <a class="btn btn-lg btn-secondary me-3 mb-4" href="https://github.com/kubefleet-dev/kubefleet">

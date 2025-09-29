@@ -8,7 +8,7 @@ While users rely on the `RollingUpdate` rollout strategy to safely roll out thei
 there is also a requirement for a staged rollout mechanism at the cluster level to enable more controlled and systematic continuous delivery (CD) across the fleet.
 Introducing a staged update run feature would address this need by enabling gradual deployments, reducing risk, and ensuring greater reliability and consistency in workload updates across clusters.
 
-![](/website/images/en/docs/concepts/staged-update/updaterun.jpg)
+![](/images/en/docs/concepts/staged-update/updaterun.jpg)
 
 ## Overview
 

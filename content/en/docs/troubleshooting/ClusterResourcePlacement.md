@@ -33,11 +33,15 @@ The complete progression of `ClusterResourcePlacement` is as follows:
    - If this condition is false, refer to [CRP Override Failure TSG](ClusterResourcePlacementOverridden)
 4. `ClusterResourcePlacementWorkSynchronized`: Indicates the work objects have been synchronized.
    - If this condition is false, refer to [CRP Work-Synchronization Failure TSG](ClusterResourcePlacementWorkSynchronized)
-5. `ClusterResourcePlacementApplied`: Indicates the resource has been applied.
+5. `ClusterResourcePlacementApplied`: Indicates the resource has been applied. This condition will only be populated if the
+apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
    - If this condition is false, refer to [CRP Work-Application Failure TSG](ClusterResourcePlacementApplied)
-6. `ClusterResourcePlacementAvailable`: Indicates the resource is available. 
+6. `ClusterResourcePlacementAvailable`: Indicates the resource is available. This condition will only be populated if the
+apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
    - If this condition is false, refer to [CRP Availability Failure TSG](ClusterResourcePlacementAvailable)
-
+7. `ClusterResourcePlacementDiffreported`: Indicates whether diff reporting has completed on all resources. This condition
+will only be populated if the apply strategy in use is of the type `ReportDiff`.
+   - If this condition is false, refer to the [CRP Diff Reporting Failure TSG](ClusterResourcePlacementDiffReported) for more information.
 
 ## How can I debug if some clusters are not selected as expected?
 
@@ -55,6 +59,10 @@ Please check the following cases,
   - If `true`, verify that the resource exists on the hub cluster.
 
 We can also take a look at the `placementStatuses` section in `ClusterResourcePlacement` status for that particular cluster. In `placementStatuses` we would find `failedPlacements` section which should have the reasons as to why resources failed to apply.
+
+## How can I debug if the drift detection result or the configuration difference check result are different from my expectations?
+
+See the [Drift Detection and Configuration Difference Check Unexpected Result TSG](DriftAndDiffDetection) for more information.
 
 ## How can I find and verify the latest ClusterSchedulingPolicySnapshot for a ClusterResourcePlacement?
 

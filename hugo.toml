@@ -1,4 +1,4 @@
-baseURL = "https://kubefleet-dev.github.io/website"
+baseURL = "https://kubefleet.dev"
 title = "KubeFleet"
 theme = "docsy"
 

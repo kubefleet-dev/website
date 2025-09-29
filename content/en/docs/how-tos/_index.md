@@ -1,7 +1,7 @@
 ---
 title: How-To Guides
 description: Guides for completing common Fleet tasks
-weight: 4
+weight: 3
 ---
 
 {{% pageinfo %}}

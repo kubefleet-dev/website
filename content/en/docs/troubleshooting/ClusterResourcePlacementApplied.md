@@ -5,7 +5,7 @@ weight: 6
 ---
 
 The `ClusterResourcePlacementApplied` condition is set to `false` when the deployment fails.
-> Note: To get more information about why the resources are not applied, you can check the [apply work controller](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/work/apply_controller.go) logs.
+> Note: To get more information about why the resources are not applied, you can check the [work applier](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier) logs.
 
 ## Common scenarios
 Instances where this condition may arise:

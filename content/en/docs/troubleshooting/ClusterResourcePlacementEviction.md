@@ -1,7 +1,7 @@
 ---
 title: ClusterResourcePlacementEviction TSG
 description: Identify and fix KubeFleet issues associated with the ClusterResourcePlacementEviction API
-weight: 8
+weight: 11
 ---
 
 This guide provides troubleshooting steps for issues related to placement eviction.

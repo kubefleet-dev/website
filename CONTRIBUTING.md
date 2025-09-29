@@ -62,7 +62,7 @@ Replace `YOUR-TITLE` and `YOUR-DOCUMENT-DESCRIPTION` with values of your own res
 
 ## Building and Deploying the Website
 
-The KubeFleet repository has set up a GitHub Actions pipeline to build the website and deploy it to [GitHub Pages](https://kubefleet-dev.github.io/website/) every time a PR is merged into the `main` branch. Track the build + deployment status in the [GitHub Workflow page](https://github.com/kubefleet-dev/website/actions/workflows/github-pages.yml); once deployed, your changes should appear on the [GitHub Pages](https://kubefleet-dev.github.io/website/) right away.
+The KubeFleet repository has set up a GitHub Actions pipeline to build the website and deploy it to [GitHub Pages](https://kubefleet.dev) every time a PR is merged into the `main` branch. Track the build + deployment status in the [GitHub Workflow page](https://github.com/kubefleet-dev/website/actions/workflows/github-pages.yml); once deployed, your changes should appear on the [GitHub Pages](https://kubefleet.dev) right away.
 
 The same pipeline would also run on each PR; the workflow would attempt to build the website, but no deployment is performed. Use this check to verify if your changes are valid.
 

@@ -20,7 +20,7 @@ def rainbow_print(text, delay=0.05):
 
 s = Back.CYAN + "KubeFleet" + Style.RESET_ALL + " " + \
     "is a CNCF sandbox project that allows you " + \
-    "to manage multiple Kubernetes clusters seamlessly, on-premises and/or " + \
+    "to manage applications running on multiple Kubernetes seamlessly, on-premises and/or " + \
     "on the cloud."
 print_char_by_char(s)
 print_char_by_char("\n\n")
@@ -116,7 +116,7 @@ s = "Learn more about " + \
     Back.CYAN + "KubeFleet" + Style.RESET_ALL + " " + \
     "at "
 print_char_by_char(s)
-rainbow_print("https://kubefleet-dev.github.io/website/")
+rainbow_print("https://kubefleet.dev")
 print_char_by_char(", or check out the source code at ")
 rainbow_print("github.com/kubefleet-dev/kubefleet")
 print_char_by_char(" ✨.\n")

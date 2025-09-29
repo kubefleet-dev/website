@@ -40,6 +40,9 @@ jobs:
 
       - name: Build
         run: hugo --minify
+      
+      - name: Add CNAME file
+        run: echo 'kubefleet.dev' > ./public/CNAME
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
