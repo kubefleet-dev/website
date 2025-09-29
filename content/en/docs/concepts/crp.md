@@ -485,8 +485,8 @@ Events:
   Normal  PlacementApplied              3m46s  cluster-resource-placement-controller  Resources have been applied to the selected cluster(s)
   Normal  PlacementRolloutCompleted     3m46s  cluster-resource-placement-controller  Resources are available in the selected clusters
 ```
-
-## Tolerations
+## Advanced Features
+### Tolerations
 
 Tolerations are a mechanism to allow the Fleet Scheduler to schedule resources to a `MemberCluster` that has taints specified on it.
 We adopt the concept of [taints & tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) 
@@ -509,7 +509,7 @@ and create a new object with the updated tolerations.
 
 For detailed instructions, please refer to this [document](/docs/how-tos/taints-tolerations).
 
-## Envelope Object
+### Envelope Object
 
 The `ClusterResourcePlacement` leverages the fleet hub cluster as a staging environment for customer resources. These resources are then propagated to member clusters that are part of the fleet, based on the `ClusterResourcePlacement` spec.
 
