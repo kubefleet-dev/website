@@ -101,6 +101,14 @@ Follow along to transform your multi-cluster challenges into streamlined, automa
 member clusters within a fleet. This API offers scheduling capabilities that allow you to target the most suitable
 group of clusters for a set of resources using a complex rule set. For example, you can distribute resources to
 clusters in specific regions (North America, East Asia, Europe, etc.) and/or release stages (production, canary, etc.).
+You can even distribute resources according to certain topology spread constraints.&lt;/p></description></item><item><title>Using the ResourcePlacement API</title><link>https://kubefleet.dev/docs/how-tos/rp/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/rp/</guid><description>&lt;p>This guide provides an overview of how to use the KubeFleet &lt;code>ResourcePlacement&lt;/code> (RP) API to orchestrate workload distribution across your fleet.&lt;/p>
+&lt;blockquote>
+&lt;p>NOTE: The &lt;code>ResourcePlacement&lt;/code> is a namespace-scoped CR.&lt;/p>&lt;/blockquote>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>The RP API is a core KubeFleet API that facilitates the distribution of specific resources from the hub cluster to
+member clusters within a fleet. This API offers scheduling capabilities that allow you to target the most suitable
+group of clusters for a set of resources using a complex rule set. For example, you can distribute resources to
+clusters in specific regions (North America, East Asia, Europe, etc.) and/or release stages (production, canary, etc.).
 You can even distribute resources according to certain topology spread constraints.&lt;/p></description></item><item><title>ClusterResourcePlacement</title><link>https://kubefleet.dev/docs/concepts/crp/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/crp/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
 &lt;p>&lt;code>ClusterResourcePlacement&lt;/code> concept is used to dynamically select cluster scoped resources (especially namespaces and all
 objects within it) and control how they are propagated to all or a subset of the member clusters.
