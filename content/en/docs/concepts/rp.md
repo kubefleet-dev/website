@@ -18,7 +18,7 @@ A ResourcePlacement consists of three core components:
 - **Placement Policy**: Determine target clusters using PickAll, PickFixed, or PickN strategies  
 - **Rollout Strategy**: Control how changes propagate across selected clusters
 
-For detailed examples and implementation guidance, see the [ResourcePlacement How-To Guide](/docs/how-tos/resource-placement).
+For detailed examples and implementation guidance, see the [ResourcePlacement How-To Guide](/docs/how-tos/rp).
 
 ## Motivation
 
