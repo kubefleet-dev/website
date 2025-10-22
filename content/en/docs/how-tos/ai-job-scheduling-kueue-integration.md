@@ -1,6 +1,6 @@
 ---
-title: "Scheduling AI Jobs with Kueue and ResourcePlacement"
-description: "Learn how to schedule AI/ML workloads using Kueue and ClusterResourcePlacement/ResourcePlacement across clusters"
+title: "Scheduling AI Jobs with Kueue and Fleet"
+description: "Learn how to schedule AI/ML workloads using Kueue and ClusterResourcePlacement/ResourcePlacement"
 weight: 16
 ---
 
@@ -74,6 +74,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/kueue/$VERSIO
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/kueue/$VERSION/config/components/crd/bases/kueue.x-k8s.io_localqueues.yaml
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/kueue/$VERSION/config/components/crd/bases/kueue.x-k8s.io_resourceflavors.yaml
+
 # Verify CRDs are installed
 kubectl get crds | grep kueue
 ```
@@ -105,7 +106,7 @@ A ResourceFlavor is an object that represents the variations in the nodes availa
 
 ### 2. Configure ClusterQueue on Hub
 
-Set up a ClusterQueue for the workloads in your cluster:
+Set up a ClusterQueue for the workloads:
 
 ```yaml
 apiVersion: kueue.x-k8s.io/v1beta1
@@ -143,7 +144,7 @@ metadata:
   labels:
     app: ai-training
 ```
-The LocalQueue and Job require a namespace to be specified. This will also be used in your ClusterResourcePlacement to propagate your resources to the member clusters.
+The LocalQueue and Job require a namespace to be specified. 
 
 
 ### 4. Use ClusterResourcePlacement to Propagate Cluster-Scoped Resources
@@ -193,7 +194,7 @@ spec:
   revisionHistoryLimit: 15
 ```
 
-The ClusterResourcePlacement (CRP) will select the cluster-scoped resources you created (such as ResourceFlavor and ClusterQueue) and the namespace along with its associated namespace-scoped resources (like LocalQueue). The CRP will propagate these resources to all live member clusters on the Fleet.
+The ClusterResourcePlacement (CRP) will select the cluster-scoped resources you created (such as ResourceFlavor and ClusterQueue) and the namespace only. The CRP will propagate these resources to all selected member clusters on the Fleet.
 
 #### Verify ClusterResourcePlacement Completed
 
@@ -403,7 +404,7 @@ spec:
   ttlSecondsAfterFinished: 60 # Job will be deleted after 60 seconds  
   parallelism: 3
   completions: 3
-  suspend: true
+  suspend: true # Set to true to allow Kueue to control the Job when it starts 
   template:
     spec:
       containers:
@@ -698,13 +699,12 @@ The job scheduling process combines ClusterResourcePlacement, ResourcePlacement,
 2. **ResourcePlacement Phase**: 
    - Selects appropriate clusters based on resource constraints
    - Propagates the AI/ML job and LocalQueue to the selected cluster(s)
-   - Uses intelligent scheduling based on resource availability and cluster properties
 
 3. **Kueue Management Phase**:
-   - Once resources arrive on the target cluster, Kueue takes over job lifecycle management
-   - Manages job admission based on available GPU quotas
-   - Ensures fair resource sharing and prevents GPU oversubscription
-   - Jobs wait in the LocalQueue if resources are currently unavailable
+   - Manages job admission based on ClusterQueue quotas
+   - Controls job execution through suspend/unsuspend mechanism
+   - Handles resource tracking and quota enforcement
+   - Maintains job queuing and priority order
 
 ### 🎯 Resource Flow
 
@@ -719,20 +719,20 @@ Hub Cluster                    Member Cluster(s)
 
 ## Best Practices
 
-1. **Resource Requests**
-   - Always specify both requests and limits for GPU resources
-   - Include memory and CPU requirements for data preprocessing
-   - Consider network bandwidth for distributed training
+1. **Resource Management**
+   - Always specify both requests and limits for resources
+   - Set realistic resource requirements based on workload needs
+   - Consider additional resources needed for data processing
 
 2. **Queue Configuration**
-   - Set appropriate GPU quotas based on cluster capacity
-   - Configure separate queues for different GPU types
-   - Use cohorts to manage related training jobs
+   - Configure quotas based on actual cluster capacity
+   - Create separate queues for different workload types
+   - Use cohorts to manage related jobs efficiently
 
-3. **Cluster Selection**
-   - Use cluster labels to identify GPU capabilities
-   - Consider network topology for distributed training
-   - Include backup clusters in case of failures
+3. **Placement Strategy**
+   - Define clear cluster selection criteria
+   - Consider workload requirements when setting affinities
+   - Plan for high availability with backup clusters
 
 ## Monitoring and Troubleshooting
 
@@ -741,22 +741,22 @@ Hub Cluster                    Member Cluster(s)
 #### Check Placement Status
 ```bash
 # View ResourcePlacement status
-kubectl get resourceplacement training-placement -o yaml
+kubectl get resourceplacement <rp-name> -n <namespace> -o yaml
 
 # View ClusterResourcePlacement status
-kubectl get clusterresourceplacement sample-kueue-crp -o yaml
+kubectl get clusterresourceplacement <crp-name> -o yaml
 ```
 
 #### Monitor Queue Status on Member Cluster
 ```bash
 # Check LocalQueue status
-kubectl get localqueue lq-training -n training
+kubectl get localqueue <lq-name> -n <namespace>
 
 # Check ClusterQueue status
-kubectl get clusterqueue cluster-queue -o wide
+kubectl get clusterqueue <cq-name> -o wide
 
 # Check Job status
-kubectl get job mock-training -n training
+kubectl get job <job-name> -n <namespace>
 ```
 
 ## Related Resources
