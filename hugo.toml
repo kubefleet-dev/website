@@ -92,7 +92,8 @@ time_format_blog = "2006.01.02"
 section = ["HTML", "print", "RSS"]
 
 [params]
-privacy_policy = "https://github.com/kubefleet-dev/website/blob/main/PRIVACY_POLICY.md"
+# privacy_policy = "https://github.com/kubefleet-dev/website/blob/main/PRIVACY_POLICY.md"
+privacy_policy = "https://www.linuxfoundation.org/legal/privacy-policy"
 
 # First one is picked as the Twitter card image if not set on page.
 # images = ["images/project-illustration.png"]
@@ -113,7 +114,7 @@ version = "0.0"
 
 # A link to latest version of the docs. Used in the "version-banner" partial to
 # point people to the main doc site.
-url_latest_version = "https://kubefleet-dev.github.io/website"
+url_latest_version = "https://kubefleet.dev/"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://github.com/kubefleet-dev/website"

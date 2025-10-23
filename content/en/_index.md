@@ -29,7 +29,7 @@ Leverage KubeFleet's flexible scheduling capabilities to always run workloads in
 {{% /blocks/feature %}}
 
 {{% blocks/feature icon="fa-solid fa-bars-progress" title="Simplified administration" %}}
-Use KubeFleet to perform administrative tasks at ease. KubeFleet can help you enforce policies, observe status, detect configuration drifts, move workloads around as needed, and do many more. 
+Use KubeFleet to perform administrative tasks with ease. KubeFleet can help you enforce policies, observe status, detect configuration drifts, and move workloads around as needed.
 {{% /blocks/feature %}}
 
 {{% /blocks/section %}}
@@ -77,4 +77,3 @@ Use KubeFleet to perform administrative tasks at ease. KubeFleet can help you en
 {{% /blocks/feature %}}
 
 {{% /blocks/section %}}
-
