@@ -170,21 +170,7 @@ spec:
       name: training  
       selectionScope: NamespaceOnly
   policy:  
-    placementType: PickN  
-    numberOfClusters: 1  
-    affinity:  
-      clusterAffinity:  
-        preferredDuringSchedulingIgnoredDuringExecution:  
-          - weight: 20  
-            preference:  
-              propertySorter:  
-                name: kubernetes-fleet.io/node-count  
-                sortOrder: Descending  
-          - weight: 30  
-            preference:  
-              propertySorter:  
-                name: resources.kubernetes-fleet.io/available-cpu  
-                sortOrder: Descending  
+    placementType: PickAll
   strategy:  
     type: RollingUpdate  
     rollingUpdate:  
@@ -221,54 +207,17 @@ Metadata:
   Resource Version:  3794694
   UID:               e242900c-3552-4289-bf8f-8be2480e63b1
 Spec:
-  Policy:
-    Affinity:
-      Cluster Affinity:
-        Preferred During Scheduling Ignored During Execution:
-          Preference:
-            Property Sorter:
-              Name:        kubernetes-fleet.io/node-count
-              Sort Order:  Descending
-          Weight:          20
-          Preference:
-            Property Sorter:
-              Name:        resources.kubernetes-fleet.io/available-cpu
-              Sort Order:  Descending
-          Weight:          30
-    Number Of Clusters:    1
-    Placement Type:        PickN
-  Resource Selectors:
-    Group:                 kueue.x-k8s.io
-    Kind:                  ResourceFlavor
-    Name:                  default-flavor
-    Version:               v1beta1
-    Group:                 kueue.x-k8s.io
-    Kind:                  ClusterQueue
-    Name:                  cluster-queue
-    Version:               v1beta1
-    Group:                 
-    Kind:                  Namespace
-    Name:                  training
-    Version:               v1
-  Revision History Limit:  15
-  Strategy:
-    Apply Strategy:
-      Type:  ClientSideApply
-    Rolling Update:
-      Max Surge:                   25%
-      Max Unavailable:             25%
-      Unavailable Period Seconds:  60
-    Type:                          RollingUpdate
+  ..
 Status:
   Conditions:
     Last Transition Time:   2025-10-22T20:19:50Z
-    Message:                found all cluster needed as specified by the scheduling policy, found 1 cluster(s)
+    Message:                found all cluster needed as specified by the scheduling policy, found 3 cluster(s)
     Observed Generation:    1
     Reason:                 SchedulingPolicyFulfilled
     Status:                 True
     Type:                   ClusterResourcePlacementScheduled
     Last Transition Time:   2025-10-22T20:19:50Z
-    Message:                All 1 cluster(s) start rolling out the latest resource
+    Message:                All 3 cluster(s) start rolling out the latest resource
     Observed Generation:    1
     Reason:                 RolloutStarted
     Status:                 True
@@ -280,29 +229,29 @@ Status:
     Status:                 True
     Type:                   ClusterResourcePlacementOverridden
     Last Transition Time:   2025-10-22T20:19:50Z
-    Message:                Works(s) are succcesfully created or updated in 1 target cluster(s)' namespaces
+    Message:                Works(s) are succcesfully created or updated in 3 target cluster(s)' namespaces
     Observed Generation:    1
     Reason:                 WorkSynchronized
     Status:                 True
     Type:                   ClusterResourcePlacementWorkSynchronized
     Last Transition Time:   2025-10-22T20:19:50Z
-    Message:                The selected resources are successfully applied to 1 cluster(s)
+    Message:                The selected resources are successfully applied to 3 cluster(s)
     Observed Generation:    1
     Reason:                 ApplySucceeded
     Status:                 True
     Type:                   ClusterResourcePlacementApplied
     Last Transition Time:   2025-10-22T20:19:50Z
-    Message:                The selected resources in 1 cluster(s) are available now
+    Message:                The selected resources in 3 cluster(s) are available now
     Observed Generation:    1
     Reason:                 ResourceAvailable
     Status:                 True
     Type:                   ClusterResourcePlacementAvailable
   Observed Resource Index:  0
   Placement Statuses:
-    Cluster Name:  aks-cluster-1
+    Cluster Name:  cluster-1
     Conditions:
       Last Transition Time:  2025-10-22T20:19:50Z
-      Message:               Successfully scheduled resources for placement in "aks-cluster-1" (affinity score: 0, topology spread score: 0): picked by scheduling policy
+      Message:               Successfully scheduled resources for placement in "cluster-1" (affinity score: 0, topology spread score: 0): picked by scheduling policy
       Observed Generation:   1
       Reason:                Scheduled
       Status:                True
@@ -337,6 +286,10 @@ Status:
       Reason:                NotAllWorkAreAvailabilityTrackable
       Status:                True
       Type:                  Available
+    ClusterName: cluster-2
+      ...
+    ClusterName: cluster-3
+      ...
   Selected Resources:
     Kind:     Namespace
     Name:     training
@@ -388,9 +341,9 @@ spec:
 A LocalQueue is a namespaced resource that receives workloads from users within the specified namespace. This resource will point to the ClusterQueue previously created.
 
 
-### 6. Define Your AI Job on Hub
+### 6. Define Your AI Job(s) on Hub
 
-Create your AI training job with Kueue annotations:
+Create your AI training job(s) with Kueue annotations:
 
 ```yaml
 apiVersion: batch/v1
@@ -404,7 +357,7 @@ spec:
   ttlSecondsAfterFinished: 60 # Job will be deleted after 60 seconds  
   parallelism: 3
   completions: 3
-  suspend: true # Set to true to allow Kueue to control the Job when it starts 
+  suspend: true # Set to true to allow Kueue to control the Job
   template:
     spec:
       containers:
@@ -414,8 +367,8 @@ spec:
         - "/bin/bash"
         - "-c"
         - |
-          echo "Starting mock AI training job..."
-          echo "Initializing training data..."
+          echo "Starting mock training job..."
+          echo "Loading training dataset..."
           sleep 10
           echo "Epoch 1/3: Training accuracy: 65%"
           sleep 10
@@ -423,6 +376,46 @@ spec:
           sleep 10
           echo "Epoch 3/3: Training accuracy: 95%"
           echo "Training completed successfully!"
+        resources:
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+          limits:
+            cpu: "1"
+            memory: "2Gi"
+      restartPolicy: Never
+  backoffLimit: 3
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: model-evaluation
+  namespace: training
+  annotations:
+    kueue.x-k8s.io/queue-name: lq-training
+spec:
+  ttlSecondsAfterFinished: 60
+  parallelism: 3
+  completions: 3
+  suspend: true # Set to true to allow Kueue to control the Job
+  template:
+    spec:
+      containers:
+      - name: evaluation
+        image: ubuntu:22.04
+        command:
+        - "/bin/bash"
+        - "-c"
+        - |
+          echo "Starting model evaluation job..."
+          echo "Loading test dataset..."
+          sleep 5
+          echo "Running evaluation suite..."
+          sleep 10
+          echo "Computing metrics..."
+          echo "Accuracy: 94.5%"
+          echo "F1 Score: 0.93"
+          echo "Evaluation completed successfully!"
         resources:
           requests:
             cpu: "1"
@@ -452,13 +445,17 @@ spec:
     version: v1
     kind: Job
     name: mock-training
+  - group: batch
+    version: v1
+    kind: Job
+    name: model-evaluation
   - group: kueue.x-k8s.io
     version: v1beta1
     kind: LocalQueue
     name: lq-training 
   policy:  
     placementType: PickN  
-    numberOfClusters: 1  # Start with one cluster for this example
+    numberOfClusters: 2  
     affinity:  
       clusterAffinity:  
         preferredDuringSchedulingIgnoredDuringExecution:  
@@ -503,144 +500,125 @@ Annotations:  <none>
 API Version:  placement.kubernetes-fleet.io/v1beta1
 Kind:         ResourcePlacement
 Metadata:
-  Creation Timestamp:  2025-10-22T20:28:17Z
+  Creation Timestamp:  2025-10-23T22:41:26Z
   Finalizers:
     kubernetes-fleet.io/crp-cleanup
     kubernetes-fleet.io/scheduler-cleanup
   Generation:        1
-  Resource Version:  3798310
-  UID:               d80e18f3-2192-4d7c-9fe6-2ee450c00c95
+  Resource Version:  4416159
+  UID:               91666f24-9b16-43cd-90f3-9a2e715733be
 Spec:
-  Policy:
-    Affinity:
-      Cluster Affinity:
-        Preferred During Scheduling Ignored During Execution:
-          Preference:
-            Property Sorter:
-              Name:        kubernetes-fleet.io/node-count
-              Sort Order:  Descending
-          Weight:          40
-          Preference:
-            Property Sorter:
-              Name:        resources.kubernetes-fleet.io/available-cpu
-              Sort Order:  Descending
-          Weight:          30
-    Number Of Clusters:    1
-    Placement Type:        PickN
-  Resource Selectors:
-    Group:                 batch
-    Kind:                  Job
-    Name:                  mock-training
-    Selection Scope:       NamespaceWithResources
-    Version:               v1
-    Group:                 kueue.x-k8s.io
-    Kind:                  LocalQueue
-    Name:                  lq-training
-    Selection Scope:       NamespaceWithResources
-    Version:               v1beta1
-  Revision History Limit:  15
-  Status Reporting Scope:  ClusterScopeOnly
-  Strategy:
-    Apply Strategy:
-      Comparison Option:  PartialComparison
-      Type:               ClientSideApply
-      When To Apply:      IfNotDrifted
-      When To Take Over:  Always
-    Rolling Update:
-      Max Surge:                   25%
-      Max Unavailable:             25%
-      Unavailable Period Seconds:  60
-    Type:                          RollingUpdate
+  ...
 Status:
   Conditions:
-    Last Transition Time:   2025-10-22T20:28:17Z
-    Message:                found all cluster needed as specified by the scheduling policy, found 1 cluster(s)
+    Last Transition Time:   2025-10-23T22:41:26Z
+    Message:                found all cluster needed as specified by the scheduling policy, found 2 cluster(s)
     Observed Generation:    1
     Reason:                 SchedulingPolicyFulfilled
     Status:                 True
     Type:                   ResourcePlacementScheduled
-    Last Transition Time:   2025-10-22T20:28:17Z
-    Message:                All 1 cluster(s) start rolling out the latest resource
+    Last Transition Time:   2025-10-23T22:41:26Z
+    Message:                All 2 cluster(s) start rolling out the latest resource
     Observed Generation:    1
     Reason:                 RolloutStarted
     Status:                 True
     Type:                   ResourcePlacementRolloutStarted
-    Last Transition Time:   2025-10-22T20:28:17Z
+    Last Transition Time:   2025-10-23T22:41:26Z
     Message:                No override rules are configured for the selected resources
     Observed Generation:    1
     Reason:                 NoOverrideSpecified
     Status:                 True
     Type:                   ResourcePlacementOverridden
-    Last Transition Time:   2025-10-22T20:28:17Z
-    Message:                Works(s) are succcesfully created or updated in 1 target cluster(s)' namespaces
+    Last Transition Time:   2025-10-23T22:41:26Z
+    Message:                Works(s) are succcesfully created or updated in 2 target cluster(s)' namespaces
     Observed Generation:    1
     Reason:                 WorkSynchronized
     Status:                 True
     Type:                   ResourcePlacementWorkSynchronized
-    Last Transition Time:   2025-10-22T20:28:22Z
-    Message:                Failed to apply resources to 1 cluster(s), please check the `failedPlacements` status
+    Last Transition Time:   2025-10-23T22:41:32Z
+    Message:                Failed to apply resources to 2 cluster(s), please check the `failedPlacements` status
     Observed Generation:    1
     Reason:                 ApplyFailed
     Status:                 False
     Type:                   ResourcePlacementApplied
   Observed Resource Index:  0
   Placement Statuses:
-    Cluster Name:  aks-cluster-1
+    Cluster Name:  cluster-3
     Conditions:
-      Last Transition Time:  2025-10-22T20:28:17Z
-      Message:               Successfully scheduled resources for placement in "aks-cluster-1" (affinity score: 0, topology spread score: 0): picked by scheduling policy
+      Last Transition Time:  2025-10-23T22:41:26Z
+      Message:               Successfully scheduled resources for placement in "cluster-3" (affinity score: 70, topology spread score: 0): picked by scheduling policy
       Observed Generation:   1
       Reason:                Scheduled
       Status:                True
       Type:                  Scheduled
-      Last Transition Time:  2025-10-22T20:28:17Z
+      Last Transition Time:  2025-10-23T22:41:26Z
       Message:               Detected the new changes on the resources and started the rollout process
       Observed Generation:   1
       Reason:                RolloutStarted
       Status:                True
       Type:                  RolloutStarted
-      Last Transition Time:  2025-10-22T20:28:17Z
+      Last Transition Time:  2025-10-23T22:41:26Z
       Message:               No override rules are configured for the selected resources
       Observed Generation:   1
       Reason:                NoOverrideSpecified
       Status:                True
       Type:                  Overridden
-      Last Transition Time:  2025-10-22T20:28:17Z
+      Last Transition Time:  2025-10-23T22:41:26Z
       Message:               All of the works are synchronized to the latest
       Observed Generation:   1
       Reason:                AllWorkSynced
       Status:                True
       Type:                  WorkSynchronized
-      Last Transition Time:  2025-10-22T20:28:22Z
+      Last Transition Time:  2025-10-23T22:41:32Z
       Message:               Work object training.training-placement-work has failed to apply
       Observed Generation:   1
       Reason:                NotAllWorkHaveBeenApplied
       Status:                False
       Type:                  Applied
     Drifted Placements:
-      First Drifted Observed Time:  2025-10-22T20:28:22Z
+      First Drifted Observed Time:  2025-10-23T22:41:32Z
       Group:                        batch
       Kind:                         Job
       Name:                         mock-training
       Namespace:                    training
-      Observation Time:             2025-10-22T20:29:33Z
+      Observation Time:             2025-10-23T22:41:45Z
       Observed Drifts:
         Path:                              /spec/selector/matchLabels/batch.kubernetes.io~1controller-uid
-        Value In Member:                   a82a5c52-43d5-4721-b265-6c643f2cd95f
+        Value In Member:                   f9e62977-6c5c-48aa-a82b-1421e2647395
         Path:                              /spec/suspend
         Value In Hub:                      true
         Value In Member:                   false
         Path:                              /spec/template/metadata/creationTimestamp
         Value In Member:                   <nil>
         Path:                              /spec/template/metadata/labels/batch.kubernetes.io~1controller-uid
-        Value In Member:                   a82a5c52-43d5-4721-b265-6c643f2cd95f
+        Value In Member:                   f9e62977-6c5c-48aa-a82b-1421e2647395
         Path:                              /spec/template/metadata/labels/controller-uid
-        Value In Member:                   a82a5c52-43d5-4721-b265-6c643f2cd95f
+        Value In Member:                   f9e62977-6c5c-48aa-a82b-1421e2647395
+      Target Cluster Observed Generation:  2
+      Version:                             v1
+      First Drifted Observed Time:         2025-10-23T22:41:32Z
+      Group:                               batch
+      Kind:                                Job
+      Name:                                model-evaluation
+      Namespace:                           training
+      Observation Time:                    2025-10-23T22:41:45Z
+      Observed Drifts:
+        Path:                              /spec/selector/matchLabels/batch.kubernetes.io~1controller-uid
+        Value In Member:                   bf5e580f-48ed-4eeb-8d91-58a6da398091
+        Path:                              /spec/suspend
+        Value In Hub:                      true
+        Value In Member:                   false
+        Path:                              /spec/template/metadata/creationTimestamp
+        Value In Member:                   <nil>
+        Path:                              /spec/template/metadata/labels/batch.kubernetes.io~1controller-uid
+        Value In Member:                   bf5e580f-48ed-4eeb-8d91-58a6da398091
+        Path:                              /spec/template/metadata/labels/controller-uid
+        Value In Member:                   bf5e580f-48ed-4eeb-8d91-58a6da398091
       Target Cluster Observed Generation:  2
       Version:                             v1
     Failed Placements:
       Condition:
-        Last Transition Time:  2025-10-22T20:28:22Z
+        Last Transition Time:  2025-10-23T22:41:32Z
         Message:               Failed to apply the manifest (error: cannot apply manifest: drifts are found between the manifest and the object from the member cluster in degraded mode (full comparison is performed instead of partial comparison, as the manifest object is considered to be invalid by the member cluster API server))
         Observed Generation:   2
         Reason:                FoundDriftsInDegradedMode
@@ -651,11 +629,31 @@ Status:
       Name:                    mock-training
       Namespace:               training
       Version:                 v1
+      Condition:
+        Last Transition Time:  2025-10-23T22:41:32Z
+        Message:               Failed to apply the manifest (error: cannot apply manifest: drifts are found between the manifest and the object from the member cluster in degraded mode (full comparison is performed instead of partial comparison, as the manifest object is considered to be invalid by the member cluster API server))
+        Observed Generation:   2
+        Reason:                FoundDriftsInDegradedMode
+        Status:                False
+        Type:                  Applied
+      Group:                   batch
+      Kind:                    Job
+      Name:                    model-evaluation
+      Namespace:               training
+      Version:                 v1
     Observed Resource Index:   0
+    Cluster Name:              cluster-1
+    Conditions:
+      ... # Should be similar to first cluster above
   Selected Resources:
     Group:      batch
     Kind:       Job
     Name:       mock-training
+    Namespace:  training
+    Version:    v1
+    Group:      batch
+    Kind:       Job
+    Name:       model-evaluation
     Namespace:  training
     Version:    v1
     Group:      kueue.x-k8s.io
@@ -666,12 +664,12 @@ Status:
 Events:
   Type    Reason                        Age   From                  Message
   ----    ------                        ----  ----                  -------
-  Normal  PlacementRolloutStarted       80s   placement-controller  Started rolling out the latest resources
-  Normal  PlacementOverriddenSucceeded  80s   placement-controller  Placement has been successfully overridden
-  Normal  PlacementWorkSynchronized     80s   placement-controller  Work(s) have been created or updated successfully for the selected cluster(s)
-  Normal  PlacementApplied              80s   placement-controller  Resources have been applied to the selected cluster(s)
-  Normal  PlacementAvailable            80s   placement-controller  Resources are available on the selected cluster(s)
-  Normal  PlacementRolloutCompleted     80s   placement-controller  Placement has finished the rollout process and reached the desired status
+  Normal  PlacementRolloutStarted       23s   placement-controller  Started rolling out the latest resources
+  Normal  PlacementOverriddenSucceeded  23s   placement-controller  Placement has been successfully overridden
+  Normal  PlacementWorkSynchronized     23s   placement-controller  Work(s) have been created or updated successfully for the selected cluster(s)
+  Normal  PlacementApplied              22s   placement-controller  Resources have been applied to the selected cluster(s)
+  Normal  PlacementAvailable            22s   placement-controller  Resources are available on the selected cluster(s)
+  Normal  PlacementRolloutCompleted     22s   placement-controller  Placement has finished the rollout process and reached the desired status
 ```
 > NOTE: The ResourcePlacement will complete rollout but with detect drifts after initial application as kueue takes over the resources. Completition indication can be found in the events.
 
