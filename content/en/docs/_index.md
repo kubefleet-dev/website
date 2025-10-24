@@ -14,14 +14,13 @@ We are actively working on the documentation site.
 
 ## About KubeFleet
 
-KubeFleet is a CNCF sandbox project that aims to simplify Kubernetes multi-cluster management .
-It can greatly enhance your multi-cluster management experience; specifically,
-with the help of KubeFleet, one is able to easily:
+KubeFleet is a CNCF sandbox project that aims to simplify Kubernetes multi-cluster management.
+It can greatly enhance your multi-cluster management experience; specifically, with the help of KubeFleet, you can easily:
 
-* manage clusters through one unified portal; and
+* manage clusters through one unified API; and
 * place Kubernetes resources across a group of clusters with advanced scheduling capabilities; and
 * roll out changes progressively; and
-* perform administrative tasks easily, such as observing application status, detecting configuration drifts, migrating workloads across clusters, etc.
+* perform administrative tasks easily, such as observing application status, detecting configuration drifts, and migrating workloads across clusters.
 
 ## Is KubeFleet right for my multi-cluster setup?
 
