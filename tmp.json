@@ -1,0 +1,73 @@
+{
+    "apiVersion": "v1",
+    "kind": "Namespace",
+    "metadata": {
+        "annotations": {
+            "kubernetes-fleet.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Namespace\",\"metadata\":{\"annotations\":{\"kubernetes-fleet.io/spec-hash\":\"354655904d7ad5aea2fc1f6504dc6a860b1b5af8b3ec5ab7cd0a631e7acadea8\"},\"labels\":{\"app\":\"ai-training\",\"kubernetes.io/metadata.name\":\"training\"},\"name\":\"training\",\"ownerReferences\":[{\"apiVersion\":\"placement.kubernetes-fleet.io/v1beta1\",\"blockOwnerDeletion\":true,\"kind\":\"AppliedWork\",\"name\":\"sample-kueue-work\",\"uid\":\"8cd90dd4-d58f-42ea-8e46-f12058f6974f\"}]},\"spec\":{\"finalizers\":[\"kubernetes\"]}}\n",
+            "kubernetes-fleet.io/spec-hash": "354655904d7ad5aea2fc1f6504dc6a860b1b5af8b3ec5ab7cd0a631e7acadea8"
+        },
+        "creationTimestamp": "2025-10-22T20:19:50Z",
+        "deletionTimestamp": "2025-10-23T21:22:36Z",
+        "labels": {
+            "app": "ai-training",
+            "kubernetes.io/metadata.name": "training"
+        },
+        "name": "training",
+        "ownerReferences": [
+            {
+                "apiVersion": "placement.kubernetes-fleet.io/v1beta1",
+                "blockOwnerDeletion": true,
+                "kind": "AppliedWork",
+                "name": "sample-kueue-work",
+                "uid": "8cd90dd4-d58f-42ea-8e46-f12058f6974f"
+            }
+        ],
+        "resourceVersion": "5710983",
+        "uid": "d3743155-0991-4e08-8841-4d29e0baa5b0"
+    },
+    "spec": {
+        "finalizers": [
+            "kubernetes"
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastTransitionTime": "2025-10-23T21:22:41Z",
+                "message": "Discovery failed for some groups, 2 failing: unable to retrieve the complete list of server APIs: visibility.kueue.x-k8s.io/v1alpha1: stale GroupVersion discovery: visibility.kueue.x-k8s.io/v1alpha1, visibility.kueue.x-k8s.io/v1beta1: stale GroupVersion discovery: visibility.kueue.x-k8s.io/v1beta1",
+                "reason": "DiscoveryFailed",
+                "status": "True",
+                "type": "NamespaceDeletionDiscoveryFailure"
+            },
+            {
+                "lastTransitionTime": "2025-10-23T21:22:47Z",
+                "message": "All legacy kube types successfully parsed",
+                "reason": "ParsedGroupVersions",
+                "status": "False",
+                "type": "NamespaceDeletionGroupVersionParsingFailure"
+            },
+            {
+                "lastTransitionTime": "2025-10-23T21:22:47Z",
+                "message": "All content successfully deleted, may be waiting on finalization",
+                "reason": "ContentDeleted",
+                "status": "False",
+                "type": "NamespaceDeletionContentFailure"
+            },
+            {
+                "lastTransitionTime": "2025-10-23T21:22:47Z",
+                "message": "All content successfully removed",
+                "reason": "ContentRemoved",
+                "status": "False",
+                "type": "NamespaceContentRemaining"
+            },
+            {
+                "lastTransitionTime": "2025-10-23T21:22:47Z",
+                "message": "All content-preserving finalizers finished",
+                "reason": "ContentHasNoFinalizers",
+                "status": "False",
+                "type": "NamespaceFinalizersRemaining"
+            }
+        ],
+        "phase": "Terminating"
+    }
+}

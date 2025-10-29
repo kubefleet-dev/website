@@ -114,7 +114,7 @@ kind: ClusterQueue
 metadata:
   name: cluster-queue
 spec:
-  cohort: ai-training
+  cohort: compute-workload
   namespaceSelector: {} # Available to all namespaces  
   queueingStrategy: BestEffortFIFO # Default queueing strategy 
   resourceGroups:
@@ -132,7 +132,7 @@ spec:
 A ClusterQueue is a cluster-scoped object that oversees a pool of resources, including CPU, memory, and GPU. It manages ResourceFlavors, sets usage limits, and controls the order in which workloads are admitted. This will handle the ResourceFlavor that was previously created.
 
 
-### 3. Create Training Namespace on Hub
+### 3. Create AI job Namespace on Hub
 
 Create the namespace where your AI jobs will be scheduled:
 
@@ -140,9 +140,9 @@ Create the namespace where your AI jobs will be scheduled:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: training
+  name: compute-jobs
   labels:
-    app: ai-training
+    app: compute-workload
 ```
 The LocalQueue and Job require a namespace to be specified. 
 
@@ -167,7 +167,7 @@ spec:
     - group: ""  
       kind: Namespace  
       version: v1  
-      name: training  
+      name: compute-jobs  
       selectionScope: NamespaceOnly
   policy:  
     placementType: PickAll
@@ -292,7 +292,7 @@ Status:
       ...
   Selected Resources:
     Kind:     Namespace
-    Name:     training
+    Name:     compute-jobs
     Version:  v1
     Group:    kueue.x-k8s.io
     Kind:     ClusterQueue
@@ -321,7 +321,7 @@ kubectl config use-context <member-cluster-context>
 # Check if resources are present
 kubectl get resourceflavor default-flavor
 kubectl get clusterqueue cluster-queue
-kubectl get ns training
+kubectl get ns compute-jobs
 ```
 
 ### 5. Create LocalQueue on Hub
@@ -332,8 +332,8 @@ Create a LocalQueue that will be propagated to member clusters:
 apiVersion: kueue.x-k8s.io/v1beta1 
 kind: LocalQueue  
 metadata:   
-  namespace: training
-  name: lq-training   
+  namespace: compute-jobs
+  name: local-queue   
 spec:  
   clusterQueue: cluster-queue # Point to the ClusterQueue
 ```
@@ -343,16 +343,16 @@ A LocalQueue is a namespaced resource that receives workloads from users within 
 
 ### 6. Define Your AI Job(s) on Hub
 
-Create your AI training job(s) with Kueue annotations:
+Create your compute job(s) with Kueue annotations:
 
 ```yaml
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: mock-training
-  namespace: training
+  name: mock-workload
+  namespace: compute-jobs
   annotations:
-    kueue.x-k8s.io/queue-name: lq-training
+    kueue.x-k8s.io/queue-name: local-queue
 spec:
   ttlSecondsAfterFinished: 60 # Job will be deleted after 60 seconds  
   parallelism: 3
@@ -361,21 +361,21 @@ spec:
   template:
     spec:
       containers:
-      - name: training
+      - name: compute
         image: ubuntu:22.04
         command:
         - "/bin/bash"
         - "-c"
         - |
-          echo "Starting mock training job..."
-          echo "Loading training dataset..."
+          echo "Starting mock compute job..."
+          echo "Loading input dataset..."
           sleep 10
-          echo "Epoch 1/3: Training accuracy: 65%"
+          echo "Epoch 1/3: Processing accuracy: 65%"
           sleep 10
-          echo "Epoch 2/3: Training accuracy: 85%"
+          echo "Epoch 2/3: Processing accuracy: 85%"
           sleep 10
-          echo "Epoch 3/3: Training accuracy: 95%"
-          echo "Training completed successfully!"
+          echo "Epoch 3/3: Processing accuracy: 95%"
+          echo "Processing completed successfully!"
         resources:
           requests:
             cpu: "1"
@@ -390,9 +390,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: model-evaluation
-  namespace: training
+  namespace: compute-jobs
   annotations:
-    kueue.x-k8s.io/queue-name: lq-training
+    kueue.x-k8s.io/queue-name: local-queue
 spec:
   ttlSecondsAfterFinished: 60
   parallelism: 3
@@ -427,48 +427,105 @@ spec:
   backoffLimit: 3
 ```
 
-This Job defines the AI/ML training workload that will be scheduled by Kueue. The `kueue.x-k8s.io/queue-name` annotation tells Kueue which LocalQueue should manage this job, ensuring proper resource allocation and queuing behavior.
+This Job defines the compute workload that will be scheduled by Kueue. The `kueue.x-k8s.io/queue-name` annotation tells Kueue which LocalQueue should manage this job, ensuring proper resource allocation and queuing behavior.
 
-### 7. Create ResourcePlacement for the AI Job and LocalQueue
+### 7. Create Independent ResourcePlacements for Jobs
 
-Create a ResourcePlacement to schedule your job and LocalQueue on appropriate clusters:
+When submitting jobs, each one can be placed independently to allow for dynamic scheduling based on current cluster conditions. Here's how to create separate ResourcePlacements for each job:
 
 ```yaml
+# First, create a ResourcePlacement for the LocalQueue
 apiVersion: placement.kubernetes-fleet.io/v1beta1  
 kind: ResourcePlacement
 metadata:
-  name: training-placement
-  namespace: training
+  name: queue-placement
+  namespace: compute-jobs
+spec:
+  resourceSelectors:
+  - group: kueue.x-k8s.io
+    version: v1beta1
+    kind: LocalQueue
+    name: local-queue 
+  policy:  
+    placementType: PickAll  # Place queue in all available clusters
+  strategy:  
+    type: RollingUpdate  
+    rollingUpdate:  
+      maxUnavailable: 25%  
+      maxSurge: 25%  
+      unavailablePeriodSeconds: 60  
+    applyStrategy:  
+      whenToApply: IfNotDrifted
+  revisionHistoryLimit: 15
+
+---
+# Then, create an independent ResourcePlacement for each job
+apiVersion: placement.kubernetes-fleet.io/v1beta1  
+kind: ResourcePlacement
+metadata:
+  name: job1-placement
+  namespace: compute-jobs
 spec:
   resourceSelectors:
   - group: batch
     version: v1
     kind: Job
-    name: mock-training
-  - group: batch
-    version: v1
-    kind: Job
-    name: model-evaluation
-  - group: kueue.x-k8s.io
-    version: v1beta1
-    kind: LocalQueue
-    name: lq-training 
+    name: mock-workload
   policy:  
     placementType: PickN  
-    numberOfClusters: 2  
+    numberOfClusters: 1  # Schedule each job to a single cluster
     affinity:  
       clusterAffinity:  
         preferredDuringSchedulingIgnoredDuringExecution:  
           - weight: 40
             preference:  
               propertySorter:  
-                name: kubernetes-fleet.io/node-count  
+                name: resources.kubernetes-fleet.io/available-cpu  
                 sortOrder: Descending  
-          - weight: 30  
+          - weight: 30
+            preference:
+              propertySorter:
+                name: resources.kubernetes-fleet.io/available-memory
+                sortOrder: Descending
+  strategy:  
+    type: RollingUpdate  
+    rollingUpdate:  
+      maxUnavailable: 25%  
+      maxSurge: 25%  
+      unavailablePeriodSeconds: 60  
+    applyStrategy:  
+      whenToApply: IfNotDrifted
+  revisionHistoryLimit: 15
+
+---
+# Example of placing another job independently
+apiVersion: placement.kubernetes-fleet.io/v1beta1  
+kind: ResourcePlacement
+metadata:
+  name: job2-placement
+  namespace: compute-jobs
+spec:
+  resourceSelectors:
+  - group: batch
+    version: v1
+    kind: Job
+    name: model-evaluation
+  policy:  
+    placementType: PickN  
+    numberOfClusters: 1  
+    affinity:  
+      clusterAffinity:  
+        preferredDuringSchedulingIgnoredDuringExecution:  
+          - weight: 40
             preference:  
               propertySorter:  
                 name: resources.kubernetes-fleet.io/available-cpu  
                 sortOrder: Descending  
+          - weight: 30
+            preference:
+              propertySorter:
+                name: resources.kubernetes-fleet.io/available-memory
+                sortOrder: Descending
   strategy:  
     type: RollingUpdate  
     rollingUpdate:  
@@ -480,21 +537,80 @@ spec:
   revisionHistoryLimit: 15
 ```
 
-The ResourcePlacement intelligently selects member clusters based on resource availability and placement policies, then propagates both the AI Job and LocalQueue to the chosen cluster(s). It uses cluster affinity rules to prioritize clusters with more nodes and available CPU resources for optimal job placement.
+This approach enables dynamic job scheduling for continuous job submissions. Here's how it works:
 
-#### Verify ResourcePlacement Completed
+1. **Initial Setup**:
+   - The LocalQueue is placed on all clusters through its own ResourcePlacement with `placementType: PickAll`
+   - This ensures any cluster can potentially receive jobs based on their current capacity
 
-After creating the ResourcePlacement, verify that your AI job and LocalQueue are properly propagated:
+2. **Continuous Job Submission Pattern**:
+   
+   When submitting jobs continuously, each job needs its own unique identity and ResourcePlacement:
 
-1. Check ResourcePlacement status:
+   a. **Job Creation**:
+      - Generate a unique name for each job (e.g., using timestamp)
+      - Create the job with the Kueue annotation pointing to the LocalQueue
+      - Set `suspend: true` to allow Kueue to manage job execution
+      - Define resource requirements specific to the job
+
+   b. **ResourcePlacement Creation**:
+      - Create a new ResourcePlacement for each job
+      - Name it to match or reference the job (e.g., `<jobname>-placement`)
+      - Set `placementType: PickN` with `numberOfClusters: 1`
+      - Configure affinity rules based on current requirements:
+        * CPU availability
+        * Memory availability
+        * Specific node capabilities
+        * Geographic location
+        * Cost considerations
+
+   c. **Independent Scheduling**:
+      - Each job's ResourcePlacement operates independently
+      - Scheduling decisions are made based on real-time cluster conditions
+      - New jobs can be submitted without affecting existing ones
+      - Failed placements don't block other job submissions
+
+   d. **Resource Consideration**:
+      - Check cluster capacity before submission
+      - Consider job priority and resource requirements
+      - Account for existing workload distribution
+      - Allow time for placement and resource allocation
+
+3. **Monitoring Job Distribution**:
+   ```bash
+   # Watch job distribution across clusters
+   watch 'for ctx in $(kubectl config get-contexts -o name); do
+     echo "=== Cluster: $ctx ==="
+     kubectl --context $ctx get jobs -n compute-jobs
+   done'
+   ```
+This pattern ensures:
+- Jobs are distributed based on real-time resource availability
+- No single cluster gets overloaded
+- System remains responsive as new jobs are continuously submitted
+- Each job can use different resource requirements or placement policies
+- Failed placements don't block the submission pipeline
+
+#### Verify ResourcePlacements Completed
+
+After creating the ResourcePlacements, verify that your jobs and LocalQueue are properly propagated:
+
+1. Check ResourcePlacement status for the LocalQueue:
 ```bash
-# Get detailed status of the ResourcePlacement
-kubectl describe resourceplacement training-placement -n training
+# Get detailed status of the queue ResourcePlacement
+kubectl describe resourceplacement queue-placement -n compute-jobs
 ```
 
+2. Check ResourcePlacement status for individual jobs:
+```bash
+# Get detailed status of job placements
+kubectl describe resourceplacement job1-placement -n compute-jobs
+kubectl describe resourceplacement job2-placement -n compute-jobs
+```
+##### Example: 
 ```yaml
-Name:         training-placement
-Namespace:    training
+Name:         job1-placement
+Namespace:    compute-jobs
 Labels:       <none>
 Annotations:  <none>
 API Version:  placement.kubernetes-fleet.io/v1beta1
@@ -512,13 +628,13 @@ Spec:
 Status:
   Conditions:
     Last Transition Time:   2025-10-23T22:41:26Z
-    Message:                found all cluster needed as specified by the scheduling policy, found 2 cluster(s)
+    Message:                found all cluster needed as specified by the scheduling policy, found 1 cluster(s)
     Observed Generation:    1
     Reason:                 SchedulingPolicyFulfilled
     Status:                 True
     Type:                   ResourcePlacementScheduled
     Last Transition Time:   2025-10-23T22:41:26Z
-    Message:                All 2 cluster(s) start rolling out the latest resource
+    Message:                All 1 cluster(s) start rolling out the latest resource
     Observed Generation:    1
     Reason:                 RolloutStarted
     Status:                 True
@@ -530,13 +646,13 @@ Status:
     Status:                 True
     Type:                   ResourcePlacementOverridden
     Last Transition Time:   2025-10-23T22:41:26Z
-    Message:                Works(s) are succcesfully created or updated in 2 target cluster(s)' namespaces
+    Message:                Works(s) are succcesfully created or updated in 1 target cluster(s)' namespaces
     Observed Generation:    1
     Reason:                 WorkSynchronized
     Status:                 True
     Type:                   ResourcePlacementWorkSynchronized
     Last Transition Time:   2025-10-23T22:41:32Z
-    Message:                Failed to apply resources to 2 cluster(s), please check the `failedPlacements` status
+    Message:                Failed to apply resources to 1 cluster(s), please check the `failedPlacements` status
     Observed Generation:    1
     Reason:                 ApplyFailed
     Status:                 False
@@ -570,7 +686,7 @@ Status:
       Status:                True
       Type:                  WorkSynchronized
       Last Transition Time:  2025-10-23T22:41:32Z
-      Message:               Work object training.training-placement-work has failed to apply
+      Message:               Work object training.job1-placement-work has failed to apply
       Observed Generation:   1
       Reason:                NotAllWorkHaveBeenApplied
       Status:                False
@@ -579,8 +695,8 @@ Status:
       First Drifted Observed Time:  2025-10-23T22:41:32Z
       Group:                        batch
       Kind:                         Job
-      Name:                         mock-training
-      Namespace:                    training
+      Name:                         mock-workload
+      Namespace:                    compute-jobs
       Observation Time:             2025-10-23T22:41:45Z
       Observed Drifts:
         Path:                              /spec/selector/matchLabels/batch.kubernetes.io~1controller-uid
@@ -596,26 +712,6 @@ Status:
         Value In Member:                   f9e62977-6c5c-48aa-a82b-1421e2647395
       Target Cluster Observed Generation:  2
       Version:                             v1
-      First Drifted Observed Time:         2025-10-23T22:41:32Z
-      Group:                               batch
-      Kind:                                Job
-      Name:                                model-evaluation
-      Namespace:                           training
-      Observation Time:                    2025-10-23T22:41:45Z
-      Observed Drifts:
-        Path:                              /spec/selector/matchLabels/batch.kubernetes.io~1controller-uid
-        Value In Member:                   bf5e580f-48ed-4eeb-8d91-58a6da398091
-        Path:                              /spec/suspend
-        Value In Hub:                      true
-        Value In Member:                   false
-        Path:                              /spec/template/metadata/creationTimestamp
-        Value In Member:                   <nil>
-        Path:                              /spec/template/metadata/labels/batch.kubernetes.io~1controller-uid
-        Value In Member:                   bf5e580f-48ed-4eeb-8d91-58a6da398091
-        Path:                              /spec/template/metadata/labels/controller-uid
-        Value In Member:                   bf5e580f-48ed-4eeb-8d91-58a6da398091
-      Target Cluster Observed Generation:  2
-      Version:                             v1
     Failed Placements:
       Condition:
         Last Transition Time:  2025-10-23T22:41:32Z
@@ -626,41 +722,16 @@ Status:
         Type:                  Applied
       Group:                   batch
       Kind:                    Job
-      Name:                    mock-training
-      Namespace:               training
-      Version:                 v1
-      Condition:
-        Last Transition Time:  2025-10-23T22:41:32Z
-        Message:               Failed to apply the manifest (error: cannot apply manifest: drifts are found between the manifest and the object from the member cluster in degraded mode (full comparison is performed instead of partial comparison, as the manifest object is considered to be invalid by the member cluster API server))
-        Observed Generation:   2
-        Reason:                FoundDriftsInDegradedMode
-        Status:                False
-        Type:                  Applied
-      Group:                   batch
-      Kind:                    Job
-      Name:                    model-evaluation
-      Namespace:               training
+      Name:                    mock-workload
+      Namespace:               compute-jobs
       Version:                 v1
     Observed Resource Index:   0
-    Cluster Name:              cluster-1
-    Conditions:
-      ... # Should be similar to first cluster above
   Selected Resources:
     Group:      batch
     Kind:       Job
-    Name:       mock-training
-    Namespace:  training
+    Name:       mock-workload
+    Namespace:  compute-jobs
     Version:    v1
-    Group:      batch
-    Kind:       Job
-    Name:       model-evaluation
-    Namespace:  training
-    Version:    v1
-    Group:      kueue.x-k8s.io
-    Kind:       LocalQueue
-    Name:       lq-training
-    Namespace:  training
-    Version:    v1beta1
 Events:
   Type    Reason                        Age   From                  Message
   ----    ------                        ----  ----                  -------
@@ -680,7 +751,7 @@ Events:
 kubectl config use-context <member-cluster-context>
 
 # Check if job and localqueue exist in the namespace
-kubectl get jobs,localqueue -n training
+kubectl get jobs,localqueue -n compute-jobs
 ```
 
 ## How It Works
