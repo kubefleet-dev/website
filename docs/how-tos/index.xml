@@ -108,4 +108,13 @@ perform any apply op. This is most helpful in cases of experimentation and drift
 &lt;p>To demonstrate the rollout and rollback behavior, we create a demo namespace and a sample configmap with very simple data on the hub cluster. The namespace with configmap will be deployed to the member clusters.&lt;/p></description></item><item><title>Evicting Resources and Setting up Disruption Budgets</title><link>https://kubefleet.dev/docs/how-tos/eviction-disruption-budget/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/eviction-disruption-budget/</guid><description>&lt;p>This how-to guide discusses how to create &lt;code>ClusterResourcePlacementEviction&lt;/code> objects and &lt;code>ClusterResourcePlacementDisruptionBudget&lt;/code> objects to evict resources from member clusters and protect resources on member clusters from voluntary disruption, respectively.&lt;/p>
 &lt;h2 id="evicting-resources-from-member-clusters-using-clusterresourceplacementeviction">Evicting Resources from Member Clusters using ClusterResourcePlacementEviction&lt;/h2>
 &lt;p>The &lt;code>ClusterResourcePlacementEviction&lt;/code> object is used to remove resources from a member cluster once the resources have already been propagated from the hub cluster.&lt;/p>
-&lt;p>To successfully evict resources from a cluster, the user needs to specify:&lt;/p></description></item></channel></rss>
+&lt;p>To successfully evict resources from a cluster, the user needs to specify:&lt;/p></description></item><item><title>Scheduling AI Jobs with Kueue and Fleet</title><link>https://kubefleet.dev/docs/how-tos/ai-job-scheduling-kueue-integration/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/ai-job-scheduling-kueue-integration/</guid><description>&lt;h1 id="scheduling-ai-jobs-with-kueue-and-placement">Scheduling AI Jobs with Kueue and Placement&lt;/h1>
+&lt;p>This guide demonstrates how to schedule AI/ML workloads across your fleet using KubeFleet&amp;rsquo;s ClusterResourcePlacement/ResourcePlacement in conjunction with Kueue for efficient job queuing and resource management.&lt;/p>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>When scheduling AI/ML jobs across multiple clusters, you need three key components working together:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>ClusterResourcePlacement&lt;/strong>: Propagates cluster-scoped resources (ClusterQueues, ResourceFlavors) and namespaces to selected clusters&lt;/li>
+&lt;li>&lt;strong>ResourcePlacement&lt;/strong>: Propagates the AI/ML job and LocalQueue to selected clusters within the namespace&lt;/li>
+&lt;li>&lt;strong>Kueue&lt;/strong>: Manages job queuing and resource quotas within each cluster&lt;/li>
+&lt;/ul>
+&lt;p>This combination ensures efficient scheduling and resource utilization for your AI workloads across your entire fleet.&lt;/p></description></item></channel></rss>
