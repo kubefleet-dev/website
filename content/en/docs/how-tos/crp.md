@@ -22,6 +22,7 @@ The CRP API generally consists of the following components:
 - **Scheduling Policy**: This determines the set of clusters where the resources will be placed.
 - **Rollout Strategy**: This controls the behavior of resource placement when the resources themselves and/or the 
               scheduling policy are updated, minimizing interruptions caused by refreshes.
+- **StatusReportingScope**: This controls where ClusterResourcePlacement status information is made available.
 
 The following sections discuss these components in depth.
 
@@ -474,6 +475,169 @@ longer to complete the rollout, in accordance with the rolling update strategy y
 > In very extreme circumstances, rollout may get stuck, if Fleet just cannot apply resources
 > to some clusters. You can identify this behavior if CRP status; for more information, see
 > [Understanding the Status of a `ClusterResourcePlacement`](crp-status) How-To Guide.
+
+## StatusReportingScope
+
+We currently support two values for StatusReportingScope,
+- **ClusterScopeOnly**: Default behavior placement status is part of the `ClusterResourcePlacement` object.
+- **NamespaceAccessible**: A `ClusterResourcePlacementStatus` object is created in the namespace selected by the `ClusterResourcePlacement`.
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: test-crp
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: test-ns
+      version: v1
+  policy:
+    placementType: PickAll
+  strategy:
+    type: RollingUpdate
+  statusReportingScope: NamespaceAccessible
+```
+
+Lets take a look at the `ClusterResourcePlacment` object's status,
+
+```yaml
+% kubectl get clusterresourceplacements.v1beta1.placement.kubernetes-fleet.io test-crp -o yaml
+...
+status:
+  conditions:
+  - lastTransitionTime: ...
+    message: found all cluster needed as specified by the scheduling policy, found
+      3 cluster(s)
+    observedGeneration: 1
+    reason: SchedulingPolicyFulfilled
+    status: "True"
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: ...
+    message: Successfully created or updated ClusterResourcePlacementStatus in namespace
+      'test-ns'
+    observedGeneration: 1
+    reason: StatusSyncSucceeded
+    status: "True"
+    type: ClusterResourcePlacementStatusSynced # Only preset for NamespaceAccessible CRPs.
+  - lastTransitionTime: ...
+    message: All 3 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: "True"
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: ...
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: "True"
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: ...
+    message: Works(s) are succcesfully created or updated in 3 target cluster(s)'
+      namespaces
+    observedGeneration: 1
+    reason: WorkSynchronized
+    status: "True"
+    type: ClusterResourcePlacementWorkSynchronized
+  - lastTransitionTime: ...
+    message: The selected resources are successfully applied to 3 cluster(s)
+    observedGeneration: 1
+    reason: ApplySucceeded
+    status: "True"
+    type: ClusterResourcePlacementApplied
+  - lastTransitionTime: ...
+    message: The selected resources in 3 cluster(s) are available now
+    observedGeneration: 1
+    reason: ResourceAvailable
+    status: "True"
+    type: ClusterResourcePlacementAvailable
+ ...
+  selectedResources:
+  - kind: Namespace
+    name: test-ns
+    version: v1
+  - kind: ConfigMap
+    name: test-cm
+    namespace: test-ns
+    version: v1
+```
+
+Let's take a look at the corresponding `ClusterResourcePlacementStatus` object created in `test-ns` namespace selected by our NamespaceAccessible `ClusterResourcePlacement`.
+
+```yaml
+% kubectl get clusterresourceplacementstatus.v1beta1.placement.kubernetes-fleet.io test-crp -n test-ns -o yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacementStatus
+lastUpdatedTime: ...
+metadata:
+  creationTimestamp: ...
+  generation: 11
+  name: test-crp
+  namespace: test-ns
+  ownerReferences:
+  - apiVersion: placement.kubernetes-fleet.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ClusterResourcePlacement
+    name: test-crp
+    uid: 7877ff66-74db-4f13-b84a-91e43da5d06e
+  resourceVersion: "1837"
+  uid: df6adcc3-54a3-41d8-b954-a72992a4e35f
+sourceStatus:
+  conditions:
+  - lastTransitionTime: ...
+    message: found all cluster needed as specified by the scheduling policy, found
+      3 cluster(s)
+    observedGeneration: 1
+    reason: SchedulingPolicyFulfilled
+    status: "True"
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: ...
+    message: All 3 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: "True"
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: ...
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: "True"
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: ...
+    message: Works(s) are succcesfully created or updated in 3 target cluster(s)'
+      namespaces
+    observedGeneration: 1
+    reason: WorkSynchronized
+    status: "True"
+    type: ClusterResourcePlacementWorkSynchronized
+  - lastTransitionTime: ...
+    message: The selected resources are successfully applied to 3 cluster(s)
+    observedGeneration: 1
+    reason: ApplySucceeded
+    status: "True"
+    type: ClusterResourcePlacementApplied
+  - lastTransitionTime: ...
+    message: The selected resources in 3 cluster(s) are available now
+    observedGeneration: 1
+    reason: ResourceAvailable
+    status: "True"
+    type: ClusterResourcePlacementAvailable
+  ...
+  selectedResources:
+  - kind: Namespace
+    name: test-ns
+    version: v1
+  - kind: ConfigMap
+    name: test-cm
+    namespace: test-ns
+    version: v1
+```
+
+> Note: From the output above we can see that the `ClusterResourcePlacementSyncedCondition` condition is not part of the copied status from the `ClusterResourcePlacement`.
+
+This allows users with only namespace-level access to view the status of the cluster-scoped `ClusterResourcePlacement` object within the target namespace.
 
 ## Snapshots and revisions
 
