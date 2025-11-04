@@ -495,7 +495,7 @@ The `ClusterResourcePlacementStatus` (CRPS) is a **namespaced resource** tha
 *   **Optional feature**: Only created when `StatusReportingScope` is set to `NamespaceAccessible`, once set `StatusReportingScope` is immutable
 
 
-For a `ClusterResourcePlacement` with `StatusReportingScope` set to `NamespaceAccessible`, only one Namespace resource selector is allowed and it is immutable. Once specified during creation, the namespace resource selector cannot be updated.
+For a `ClusterResourcePlacement` with `StatusReportingScope` set to `NamespaceAccessible`, only **one** Namespace resource selector is allowed and it is immutable. Once specified during creation, the namespace resource selector cannot be updated.
 
 For detailed instructions, please refer to this [document](/docs/how-tos/crp#statusreportingscope).
 
