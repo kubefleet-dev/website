@@ -485,6 +485,20 @@ Events:
   Normal  PlacementApplied              3m46s  cluster-resource-placement-controller  Resources have been applied to the selected cluster(s)
   Normal  PlacementRolloutCompleted     3m46s  cluster-resource-placement-controller  Resources are available in the selected clusters
 ```
+
+## ClusterResourcePlacementStatus
+
+The `ClusterResourcePlacementStatus` (CRPS) is a **namespaced resource** that mirrors the PlacementStatus of a corresponding **cluster-scoped** `ClusterResourcePlacement` (CRP) object. It provides namespace-scoped access to cluster-scoped placement status information.
+
+*   **Namespace-scoped access**: Allows users with namespace-level permissions to view placement status without requiring cluster-scoped access
+*   **Status mirroring**: Contains the same placement status information as the parent CRP, but accessible within a specific namespace
+*   **Optional feature**: Only created when `StatusReportingScope` is set to `NamespaceAccessible`. Once set, `StatusReportingScope` is immutable.
+
+
+When `StatusReportingScope` is set to `NamespaceAccessible` for a` ClusterResourcePlacement`, only one namespace resource selector is allowed, and it is immutable. Therefore, the namespace resource selector cannot be changed after creation.
+
+For detailed instructions, please refer to this [document](/docs/how-tos/crp#statusreportingscope).
+
 ## Advanced Features
 ### Tolerations
 
