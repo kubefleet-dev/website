@@ -492,10 +492,10 @@ The `ClusterResourcePlacementStatus` (CRPS) is a **namespaced resource** tha
 
 *   **Namespace-scoped access**: Allows users with namespace-level permissions to view placement status without requiring cluster-scoped access
 *   **Status mirroring**: Contains the same placement status information as the parent CRP, but accessible within a specific namespace
-*   **Optional feature**: Only created when `StatusReportingScope` is set to `NamespaceAccessible`, once set `StatusReportingScope` is immutable
+*   **Optional feature**: Only created when `StatusReportingScope` is set to `NamespaceAccessible`. Once set, `StatusReportingScope` is immutable.
 
 
-For a `ClusterResourcePlacement` with `StatusReportingScope` set to `NamespaceAccessible`, only **one** Namespace resource selector is allowed and it is immutable. Once specified during creation, the namespace resource selector cannot be updated.
+When `StatusReportingScope` is set to `NamespaceAccessible` for a` ClusterResourcePlacement`, only one namespace resource selector is allowed, and it is immutable. Therefore, the namespace resource selector cannot be changed after creation.
 
 For detailed instructions, please refer to this [document](/docs/how-tos/crp#statusreportingscope).
 

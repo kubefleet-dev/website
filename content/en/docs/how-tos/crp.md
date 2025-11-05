@@ -478,8 +478,8 @@ longer to complete the rollout, in accordance with the rolling update strategy y
 
 ## StatusReportingScope
 
-We currently support two values for StatusReportingScope,
-- **ClusterScopeOnly**: Default behavior placement status is part of the `ClusterResourcePlacement` object.
+The two supported values for `StatusReportingScope` are:
+- **ClusterScopeOnly**: Default behavior, placement status is part of the `ClusterResourcePlacement` object.
 - **NamespaceAccessible**: A `ClusterResourcePlacementStatus` object is created in the namespace selected by the `ClusterResourcePlacement`.
 
 ```yaml
@@ -520,7 +520,7 @@ status:
     observedGeneration: 1
     reason: StatusSyncSucceeded
     status: "True"
-    type: ClusterResourcePlacementStatusSynced # Only preset for NamespaceAccessible CRPs.
+    type: ClusterResourcePlacementStatusSynced # Only present for NamespaceAccessible CRPs to indicate corresponding ClusterResourcePlacementStatus is created/updated successfully.
   - lastTransitionTime: ...
     message: All 3 cluster(s) start rolling out the latest resource
     observedGeneration: 1
