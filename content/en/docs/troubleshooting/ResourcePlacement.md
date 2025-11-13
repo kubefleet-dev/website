@@ -75,7 +75,7 @@ Please check the following cases,
 - If `false`, the resource placement has not started rolling out yet.
 - If `true`,
   - Check to see if `ResourcePlacementApplied` condition is set to **unknown**, **false** or **true**.
-  - If `unknown`, wait for the process to finish, as the resources are still being applied to the member cluster. If the state remains unknown for a while, create a [issue](https://github.com/kubefleet-dev/kubefleet/issues), as this is an unusual behavior.
+  - If `unknown`, wait for the process to finish, as the resources are still being applied to the member cluster. If the state remains unknown for a while, create an [issue](https://github.com/kubefleet-dev/kubefleet/issues), as this is an unusual behavior.
   - If `false`, the resources failed to apply. Check the `Failed Placements` section in the status for more details.
   - If `true`, verify that the resource exists on the hub cluster in the same namespace as the ResourcePlacement.
 
@@ -99,7 +99,7 @@ kubectl get resourcebinding -n <namespace> -l kubernetes-fleet.io/parent-CRP={RP
 
 In this case we have `ResourcePlacement` called test-rp in namespace `test-ns`.
 
-1. List the `ResourcePlacement` to get the name of the RP,
+1. Get the `ResourcePlacement` to get a basic overview of the RP,
 
 ```bash
 kubectl get rp test-rp -n test-ns
@@ -107,13 +107,14 @@ NAME       GEN   SCHEDULED   SCHEDULEDGEN   AVAILABLE   AVAILABLE-GEN   AGE
 test-rp    1     True        1              True        1               15s
 ```
 
-2. The following command is run to view the status of the `ResourcePlacement` deployment.
+2. The following command is run to view the status of the `ResourcePlacement`.
 
 ```bash
 kubectl describe resourceplacement test-rp -n test-ns
 ```
 
-3. Here's an example output. From the `Placement Statuses` section of the `test-rp` status, notice that it has distributed
+**Here's an example output:**
+From the `Placement Statuses` section of the `test-rp` status, you can see that resources have been distributed to two member clusters. As a result, there are two corresponding `ResourceBinding` instances.
 resources to two member clusters and, therefore, has two `ResourceBindings` instances:
 
 ```bash
@@ -136,13 +137,13 @@ Status:
       Type: Applied
 ```
 
-3. To get the `ResourceBindings` value, run the following command:
+2. To get the `ResourceBindings`, run the following command:
 
 ```bash
     kubectl get resourcebinding -n test-ns -l kubernetes-fleet.io/parent-CRP=test-rp 
 ```
 
-4. The output lists all `ResourceBindings` instances that are associated with `test-rp`.
+This lists all `ResourceBindings` instances that are associated with `test-rp`.
 
 ```bash
 kubectl get resourcebinding -n test-ns -l kubernetes-fleet.io/parent-CRP=test-rp 
@@ -181,13 +182,13 @@ kubectl get work -n fleet-member-{clusterName} -l kubernetes-fleet.io/parent-CRP
 
 ### Namespace Prerequisites
 
-**Important**: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace. Before creating a ResourcePlacement:
-
-1. Ensure the target namespace exists on the member clusters, either:
+**Important**: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace. 
+Before creating a ResourcePlacement:
+- Ensure the target namespace exists on the member clusters, either:
    - Created by a `ClusterResourcePlacement` (CRP) using namespace-only mode
    - Pre-existing on the member clusters
 
-2. If the namespace doesn't exist on a member cluster, the ResourcePlacement will fail to apply resources to that cluster.
+- If the namespace doesn't exist on a member cluster, the `ResourcePlacement` will fail to apply resources to that cluster.
 
 ### Coordination with ClusterResourcePlacement
 
