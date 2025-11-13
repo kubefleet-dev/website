@@ -29,23 +29,23 @@ kubectl describe resourceplacement <name> -n <namespace>
 The complete progression of `ResourcePlacement` is as follows:
 
 1. `ResourcePlacementScheduled`: Indicates a resource has been scheduled for placement.
-   - If this condition is false, refer to [CRP Schedule Failure TSG](ClusterResourcePlacementScheduled).
+   - If this condition is false, refer to [CRP Schedule Failure TSG](ClusterResourcePlacementSchedule.md).
 2. `ResourcePlacementRolloutStarted`: Indicates the rollout process has begun.
-   - If this condition is false, refer to [CRP Rollout Failure TSG](ClusterResourcePlacementRolloutStarted).
-   - If you are triggering a rollout with a staged update run, refer to [ClusterStagedUpdateRun TSG](ClusterStagedUpdateRun).
+   - If this condition is false, refer to [CRP Rollout Failure TSG](ClusterResourcePlacementRolloutStarted.md).
+   - If you are triggering a rollout with a staged update run, refer to [ClusterStagedUpdateRun TSG](ClusterStagedUpdateRun.md).
 3. `ResourcePlacementOverridden`: Indicates the resource has been overridden.
-   - If this condition is false, refer to [CRP Override Failure TSG](ClusterResourcePlacementOverridden).
+   - If this condition is false, refer to [CRP Override Failure TSG](ClusterResourcePlacementOverridden.md).
 4. `ResourcePlacementWorkSynchronized`: Indicates the work objects have been synchronized.
-   - If this condition is false, refer to [CRP Work-Synchronization Failure TSG](ClusterResourcePlacementWorkSynchronized).
+   - If this condition is false, refer to [CRP Work-Synchronization Failure TSG](ClusterResourcePlacementWorkSynchronized.md).
 5. `ResourcePlacementApplied`: Indicates the resource has been applied. This condition will only be populated if the
 apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
-   - If this condition is false, refer to [CRP Work-Application Failure TSG](ClusterResourcePlacementApplied).
+   - If this condition is false, refer to [CRP Work-Application Failure TSG](ClusterResourcePlacementApplied.md).
 6. `ResourcePlacementAvailable`: Indicates the resource is available. This condition will only be populated if the
 apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
-   - If this condition is false, refer to [CRP Availability Failure TSG](ClusterResourcePlacementAvailable).
+   - If this condition is false, refer to [CRP Availability Failure TSG](ClusterResourcePlacementAvailable.md).
 7. `ResourcePlacementDiffreported`: Indicates whether diff reporting has completed on all resources. This condition
 will only be populated if the apply strategy in use is of the type `ReportDiff`.
-   - If this condition is false, refer to the [CRP Diff Reporting Failure TSG](ClusterResourcePlacementDiffReported) for more information.
+   - If this condition is false, refer to the [CRP Diff Reporting Failure TSG](ClusterResourcePlacementDiffReported.md) for more information.
 
 > **Note**: ResourcePlacement and ClusterResourcePlacement share the same underlying architecture and condition types.
 > The troubleshooting approaches documented in the CRP TSG files are applicable to ResourcePlacement as well. The main
@@ -83,7 +83,7 @@ We can also take a look at the `Placement Statuses` section in `ResourcePlacemen
 
 ## How can I debug if the drift detection result or the configuration difference check result are different from my expectations?
 
-See the [Drift Detection and Configuration Difference Check Unexpected Result TSG](DriftAndDiffDetection) for more information.
+See the [Drift Detection and Configuration Difference Check Unexpected Result TSG](DriftAndDiffDetection.md) for more information.
 
 ## How can I find the latest ResourceBinding resource?
 
