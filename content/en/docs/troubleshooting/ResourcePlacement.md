@@ -29,7 +29,7 @@ kubectl describe resourceplacement <name> -n <namespace>
 The complete progression of `ResourcePlacement` is as follows:
 
 1. `ResourcePlacementScheduled`: Indicates a resource has been scheduled for placement.
-   - If this condition is false, refer to [CRP Schedule Failure TSG](ClusterResourcePlacementSchedule.md).
+   - If this condition is false, refer to [CRP Schedule Failure TSG](ClusterResourcePlacementScheduled.md).
 2. `ResourcePlacementRolloutStarted`: Indicates the rollout process has begun.
    - If this condition is false, refer to [CRP Rollout Failure TSG](ClusterResourcePlacementRolloutStarted.md).
    - If you are triggering a rollout with a staged update run, refer to [ClusterStagedUpdateRun TSG](ClusterStagedUpdateRun.md).
