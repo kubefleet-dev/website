@@ -17,6 +17,34 @@ Internal Objects to keep in mind when troubleshooting RP related errors on the h
 
 Please read the [Fleet API reference](docs/api-reference) for more details about each object.
 
+## Important Considerations for ResourcePlacement
+
+### Namespace Prerequisites
+
+**Important**: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace. 
+Before creating a ResourcePlacement:
+- Ensure the target namespace exists on the member clusters, either:
+   - Created by a `ClusterResourcePlacement` (CRP) using namespace-only mode
+   - Pre-existing on the member clusters
+
+- If the namespace doesn't exist on a member cluster, the `ResourcePlacement` will fail to apply resources to that cluster.
+
+### Coordination with ClusterResourcePlacement
+
+When using both ResourcePlacement (RP) and ClusterResourcePlacement (CRP) together:
+
+- **CRP in namespace-only mode**: Use CRP to create and manage the namespace itself across clusters
+- **RP for resources**: Use RP to manage specific resources within that namespace
+- **Avoid conflicts**: Ensure that CRP and RP don't select the same resources to prevent conflicts
+
+### Resource Scope Limitations
+
+ResourcePlacement can only select and manage namespace-scoped resources within the same namespace where the RP object resides:
+
+- ✅ **Supported**: ConfigMaps, Secrets, Services, Deployments, StatefulSets, Jobs, etc. within the RP's namespace
+- ❌ **Not Supported**: Cluster-scoped resources (use ClusterResourcePlacement instead)
+- ❌ **Not Supported**: Resources in other namespaces
+
 ## Complete Progress of the ResourcePlacement
 
 Understanding the progression and the status of the `ResourcePlacement` custom resource is crucial for diagnosing and identifying failures.
@@ -47,11 +75,17 @@ apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideA
 will only be populated if the apply strategy in use is of the type `ReportDiff`.
    - If this condition is false, refer to the [CRP Diff Reporting Failure TSG](ClusterResourcePlacementDiffReported.md) for more information.
 
-> **Note**: ResourcePlacement and ClusterResourcePlacement share the same underlying architecture and condition types.
-> The troubleshooting approaches documented in the CRP TSG files are applicable to ResourcePlacement as well. The main
-> difference is that ResourcePlacement is namespace-scoped and works with namespace-scoped resources, while
-> ClusterResourcePlacement is cluster-scoped. When following CRP TSG guidance, substitute the appropriate RP commands
-> (e.g., use `kubectl get resourceplacement -n <namespace>` instead of `kubectl get clusterresourceplacement`).
+> **Note**: ResourcePlacement and ClusterResourcePlacement share the same underlying architecture with a 1-to-1 mapping of condition types. 
+> The condition types follow a naming convention where RP conditions use the `ResourcePlacement` prefix while CRP conditions use the 
+> `ClusterResourcePlacement` prefix. For example:
+> - `ResourcePlacementScheduled` ↔ `ClusterResourcePlacementScheduled`
+> - `ResourcePlacementApplied` ↔ `ClusterResourcePlacementApplied`
+> - `ResourcePlacementAvailable` ↔ `ClusterResourcePlacementAvailable`
+>
+> The troubleshooting approaches documented in the CRP TSG files are applicable to ResourcePlacement as well. The main difference is that 
+> ResourcePlacement is namespace-scoped and works with namespace-scoped resources, while ClusterResourcePlacement is cluster-scoped. 
+> When following CRP TSG guidance, substitute the appropriate RP condition names and commands (e.g., use 
+> `kubectl get resourceplacement -n <namespace>` instead of `kubectl get clusterresourceplacement`).
 
 ## How can I debug if some clusters are not selected as expected?
 
@@ -74,12 +108,15 @@ Please check the following cases,
 - Check whether the `ResourcePlacementRolloutStarted` condition in `ResourcePlacement` status is set to **true** or **false**.
 - If `false`, the resource placement has not started rolling out yet.
 - If `true`,
-  - Check to see if `ResourcePlacementApplied` condition is set to **unknown**, **false** or **true**.
-  - If `unknown`, wait for the process to finish, as the resources are still being applied to the member cluster. If the state remains unknown for a while, create an [issue](https://github.com/kubefleet-dev/kubefleet/issues), as this is an unusual behavior.
-  - If `false`, the resources failed to apply. Check the `Failed Placements` section in the status for more details.
+  - Check to see if the overall `ResourcePlacementApplied` condition is set to **unknown**, **false** or **true**.
+  - If `unknown`, wait for the process to finish, as the resources are still being applied to the member clusters. If the state remains unknown for a while, create an [issue](https://github.com/kubefleet-dev/kubefleet/issues), as this is an unusual behavior.
+  - If `false`, the resources failed to apply on one or more clusters. Check the `Placement Statuses` section in the status for cluster-specific details.
   - If `true`, verify that the resource exists on the hub cluster in the same namespace as the ResourcePlacement.
 
-We can also take a look at the `Placement Statuses` section in `ResourcePlacement` status for that particular cluster. In `Placement Statuses` we would find `Failed Placements` section which should have the reasons as to why resources failed to apply.
+To pinpoint issues on specific clusters, examine the `Placement Statuses` section in `ResourcePlacement` status. For each cluster, you can find:
+- The cluster name
+- Conditions specific to that cluster (e.g., `Applied`, `Available`)
+- `Failed Placements` section which lists the resources that failed to apply along with the reasons
 
 ## How can I debug if the drift detection result or the configuration difference check result are different from my expectations?
 
@@ -114,28 +151,141 @@ kubectl describe resourceplacement test-rp -n test-ns
 ```
 
 **Here's an example output:**
-From the `Placement Statuses` section of the `test-rp` status, you can see that resources have been distributed to two member clusters. As a result, there are two corresponding `ResourceBinding` instances.
-resources to two member clusters and, therefore, has two `ResourceBindings` instances:
 
-```bash
+```yaml
 Status:
   Conditions:
-  - Last Transition Time: "2023-11-23T00:49:29Z"
-    ...
+    Last Transition Time:   2025-11-13T22:25:45Z
+    Message:                found all cluster needed as specified by the scheduling policy, found 2 cluster(s)
+    Observed Generation:    2
+    Reason:                 SchedulingPolicyFulfilled
+    Status:                 True
+    Type:                   ResourcePlacementScheduled
+    Last Transition Time:   2025-11-13T22:25:45Z
+    Message:                All 2 cluster(s) start rolling out the latest resource
+    Observed Generation:    2
+    Reason:                 RolloutStarted
+    Status:                 True
+    Type:                   ResourcePlacementRolloutStarted
+    Last Transition Time:   2025-11-13T22:25:45Z
+    Message:                No override rules are configured for the selected resources
+    Observed Generation:    2
+    Reason:                 NoOverrideSpecified
+    Status:                 True
+    Type:                   ResourcePlacementOverridden
+    Last Transition Time:   2025-11-13T22:25:45Z
+    Message:                Works(s) are succcesfully created or updated in 2 target cluster(s)' namespaces
+    Observed Generation:    2
+    Reason:                 WorkSynchronized
+    Status:                 True
+    Type:                   ResourcePlacementWorkSynchronized
+    Last Transition Time:   2025-11-13T22:25:45Z
+    Message:                The selected resources are successfully applied to 2 cluster(s)
+    Observed Generation:    2
+    Reason:                 ApplySucceeded
+    Status:                 True
+    Type:                   ResourcePlacementApplied
+    Last Transition Time:   2025-11-13T22:25:45Z
+    Message:                The selected resources in 2 cluster(s) are available now
+    Observed Generation:    2
+    Reason:                 ResourceAvailable
+    Status:                 True
+    Type:                   ResourcePlacementAvailable
+  Observed Resource Index:  0
   Placement Statuses:
-  - Cluster Name: kind-cluster-1
-    conditions:
-      ...
-      Reason: AllWorkHaveBeenApplied
-      Status: True
-      Type: Applied
-  - clusterName: kind-cluster-2
-    conditions:
-      ...
-      Reason: AllWorkHaveBeenApplied
-      Status: True
-      Type: Applied
+    Cluster Name:  kind-cluster-1
+    Conditions:
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                Successfully scheduled resources for placement in "kind-cluster-1": picked by scheduling policy
+      Observed Generation:    2
+      Reason:                 Scheduled
+      Status:                 True
+      Type:                   Scheduled
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                Detected the new changes on the resources and started the rollout process
+      Observed Generation:    2
+      Reason:                 RolloutStarted
+      Status:                 True
+      Type:                   RolloutStarted
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                No override rules are configured for the selected resources
+      Observed Generation:    2
+      Reason:                 NoOverrideSpecified
+      Status:                 True
+      Type:                   Overridden
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                All of the works are synchronized to the latest
+      Observed Generation:    2
+      Reason:                 AllWorkSynced
+      Status:                 True
+      Type:                   WorkSynchronized
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                All corresponding work objects are applied
+      Observed Generation:    2
+      Reason:                 AllWorkHaveBeenApplied
+      Status:                 True
+      Type:                   Applied
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                All corresponding work objects are available
+      Observed Generation:    2
+      Reason:                 AllWorkAreAvailable
+      Status:                 True
+      Type:                   Available
+    Observed Resource Index:  0
+    Cluster Name:             kind-cluster-2
+    Conditions:
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                Successfully scheduled resources for placement in "kind-cluster-2": picked by scheduling policy
+      Observed Generation:    2
+      Reason:                 Scheduled
+      Status:                 True
+      Type:                   Scheduled
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                Detected the new changes on the resources and started the rollout process
+      Observed Generation:    2
+      Reason:                 RolloutStarted
+      Status:                 True
+      Type:                   RolloutStarted
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                No override rules are configured for the selected resources
+      Observed Generation:    2
+      Reason:                 NoOverrideSpecified
+      Status:                 True
+      Type:                   Overridden
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                All of the works are synchronized to the latest
+      Observed Generation:    2
+      Reason:                 AllWorkSynced
+      Status:                 True
+      Type:                   WorkSynchronized
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                All corresponding work objects are applied
+      Observed Generation:    2
+      Reason:                 AllWorkHaveBeenApplied
+      Status:                 True
+      Type:                   Applied
+      Last Transition Time:   2025-11-13T22:25:45Z
+      Message:                All corresponding work objects are available
+      Observed Generation:    2
+      Reason:                 AllWorkAreAvailable
+      Status:                 True
+      Type:                   Available
+    Observed Resource Index:  0
+  Selected Resources:
+    Kind:       ConfigMap
+    Name:       app-config
+    Namespace:  my-app
+    Version:    v1
+    Kind:       ConfigMap
+    Name:       feature-flags
+    Namespace:  my-app
+    Version:    v1
 ```
+
+From the status output, you can see:
+- **Overall Conditions**: Show the aggregated state across all clusters (e.g., `ResourcePlacementApplied`, `ResourcePlacementAvailable`)
+- **Placement Statuses**: Contains per-cluster details for `kind-cluster-1` and `kind-cluster-2`, each with their own conditions (`Scheduled`, `Applied`, `Available`, etc.)
+- **Selected Resources**: Lists the ConfigMaps (`app-config` and `feature-flags`) that were selected for placement
 
 2. To get the `ResourceBindings`, run the following command:
 
@@ -177,31 +327,3 @@ kubectl get work -n fleet-member-{clusterName} -l kubernetes-fleet.io/parent-CRP
 ```
 
 > NOTE: In this command, replace `{clusterName}` and `{RPName}` with the names that you identified in the first step.
-
-## Important Considerations for ResourcePlacement
-
-### Namespace Prerequisites
-
-**Important**: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace. 
-Before creating a ResourcePlacement:
-- Ensure the target namespace exists on the member clusters, either:
-   - Created by a `ClusterResourcePlacement` (CRP) using namespace-only mode
-   - Pre-existing on the member clusters
-
-- If the namespace doesn't exist on a member cluster, the `ResourcePlacement` will fail to apply resources to that cluster.
-
-### Coordination with ClusterResourcePlacement
-
-When using both ResourcePlacement (RP) and ClusterResourcePlacement (CRP) together:
-
-- **CRP in namespace-only mode**: Use CRP to create and manage the namespace itself across clusters
-- **RP for resources**: Use RP to manage specific resources within that namespace
-- **Avoid conflicts**: Ensure that CRP and RP don't select the same resources to prevent conflicts
-
-### Resource Scope Limitations
-
-ResourcePlacement can only select and manage namespace-scoped resources within the same namespace where the RP object resides:
-
-- ✅ **Supported**: ConfigMaps, Secrets, Services, Deployments, StatefulSets, Jobs, etc. within the RP's namespace
-- ❌ **Not Supported**: Cluster-scoped resources (use ClusterResourcePlacement instead)
-- ❌ **Not Supported**: Resources in other namespaces
