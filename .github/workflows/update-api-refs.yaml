@@ -51,7 +51,7 @@ jobs:
             Signed-off-by: GitHub Actions Bot <actions@github.com>
           committer: GitHub Actions Bot <actions@github.com>
           author: GitHub Actions Bot <actions@github.com>
-          branch: automated-api-ref-update-${{ github.run_id }}
+          branch: automated-api-ref-update
           base: 'main'
           delete-branch: true
           title: 'Update API references from KubeFleet main'
