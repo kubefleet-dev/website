@@ -1,13 +1,9 @@
 name: Update API References
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
-    paths:
-      - '.github/workflows/update-api-refs.yaml'
-      - 'Makefile'
-      - 'configs/api-refs-generator.yaml'
+      - weiweng/auto-gen-api-ref  # Temporary: for testing before merge
   schedule:
     # Run daily at 2 AM UTC
     - cron: '0 2 * * *'
