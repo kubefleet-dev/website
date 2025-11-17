@@ -66,14 +66,7 @@ restore-frontmatter: ## Restore Hugo front matter to generated API references
 	@test -f content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md || \
 		(echo "Error: placement.kubernetes-fleet.io/v1beta1.md not found. Generation may have failed." && exit 1)
 	
-	@set -e; restore_frontmatter() { \
-		FILE="$$1"; TITLE="$$2"; DESC="$$3"; WEIGHT="$$4"; \
-		echo "Restoring Hugo front matter to $${FILE}..."; \
-		TEMP_FILE="$$(mktemp)" || exit 1; \
-		printf '%s\n' '---' "title: $${TITLE}" "description: $${DESC}" "weight: $${WEIGHT}" '---' '' > "$${TEMP_FILE}" || exit 1; \
-		cat "$${FILE}" >> "$${TEMP_FILE}" || exit 1; \
-		mv "$${TEMP_FILE}" "$${FILE}" || exit 1; \
-	}; \
+	@. scripts/restore-frontmatter.sh; \
 	restore_frontmatter content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md "cluster.kubernetes-fleet.io/v1" "API reference for cluster.kubernetes-fleet.io/v1" 1; \
 	restore_frontmatter content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md "cluster.kubernetes-fleet.io/v1beta1" "API reference for cluster.kubernetes-fleet.io/v1beta1" 2; \
 	restore_frontmatter content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md "placement.kubernetes-fleet.io/v1" "API reference for placement.kubernetes-fleet.io/v1" 3; \
