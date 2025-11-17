@@ -66,7 +66,7 @@ restore-frontmatter: ## Restore Hugo front matter to generated API references
 	@test -f content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md || \
 		(echo "Error: placement.kubernetes-fleet.io/v1beta1.md not found. Generation may have failed." && exit 1)
 	
-	@restore_frontmatter() { \
+	@set -e; restore_frontmatter() { \
 		FILE="$$1"; TITLE="$$2"; DESC="$$3"; WEIGHT="$$4"; \
 		echo "Restoring Hugo front matter to $${FILE}..."; \
 		TEMP_FILE="$$(mktemp)" || exit 1; \
@@ -87,6 +87,11 @@ update-api-refs: clone-kubefleet generate-api-refs restore-frontmatter ## Update
 	@echo ""
 	@echo "Changed files:"
 	@git diff --stat content/en/docs/api-reference/
+
+.PHONY: update-api-refs-ci
+update-api-refs-ci: clone-kubefleet generate-api-refs restore-frontmatter ## Update API references (CI pipeline - no git diff)
+	@echo ""
+	@echo "✓ API references updated successfully!"
 
 .PHONY: clean
 clean: ## Remove cloned KubeFleet source
