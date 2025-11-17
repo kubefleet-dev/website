@@ -66,47 +66,22 @@ restore-frontmatter: ## Restore Hugo front matter to generated API references
 	@test -f content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md || \
 		(echo "Error: placement.kubernetes-fleet.io/v1beta1.md not found. Generation may have failed." && exit 1)
 	
-	@echo "Restoring Hugo front matter to cluster.kubernetes-fleet.io/v1.md..."
-	@sed -i.bak '1i\
----\
-title: cluster.kubernetes-fleet.io/v1\
-description: API reference for cluster.kubernetes-fleet.io/v1\
-weight: 1\
----\
-' content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md && \
-		rm content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md.bak
-	
-	@echo "Restoring Hugo front matter to cluster.kubernetes-fleet.io/v1beta1.md..."
-	@sed -i.bak '1i\
----\
-title: cluster.kubernetes-fleet.io/v1beta1\
-description: API reference for cluster.kubernetes-fleet.io/v1beta1\
-weight: 2\
----\
-' content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md && \
-		rm content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md.bak
-	
-	@echo "Restoring Hugo front matter to placement.kubernetes-fleet.io/v1.md..."
-	@sed -i.bak '1i\
----\
-title: placement.kubernetes-fleet.io/v1\
-description: API reference for placement.kubernetes-fleet.io/v1\
-weight: 3\
----\
-' content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md && \
-		rm content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md.bak
-	
-	@echo "Restoring Hugo front matter to placement.kubernetes-fleet.io/v1beta1.md..."
-	@sed -i.bak '1i\
----\
-title: placement.kubernetes-fleet.io/v1beta1\
-description: API reference for placement.kubernetes-fleet.io/v1beta1\
-weight: 4\
----\
-' content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md && \
-		rm content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md.bak
-	
-	@echo "✓ Hugo front matter restored successfully"
+	@restore_frontmatter() { \
+		FILE="$$1"; TITLE="$$2"; DESC="$$3"; WEIGHT="$$4"; \
+		echo "Restoring Hugo front matter to $${FILE}..."; \
+		sed -i.bak "1i\\\
+---\\\
+title: $${TITLE}\\\
+description: $${DESC}\\\
+weight: $${WEIGHT}\\\
+---\\\
+" "$${FILE}" && rm "$${FILE}.bak"; \
+	}; \
+	restore_frontmatter content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md "cluster.kubernetes-fleet.io/v1" "API reference for cluster.kubernetes-fleet.io/v1" 1; \
+	restore_frontmatter content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md "cluster.kubernetes-fleet.io/v1beta1" "API reference for cluster.kubernetes-fleet.io/v1beta1" 2; \
+	restore_frontmatter content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md "placement.kubernetes-fleet.io/v1" "API reference for placement.kubernetes-fleet.io/v1" 3; \
+	restore_frontmatter content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md "placement.kubernetes-fleet.io/v1beta1" "API reference for placement.kubernetes-fleet.io/v1beta1" 4; \
+	echo "✓ Hugo front matter restored successfully"
 
 .PHONY: update-api-refs
 update-api-refs: clone-kubefleet generate-api-refs restore-frontmatter ## Update API references (full pipeline)
