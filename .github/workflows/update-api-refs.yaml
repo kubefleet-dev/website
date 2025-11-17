@@ -42,7 +42,10 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'docs: update API references from kubefleet main'
+          commit-message: |
+            docs: update API references from kubefleet main
+            
+            Signed-off-by: GitHub Actions Bot <actions@github.com>
           committer: GitHub Actions Bot <actions@github.com>
           author: GitHub Actions Bot <actions@github.com>
           branch: automated-api-ref-update-${{ github.run_id }}
