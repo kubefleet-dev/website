@@ -1,3 +1,10 @@
+# API versions to generate documentation for
+API_VERSIONS := \
+	cluster.kubernetes-fleet.io/v1 \
+	cluster.kubernetes-fleet.io/v1beta1 \
+	placement.kubernetes-fleet.io/v1 \
+	placement.kubernetes-fleet.io/v1beta1
+
 .PHONY: help
 help: ## Display this help message
 	@echo "Available targets:"
@@ -20,57 +27,20 @@ clone-kubefleet: ## Clone KubeFleet source repository
 
 .PHONY: generate-api-refs
 generate-api-refs: ## Generate API reference documentation
-	@echo "Verifying kubefleet-source directory exists..."
-	@test -d kubefleet-source/apis || \
-		(echo "Error: kubefleet-source/apis not found. Run 'make clone-kubefleet' first." && exit 1)
-	
-	@echo "Generating cluster.kubernetes-fleet.io/v1 API reference..."
-	crd-ref-docs \
-		--source-path=kubefleet-source/apis/cluster/v1 \
-		--config=configs/api-refs-generator.yaml \
-		--renderer=markdown \
-		--output-path=content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md
-	
-	@echo "Generating cluster.kubernetes-fleet.io/v1beta1 API reference..."
-	crd-ref-docs \
-		--source-path=kubefleet-source/apis/cluster/v1beta1 \
-		--config=configs/api-refs-generator.yaml \
-		--renderer=markdown \
-		--output-path=content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md
-	
-	@echo "Generating placement.kubernetes-fleet.io/v1 API reference..."
-	crd-ref-docs \
-		--source-path=kubefleet-source/apis/placement/v1 \
-		--config=configs/api-refs-generator.yaml \
-		--renderer=markdown \
-		--output-path=content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md
-	
-	@echo "Generating placement.kubernetes-fleet.io/v1beta1 API reference..."
-	crd-ref-docs \
-		--source-path=kubefleet-source/apis/placement/v1beta1 \
-		--config=configs/api-refs-generator.yaml \
-		--renderer=markdown \
-		--output-path=content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md
-	
-	@echo "✓ API references generated successfully"
+	@. scripts/generate-api-ref.sh; \
+	for api in $(API_VERSIONS); do \
+		generate_api_ref "$$api"; \
+	done; \
+	echo "✓ API references generated successfully"
 
 .PHONY: restore-frontmatter
 restore-frontmatter: ## Restore Hugo front matter to generated API references
-	@echo "Checking generated files exist..."
-	@test -f content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md || \
-		(echo "Error: cluster.kubernetes-fleet.io/v1.md not found. Generation may have failed." && exit 1)
-	@test -f content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md || \
-		(echo "Error: cluster.kubernetes-fleet.io/v1beta1.md not found. Generation may have failed." && exit 1)
-	@test -f content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md || \
-		(echo "Error: placement.kubernetes-fleet.io/v1.md not found. Generation may have failed." && exit 1)
-	@test -f content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md || \
-		(echo "Error: placement.kubernetes-fleet.io/v1beta1.md not found. Generation may have failed." && exit 1)
-	
 	@. scripts/restore-frontmatter.sh; \
-	restore_frontmatter content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md "cluster.kubernetes-fleet.io/v1" "API reference for cluster.kubernetes-fleet.io/v1" 1; \
-	restore_frontmatter content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md "cluster.kubernetes-fleet.io/v1beta1" "API reference for cluster.kubernetes-fleet.io/v1beta1" 2; \
-	restore_frontmatter content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md "placement.kubernetes-fleet.io/v1" "API reference for placement.kubernetes-fleet.io/v1" 3; \
-	restore_frontmatter content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md "placement.kubernetes-fleet.io/v1beta1" "API reference for placement.kubernetes-fleet.io/v1beta1" 4; \
+	weight=1; \
+	for api in $(API_VERSIONS); do \
+		restore_frontmatter "$$api" $$weight; \
+		weight=$$((weight + 1)); \
+	done; \
 	echo "✓ Hugo front matter restored successfully"
 
 .PHONY: update-api-refs
