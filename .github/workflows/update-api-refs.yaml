@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - weiweng/auto-gen-api-ref  # Temporary: for testing before merge
+    paths:
+      - '.github/workflows/update-api-refs.yaml'
+      - 'Makefile'
+      - 'configs/api-refs-generator.yaml'
   schedule:
     # Run daily at 2 AM UTC
     - cron: '0 2 * * *'
