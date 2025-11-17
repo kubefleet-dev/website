@@ -12,14 +12,18 @@ install-tools: ## Install required tools (crd-ref-docs)
 clone-kubefleet: ## Clone KubeFleet source repository
 	@echo "Cloning KubeFleet repository..."
 	@if [ -d "kubefleet-source" ]; then \
-		echo "kubefleet-source directory already exists, pulling latest..."; \
-		cd kubefleet-source && git pull origin main; \
+		echo "kubefleet-source directory already exists, updating to latest..."; \
+		cd kubefleet-source && git fetch origin && git reset --hard origin/main; \
 	else \
 		git clone https://github.com/kubefleet-dev/kubefleet.git kubefleet-source; \
 	fi
 
 .PHONY: generate-api-refs
 generate-api-refs: ## Generate API reference documentation
+	@echo "Verifying kubefleet-source directory exists..."
+	@test -d kubefleet-source/apis || \
+		(echo "Error: kubefleet-source/apis not found. Run 'make clone-kubefleet' first." && exit 1)
+	
 	@echo "Generating cluster.kubernetes-fleet.io/v1 API reference..."
 	crd-ref-docs \
 		--source-path=kubefleet-source/apis/cluster/v1 \
@@ -52,21 +56,55 @@ generate-api-refs: ## Generate API reference documentation
 
 .PHONY: restore-frontmatter
 restore-frontmatter: ## Restore Hugo front matter to generated API references
+	@echo "Checking generated files exist..."
+	@test -f content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md || \
+		(echo "Error: cluster.kubernetes-fleet.io/v1.md not found. Generation may have failed." && exit 1)
+	@test -f content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md || \
+		(echo "Error: cluster.kubernetes-fleet.io/v1beta1.md not found. Generation may have failed." && exit 1)
+	@test -f content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md || \
+		(echo "Error: placement.kubernetes-fleet.io/v1.md not found. Generation may have failed." && exit 1)
+	@test -f content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md || \
+		(echo "Error: placement.kubernetes-fleet.io/v1beta1.md not found. Generation may have failed." && exit 1)
+	
 	@echo "Restoring Hugo front matter to cluster.kubernetes-fleet.io/v1.md..."
-	@sed -i '1i---\ntitle: cluster.kubernetes-fleet.io/v1\ndescription: API reference for cluster.kubernetes-fleet.io/v1\nweight: 1\n---\n' \
-		content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md
+	@sed -i.bak '1i\
+---\
+title: cluster.kubernetes-fleet.io/v1\
+description: API reference for cluster.kubernetes-fleet.io/v1\
+weight: 1\
+---\
+' content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md && \
+		rm content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md.bak
 	
 	@echo "Restoring Hugo front matter to cluster.kubernetes-fleet.io/v1beta1.md..."
-	@sed -i '1i---\ntitle: cluster.kubernetes-fleet.io/v1beta1\ndescription: API reference for cluster.kubernetes-fleet.io/v1beta1\nweight: 2\n---\n' \
-		content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md
+	@sed -i.bak '1i\
+---\
+title: cluster.kubernetes-fleet.io/v1beta1\
+description: API reference for cluster.kubernetes-fleet.io/v1beta1\
+weight: 2\
+---\
+' content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md && \
+		rm content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md.bak
 	
 	@echo "Restoring Hugo front matter to placement.kubernetes-fleet.io/v1.md..."
-	@sed -i '1i---\ntitle: placement.kubernetes-fleet.io/v1\ndescription: API reference for placement.kubernetes-fleet.io/v1\nweight: 3\n---\n' \
-		content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md
+	@sed -i.bak '1i\
+---\
+title: placement.kubernetes-fleet.io/v1\
+description: API reference for placement.kubernetes-fleet.io/v1\
+weight: 3\
+---\
+' content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md && \
+		rm content/en/docs/api-reference/placement.kubernetes-fleet.io/v1.md.bak
 	
 	@echo "Restoring Hugo front matter to placement.kubernetes-fleet.io/v1beta1.md..."
-	@sed -i '1i---\ntitle: placement.kubernetes-fleet.io/v1beta1\ndescription: API reference for placement.kubernetes-fleet.io/v1beta1\nweight: 4\n---\n' \
-		content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md
+	@sed -i.bak '1i\
+---\
+title: placement.kubernetes-fleet.io/v1beta1\
+description: API reference for placement.kubernetes-fleet.io/v1beta1\
+weight: 4\
+---\
+' content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md && \
+		rm content/en/docs/api-reference/placement.kubernetes-fleet.io/v1beta1.md.bak
 	
 	@echo "✓ Hugo front matter restored successfully"
 

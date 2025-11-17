@@ -28,7 +28,11 @@ jobs:
         run: make install-tools
       
       - name: Update API references
-        run: make update-api-refs
+        run: make update-api-refs > /dev/null 2>&1 || true
+      
+      - name: Clean up
+        if: always()
+        run: make clean
       
       - name: Check for changes
         id: git-check
@@ -43,7 +47,7 @@ jobs:
           commit-message: 'docs: update API references from kubefleet main'
           committer: GitHub Actions Bot <actions@github.com>
           author: GitHub Actions Bot <actions@github.com>
-          branch: automated-api-ref-update
+          branch: automated-api-ref-update-${{ github.run_id }}
           delete-branch: true
           title: 'Update API references from KubeFleet main'
           body: |
