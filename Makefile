@@ -69,13 +69,10 @@ restore-frontmatter: ## Restore Hugo front matter to generated API references
 	@restore_frontmatter() { \
 		FILE="$$1"; TITLE="$$2"; DESC="$$3"; WEIGHT="$$4"; \
 		echo "Restoring Hugo front matter to $${FILE}..."; \
-		sed -i.bak "1i\\\
----\\\
-title: $${TITLE}\\\
-description: $${DESC}\\\
-weight: $${WEIGHT}\\\
----\\\
-" "$${FILE}" && rm "$${FILE}.bak"; \
+		TEMP_FILE="$$(mktemp)"; \
+		printf '%s\n' '---' "title: $${TITLE}" "description: $${DESC}" "weight: $${WEIGHT}" '---' '' > "$${TEMP_FILE}"; \
+		cat "$${FILE}" >> "$${TEMP_FILE}"; \
+		mv "$${TEMP_FILE}" "$${FILE}"; \
 	}; \
 	restore_frontmatter content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1.md "cluster.kubernetes-fleet.io/v1" "API reference for cluster.kubernetes-fleet.io/v1" 1; \
 	restore_frontmatter content/en/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1.md "cluster.kubernetes-fleet.io/v1beta1" "API reference for cluster.kubernetes-fleet.io/v1beta1" 2; \
