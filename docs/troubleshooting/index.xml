@@ -21,7 +21,20 @@ You can view the status of the &lt;code>ClusterResourcePlacement&lt;/code> custo
 &lt;li>When the &lt;code>ClusterResourcePlacement&lt;/code> resource selector selects a reserved namespace.&lt;/li>
 &lt;/ul>
 &lt;blockquote>
-&lt;p>Note: When the placement policy is set to &lt;code>PickAll&lt;/code>, the &lt;code>ClusterResourcePlacementScheduled&lt;/code> condition is always set to &lt;code>true&lt;/code>.&lt;/p></description></item><item><title>CRP Rollout Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementrolloutstarted/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementrolloutstarted/</guid><description>&lt;p>When using the &lt;code>ClusterResourcePlacement&lt;/code> API object in Azure Kubernetes Fleet Manager to propagate resources, the selected resources aren&amp;rsquo;t rolled out in all scheduled clusters and the &lt;code>ClusterResourcePlacementRolloutStarted&lt;/code> condition status shows as &lt;code>False&lt;/code>.&lt;/p>
+&lt;p>Note: When the placement policy is set to &lt;code>PickAll&lt;/code>, the &lt;code>ClusterResourcePlacementScheduled&lt;/code> condition is always set to &lt;code>true&lt;/code>.&lt;/p></description></item><item><title>ResourcePlacement TSG</title><link>https://kubefleet.dev/docs/troubleshooting/resourceplacement/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/resourceplacement/</guid><description>&lt;p>This TSG is meant to help you troubleshoot issues with the ResourcePlacement API in Fleet.&lt;/p>
+&lt;h2 id="resource-placement">Resource Placement&lt;/h2>
+&lt;p>Internal Objects to keep in mind when troubleshooting RP related errors on the hub cluster:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>ResourceSnapshot&lt;/code>&lt;/li>
+&lt;li>&lt;code>SchedulingPolicySnapshot&lt;/code>&lt;/li>
+&lt;li>&lt;code>ResourceBinding&lt;/code>&lt;/li>
+&lt;li>&lt;code>Work&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>Please read the &lt;a href="https://kubefleet.dev/docs/api-reference/">Fleet API reference&lt;/a> for more details about each object.&lt;/p>
+&lt;h2 id="important-considerations-for-resourceplacement">Important Considerations for ResourcePlacement&lt;/h2>
+&lt;h3 id="namespace-prerequisites">Namespace Prerequisites&lt;/h3>
+&lt;p>&lt;strong>Important&lt;/strong>: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace.
+Before creating a ResourcePlacement:&lt;/p></description></item><item><title>CRP Rollout Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementrolloutstarted/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementrolloutstarted/</guid><description>&lt;p>When using the &lt;code>ClusterResourcePlacement&lt;/code> API object in Azure Kubernetes Fleet Manager to propagate resources, the selected resources aren&amp;rsquo;t rolled out in all scheduled clusters and the &lt;code>ClusterResourcePlacementRolloutStarted&lt;/code> condition status shows as &lt;code>False&lt;/code>.&lt;/p>
 &lt;p>&lt;em>This TSG only applies to the &lt;code>RollingUpdate&lt;/code> rollout strategy, which is the default strategy if you don&amp;rsquo;t specify in the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/em>
 &lt;em>To troubleshoot the update run strategy as you specify &lt;code>External&lt;/code> in the &lt;code>ClusterResourcePlacement&lt;/code>, please refer to the &lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterstagedupdaterun/">Staged Update Run Troubleshooting Guide&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>CRP Override Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementoverridden/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementoverridden/</guid><description>&lt;p>The status of the &lt;code>ClusterResourcePlacementOverridden&lt;/code> condition is set to &lt;code>false&lt;/code> when there is an Override API related issue.&lt;/p>
 &lt;blockquote>
