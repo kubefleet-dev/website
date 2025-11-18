@@ -1,6 +1,6 @@
 ---
-title: Properties and Property Provides
-description: Concept about cluster properties and property provides
+title: Properties and Property Providers
+description: Concept about cluster properties and property providers
 weight: 8
 ---
 
@@ -57,10 +57,7 @@ CPU and memory capacities of the host member cluster.
 
 A cluster property is an attribute of a member cluster. There are two types of properties:
 
-* Resource property: the usage information of a resource in a member cluster; the
-name of the resource should be in the format of
-[a Kubernetes label key](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set),
-such as `cpu` and `memory`, and the usage information should consist of:
+* Resource property: the usage information of a resource in a member cluster, which consists of:
 
     * the total capacity of the resource, which is the amount of the resource
     installed in the cluster;
@@ -72,12 +69,19 @@ such as `cpu` and `memory`, and the usage information should consist of:
 
     Note that you may report a virtual resource via the property provider, if applicable.
 
-* Non-resource property: a metric about a member cluster, in the form of a key/value
-pair; the key should be in the format of
-[a Kubernetes label key](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set),
-such as `kubernetes-fleet.io/node-count`, and the value at this moment should be a sortable
-numeric that can be parsed as
-[a Kubernetes quantity](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/).
+* Non-resource property: a value that describes a member cluster.
+
+A property is uniquely identified by its name, which is formatted as a string of one or more
+segments, separated by slashes (`/`). Each segment must be 63 characters or less, start and end
+with an alphanumeric character, and can include dashes (`-`), underscores (`_`), dots (`.`), and
+alphanumerics in between. Optionally, the property name can have a prefix, which must be a DNS
+subdomain up to 253 characters, followed by a slash (`/`). Below are some examples of valid
+property names:
+
+* `cpu`
+* `memory`
+* `kubernetes-fleet.io/node-count`
+* `kubernetes.azure.com/skus/Standard_B4ms/count`
 
 Eventually, all cluster properties are exposed via the Fleet `MemberCluster` API, with the
 non-resource properties in the `.status.properties` field and the resource properties

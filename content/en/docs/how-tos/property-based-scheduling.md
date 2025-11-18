@@ -228,7 +228,7 @@ spec:
             preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 20
               preference:
-                metricSorter:
+                propertySorter:
                   name: kubernetes-fleet.io/node-count
                   sortOrder: Descending
 ```
@@ -261,7 +261,7 @@ spec:
                 labelSelector:
                   matchLabels:
                     env: prod
-                metricSorter:
+                propertySorter:
                   name: resources.kubernetes-fleet.io/total-cpu
                   sortOrder: Descending
 ```
