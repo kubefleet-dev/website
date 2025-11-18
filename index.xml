@@ -264,7 +264,7 @@ instead.&lt;/p>&lt;/blockquote>
 results. If you have encountered drift and configuration difference detection
 failures (e.g., no detection results at all with the &lt;code>ClusterResourcePlacementApplied&lt;/code>
 condition being set to &lt;code>False&lt;/code> with a detection related error), see the
-&lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/">CRP Apply Op Failure TSG&lt;/a> instead.&lt;/p></description></item><item><title>Properties and Property Provides</title><link>https://kubefleet.dev/docs/concepts/properties/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/properties/</guid><description>&lt;p>This document explains the concepts of property provider and cluster properties in Fleet.&lt;/p>
+&lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/">CRP Apply Op Failure TSG&lt;/a> instead.&lt;/p></description></item><item><title>Properties and Property Providers</title><link>https://kubefleet.dev/docs/concepts/properties/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/properties/</guid><description>&lt;p>This document explains the concepts of property provider and cluster properties in Fleet.&lt;/p>
 &lt;p>Fleet allows developers to implement a property provider to expose arbitrary properties about
 a member cluster, such as its node count and available resources for workload placement. Platforms
 could also enable their property providers to expose platform-specific properties via Fleet.

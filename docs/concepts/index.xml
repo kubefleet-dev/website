@@ -72,7 +72,7 @@ being placed within the same cluster. This distinguishes it from Kubernetes, whi
 &lt;li>&lt;strong>Cluster Eligibility Plugin&lt;/strong>: Enables cluster selection based on specific status criteria.&lt;/li>
 &lt;li>** Taint &amp;amp; Toleration Plugin**: Enables cluster selection based on taints on the cluster &amp;amp; tolerations on the ClusterResourcePlacement.&lt;/li>
 &lt;/ul>
-&lt;p>Compared to the Kubernetes scheduling framework, the fleet framework introduces additional stages for the pickN placement type:&lt;/p></description></item><item><title>Properties and Property Provides</title><link>https://kubefleet.dev/docs/concepts/properties/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/properties/</guid><description>&lt;p>This document explains the concepts of property provider and cluster properties in Fleet.&lt;/p>
+&lt;p>Compared to the Kubernetes scheduling framework, the fleet framework introduces additional stages for the pickN placement type:&lt;/p></description></item><item><title>Properties and Property Providers</title><link>https://kubefleet.dev/docs/concepts/properties/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/properties/</guid><description>&lt;p>This document explains the concepts of property provider and cluster properties in Fleet.&lt;/p>
 &lt;p>Fleet allows developers to implement a property provider to expose arbitrary properties about
 a member cluster, such as its node count and available resources for workload placement. Platforms
 could also enable their property providers to expose platform-specific properties via Fleet.
