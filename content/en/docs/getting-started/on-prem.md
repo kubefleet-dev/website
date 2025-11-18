@@ -4,7 +4,7 @@ description: Use on-premises clusters of your own to learn about Fleet
 weight: 4
 ---
 
-In this tutorial, you will try Fleet out using a few of your own Kubernetes clusters; Fleet can 
+In this tutorial, you will try Fleet out using a few of your own Kubernetes clusters; Fleet can
 help you manage workloads seamlessly across these clusters, greatly simplifying the experience
 of day-to-day Kubernetes management.
 
@@ -33,7 +33,7 @@ To complete this tutorial, you will need:
 ## Set up a Fleet hub cluster
 
 The Fleet open-source project manages a multi-cluster environment using a hub-spoke pattern,
-which consists of one hub cluster and one or more member clusters: 
+which consists of one hub cluster and one or more member clusters:
 
 * The hub cluster is the portal to which every member cluster connects; it also serves as an
 interface for centralized management, through which you can perform a number of tasks,
@@ -56,20 +56,22 @@ export HUB_CLUSTER_CONTEXT=YOUR-HUB-CLUSTER-CONTEXT
 
 kubectl config use-context $HUB_CLUSTER_CONTEXT
 
-# The variables below uses the Fleet images kept in the Microsoft Container Registry (MCR),
-# and will retrieve the latest version from the Fleet GitHub repository.
+# The variables below uses the Fleet images kept in the Microsoft Container
+# Registry (MCR) and will retrieve the latest version from the Fleet GitHub
+# repository. This pulls from the Azure Fleet repository while the kubefleet
+# containers are being developed.
 #
-# You can, however, build the Fleet images of your own; see the repository README for
-# more information.
+# You can also build the Fleet images of your own; see the repository README
+# for more information.
 export REGISTRY="mcr.microsoft.com/aks/fleet"
 export FLEET_VERSION=$(curl "https://api.github.com/repos/Azure/fleet/tags" | jq -r '.[0].name')
 export HUB_AGENT_IMAGE="hub-agent"
 
 # Clone the Fleet repository from GitHub.
-git clone https://github.com/Azure/fleet.git
+git clone https://github.com/kubefleet-dev/kubefleet.git
 
 # Install the helm chart for running Fleet agents on the hub cluster.
-helm install hub-agent fleet/charts/hub-agent/ \
+helm install hub-agent kubefleet/charts/hub-agent/ \
     --set image.pullPolicy=Always \
     --set image.repository=$REGISTRY/$HUB_AGENT_IMAGE \
     --set image.tag=$FLEET_VERSION \
@@ -170,7 +172,7 @@ spec:
   resourceSelectors:
     - group: ""
       kind: Namespace
-      version: v1          
+      version: v1
       name: work
   policy:
     placementType: PickAll
@@ -192,12 +194,12 @@ kubectl get clusterresourceplacement crp
 ```
 
 Verify that the placement has been completed successfully; you should see that the `APPLIED` status
-field has been set to `True`. You may need to repeat the commands a few times to wait for 
+field has been set to `True`. You may need to repeat the commands a few times to wait for
 the completion.
 
 ### Confirm the placement
 
-Now, log into the member clusters to confirm that the placement has been completed.  
+Now, log into the member clusters to confirm that the placement has been completed.
 
 ```sh
 kubectl config use-context $MEMBER_CLUSTER_CONTEXT

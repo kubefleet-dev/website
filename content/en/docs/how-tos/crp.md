@@ -22,6 +22,7 @@ The CRP API generally consists of the following components:
 - **Scheduling Policy**: This determines the set of clusters where the resources will be placed.
 - **Rollout Strategy**: This controls the behavior of resource placement when the resources themselves and/or the 
               scheduling policy are updated, minimizing interruptions caused by refreshes.
+- **StatusReportingScope**: This controls where ClusterResourcePlacement status information is made available.
 
 The following sections discuss these components in depth.
 
@@ -32,7 +33,7 @@ specifying which resources to select for placement. To add a resource selector, 
 the `resourceSelectors` field in the `ClusterResourcePlacement` spec:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
@@ -152,7 +153,7 @@ which clusters to place resources at. To use this placement type, specify the ta
 names in the `clusterNames` field, such as
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
@@ -193,7 +194,7 @@ of a label.
 > Guide.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
@@ -216,7 +217,7 @@ The `ClusterResourcePlacement` object above will pick all the clusters with the 
 
 Fleet is forward-looking with the `PickAll` placement type: any cluster that satisfies the
 affinity terms of a `ClusterResourcePlacement` object, even if it joins after the
- `ClsuterResourcePlacement` object is created, will be picked.
+ `ClusterResourcePlacement` object is created, will be picked.
 
 > Note
 >
@@ -250,7 +251,7 @@ to enable high-availability.
 > [Using Topology Spread Constraints to Pick Clusters](topology-spread-constraints) How-To Guide.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
@@ -441,7 +442,7 @@ placement type and a target number of clusters of 10, with the default rollout s
 shown in the example below,
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp
@@ -475,6 +476,169 @@ longer to complete the rollout, in accordance with the rolling update strategy y
 > to some clusters. You can identify this behavior if CRP status; for more information, see
 > [Understanding the Status of a `ClusterResourcePlacement`](crp-status) How-To Guide.
 
+## StatusReportingScope
+
+The two supported values for `StatusReportingScope` are:
+- **ClusterScopeOnly**: Default behavior, placement status is part of the `ClusterResourcePlacement` object.
+- **NamespaceAccessible**: A `ClusterResourcePlacementStatus` object is created in the namespace selected by the `ClusterResourcePlacement`.
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: test-crp
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: test-ns
+      version: v1
+  policy:
+    placementType: PickAll
+  strategy:
+    type: RollingUpdate
+  statusReportingScope: NamespaceAccessible
+```
+
+Lets take a look at the `ClusterResourcePlacment` object's status,
+
+```yaml
+% kubectl get clusterresourceplacements.v1beta1.placement.kubernetes-fleet.io test-crp -o yaml
+...
+status:
+  conditions:
+  - lastTransitionTime: ...
+    message: found all cluster needed as specified by the scheduling policy, found
+      3 cluster(s)
+    observedGeneration: 1
+    reason: SchedulingPolicyFulfilled
+    status: "True"
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: ...
+    message: Successfully created or updated ClusterResourcePlacementStatus in namespace
+      'test-ns'
+    observedGeneration: 1
+    reason: StatusSyncSucceeded
+    status: "True"
+    type: ClusterResourcePlacementStatusSynced # Only present for NamespaceAccessible CRPs to indicate corresponding ClusterResourcePlacementStatus is created/updated successfully.
+  - lastTransitionTime: ...
+    message: All 3 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: "True"
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: ...
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: "True"
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: ...
+    message: Works(s) are succcesfully created or updated in 3 target cluster(s)'
+      namespaces
+    observedGeneration: 1
+    reason: WorkSynchronized
+    status: "True"
+    type: ClusterResourcePlacementWorkSynchronized
+  - lastTransitionTime: ...
+    message: The selected resources are successfully applied to 3 cluster(s)
+    observedGeneration: 1
+    reason: ApplySucceeded
+    status: "True"
+    type: ClusterResourcePlacementApplied
+  - lastTransitionTime: ...
+    message: The selected resources in 3 cluster(s) are available now
+    observedGeneration: 1
+    reason: ResourceAvailable
+    status: "True"
+    type: ClusterResourcePlacementAvailable
+ ...
+  selectedResources:
+  - kind: Namespace
+    name: test-ns
+    version: v1
+  - kind: ConfigMap
+    name: test-cm
+    namespace: test-ns
+    version: v1
+```
+
+Let's take a look at the corresponding `ClusterResourcePlacementStatus` object created in `test-ns` namespace selected by our NamespaceAccessible `ClusterResourcePlacement`.
+
+```yaml
+% kubectl get clusterresourceplacementstatus.v1beta1.placement.kubernetes-fleet.io test-crp -n test-ns -o yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacementStatus
+lastUpdatedTime: ...
+metadata:
+  creationTimestamp: ...
+  generation: 11
+  name: test-crp
+  namespace: test-ns
+  ownerReferences:
+  - apiVersion: placement.kubernetes-fleet.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ClusterResourcePlacement
+    name: test-crp
+    uid: 7877ff66-74db-4f13-b84a-91e43da5d06e
+  resourceVersion: "1837"
+  uid: df6adcc3-54a3-41d8-b954-a72992a4e35f
+sourceStatus:
+  conditions:
+  - lastTransitionTime: ...
+    message: found all cluster needed as specified by the scheduling policy, found
+      3 cluster(s)
+    observedGeneration: 1
+    reason: SchedulingPolicyFulfilled
+    status: "True"
+    type: ClusterResourcePlacementScheduled
+  - lastTransitionTime: ...
+    message: All 3 cluster(s) start rolling out the latest resource
+    observedGeneration: 1
+    reason: RolloutStarted
+    status: "True"
+    type: ClusterResourcePlacementRolloutStarted
+  - lastTransitionTime: ...
+    message: No override rules are configured for the selected resources
+    observedGeneration: 1
+    reason: NoOverrideSpecified
+    status: "True"
+    type: ClusterResourcePlacementOverridden
+  - lastTransitionTime: ...
+    message: Works(s) are succcesfully created or updated in 3 target cluster(s)'
+      namespaces
+    observedGeneration: 1
+    reason: WorkSynchronized
+    status: "True"
+    type: ClusterResourcePlacementWorkSynchronized
+  - lastTransitionTime: ...
+    message: The selected resources are successfully applied to 3 cluster(s)
+    observedGeneration: 1
+    reason: ApplySucceeded
+    status: "True"
+    type: ClusterResourcePlacementApplied
+  - lastTransitionTime: ...
+    message: The selected resources in 3 cluster(s) are available now
+    observedGeneration: 1
+    reason: ResourceAvailable
+    status: "True"
+    type: ClusterResourcePlacementAvailable
+  ...
+  selectedResources:
+  - kind: Namespace
+    name: test-ns
+    version: v1
+  - kind: ConfigMap
+    name: test-cm
+    namespace: test-ns
+    version: v1
+```
+
+> Note: From the output above we can see that the `ClusterResourcePlacementSyncedCondition` condition is not part of the copied status from the `ClusterResourcePlacement`.
+
+This allows users with only namespace-level access to view the status of the cluster-scoped `ClusterResourcePlacement` object within the target namespace.
+
 ## Snapshots and revisions
 
 Internally, Fleet keeps a history of all the scheduling policies you have used with a
@@ -488,7 +652,7 @@ of the history (i.e., how many snapshot objects Fleet will keep for a `ClusterRe
 configure the `revisionHistoryLimit` field:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp

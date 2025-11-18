@@ -2,48 +2,37 @@
 title: KubeFleet
 ---
 
-{{< blocks/custom-cover covertitle="Managing Kubernetes Clusters" coversubtitle="Seamlessly. At scale." image_anchor="top" height="full" >}}
-<p class="h5">KubeFleet is a CNCF sandbox project for easily managing your Kubernetes multi-cluster setup.</p>
+{{< blocks/custom-cover covertitle="Treat clusters as an ephemeral container platform" image_anchor="top" height="full" >}}
+<p class="h1">Intelligently place and run cloud-native workloads at scale on multiple clusters.</p>
 <br>
-<a class="btn btn-lg btn-dark me-3 mb-4" href="/website/docs/">
-  Documentation <i class="fas fa-arrow-alt-circle-right ms-2"></i>
-</a>
-<a class="btn btn-lg btn-secondary me-3 mb-4" href="https://github.com/kubefleet-dev/kubefleet">
-  Source Code <i class="fab fa-github ms-2 "></i>
-</a>
+<p class="h3">KubeFleet is a CNCF sandbox project.</p>
+<br>
+<a class="btn btn-lg btn-dark me-3 mb-4" href="/docs/">Documentation <i class="fas fa-arrow-alt-circle-right ms-2"></i></a>
+<a class="btn btn-lg btn-secondary me-3 mb-4" href="https://github.com/kubefleet-dev/kubefleet">Source Code <i class="fab fa-github ms-2 "></i></a>
 <p class="lead mt-5"></p>
+
 {{< blocks/link-down color="info" >}}
 {{< /blocks/custom-cover >}}
 
-
 {{% blocks/custom-showcase color="primary" %}}
-KubeFleet is a powerful <span class="text-white bg-dark"><b>open-source platform
-for multi-cluster management</b></span>. Use Fleet to schedule workloads smartly,
-roll out changes progressively, and perform administrative tasks easily, 
-across a group of Kubernetes clusters
-<span class="text-white bg-dark"><b>on any cloud or on-premises</b></span>.
+KubeFleet is a cloud-native solution for <b>multi-cluster application management</b>. Use KubeFleet to intelligently schedule workloads,
+roll out changes progressively, and perform administrative tasks easily, across a group of Kubernetes clusters <b>on any cloud or on-premises</b>.
 {{< /blocks/custom-showcase >}}
-
 
 {{% blocks/section color="dark" type="row" %}}
 {{% blocks/feature icon="fab fa-hubspot" title="Centralized management" %}}
-KubeFleet enables developers and admins to use one Kubernetes cluster, known as the hub cluster, as the portal for running all multi-cluster tasks.
+KubeFleet enables developers and admins to use one Kubernetes cluster, known as the hub cluster, as the control-plane for running all multi-cluster tasks.
 {{% /blocks/feature %}}
-
 
 {{% blocks/feature icon="fa-solid fa-brain" title="Smart scheduling"%}}
-Leverage KubeFleet's flexible scheduling capabilities to always run workloads in the most appropriate clusters, maximizing
-performance, availiability and cost efficiency.
+Leverage KubeFleet's flexible scheduling capabilities to always run workloads in the most appropriate clusters, maximizing performance, availiability and cost efficiency.
 {{% /blocks/feature %}}
-
 
 {{% blocks/feature icon="fa-solid fa-bars-progress" title="Simplified administration" %}}
-Use KubeFleet to perform administrative tasks at ease. KubeFleet can help you enforce policies, observe status, detect configuration drifts, move workloads around as needed, and do many more. 
+Use KubeFleet to perform administrative tasks with ease. KubeFleet can help you enforce policies, observe status, detect configuration drifts, and move workloads around as needed.
 {{% /blocks/feature %}}
 
-
 {{% /blocks/section %}}
-
 
 {{% blocks/section color="white" type="row" %}}
 <div style="position: relative; width: 100%;">
@@ -63,7 +52,8 @@ Use KubeFleet to perform administrative tasks at ease. KubeFleet can help you en
 </div>
 <p>
   <h3 class="text-center">
-  We have sessions featuring KubeFleet at KubeCon + CloudNativeCon Europe 2025 (Apr 1-4, 2025)! <a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/program/schedule/">Learn more about the sessions here</a>.
+  We have sessions featuring KubeFleet at KubeCon + CloudNativeCon! Watch the recordings <a href="https://www.youtube.com/watch?v=I9GV4N23dvE&si=kdADu4pIo5gMu0lW">here</a> and
+  <a href="https://www.youtube.com/watch?v=6c8Rh_vrIA4">here</a>.
   </h3><br><br>
 </p>
 <br>
@@ -87,4 +77,3 @@ Use KubeFleet to perform administrative tasks at ease. KubeFleet can help you en
 {{% /blocks/feature %}}
 
 {{% /blocks/section %}}
-

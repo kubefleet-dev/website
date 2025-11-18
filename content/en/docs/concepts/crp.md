@@ -28,7 +28,7 @@ is not specified, it will select all joined and healthy member clusters.
     - **PickFixed**: select a fixed list of member clusters defined in the `ClusterNames`.
     - **PickN**: select a `NumberOfClusters` of member clusters with optional matching cluster `Affinity` scheduling rules or topology spread constraints `TopologySpreadConstraints`.
 
-- **Rollout strategy**: how to propagate new changes to the selected member clusters.
+- **Strategy**: how changes are rolled out (rollout strategy) and how resources are applied on the member cluster side (apply strategy).
 
 A simple `ClusterResourcePlacement` looks like this:
 
@@ -241,10 +241,46 @@ spread score and breaking ties based on the affinity score.
 
 The _bind_ step is to create/update/delete the `ClusterResourceBinding` based on the desired and current member cluster list.
 
-## Rollout Strategy
-Update strategy determines how changes to the `ClusterWorkloadPlacement` will be rolled out across member clusters. 
-The only supported update strategy is `RollingUpdate` and it replaces the old placed resource using rolling update, i.e. 
-gradually create the new one while replace the old ones.
+## Strategy
+
+### Rollout strategy
+
+Use rollout strategy to control how KubeFleet rolls out a resource change made on the hub cluster to all member clusters.
+Right now KubeFleet supports two types of rollout strategies out of the box:
+
+* Rolling update: this rollout strategy helps roll out changes incrementally in a way that ensures system
+availability, akin to how the Kubernetes Deployment API handles updates. For more information, see the
+[Safe Rollout](safe-rollout) concept.
+* Staged update: this rollout strategy helps roll out changes in different stages; users may group clusters
+into different stages and specify the order in which each stage receives the update. The strategy also allows
+users to set up timed or approval-based gates between stages to fine-control the flow. For more information, see
+the [Staged Update](staged-update) concept and [Staged Update How-To Guide](../how-tos/staged-update.md).
+
+### Apply strategy
+
+Use apply strategy to control how KubeFleet applies a resource to a member cluster. KubeFleet currently features
+three different types of apply strategies:
+
+* Client-side apply: this apply strategy sets up KubeFleet to apply resources in a three-way merge that is similar to how
+the Kubernetes CLI, `kubectl`, performs client-side apply.
+* Server-side apply: this apply strategy sets up KubeFleet to apply resources via the new server-side apply mechanism.
+* Report Diff mode: this apply strategy instructs KubeFleet to check for configuration differences between the resource
+on the hub cluster and its counterparts among the member clusters; no apply op will be performed. For more information,
+see the [ReportDiff Mode How-To Guide](../how-tos/reportdiff.md).
+
+> To learn more about the differences between client-side apply and server-side apply, see also the
+> [Kubernetes official documentation](https://kubernetes.io/docs/reference/using-api/server-side-apply/).
+
+KubeFleet apply strategy is also the place where users can set up KubeFleet's drift detection capabilities and takeover
+settings:
+
+* Drift detection helps users identify and resolve configuration drifts that are commonly observed in a multi-cluster
+environment; through this feature, KubeFleet can detect the presence of drifts, reveal their details, and let users 
+decide how and when to handle them. See the [Drift Detection How-To Guide](../how-tos/drift-detection.md) for more
+information.
+* Takeover settings allows users to decide how KubeFleet can best handle pre-existing resources. When you join a cluster
+with running workloads into a fleet, these settings can help bring the workloads under KubeFleet's management in a
+way that avoids interruptions. For specifics, see the [Takeover Settings How-To Guide](../how-tos/takeover.md).
 
 ## Placement status
 
@@ -450,7 +486,21 @@ Events:
   Normal  PlacementRolloutCompleted     3m46s  cluster-resource-placement-controller  Resources are available in the selected clusters
 ```
 
-## Tolerations
+## ClusterResourcePlacementStatus
+
+The `ClusterResourcePlacementStatus` (CRPS) is a **namespaced resource** that mirrors the PlacementStatus of a corresponding **cluster-scoped** `ClusterResourcePlacement` (CRP) object. It provides namespace-scoped access to cluster-scoped placement status information.
+
+*   **Namespace-scoped access**: Allows users with namespace-level permissions to view placement status without requiring cluster-scoped access
+*   **Status mirroring**: Contains the same placement status information as the parent CRP, but accessible within a specific namespace
+*   **Optional feature**: Only created when `StatusReportingScope` is set to `NamespaceAccessible`. Once set, `StatusReportingScope` is immutable.
+
+
+When `StatusReportingScope` is set to `NamespaceAccessible` for a` ClusterResourcePlacement`, only one namespace resource selector is allowed, and it is immutable. Therefore, the namespace resource selector cannot be changed after creation.
+
+For detailed instructions, please refer to this [document](/docs/how-tos/crp#statusreportingscope).
+
+## Advanced Features
+### Tolerations
 
 Tolerations are a mechanism to allow the Fleet Scheduler to schedule resources to a `MemberCluster` that has taints specified on it.
 We adopt the concept of [taints & tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) 
@@ -473,7 +523,7 @@ and create a new object with the updated tolerations.
 
 For detailed instructions, please refer to this [document](/docs/how-tos/taints-tolerations).
 
-## Envelope Object
+### Envelope Object
 
 The `ClusterResourcePlacement` leverages the fleet hub cluster as a staging environment for customer resources. These resources are then propagated to member clusters that are part of the fleet, based on the `ClusterResourcePlacement` spec.
 
