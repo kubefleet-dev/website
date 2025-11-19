@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>API Reference on KubeFleet</title><link>https://kubefleet.dev/docs/api-reference/</link><description>Recent content in API Reference on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet.dev/docs/api-reference/index.xml" rel="self" type="application/rss+xml"/><item><title>API Reference</title><link>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/</guid><description>&lt;h2 id="clusterkubernetes-fleetiov1">cluster.kubernetes-fleet.io/v1&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>API Reference on KubeFleet</title><link>https://kubefleet.dev/docs/api-reference/</link><description>Recent content in API Reference on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet.dev/docs/api-reference/index.xml" rel="self" type="application/rss+xml"/><item><title>cluster.kubernetes-fleet.io/v1</title><link>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/</guid><description>&lt;h1 id="api-reference">API Reference&lt;/h1>
+&lt;h2 id="packages">Packages&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#clusterkubernetes-fleetiov1">cluster.kubernetes-fleet.io/v1&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="clusterkubernetes-fleetiov1">cluster.kubernetes-fleet.io/v1&lt;/h2>
 &lt;h3 id="resource-types">Resource Types&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#internalmembercluster">InternalMemberCluster&lt;/a>&lt;/li>
@@ -44,7 +49,12 @@
  &lt;/tbody>
 &lt;/table>
 &lt;h4 id="agenttype">AgentType&lt;/h4>
-&lt;p>&lt;em>Underlying type:&lt;/em> &lt;em>string&lt;/em>&lt;/p></description></item><item><title>API Reference</title><link>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/</guid><description>&lt;h2 id="clusterkubernetes-fleetiov1beta1">cluster.kubernetes-fleet.io/v1beta1&lt;/h2>
+&lt;p>&lt;em>Underlying type:&lt;/em> &lt;em>string&lt;/em>&lt;/p></description></item><item><title>cluster.kubernetes-fleet.io/v1beta1</title><link>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/</guid><description>&lt;h1 id="api-reference">API Reference&lt;/h1>
+&lt;h2 id="packages">Packages&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#clusterkubernetes-fleetiov1beta1">cluster.kubernetes-fleet.io/v1beta1&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="clusterkubernetes-fleetiov1beta1">cluster.kubernetes-fleet.io/v1beta1&lt;/h2>
 &lt;h3 id="resource-types">Resource Types&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#internalmembercluster">InternalMemberCluster&lt;/a>&lt;/li>
@@ -90,15 +100,24 @@
  &lt;/tbody>
 &lt;/table>
 &lt;h4 id="agenttype">AgentType&lt;/h4>
-&lt;p>&lt;em>Underlying type:&lt;/em> &lt;em>string&lt;/em>&lt;/p></description></item><item><title>API Reference</title><link>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/</guid><description>&lt;h2 id="placementkubernetes-fleetiov1">placement.kubernetes-fleet.io/v1&lt;/h2>
+&lt;p>&lt;em>Underlying type:&lt;/em> &lt;em>string&lt;/em>&lt;/p></description></item><item><title>placement.kubernetes-fleet.io/v1</title><link>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/</guid><description>&lt;h1 id="api-reference">API Reference&lt;/h1>
+&lt;h2 id="packages">Packages&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#placementkubernetes-fleetiov1">placement.kubernetes-fleet.io/v1&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="placementkubernetes-fleetiov1">placement.kubernetes-fleet.io/v1&lt;/h2>
 &lt;h3 id="resource-types">Resource Types&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#appliedwork">AppliedWork&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#appliedworklist">AppliedWorkList&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourcebinding">ClusterResourceBinding&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceoverride">ClusterResourceOverride&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceoverridesnapshot">ClusterResourceOverrideSnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceplacement">ClusterResourcePlacement&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourcesnapshot">ClusterResourceSnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterschedulingpolicysnapshot">ClusterSchedulingPolicySnapshot&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceoverride">ResourceOverride&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceoverridesnapshot">ResourceOverrideSnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#work">Work&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#worklist">WorkList&lt;/a>&lt;/li>
 &lt;/ul>
@@ -128,25 +147,39 @@
 &lt;/table>
 &lt;h4 id="appliedresourcemeta">AppliedResourceMeta&lt;/h4>
 &lt;p>AppliedResourceMeta represents the group, version, resource, name and namespace of a resource.
-Since these resources have been created, they must have valid group, version, resource, namespace, and name.&lt;/p></description></item><item><title>API Reference</title><link>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</guid><description>&lt;h2 id="placementkubernetes-fleetiov1beta1">placement.kubernetes-fleet.io/v1beta1&lt;/h2>
+Since these resources have been created, they must have valid group, version, resource, namespace, and name.&lt;/p></description></item><item><title>placement.kubernetes-fleet.io/v1beta1</title><link>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</guid><description>&lt;h1 id="api-reference">API Reference&lt;/h1>
+&lt;h2 id="packages">Packages&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#placementkubernetes-fleetiov1beta1">placement.kubernetes-fleet.io/v1beta1&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="placementkubernetes-fleetiov1beta1">placement.kubernetes-fleet.io/v1beta1&lt;/h2>
 &lt;h3 id="resource-types">Resource Types&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#appliedwork">AppliedWork&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#appliedworklist">AppliedWorkList&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#approvalrequest">ApprovalRequest&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterapprovalrequest">ClusterApprovalRequest&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourcebinding">ClusterResourceBinding&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceenvelope">ClusterResourceEnvelope&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceoverride">ClusterResourceOverride&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceoverridesnapshot">ClusterResourceOverrideSnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacement">ClusterResourcePlacement&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacementstatus">ClusterResourcePlacementStatus&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacementdisruptionbudget">ClusterResourcePlacementDisruptionBudget&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacementeviction">ClusterResourcePlacementEviction&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacementstatus">ClusterResourcePlacementStatus&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourcesnapshot">ClusterResourceSnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterschedulingpolicysnapshot">ClusterSchedulingPolicySnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterstagedupdaterun">ClusterStagedUpdateRun&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterstagedupdatestrategy">ClusterStagedUpdateStrategy&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourcebinding">ResourceBinding&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceenvelope">ResourceEnvelope&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceoverride">ResourceOverride&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceoverridesnapshot">ResourceOverrideSnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceplacement">ResourcePlacement&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourcesnapshot">ResourceSnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#schedulingpolicysnapshot">SchedulingPolicySnapshot&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#stagedupdaterun">StagedUpdateRun&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#stagedupdatestrategy">StagedUpdateStrategy&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#work">Work&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#worklist">WorkList&lt;/a>&lt;/li>
 &lt;/ul>
@@ -174,5 +207,6 @@ Since these resources have been created, they must have valid group, version, re
  &lt;/tr>
  &lt;/tbody>
 &lt;/table>
-&lt;h4 id="afterstagetask">AfterStageTask&lt;/h4>
-&lt;p>AfterStageTask is the collection of post-stage tasks that ALL need to be completed before moving to the next stage.&lt;/p></description></item></channel></rss>
+&lt;h4 id="appliedresourcemeta">AppliedResourceMeta&lt;/h4>
+&lt;p>AppliedResourceMeta represents the group, version, resource, name and namespace of a resource.
+Since these resources have been created, they must have valid group, version, resource, namespace, and name.&lt;/p></description></item></channel></rss>
