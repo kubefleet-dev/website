@@ -23,6 +23,7 @@ To complete this tutorial, you will need:
     * Note that one of these clusters will serve as your hub cluster; other clusters must be able
     to reach it via the network.
 * The following tools on your local machine:
+    * `docker`, to build kubefleet agent images.
     * `kubectl`, the Kubernetes CLI tool.
     * `git`
     * `curl`
@@ -42,47 +43,43 @@ primarily orchestrating workloads across different clusters.
 hub cluster.
 
 Any Kubernetes cluster running a supported version of Kubernetes can serve as the hub cluster;
-it is recommended that you reserve a cluster
-specifically for this responsibility, and do not run other workloads on it. For the best
-experience, consider disabling the built-in `kube-controller-manager` controllers for the
-cluster: you could achieve this by setting the `--controllers` CLI argument; for more information,
-see the [`kube-controller-manager` documentation](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/).
+it is recommended that you reserve a cluster specifically for this responsibility, and do not run heavy workloads on it. 
 
 To set up the hub cluster, run the commands below:
 
 ```sh
 # Replace YOUR-HUB-CLUSTER-CONTEXT with the name of the kubeconfig context for your hub cluster.
 export HUB_CLUSTER_CONTEXT=YOUR-HUB-CLUSTER-CONTEXT
-
 kubectl config use-context $HUB_CLUSTER_CONTEXT
 
-# The variables below uses the Fleet images kept in the Microsoft Container
-# Registry (MCR) and will retrieve the latest version from the Fleet GitHub
-# repository. This pulls from the Azure Fleet repository while the kubefleet
-# containers are being developed.
-#
-# You can also build the Fleet images of your own; see the repository README
-# for more information.
-export REGISTRY="mcr.microsoft.com/aks/fleet"
-export FLEET_VERSION=$(curl "https://api.github.com/repos/Azure/fleet/tags" | jq -r '.[0].name')
-export HUB_AGENT_IMAGE="hub-agent"
+# please replace the following env variables with the values of your own; see the repository README for
+# more information.
 
-# Clone the Fleet repository from GitHub.
+export REGISTRY="$ACR.azurecr.io" # replace with your own container registry
+export TARGET_ARCH="amd64" # replace with your architecture, we support amd64 and arm64
+export TAG=$(curl "https://api.github.com/repos/kubefleet-dev/kubefleet/tags" | jq -r '.[0].name') # replace with your desired version
+
+# Clone the KubeFleet repository from GitHub and navigate to the root directory of the repository.
 git clone https://github.com/kubefleet-dev/kubefleet.git
+cd kubefleet
+
+# Build and push the hub agent image to your container registry. 
+export OUTPUT_TYPE="type=registry"
+make docker-build-hub-agent
 
 # Install the helm chart for running Fleet agents on the hub cluster.
-helm install hub-agent kubefleet/charts/hub-agent/ \
-    --set image.pullPolicy=Always \
-    --set image.repository=$REGISTRY/$HUB_AGENT_IMAGE \
-    --set image.tag=$FLEET_VERSION \
-    --set logVerbosity=2 \
-    --set namespace=fleet-system \
-    --set enableWebhook=true \
-    --set webhookClientConnectionType=service \
-    --set enableV1Alpha1APIs=false \
-    --set enableV1Beta1APIs=true
+helm upgrade --install hub-agent ./charts/hub-agent/ \
+        --set image.pullPolicy=Always \
+        --set image.repository=$REGISTRY/$HUB_AGENT_IMAGE \
+        --set image.tag=$TAG \
+        --set namespace=fleet-system \
+        --set logVerbosity=5 \
+        --set enableGuardRail=false \
+        --set forceDeleteWaitTime="3m0s" \
+        --set clusterUnhealthyThreshold="5m0s" \
+        --set logFileMaxSize=100000 \
+        --set MaxConcurrentClusterPlacement=200 
 ```
-
 It may take a few seconds for the installation to complete. Once it finishes, verify that
 the Fleet hub agents are up and running with the commands below:
 
@@ -101,8 +98,6 @@ For your convenience, Fleet provides a script that can automate the process of j
 into a fleet. To use the script, follow the steps below:
 
 ```sh
-# Replace the value of HUB_CLUSTER_ADDRESS with the address of your hub cluster API server.
-export HUB_CLUSTER_ADDRESS=YOUR-HUB-CLUSTER-ADDRESS
 # Replace the value of MEMBER_CLUSTER with the name you would like to assign to the new member
 # cluster.
 #
@@ -112,32 +107,28 @@ export MEMBER_CLUSTER=YOUR-MEMBER-CLUSTER
 # for accessing your member cluster.
 export MEMBER_CLUSTER_CONTEXT=YOUR-MEMBER-CLUSTER-CONTEXT
 
+# Build and push the member agent image to your container registry. 
+make docker-build-member-agent
+make docker-build-refresh-token
+
 # Run the script.
-chmod +x fleet/hack/membership/join.sh
-./fleet/hack/membership/join.sh
+chmod +x ./hack/membership/joinMC.sh
+./hack/membership/joinMC.sh  $TAG <HUB-CLUSTER-NAME> <MEMBER-CLUSTER-NAME-1> <MEMBER-CLUSTER-NAME-2> <MEMBER-CLUSTER-CONTEXT-3> ...
 ```
 
-It may take a few minutes for the script to finish running. Once it is completed, verify
-that the cluster has joined successfully with the command below:
-
+It may take a few minutes for the script to finish running. Once it is completed, the script will print out something 
+like this:
 ```sh
-kubectl config use-context $HUB_CLUSTER_CONTEXT
-kubectl get membercluster $MEMBER_CLUSTER
+NAME              JOINED   AGE   MEMBER-AGENT-LAST-SEEN   NODE-COUNT   AVAILABLE-CPU   AVAILABLE-MEMORY
+routing-cluster   True     30s   28s                      2            5748m           28780328Ki
 ```
 
 The newly joined cluster should have the `JOINED` status field set to `True`. If you see that
 the cluster is still in an unknown state, it might be that the member cluster
 is still connecting to the hub cluster. Should this state persist for a prolonged
-period, refer to the [Troubleshooting Guide](/docs/troubleshooting) for
-more information.
+period, refer to the [Troubleshooting Guide](/docs/troubleshooting) for more information.
 
-> Note
->
-> If you would like to know more about the steps the script runs, or would like to join
-> a cluster into a fleet manually, refer to the [Managing Clusters](/dpcs/howtos/clusters) How-To
-> Guide.
 
-Repeat the steps above to join more clusters into your fleet.
 
 ## Use the `ClusterResourcePlacement` API to orchestrate resources among member clusters.
 
