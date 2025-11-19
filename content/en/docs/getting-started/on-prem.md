@@ -52,12 +52,12 @@ To set up the hub cluster, run the commands below:
 export HUB_CLUSTER_CONTEXT=YOUR-HUB-CLUSTER-CONTEXT
 kubectl config use-context $HUB_CLUSTER_CONTEXT
 
-# please replace the following env variables with the values of your own; see the repository README for
+# Please replace the following env variables with the values of your own; see the repository README for
 # more information.
 
-export REGISTRY="$ACR.azurecr.io" # replace with your own container registry
+export REGISTRY="YOUR CONTAINER REGISTRY" # Replace with your own container registry
 export TARGET_ARCH="amd64" # Replace with your architecture, we support amd64 and arm64
-export TAG=$(curl "https://api.github.com/repos/kubefleet-dev/kubefleet/tags" | jq -r '.[0].name') # replace with your desired version
+export TAG=$(curl "https://api.github.com/repos/kubefleet-dev/kubefleet/tags" | jq -r '.[0].name') # Replace with your desired tag
 
 # Clone the KubeFleet repository from GitHub and navigate to the root directory of the repository.
 git clone https://github.com/kubefleet-dev/kubefleet.git
