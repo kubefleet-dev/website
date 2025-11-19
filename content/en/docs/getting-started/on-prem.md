@@ -56,7 +56,7 @@ kubectl config use-context $HUB_CLUSTER_CONTEXT
 # more information.
 
 export REGISTRY="$ACR.azurecr.io" # replace with your own container registry
-export TARGET_ARCH="amd64" # replace with your architecture, we support amd64 and arm64
+export TARGET_ARCH="amd64" # Replace with your architecture, we support amd64 and arm64
 export TAG=$(curl "https://api.github.com/repos/kubefleet-dev/kubefleet/tags" | jq -r '.[0].name') # replace with your desired version
 
 # Clone the KubeFleet repository from GitHub and navigate to the root directory of the repository.
