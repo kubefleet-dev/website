@@ -1,21 +1,35 @@
 ---
 title: How to Roll Out and Roll Back Changes in Stage
-description: How to roll out and roll back changes with the `ClusterStagedUpdateRun` API
+description: How to roll out and roll back changes with staged update APIs
 weight: 13
 ---
 
-This how-to guide demonstrates how to use `ClusterStagedUpdateRun` to rollout resources to member clusters in a staged manner and rollback resources to a previous version.
+This how-to guide demonstrates how to use staged updates to rollout resources to member clusters in a staged manner and rollback resources to a previous version. We'll cover both cluster-scoped and namespace-scoped approaches to serve different organizational needs.
+
+## Overview of Staged Update Approaches
+
+Kubefleet provides two staged update approaches:
+
+**Cluster-Scoped**: Use `ClusterStagedUpdateRun` with `ClusterResourcePlacement` (CRP) for fleet administrators managing infrastructure-level changes.
+
+**Namespace-Scoped**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
 
 ## Prerequisite
 
-`ClusterStagedUpdateRun` CR is used to deploy resources from hub cluster to member clusters with `ClusterResourcePlacement` (or CRP) in a stage by stage manner. This tutorial is based on a demo fleet environment with 3 member clusters: 
+This tutorial is based on a demo fleet environment with 3 member clusters:
 | cluster name | labels                      |
 |--------------|-----------------------------|
 | member1      | environment=canary, order=2 |
 | member2      | environment=staging         |
 | member3      | environment=canary, order=1 |
 
-To demonstrate the rollout and rollback behavior, we create a demo namespace and a sample configmap with very simple data on the hub cluster. The namespace with configmap will be deployed to the member clusters.
+We'll demonstrate both cluster-scoped and namespace-scoped staged updates using different scenarios.
+
+## Cluster-Scoped Staged Updates
+
+### Setup for Cluster-Scoped Updates
+
+To demonstrate cluster-scoped rollout and rollback behavior, we create a demo namespace and a sample configmap with very simple data on the hub cluster. The namespace with configmap will be deployed to the member clusters.
 ```bash
 kubectl create ns test-namespace
 kubectl create cm test-cm --from-literal=key=value1 -n test-namespace
@@ -48,7 +62,7 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1                                           8s
 ```
 
-## Check resource snapshot versions
+### Check cluster resource snapshot versions
 
 Fleet keeps a list of resource snapshots for version control and audit, (for more details, please refer to [api-reference](docs/api-reference)).
 
@@ -118,7 +132,7 @@ spec:
       namespace: test-namespace
 ```
 
-## Deploy a ClusterStagedUpdateStrategy
+### Deploy a ClusterStagedUpdateStrategy
 
 A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence.
 It selects member clusters by labels. For our demonstration, we create one with two stages:
@@ -147,7 +161,7 @@ spec:
 EOF
 ```
 
-## Deploy a ClusterStagedUpdateRun to rollout latest change
+### Deploy a ClusterStagedUpdateRun to rollout latest change
 
 A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our CRP, we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, and the latest resource snapshot index ("1"):
 ```bash
@@ -349,7 +363,7 @@ data:
   key: value2
 ```
 
-## Deploy a second ClusterStagedUpdateRun to rollback to a previous version
+### Deploy a second ClusterStagedUpdateRun to rollback to a previous version
 
 Now suppose the workload admin wants to rollback the configmap change, reverting the value `value2` back to `value1`.
 Instead of manually updating the configmap from hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
@@ -542,3 +556,161 @@ The configmap `test-cm` should be updated on all 3 member clusters, with old dat
 data:
   key: value1
 ```
+
+## Namespace-Scoped Staged Updates
+
+Namespace-scoped staged updates allow application teams to manage rollouts independently within their namespaces using `StagedUpdateRun` and `StagedUpdateStrategy` resources.
+
+### Setup for Namespace-Scoped Updates
+
+Let's demonstrate namespace-scoped staged updates by deploying an application within a specific namespace. Create a namespace and an application rollout:
+
+```bash
+kubectl create ns my-app-namespace
+kubectl create deployment web-app --image=nginx:1.20 --port=80 -n my-app-namespace
+kubectl expose deployment web-app --port=80 --target-port=80 -n my-app-namespace
+```
+
+Create a namespace-scoped `ResourcePlacement` to deploy the application:
+```bash
+kubectl apply -f - << EOF
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ResourcePlacement
+metadata:
+  name: web-app-placement
+  namespace: my-app-namespace
+spec:
+  resourceSelectors:
+    - group: "apps"
+      kind: Deployment
+      name: web-app
+      version: v1
+    - group: ""
+      kind: Service
+      name: web-app
+      version: v1
+  policy:
+    placementType: PickAll
+  strategy:
+    type: External # enables namespace-scoped staged updates
+EOF
+```
+
+### Check namespace-scoped resource snapshots
+
+Check the resource snapshots for the namespace-scoped placement:
+```bash
+kubectl get resourcesnapshots -n my-app-namespace --show-labels
+```
+
+Update the deployment to a new version:
+```bash
+kubectl set image deployment/web-app web-app=nginx:1.21 -n my-app-namespace
+```
+
+Verify the new snapshot is created:
+```bash
+kubectl get resourcesnapshots -n my-app-namespace --show-labels
+```
+
+### Deploy a StagedUpdateStrategy
+
+Create a namespace-scoped staged update strategy:
+```bash
+kubectl apply -f - << EOF
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateStrategy
+metadata:
+  name: app-rollout-strategy
+  namespace: my-app-namespace
+spec:
+  stages:
+    - name: dev-clusters
+      labelSelector:
+        matchLabels:
+          environment: staging
+      afterStageTasks:
+        - type: TimedWait
+          waitTime: 30s
+    - name: prod-clusters
+      labelSelector:
+        matchLabels:
+          environment: canary
+      sortingLabelKey: order
+      afterStageTasks:
+        - type: Approval
+EOF
+```
+
+### Deploy a StagedUpdateRun
+
+Create a namespace-scoped staged update run to rollout the new image version:
+```bash
+kubectl apply -f - << EOF
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateRun
+metadata:
+  name: web-app-rollout-v1-21
+  namespace: my-app-namespace
+spec:
+  placementName: web-app-placement
+  resourceSnapshotIndex: "1"  # Latest snapshot with nginx:1.21
+  stagedRolloutStrategyName: app-rollout-strategy
+EOF
+```
+
+### Monitor namespace-scoped staged rollout
+
+Check the status of the staged update run:
+```bash
+kubectl describe sur web-app-rollout-v1-21 -n my-app-namespace
+```
+
+Wait for the first stage to complete, then check for approval requests:
+```bash
+kubectl get approvalrequests -n my-app-namespace
+```
+
+Approve the staging gate to proceed to production clusters:
+```bash
+kubectl patch approvalrequests web-app-rollout-v1-21-prod-clusters -n my-app-namespace --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved"}]}}' \
+  --subresource=status
+```
+
+Verify the rollout completion:
+```bash
+kubectl get sur web-app-rollout-v1-21 -n my-app-namespace
+kubectl get resourceplacement web-app-placement -n my-app-namespace
+```
+
+### Rollback with namespace-scoped staged updates
+
+To rollback to the previous version (nginx:1.20), create another staged update run referencing the earlier snapshot:
+```bash
+kubectl apply -f - << EOF
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateRun
+metadata:
+  name: web-app-rollback-v1-20
+  namespace: my-app-namespace
+spec:
+  placementName: web-app-placement
+  resourceSnapshotIndex: "0"  # Previous snapshot with nginx:1.20
+  stagedRolloutStrategyName: app-rollout-strategy
+EOF
+```
+
+Follow the same monitoring and approval process as above to complete the rollback.
+
+## Key Differences Summary
+
+| Aspect | Cluster-Scoped | Namespace-Scoped |
+|--------|----------------|------------------|
+| **Strategy Resource** | `ClusterStagedUpdateStrategy` | `StagedUpdateStrategy` |
+| **UpdateRun Resource** | `ClusterStagedUpdateRun` | `StagedUpdateRun` |
+| **Target Placement** | `ClusterResourcePlacement` | `ResourcePlacement` |
+| **Approval Resource** | `ClusterApprovalRequest` (short name: `careq`) | `ApprovalRequest` (short name: `areq`) |
+| **Scope** | Cluster-wide | Namespace-bound |
+| **Use Case** | Infrastructure rollouts | Application rollouts |
+| **Permissions** | Cluster-admin level | Namespace-level |
