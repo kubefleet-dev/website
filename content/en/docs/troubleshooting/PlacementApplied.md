@@ -180,6 +180,8 @@ as to why the resource failed to apply on the member cluster. In the preceding `
 the `Applied` condition for `kind-cluster-1` is flagged as false and shows the `NotAllWorkHaveBeenApplied` reason.
 This indicates that the Work object intended for the member cluster `kind-cluster-1` has not been applied.
 
+To inspect the Work object for more details, follow the steps in the [Investigation steps](#investigation-steps) section above.
+
 ### Work status of kind-cluster-1
 ```
  status:
