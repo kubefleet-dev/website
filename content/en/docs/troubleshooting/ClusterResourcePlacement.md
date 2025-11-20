@@ -35,7 +35,7 @@ The complete progression of `ClusterResourcePlacement` is as follows:
    - If this condition is false, refer to [CRP Work-Synchronization Failure TSG](ClusterResourcePlacementWorkSynchronized)
 5. `ClusterResourcePlacementApplied`: Indicates the resource has been applied. This condition will only be populated if the
 apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
-   - If this condition is false, refer to [CRP Work-Application Failure TSG](ClusterResourcePlacementApplied)
+   - If this condition is false, refer to [Work-Application Failure TSG](PlacementApplied)
 6. `ClusterResourcePlacementAvailable`: Indicates the resource is available. This condition will only be populated if the
 apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
    - If this condition is false, refer to [CRP Availability Failure TSG](ClusterResourcePlacementAvailable)
@@ -55,7 +55,7 @@ Please check the following cases,
 - If `true`,
   - Check to see if `ClusterResourcePlacementApplied` condition is set to **unknown**, **false** or **true**.
   - If `unknown`, wait for the process to finish, as the resources are still being applied to the member cluster. If the state remains unknown for a while, create a [issue](https://github.com/kubefleet-dev/kubefleet/issues), as this is an unusual behavior.
-  - If `false`, refer to [CRP Work-Application Failure TSG](ClusterResourcePlacementApplied).
+  - If `false`, refer to [Work-Application Failure TSG](PlacementApplied).
   - If `true`, verify that the resource exists on the hub cluster.
 
 We can also take a look at the `placementStatuses` section in `ClusterResourcePlacement` status for that particular cluster. In `placementStatuses` we would find `failedPlacements` section which should have the reasons as to why resources failed to apply.

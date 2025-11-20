@@ -67,7 +67,7 @@ The complete progression of `ResourcePlacement` is as follows:
    - If this condition is false, refer to [CRP Work-Synchronization Failure TSG](ClusterResourcePlacementWorkSynchronized.md).
 5. `ResourcePlacementApplied`: Indicates the resource has been applied. This condition will only be populated if the
 apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
-   - If this condition is false, refer to [CRP Work-Application Failure TSG](ClusterResourcePlacementApplied.md).
+   - If this condition is false, refer to [Work-Application Failure TSG](PlacementApplied.md).
 6. `ResourcePlacementAvailable`: Indicates the resource is available. This condition will only be populated if the
 apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
    - If this condition is false, refer to [CRP Availability Failure TSG](ClusterResourcePlacementAvailable.md).
