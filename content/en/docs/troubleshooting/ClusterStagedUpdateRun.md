@@ -1,13 +1,16 @@
 ---
-title: ClusterStagedUpdateRun TSG
-description: Identify and fix KubeFleet issues associated with the ClusterStagedUpdateRun API
+title: Staged Update Run TSG
+description: Identify and fix KubeFleet issues associated with both ClusterStagedUpdateRun and StagedUpdateRun APIs
 weight: 10
 ---
 
-This guide provides troubleshooting steps for common issues related to Staged Update Run.
-> Note: To get more information about why the scheduling fails, you can check the [updateRun controller](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/updaterun/controller.go) logs.
+This guide provides troubleshooting steps for common issues related to both cluster-scoped and namespace-scoped Staged Update Runs.
 
-## CRP status without Staged Update Run
+> Note: To get more information about failures, you can check the [updateRun controller](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/updaterun/controller.go) logs.
+
+## Cluster-Scoped Troubleshooting
+
+### CRP status without Staged Update Run
 
 When a `ClusterResourcePlacement` is created with `spec.strategy.type` set to `External`, the rollout does not start immediately.
 
@@ -69,7 +72,7 @@ Events:         <none>
 
 In the `Placement Statuses` section, it displays the detailed status of each cluster. Both selected clusters are in the `Scheduled` state, but the `RolloutStarted` condition is still `Unknown` because the rollout has not kicked off yet.
 
-## Investigate ClusterStagedUpdateRun initialization failure
+### Investigate ClusterStagedUpdateRun initialization failure
 
 An updateRun initialization failure can be easily detected by getting the resource:
 ```bash
@@ -101,7 +104,7 @@ Status:
 The condition clearly indicates the initialization failed. And the condition message gives more details about the failure. 
 In this case, I used a not-existing resource snapshot index `1` for the updateRun.
 
-## Investigate ClusterStagedUpdateRun execution failure
+### Investigate ClusterStagedUpdateRun execution failure
 
 An updateRun execution failure can be easily detected by getting the resource:
 ```bash
@@ -205,7 +208,7 @@ The updateRun abortion due to execution failures is not recoverable at the momen
 one can fix the issue and create a new updateRun. If preemption happens, in most cases the user is releasing a new resource 
 version, and they can just let the new updateRun run to complete.
 
-## Investigate ClusterStagedUpdateRun rollout stuck
+### Investigate ClusterStagedUpdateRun rollout stuck
 
 A `ClusterStagedUpdateRun` can get stuck when resource placement fails on some clusters. Getting the updateRun will show the cluster name and stage that is in stuck state:
 ```bash
@@ -314,3 +317,260 @@ nginx-69b9cb5485-sw24b   0/1     ErrImagePull   0          16m
 For more debugging instructions, you can refer to [ClusterResourcePlacement TSG](ClusterResourcePlacement).
 
 After resolving the issue, you can create always create a new updateRun to restart the rollout. Stuck updateRuns can be deleted.
+
+## Namespace-Scoped Troubleshooting
+
+Namespace-scoped `StagedUpdateRun` troubleshooting is a mirror image of cluster-scoped `ClusterStagedUpdateRun` troubleshooting. The concepts, failure patterns, and diagnostic approaches are exactly the same - only the resource names, scopes, and kubectl commands differ.
+
+Both follow identical troubleshooting patterns:
+- **Initialization failures**: Missing resource snapshots, invalid configurations
+- **Execution failures**: Validation errors, concurrent updateRun conflicts
+- **Rollout stuck scenarios**: Resource placement failures, cluster connectivity issues
+- **Status investigation**: Using `kubectl get`, `kubectl describe`, and checking placement status
+- **Recovery approaches**: Creating new updateRuns, cleaning up stuck resources
+
+The key differences are:
+- **Resource scope**: Namespace-scoped vs cluster-scoped resources
+- **Commands**: Use `sur` (StagedUpdateRun) instead of `csur` (ClusterStagedUpdateRun)
+- **Target resources**: `ResourcePlacement` instead of `ClusterResourcePlacement`
+- **Bindings**: `resourcebindings` instead of `clusterresourcebindings`
+- **Approvals**: `approvalrequests` instead of `clusterapprovalrequests`
+
+### ResourcePlacement status without Staged Update Run
+
+When a namespace-scoped `ResourcePlacement` is created with `spec.strategy.type` set to `External`, the rollout does not start immediately.
+
+A sample status of such `ResourcePlacement` is as follows:
+
+```bash
+$ kubectl describe rp web-app-placement -n my-app-namespace
+...
+Status:
+  Conditions:
+    Last Transition Time:   2025-03-12T23:01:32Z
+    Message:                found all cluster needed as specified by the scheduling policy, found 2 cluster(s)
+    Observed Generation:    1
+    Reason:                 SchedulingPolicyFulfilled
+    Status:                 True
+    Type:                   ResourcePlacementScheduled
+    Last Transition Time:   2025-03-12T23:01:32Z
+    Message:                There are still 2 cluster(s) in the process of deciding whether to roll out the latest resources or not
+    Observed Generation:    1
+    Reason:                 RolloutStartedUnknown
+    Status:                 Unknown
+    Type:                   ResourcePlacementRolloutStarted
+  Observed Resource Index:  0
+  Placement Statuses:
+    Cluster Name:  member1
+    Conditions:
+      Last Transition Time:  2025-03-12T23:01:32Z
+      Message:               Successfully scheduled resources for placement in "member1" (affinity score: 0, topology spread score: 0): picked by scheduling policy
+      Observed Generation:   1
+      Reason:                Scheduled
+      Status:                True
+      Type:                  Scheduled
+      Last Transition Time:  2025-03-12T23:01:32Z
+      Message:               In the process of deciding whether to roll out the latest resources or not
+      Observed Generation:   1
+      Reason:                RolloutStartedUnknown
+      Status:                Unknown
+      Type:                  RolloutStarted
+...
+Events:         <none>
+```
+
+`SchedulingPolicyFulfilled` condition indicates the ResourcePlacement has been fully scheduled, while `RolloutStartedUnknown` condition shows that the rollout has not started.
+
+### Investigate StagedUpdateRun initialization failure
+
+A namespace-scoped updateRun initialization failure can be easily detected by getting the resource:
+```bash
+$ kubectl get sur web-app-rollout -n my-app-namespace
+NAME              PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+web-app-rollout   web-app-placement   1                         0                       False                     2s
+```
+The `INITIALIZED` field is `False`, indicating the initialization failed.
+
+Describe the updateRun to get more details:
+```bash
+$ kubectl describe sur web-app-rollout -n my-app-namespace
+...
+Status:
+  Conditions:
+    Last Transition Time:  2025-03-13T07:28:29Z
+    Message:               cannot continue the StagedUpdateRun: failed to initialize the stagedUpdateRun: failed to process the request due to a client error: no resourceSnapshots with index `1` found for resourcePlacement `web-app-placement` in namespace `my-app-namespace`
+    Observed Generation:   1
+    Reason:                UpdateRunInitializedFailed
+    Status:                False
+    Type:                  Initialized
+  Deletion Stage Status:
+    Clusters:
+    Stage Name:                   kubernetes-fleet.io/deleteStage
+  Policy Observed Cluster Count:  2
+  Policy Snapshot Index Used:     0
+...
+```
+The condition clearly indicates the initialization failed. The condition message gives more details about the failure.
+In this case, a non-existing resource snapshot index `1` was used for the updateRun.
+
+### Investigate StagedUpdateRun execution failure
+
+A namespace-scoped updateRun execution failure can be easily detected by getting the resource:
+```bash
+$ kubectl get sur web-app-rollout -n my-app-namespace
+NAME              PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+web-app-rollout   web-app-placement   0                         0                       True          False       24m
+```
+The `SUCCEEDED` field is `False`, indicating the execution failure.
+
+The execution failure scenarios are similar to cluster-scoped updateRuns:
+
+1. **Validation errors during reconciliation**: The updateRun controller validates the ResourcePlacement, gathers bindings, and regenerates the execution plan. If any failure occurs, the updateRun execution fails:
+   ```yaml
+   status:
+     conditions:
+     - lastTransitionTime: "2025-05-13T21:11:06Z"
+       message: StagedUpdateRun initialized successfully
+       observedGeneration: 1
+       reason: UpdateRunInitializedSuccessfully
+       status: "True"
+       type: Initialized
+     - lastTransitionTime: "2025-05-13T21:11:21Z"
+       message: The stages are aborted due to a non-recoverable error
+       observedGeneration: 1
+       reason: UpdateRunFailed
+       status: "False"
+       type: Progressing
+     - lastTransitionTime: "2025-05-13T22:15:23Z"
+       message: 'cannot continue the StagedUpdateRun: failed to initialize the
+         stagedUpdateRun: failed to process the request due to a client error:
+         parent resourcePlacement not found'
+       observedGeneration: 1
+       reason: UpdateRunFailed
+       status: "False"
+       type: Succeeded
+   ```
+
+2. **Concurrent updateRun preemption**: When multiple updateRuns target the same ResourcePlacement, they may conflict:
+   ```yaml
+   status:
+    conditions:
+    - lastTransitionTime: "2025-05-13T21:11:13Z"
+      message: 'cannot continue the StagedUpdateRun: unexpected behavior which
+        cannot be handled by the controller: the resourceBinding of the updating
+        cluster `member1` in the stage `staging` does not have expected status: binding
+        spec diff: binding has different resourceSnapshotName, want: web-app-placement-0-snapshot,
+        got: web-app-placement-1-snapshot; please check if there is concurrent stagedUpdateRun'
+      observedGeneration: 1
+      reason: UpdateRunFailed
+      status: "False"
+      type: Succeeded
+   ```
+
+   To investigate concurrent updateRuns, check the namespace-scoped resource bindings:
+   ```bash
+   $ kubectl get resourcebindings -n my-app-namespace
+   NAME                                 WORKSYNCHRONIZED   RESOURCESAPPLIED   AGE
+   web-app-placement-member1-2afc7d7f   True               True               51m
+   web-app-placement-member2-fc081413                                         51m
+   ```
+
+### Investigate StagedUpdateRun rollout stuck
+
+A `StagedUpdateRun` can get stuck when resource placement fails on some clusters:
+```bash
+$ kubectl get sur web-app-rollout -n my-app-namespace -o yaml
+...
+status:
+  conditions:
+  - lastTransitionTime: "2025-05-13T23:15:35Z"
+    message: StagedUpdateRun initialized successfully
+    observedGeneration: 1
+    reason: UpdateRunInitializedSuccessfully
+    status: "True"
+    type: Initialized
+  - lastTransitionTime: "2025-05-13T23:21:18Z"
+    message: The updateRun is stuck waiting for cluster member1 in stage staging to
+      finish updating, please check resourceplacement status for potential errors
+    observedGeneration: 1
+    reason: UpdateRunStuck
+    status: "False"
+    type: Progressing
+...
+```
+
+To investigate further, check the `ResourcePlacement` status:
+```bash
+$ kubectl describe rp web-app-placement -n my-app-namespace
+...
+ Placement Statuses:
+    Cluster Name:  member1
+    Conditions:
+      Last Transition Time:  2025-05-13T23:11:14Z
+      Message:               Successfully scheduled resources for placement in "member1" (affinity score: 0, topology spread score: 0): picked by scheduling policy
+      Observed Generation:   1
+      Reason:                Scheduled
+      Status:                True
+      Type:                  Scheduled
+      Last Transition Time:  2025-05-13T23:15:35Z
+      Message:               Detected the new changes on the resources and started the rollout process, resourceSnapshotIndex: 0, stagedUpdateRun: web-app-rollout
+      Observed Generation:   1
+      Reason:                RolloutStarted
+      Status:                True
+      Type:                  RolloutStarted
+      Last Transition Time:  2025-05-13T23:15:35Z
+      Message:               Work object web-app-placement-work-deployment-1234 is not yet available
+      Observed Generation:   1
+      Reason:                NotAllWorkAreAvailable
+      Status:                False
+      Type:                  Available
+    Failed Placements:
+      Condition:
+        Last Transition Time:  2025-05-13T23:15:35Z
+        Message:               Manifest is trackable but not available yet
+        Observed Generation:   1
+        Reason:                ManifestNotAvailableYet
+        Status:                False
+        Type:                  Available
+      Envelope:
+        Name:       envelope-web-app-deploy
+        Namespace:  my-app-namespace
+        Type:       ConfigMap
+      Group:        apps
+      Kind:         Deployment
+      Name:         web-app
+      Namespace:    my-app-namespace
+      Version:      v1
+...
+```
+
+Check the target cluster to diagnose the specific issue:
+```bash
+kubectl config use-context member1
+
+kubectl get deploy web-app -n my-app-namespace
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+web-app   0/1     1            0           16m
+
+kubectl get pods -n my-app-namespace
+NAME                       READY   STATUS         RESTARTS   AGE
+web-app-69b9cb5485-sw24b   0/1     ErrImagePull   0          16m
+```
+
+### Namespace-Scoped Approval Troubleshooting
+
+For namespace-scoped staged updates with approval gates, check for `ApprovalRequest` objects:
+
+```bash
+# List approval requests in the namespace
+$ kubectl get approvalrequests -n my-app-namespace
+NAME                           UPDATE-RUN        STAGE      APPROVED   APPROVALACCEPTED   AGE
+web-app-rollout-prod-clusters  web-app-rollout   prod       False                         2m
+
+# Approve the request
+$ kubectl patch approvalrequests web-app-rollout-prod-clusters -n my-app-namespace --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved"}]}}' \
+  --subresource=status
+```
+
+After resolving issues, create a new updateRun to restart the rollout. Stuck updateRuns can be deleted safely.
