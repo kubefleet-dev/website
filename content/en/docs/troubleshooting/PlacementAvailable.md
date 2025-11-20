@@ -1,19 +1,21 @@
 ---
-title: CRP Availability Failure TSG
-description: Troubleshooting guide for CRP status "ClusterResourcePlacementAvailable" condition set to false
+title: Availability Failure TSG
+description: Troubleshooting guide for "Available" condition set to false
 weight: 7
 ---
 
-The `ClusterResourcePlacementAvailable` condition is `false` when some of the resources are not available yet. We will place some of the detailed failure in the `FailedResourcePlacement` array.
+The `ClusterResourcePlacementAvailable` (for ClusterResourcePlacement) or `ResourcePlacementAvailable` (for ResourcePlacement) condition is `false` when some of the resources are not available yet. Detailed failures are placed in the `failedPlacements` section of the placement status.
 > Note: To get more information about why resources are unavailable check [work applier](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier) logs.
 
 ## Common scenarios
 Instances where this condition may arise:
 - The member cluster doesn't have enough resource availability.
 - The deployment contains an invalid image name.
+- Required resources (such as persistent volumes, config maps, or secrets) are missing.
+- Resource quotas or limit ranges are preventing the resource from becoming available.
 
-## Case Study
-The example output below demonstrates a scenario where the CRP is unable to propagate a deployment to a member cluster due to the deployment having a bad image name.
+## Case Study: ClusterResourcePlacement
+The example output below demonstrates a scenario where a ClusterResourcePlacement is unable to propagate a deployment to a member cluster due to the deployment having a bad image name.
 
 ### ClusterResourcePlacement spec
 ```
@@ -136,12 +138,14 @@ status:
     namespace: test-ns
     version: v1
  ```
-In the `ClusterResourcePlacement` status, within the `failedPlacements` section for `kind-cluster-1`, we get a clear message
-as to why the resource failed to apply on the member cluster. In the preceding `conditions` section,
+In the ClusterResourcePlacement status, within the `failedPlacements` section for `kind-cluster-1`, we get a clear message
+as to why the resource is not available on the member cluster. In the preceding `conditions` section,
 the `Available` condition for `kind-cluster-1` is flagged as `false` and shows `NotAllWorkAreAvailable` reason.
 This signifies that the Work object intended for the member cluster `kind-cluster-1` is not yet available.
 
-For more information, see this [section](ClusterResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement).
+For more information on finding the correct Work resource:
+- For ClusterResourcePlacement, see [this section](ClusterResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement)
+- For ResourcePlacement, see [this section](ResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-resourceplacement)
 
 ### Work status of kind-cluster-1
 ```
@@ -206,7 +210,15 @@ This suggests that an issue might be affecting the deployment manifest.
 ### Resolution
 In this situation, a potential solution is to check the deployment in the member cluster because the message indicates that the root cause of the issue is a bad image name. 
 After this image name is identified, you can correct the deployment manifest and update it. 
-After you fix and update the resource manifest, the `ClusterResourcePlacement` object API automatically propagates the corrected resource to the member cluster.
+After you fix and update the resource manifest, the placement object (ClusterResourcePlacement or ResourcePlacement) automatically propagates the corrected resource to the member cluster.
 
 For all other situations, make sure that the propagated resource is configured correctly. 
 Additionally, verify that the selected cluster has sufficient available capacity to accommodate the new resources.
+
+## General Troubleshooting Notes
+
+The troubleshooting process and Work object inspection are identical for both ClusterResourcePlacement and ResourcePlacement:
+- Both use the same underlying Work API to apply resources to member clusters
+- The Work object status and manifestConditions have the same structure regardless of whether they were created by a ClusterResourcePlacement or ResourcePlacement
+- The `Available` condition in the Work status indicates whether the applied resources have become available on the member cluster
+- The main difference is the scope: ClusterResourcePlacement is cluster-scoped and can select both cluster-scoped and namespace-scoped resources, while ResourcePlacement is namespace-scoped and can only select namespace-scoped resources within its own namespace

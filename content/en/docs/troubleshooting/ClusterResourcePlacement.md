@@ -38,7 +38,7 @@ apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideA
    - If this condition is false, refer to [Work-Application Failure TSG](PlacementApplied)
 6. `ClusterResourcePlacementAvailable`: Indicates the resource is available. This condition will only be populated if the
 apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
-   - If this condition is false, refer to [CRP Availability Failure TSG](ClusterResourcePlacementAvailable)
+   - If this condition is false, refer to [Availability Failure TSG](PlacementAvailable)
 7. `ClusterResourcePlacementDiffreported`: Indicates whether diff reporting has completed on all resources. This condition
 will only be populated if the apply strategy in use is of the type `ReportDiff`.
    - If this condition is false, refer to the [CRP Diff Reporting Failure TSG](ClusterResourcePlacementDiffReported) for more information.
