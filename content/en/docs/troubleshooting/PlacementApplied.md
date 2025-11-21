@@ -4,7 +4,7 @@ description: Troubleshooting guide for "Applied" condition set to false
 weight: 6
 ---
 
-The `ClusterResourcePlacementApplied` (for ClusterResourcePlacement) or `ResourcePlacementApplied` (for ResourcePlacement) condition is set to `false` when the deployment fails.
+The `ClusterResourcePlacementApplied` (for ClusterResourcePlacement) or `ResourcePlacementApplied` (for ResourcePlacement) condition is set to `false` when the deployment fails to apply.
 > Note: To get more information about why the resources are not applied, you can check the [work applier](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier) logs.
 
 ## Common scenarios
