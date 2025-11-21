@@ -58,24 +58,29 @@ However, the &lt;code>ClusterResourceOverride&lt;/code> is created with an inval
 &lt;li>The enveloped object is not well formatted.&lt;/li>
 &lt;/ul>
 &lt;h3 id="case-study">Case Study&lt;/h3>
-&lt;p>The CRP is attempting to propagate a resource to a selected cluster, but the work object has not been updated to reflect the latest changes due to the selected cluster has been terminated.&lt;/p></description></item><item><title>CRP Work-Application Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementApplied&lt;/code> condition is set to &lt;code>false&lt;/code> when the deployment fails.&lt;/p>
+&lt;p>The CRP is attempting to propagate a resource to a selected cluster, but the work object has not been updated to reflect the latest changes due to the selected cluster has been terminated.&lt;/p></description></item><item><title>Work-Application Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementapplied/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementapplied/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementApplied&lt;/code> (for ClusterResourcePlacement) or &lt;code>ResourcePlacementApplied&lt;/code> (for ResourcePlacement) condition is set to &lt;code>false&lt;/code> when the deployment fails to apply.&lt;/p>
 &lt;blockquote>
 &lt;p>Note: To get more information about why the resources are not applied, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier">work applier&lt;/a> logs.&lt;/p>&lt;/blockquote>
 &lt;h2 id="common-scenarios">Common scenarios&lt;/h2>
 &lt;p>Instances where this condition may arise:&lt;/p>
 &lt;ul>
 &lt;li>The resource already exists on the cluster and isn&amp;rsquo;t managed by the fleet controller.&lt;/li>
-&lt;li>Another &lt;code>ClusterResourcePlacement&lt;/code> deployment is already managing the resource for the selected cluster by using a different apply strategy.&lt;/li>
-&lt;li>The &lt;code>ClusterResourcePlacement&lt;/code> deployment doesn&amp;rsquo;t apply the manifest because of syntax errors or invalid resource configurations. This might also occur if a resource is propagated through an envelope object.&lt;/li>
+&lt;li>Another placement (ClusterResourcePlacement or ResourcePlacement) is already managing the resource for the selected cluster by using a different apply strategy.&lt;/li>
+&lt;li>The placement doesn&amp;rsquo;t apply the manifest because of syntax errors or invalid resource configurations. This might also occur if a resource is propagated through an envelope object.&lt;/li>
 &lt;/ul>
 &lt;h2 id="investigation-steps">Investigation steps&lt;/h2>
 &lt;ol>
-&lt;li>Check &lt;code>placementStatuses&lt;/code>: In the &lt;code>ClusterResourcePlacement&lt;/code> status section, inspect the &lt;code>placementStatuses&lt;/code> to identify which clusters have the &lt;code>ResourceApplied&lt;/code> condition set to &lt;code>false&lt;/code> and note down their &lt;code>clusterName&lt;/code>.&lt;/li>
-&lt;li>Locate the &lt;code>Work&lt;/code> Object in Hub Cluster: Use the identified &lt;code>clusterName&lt;/code> to locate the &lt;code>Work&lt;/code> object associated with the member cluster. Please refer to this &lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacement/#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement">section&lt;/a> to learn how to get the correct &lt;code>Work&lt;/code> resource.&lt;/li>
-&lt;li>Check &lt;code>Work&lt;/code> object status: Inspect the status of the &lt;code>Work&lt;/code> object to understand the specific issues preventing successful resource application.&lt;/li>
+&lt;li>&lt;strong>Check &lt;code>placementStatuses&lt;/code>&lt;/strong>: In the placement status section, inspect the &lt;code>placementStatuses&lt;/code> to identify which clusters have the &lt;code>Applied&lt;/code> condition set to &lt;code>false&lt;/code> and note down their &lt;code>clusterName&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Locate the &lt;code>Work&lt;/code> Object in Hub Cluster&lt;/strong>: Use the identified &lt;code>clusterName&lt;/code> to locate the &lt;code>Work&lt;/code> object associated with the member cluster.
+&lt;ul>
+&lt;li>For ClusterResourcePlacement, refer to &lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacement/#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement">this section&lt;/a>&lt;/li>
+&lt;li>For ResourcePlacement, refer to &lt;a href="https://kubefleet.dev/docs/troubleshooting/resourceplacement/#how-can-i-find-the-correct-work-resource-thats-associated-with-resourceplacement">this section&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Check &lt;code>Work&lt;/code> object status&lt;/strong>: Inspect the status of the &lt;code>Work&lt;/code> object to understand the specific issues preventing successful resource application.&lt;/li>
 &lt;/ol>
-&lt;h2 id="case-study">Case Study&lt;/h2>
-&lt;p>In the following example, &lt;code>ClusterResourcePlacement&lt;/code> is trying to propagate a namespace that contains a deployment to two member clusters. However, the namespace already exists on one member cluster, specifically &lt;code>kind-cluster-1&lt;/code>.&lt;/p></description></item><item><title>CRP Availability Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementavailable/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementavailable/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementAvailable&lt;/code> condition is &lt;code>false&lt;/code> when some of the resources are not available yet. We will place some of the detailed failure in the &lt;code>FailedResourcePlacement&lt;/code> array.&lt;/p>
+&lt;h2 id="case-study-clusterresourceplacement">Case Study: ClusterResourcePlacement&lt;/h2>
+&lt;p>In the following example, a &lt;code>ClusterResourcePlacement&lt;/code> is trying to propagate a namespace that contains a deployment to two member clusters. However, the namespace already exists on one member cluster, specifically &lt;code>kind-cluster-1&lt;/code>.&lt;/p></description></item><item><title>Availability Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementavailable/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementavailable/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementAvailable&lt;/code> (for ClusterResourcePlacement) or &lt;code>ResourcePlacementAvailable&lt;/code> (for ResourcePlacement) condition is &lt;code>false&lt;/code> when some of the resources are not available yet. Detailed failures are placed in the &lt;code>failedPlacements&lt;/code> section of the placement status.&lt;/p>
 &lt;blockquote>
 &lt;p>Note: To get more information about why resources are unavailable check &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier">work applier&lt;/a> logs.&lt;/p>&lt;/blockquote>
 &lt;h2 id="common-scenarios">Common scenarios&lt;/h2>
@@ -83,9 +88,11 @@ However, the &lt;code>ClusterResourceOverride&lt;/code> is created with an inval
 &lt;ul>
 &lt;li>The member cluster doesn&amp;rsquo;t have enough resource availability.&lt;/li>
 &lt;li>The deployment contains an invalid image name.&lt;/li>
+&lt;li>Required resources (such as persistent volumes, config maps, or secrets) are missing.&lt;/li>
+&lt;li>Resource quotas or limit ranges are preventing the resource from becoming available.&lt;/li>
 &lt;/ul>
-&lt;h2 id="case-study">Case Study&lt;/h2>
-&lt;p>The example output below demonstrates a scenario where the CRP is unable to propagate a deployment to a member cluster due to the deployment having a bad image name.&lt;/p></description></item><item><title>CRP Drift Detection and Configuration Difference Check Unexpected Result TSG</title><link>https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/</guid><description>&lt;p>This document helps you troubleshoot unexpected drift and configuration difference
+&lt;h2 id="case-study-clusterresourceplacement">Case Study: ClusterResourcePlacement&lt;/h2>
+&lt;p>The example output below demonstrates a scenario where a ClusterResourcePlacement is unable to propagate a deployment to a member cluster due to the deployment having a bad image name.&lt;/p></description></item><item><title>CRP Drift Detection and Configuration Difference Check Unexpected Result TSG</title><link>https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/</guid><description>&lt;p>This document helps you troubleshoot unexpected drift and configuration difference
 detection results when using the KubeFleet CRP API.&lt;/p>
 &lt;blockquote>
 &lt;p>Note&lt;/p>
@@ -99,7 +106,7 @@ instead.&lt;/p>&lt;/blockquote>
 results. If you have encountered drift and configuration difference detection
 failures (e.g., no detection results at all with the &lt;code>ClusterResourcePlacementApplied&lt;/code>
 condition being set to &lt;code>False&lt;/code> with a detection related error), see the
-&lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementapplied/">CRP Apply Op Failure TSG&lt;/a> instead.&lt;/p></description></item><item><title>CRP Diff Reporting Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</guid><description>&lt;p>This document helps you troubleshoot diff reporting failures when using the KubeFleet CRP API,
+&lt;a href="https://kubefleet.dev/docs/troubleshooting/placementapplied/">Work-Application Failure TSG&lt;/a> instead.&lt;/p></description></item><item><title>CRP Diff Reporting Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</guid><description>&lt;p>This document helps you troubleshoot diff reporting failures when using the KubeFleet CRP API,
 specifically when you find that the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> status condition has been
 set to &lt;code>False&lt;/code> in the CRP status.&lt;/p>
 &lt;blockquote>
