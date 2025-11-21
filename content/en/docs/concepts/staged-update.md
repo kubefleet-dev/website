@@ -45,9 +45,9 @@ This dual approach enables fleet administrators maintain oversight of infrastruc
 
 Kubefleet provides staged update capabilities at two scopes to serve different organizational needs:
 
-**Cluster-Scoped**: `ClusterStagedUpdateStrategy` and `ClusterStagedUpdateRun` for fleet administrators managing infrastructure-level changes across clusters.
+**Cluster-Scoped**: `ClusterStagedUpdateStrategy`, `ClusterStagedUpdateRun`, and `ClusterApprovalRequest` for fleet administrators managing infrastructure-level changes across clusters.
 
-**Namespace-Scoped**: `StagedUpdateStrategy` and `StagedUpdateRun` for application teams managing rollouts within their specific namespaces.
+**Namespace-Scoped**: `StagedUpdateStrategy`, `StagedUpdateRun`, and `ApprovalRequest` for application teams managing rollouts within their specific namespaces.
 
 Both systems follow the same pattern:
 1. **Strategy** resources define reusable orchestration patterns with stages, ordering, and approval gates
@@ -59,7 +59,7 @@ Both systems follow the same pattern:
 | Aspect | Fleet Administrators (Cluster-Scoped) | Application Teams (Namespace-Scoped) |
 |--------|---------------------------------------|-------------------------------------|
 | **Scope** | Entire clusters and infrastructure | Individual applications within namespaces |
-| **Resources** | `ClusterStagedUpdateStrategy`, `ClusterStagedUpdateRun` | `StagedUpdateStrategy`, `StagedUpdateRun` |
+| **Resources** | `ClusterStagedUpdateStrategy`, `ClusterStagedUpdateRun`, `ClusterApprovalRequest` | `StagedUpdateStrategy`, `StagedUpdateRun`, `ApprovalRequest` |
 | **Target** | `ClusterResourcePlacement` | `ResourcePlacement` (namespace-scoped) |
 | **Use Cases** | Fleet-wide updates, infrastructure changes | Application rollouts, service updates |
 | **Autonomy** | Requires cluster-admin permissions | Operates within namespace boundaries |
@@ -182,16 +182,20 @@ Each stage includes:
 
 ### After-Stage Tasks
 
-Two task types control stage progression:
+Two task types to control stage progression:
 - **TimedWait**: Waits for a specified duration before proceeding
 - **Approval**: Requires manual approval via an approval request object
 
 For approval tasks, the system automatically creates an approval request object named `<updateRun-name>-<stage-name>`. The approval request type depends on the scope:
 
-- **Cluster-scoped**: Creates `ClusterApprovalRequest` (short name: `careq`)
-- **Namespace-scoped**: Creates `ApprovalRequest` (short name: `areq`) within the same namespace
+- **Cluster-scoped**: Creates `ClusterApprovalRequest` (short name: `careq`) - a cluster-scoped resource containing a spec with `parentStageRollout` (the UpdateRun name) and `targetStage` (the stage name). The spec is immutable after creation.
+- **Namespace-scoped**: Creates `ApprovalRequest` (short name: `areq`) within the same namespace - a namespace-scoped resource with the same spec structure as `ClusterApprovalRequest`.
 
-Approve manually using kubectl patch:
+Both approval request types use status conditions to track approval state:
+- `Approved` condition (status `True`): indicates the request was approved by a user
+- `ApprovalAccepted` condition (status `True`): indicates the approval was processed and accepted by the system
+
+Approve manually by setting the `Approved` condition to `True` using kubectl patch:
 
 ```bash
 # For cluster-scoped approvals
@@ -277,14 +281,39 @@ kubectl describe sur app-rollout-v1-2-3 -n my-app-namespace
 
 ## UpdateRun and Placement Relationship
 
-UpdateRuns serve as triggers for their respective placement resources:
+UpdateRuns and Placements work together to orchestrate rollouts, with each serving a distinct purpose:
+
+### The Trigger Mechanism
+
+UpdateRuns serve as the trigger that initiates rollouts for their respective placement resources:
 
 - **Cluster-scoped**: `ClusterStagedUpdateRun` triggers `ClusterResourcePlacement`
 - **Namespace-scoped**: `StagedUpdateRun` triggers `ResourcePlacement`
 
-The placement resource remains in a scheduled state until triggered by an UpdateRun. During rollout:
-- **UpdateRun status** shows stage progression and cluster update completion
-- **Placement status** provides detailed rollout information including resource creation success/failure and error messages
+### Before an UpdateRun is Created
+
+When you create a Placement with `strategy.type: External`, the system schedules which clusters should receive the resources, but **does not deploy anything yet**. The Placement remains in a scheduled but not available state, waiting for an UpdateRun to trigger the actual rollout.
+
+### After an UpdateRun is Created
+
+Once you create an UpdateRun, the system begins executing the staged rollout. Both resources provide status information, but at different levels of detail:
+
+**UpdateRun Status** - High-level rollout orchestration:
+- Which stage is currently executing
+- Which clusters have started/completed updates
+- Whether after-stage tasks (approvals, waits) are complete
+- Overall rollout progression through stages
+
+**Placement Status** - Detailed deployment information for each cluster:
+- Success or failure of individual resource creation (e.g., did the Deployment create successfully?)
+- Whether overrides were applied correctly
+- Specific error messages if resources failed to deploy
+- Detailed conditions for troubleshooting
+
+This separation of concerns allows you to:
+1. Monitor high-level rollout progress and stage execution through the UpdateRun
+2. Drill down into specific deployment issues on individual clusters through the Placement
+3. Understand whether a problem is with the staged rollout orchestration or with resource deployment itself
 
 ## Concurrent UpdateRuns
 
