@@ -251,12 +251,6 @@ UpdateRuns execute in two phases:
 - `resourceSnapshotIndex`: Resource version to deploy
 - `stagedRolloutStrategyName`: Strategy to execute
 
-**State Management**: UpdateRuns have lifecycle states with restricted transitions:
-- `NotStarted` (default) → `Started` or `Abandoned`
-- `Started` → `Stopped` or `Abandoned`
-- `Stopped` → `Started` or `Abandoned`
-- `Abandoned` (terminal state, cannot transition to other states)
-
 **Strategy Limits**: Each strategy can define a maximum of 31 stages to ensure reasonable execution times.
 
 ## Monitor UpdateRun Status
