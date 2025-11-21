@@ -1,26 +1,28 @@
 ---
-title: CRP Work-Application Failure TSG
-description: Troubleshooting guide for CRP status "ClusterResourcePlacementApplied" condition set to false
+title: Work-Application Failure TSG
+description: Troubleshooting guide for "Applied" condition set to false
 weight: 6
 ---
 
-The `ClusterResourcePlacementApplied` condition is set to `false` when the deployment fails.
+The `ClusterResourcePlacementApplied` (for ClusterResourcePlacement) or `ResourcePlacementApplied` (for ResourcePlacement) condition is set to `false` when the deployment fails to apply.
 > Note: To get more information about why the resources are not applied, you can check the [work applier](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier) logs.
 
 ## Common scenarios
 Instances where this condition may arise:
 - The resource already exists on the cluster and isn't managed by the fleet controller.
-- Another `ClusterResourcePlacement` deployment is already managing the resource for the selected cluster by using a different apply strategy.
-- The `ClusterResourcePlacement` deployment doesn't apply the manifest because of syntax errors or invalid resource configurations. This might also occur if a resource is propagated through an envelope object.
+- Another placement (ClusterResourcePlacement or ResourcePlacement) is already managing the resource for the selected cluster by using a different apply strategy.
+- The placement doesn't apply the manifest because of syntax errors or invalid resource configurations. This might also occur if a resource is propagated through an envelope object.
 
 ## Investigation steps
 
-1. Check `placementStatuses`: In the `ClusterResourcePlacement` status section, inspect the `placementStatuses` to identify which clusters have the `ResourceApplied` condition set to `false` and note down their `clusterName`.
-2. Locate the `Work` Object in Hub Cluster: Use the identified `clusterName` to locate the `Work` object associated with the member cluster. Please refer to this [section](ClusterResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement) to learn how to get the correct `Work` resource.
-3. Check `Work` object status: Inspect the status of the `Work` object to understand the specific issues preventing successful resource application.
+1. **Check `placementStatuses`**: In the placement status section, inspect the `placementStatuses` to identify which clusters have the `Applied` condition set to `false` and note down their `clusterName`.
+2. **Locate the `Work` Object in Hub Cluster**: Use the identified `clusterName` to locate the `Work` object associated with the member cluster. 
+   - For ClusterResourcePlacement, refer to [this section](ClusterResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement)
+   - For ResourcePlacement, refer to [this section](ResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-resourceplacement)
+3. **Check `Work` object status**: Inspect the status of the `Work` object to understand the specific issues preventing successful resource application.
 
-## Case Study
-In the following example, `ClusterResourcePlacement` is trying to propagate a namespace that contains a deployment to two member clusters. However, the namespace already exists on one member cluster, specifically `kind-cluster-1`.
+## Case Study: ClusterResourcePlacement
+In the following example, a `ClusterResourcePlacement` is trying to propagate a namespace that contains a deployment to two member clusters. However, the namespace already exists on one member cluster, specifically `kind-cluster-1`.
 
 ### ClusterResourcePlacement spec
 ```
@@ -173,13 +175,12 @@ status:
     version: v1
 ```
 
-
-In the `ClusterResourcePlacement` status, within the `failedPlacements` section for `kind-cluster-1`, we get a clear message
+In the ClusterResourcePlacement status, within the `failedPlacements` section for `kind-cluster-1`, we get a clear message
 as to why the resource failed to apply on the member cluster. In the preceding `conditions` section,
 the `Applied` condition for `kind-cluster-1` is flagged as false and shows the `NotAllWorkHaveBeenApplied` reason.
 This indicates that the Work object intended for the member cluster `kind-cluster-1` has not been applied.
 
-For more information, see this [section](#how-and-where-to-find-the-correct-work-resource).
+To inspect the Work object for more details, follow the steps in the [Investigation steps](#investigation-steps) section above.
 
 ### Work status of kind-cluster-1
 ```
@@ -245,3 +246,14 @@ From looking at the `Work` status, specifically the `manifestConditions` section
 
 ### Resolution
 In this situation, a potential solution is to set the `AllowCoOwnership` to `true` in the ApplyStrategy policy. However, it's important to notice that this decision should be made by the user because the resources might not be shared.
+
+## General Troubleshooting Notes
+
+The troubleshooting process and Work object inspection are identical for both ClusterResourcePlacement and ResourcePlacement:
+- Both use the same underlying Work API to apply resources to member clusters
+- The Work object status and manifestConditions have the same structure regardless of whether they were created by a ClusterResourcePlacement or ResourcePlacement
+- The main difference is the scope: ClusterResourcePlacement is cluster-scoped and can select both cluster-scoped and namespace-scoped resources, while ResourcePlacement is namespace-scoped and can only select namespace-scoped resources within its own namespace
+
+For ResourcePlacement-specific considerations:
+- Ensure the target namespace exists on member clusters before the ResourcePlacement tries to apply resources to it
+- ResourcePlacement can only select resources within the same namespace where the ResourcePlacement object itself resides

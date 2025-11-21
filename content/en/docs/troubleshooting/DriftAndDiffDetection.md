@@ -20,7 +20,7 @@ detection results when using the KubeFleet CRP API.
 > results. If you have encountered drift and configuration difference detection
 > failures (e.g., no detection results at all with the `ClusterResourcePlacementApplied`
 > condition being set to `False` with a detection related error), see the 
-> [CRP Apply Op Failure TSG](ClusterResourcePlacementApplied) instead.
+> [Work-Application Failure TSG](PlacementApplied) instead.
 
 ## Common scenarios
 
