@@ -1,10 +1,10 @@
 ---
-title: CRP Schedule Failure TSG
-description: Troubleshooting guide for CRP status "ClusterResourcePlacementScheduled" condition set to false
+title: Scheduling Failure TSG
+description: Troubleshooting guide for "Scheduled" condition set to false (ClusterResourcePlacementScheduled / ResourcePlacementScheduled)
 weight: 2
 ---
 
-The `ClusterResourcePlacementScheduled` condition is set to `false` when the scheduler cannot find all the clusters needed as specified by the scheduling policy.
+The `ClusterResourcePlacementScheduled` (for ClusterResourcePlacement) or `ResourcePlacementScheduled` (for ResourcePlacement) condition is set to `false` when the scheduler cannot find all the clusters needed as specified by the scheduling policy.
 > Note: To get more information about why the scheduling fails, you can check the [scheduler](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/scheduler/scheduler.go) logs.
 
 ## Common scenarios
@@ -13,13 +13,13 @@ Instances where this condition may arise:
 
 - When the placement policy is set to `PickFixed`, but the specified cluster names do not match any joined member cluster name in the fleet, or the specified cluster is no longer connected to the fleet.
 - When the placement policy is set to `PickN`, and N clusters are specified, but there are fewer than N clusters that have joined the fleet or satisfy the placement policy.
-- When the `ClusterResourcePlacement` resource selector selects a reserved namespace.
+- When the placement resource selector selects a reserved namespace.
 
->Note: When the placement policy is set to `PickAll`, the `ClusterResourcePlacementScheduled` condition is always set to `true`.
+> Note: When the placement policy is set to `PickAll`, the `Scheduled` condition is always set to `True`.
 
 ## Case Study
 
-In the following example, the `ClusterResourcePlacement` with a `PickN` placement policy is trying to propagate resources to two clusters labeled `env:prod`. 
+In the following example, a `ClusterResourcePlacement` with a `PickN` placement policy is trying to propagate resources to two clusters labeled `env:prod`. (The same scheduling logic applies to `ResourcePlacement`.)
 The two clusters, named `kind-cluster-1` and `kind-cluster-2`, have joined the fleet. However, only one member cluster, `kind-cluster-1`, has the label `env:prod`.
 
 ### CRP spec:
@@ -141,6 +141,7 @@ The `ClusterResourcePlacementScheduled` condition is set to `false`, the goal is
 
 We can also take a look at the `ClusterSchedulingPolicySnapshot` status to figure out why the scheduler could not schedule the resource for the placement policy specified.
 To learn how to get the latest `ClusterSchedulingPolicySnapshot`, see [How can I find and verify the latest ClusterSchedulingPolicySnapshot for a ClusterResourcePlacement deployment?](ClusterResourcePlacement#how-can-i-find-and-verify-the-latest-clusterschedulingpolicysnapshot-for-a-clusterresourceplacement) to learn how to get the latest `ClusterSchedulingPolicySnapshot`.
+- For ResourcePlacement: use `SchedulingPolicySnapshot`.
 
 The corresponding `ClusterSchedulingPolicySnapshot` spec and status gives us even more information on why scheduling failed.
 
@@ -204,3 +205,6 @@ status:
 
 ### Resolution:
 The solution here is to add the `env:prod` label to the member cluster resource for `kind-cluster-2` as well, so that the scheduler can select the cluster to propagate resources.
+
+## General Notes
+The scheduling failure investigation flow is identical for ClusterResourcePlacement and ResourcePlacement; only the snapshot object kind differs. Replace CRP-specific object kinds with their RP equivalents when working with namespace-scoped placements.

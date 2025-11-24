@@ -1,10 +1,10 @@
 ---
-title: CRP Rollout Failure TSG
-description: Troubleshooting guide for CRP status "ClusterResourcePlacementRolloutStarted" condition set to false
+title: Rollout Failure TSG
+description: Troubleshooting guide for "RolloutStarted" condition set to false (ClusterResourcePlacementRolloutStarted / ResourcePlacementRolloutStarted)
 weight: 3
 ---
 
-When using the `ClusterResourcePlacement` API object in Azure Kubernetes Fleet Manager to propagate resources, the selected resources aren't rolled out in all scheduled clusters and the `ClusterResourcePlacementRolloutStarted` condition status shows as `False`.
+When using placement APIs (ClusterResourcePlacement or ResourcePlacement) to propagate resources, selected resources may not begin rolling out and the `RolloutStarted` condition shows `False`.
 
 *This TSG only applies to the `RollingUpdate` rollout strategy, which is the default strategy if you don't specify in the `ClusterResourcePlacement`.*
 *To troubleshoot the update run strategy as you specify `External` in the `ClusterResourcePlacement`, please refer to the [Staged Update Run Troubleshooting Guide](ClusterStagedUpdateRun).*
@@ -13,12 +13,12 @@ When using the `ClusterResourcePlacement` API object in Azure Kubernetes Fleet M
 
 ## Common scenarios
 Instances where this condition may arise:
-- The Cluster Resource Placement rollout strategy is blocked because the `RollingUpdate` configuration is too strict.
+- The rollout strategy is blocked because the `RollingUpdate` configuration is too strict.
 
 ## Troubleshooting Steps
 
-1. In the `ClusterResourcePlacement` status section, check the `placementStatuses` to identify clusters with the `RolloutStarted` status set to `False`.
-2. Locate the corresponding `ClusterResourceBinding` for the identified cluster. For more information, see [How can I find the latest ClusterResourceBinding resource?](README.md#how-can-i-find-the-latest-clusterresourcebinding-resource). 
+1. In the `ClusterResourcePlacement` or `ResourcePlacement` status section, check the `placementStatuses` to identify clusters with the `RolloutStarted` status set to `False`.
+2. Locate the corresponding `ClusterResourceBinding` or `ResourceBinding` for the identified cluster. For more information, see [How can I find the latest ClusterResourceBinding resource?](ClusterResourcePlacement#how-can-i-find-the-latest-clusterresourcebinding-resource) or [How can I find the latest ResourceBinding resource?](ResourcePlacement#how-can-i-find-the-latest-resourcebinding-resource). 
 This resource should indicate the status of the `Work` whether it was created or updated.
 3. Verify the values of `maxUnavailable` and `maxSurge` to ensure they align with your expectations.
 
@@ -365,3 +365,6 @@ However, `maxUnavailable` was set to `1` due to the lack of member clusters, whi
 ### Resolution
 In this situation, to address this issue, consider manually setting `maxUnavailable` to a value greater than `1` to relax the `RollingUpdate` configuration. 
 Alternatively, you can join a third member cluster.
+
+### General Notes
+The rollout failure investigation flow is identical for ClusterResourcePlacement and ResourcePlacement; only the snapshot object kind differs. Replace CRP-specific object kinds with their RP equivalents when working with namespace-scoped placements.

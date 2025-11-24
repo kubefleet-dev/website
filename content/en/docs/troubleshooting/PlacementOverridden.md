@@ -1,10 +1,10 @@
 ---
-title: CRP Override Failure TSG
-description: Troubleshooting guide for CRP status "ClusterResourcePlacementOverridden" condition set to false
+title: Override Failure TSG
+description: Troubleshooting guide for "Overridden" condition set to false (ClusterResourcePlacementOverridden / ResourcePlacementOverridden)
 weight: 4
 ---
 
-The status of the `ClusterResourcePlacementOverridden` condition is set to `false` when there is an Override API related issue.
+The `ClusterResourcePlacementOverridden` (CRP) or `ResourcePlacementOverridden` (RP) condition is `False` when an override operation fails.
 > Note: To get more information, look into the logs for the overrider controller (includes 
 > controller for [ClusterResourceOverride](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/overrider/clusterresource_controller.go) and 
 > [ResourceOverride](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/overrider/resource_controller.go)).
@@ -159,3 +159,6 @@ jsonPatchOverrides:
       newlabel: new-value
 ```
 This will successfully add the new label `newlabel` with the value `new-value` to the `ClusterRole` `secret-reader`, as we are creating the `labels` field and adding a new value `newlabel: new-value` to it.
+
+## General Notes
+For ResourcePlacement the override flow is identical; use `ResourceOverride` instead of `ClusterResourceOverride` and expect `ResourcePlacementOverridden` in conditions.

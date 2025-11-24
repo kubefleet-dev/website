@@ -24,15 +24,15 @@ kubectl describe clusterresourceplacement <name>
 ```
 
 The complete progression of `ClusterResourcePlacement` is as follows:
-1. `ClusterResourcePlacementScheduled`: Indicates a resource has been scheduled for placement.. 
-    - If this condition is false, refer to [CRP Schedule Failure TSG](ClusterResourcePlacementScheduled). 
+1. `ClusterResourcePlacementScheduled`: Indicates a resource has been scheduled for placement. 
+   - If this condition is false, refer to [Scheduling Failure TSG](PlacementScheduled). 
 2. `ClusterResourcePlacementRolloutStarted`: Indicates the rollout process has begun.
-   - If this condition is false refer to [CRP Rollout Failure TSG](ClusterResourcePlacementRolloutStarted)
+   - If this condition is false refer to [Rollout Failure TSG](PlacementRolloutStarted)
    - If you are triggering a rollout with a staged update run, refer to [ClusterStagedUpdateRun TSG](ClusterStagedUpdateRun).
 3. `ClusterResourcePlacementOverridden`: Indicates the resource has been overridden.
-   - If this condition is false, refer to [CRP Override Failure TSG](ClusterResourcePlacementOverridden)
+   - If this condition is false, refer to [Override Failure TSG](PlacementOverridden)
 4. `ClusterResourcePlacementWorkSynchronized`: Indicates the work objects have been synchronized.
-   - If this condition is false, refer to [CRP Work-Synchronization Failure TSG](ClusterResourcePlacementWorkSynchronized)
+   - If this condition is false, refer to [Work Synchronization Failure TSG](PlacementWorkSynchronized)
 5. `ClusterResourcePlacementApplied`: Indicates the resource has been applied. This condition will only be populated if the
 apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
    - If this condition is false, refer to [Work-Application Failure TSG](PlacementApplied)
@@ -41,7 +41,7 @@ apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideA
    - If this condition is false, refer to [Availability Failure TSG](PlacementAvailable)
 7. `ClusterResourcePlacementDiffreported`: Indicates whether diff reporting has completed on all resources. This condition
 will only be populated if the apply strategy in use is of the type `ReportDiff`.
-   - If this condition is false, refer to the [CRP Diff Reporting Failure TSG](ClusterResourcePlacementDiffReported) for more information.
+   - If this condition is false, refer to the [Diff Reporting Failure TSG](PlacementDiffReported) for more information.
 
 ## How can I debug if some clusters are not selected as expected?
 
@@ -51,7 +51,7 @@ Check the status of the `ClusterSchedulingPolicySnapshot` to determine which clu
 
 Please check the following cases,
 - Check whether the `ClusterResourcePlacementRolloutStarted` condition in `ClusterResourcePlacement` status is set to **true** or **false**.
-- If `false`, see [CRP Schedule Failure TSG](ClusterResourcePlacementScheduled).
+- If `false`, see [Scheduling Failure TSG](PlacementScheduled).
 - If `true`,
   - Check to see if `ClusterResourcePlacementApplied` condition is set to **unknown**, **false** or **true**.
   - If `unknown`, wait for the process to finish, as the resources are still being applied to the member cluster. If the state remains unknown for a while, create a [issue](https://github.com/kubefleet-dev/kubefleet/issues), as this is an unusual behavior.
