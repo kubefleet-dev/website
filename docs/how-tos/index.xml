@@ -80,32 +80,11 @@ which are often brought by temporary fixes, inadvertent changes, and failed auto
 easily evaluate how things will change in the system without the risk of incurring unexpected
 changes. In this mode, Fleet will check for configuration differences between the hub cluster
 resource templates and their corresponding resources on the member clusters, but will not
-perform any apply op. This is most helpful in cases of experimentation and drift/diff analysis.&lt;/p></description></item><item><title>How to Roll Out and Roll Back Changes in Stage</title><link>https://kubefleet.dev/docs/how-tos/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/staged-update/</guid><description>&lt;p>This how-to guide demonstrates how to use &lt;code>ClusterStagedUpdateRun&lt;/code> to rollout resources to member clusters in a staged manner and rollback resources to a previous version.&lt;/p>
-&lt;h2 id="prerequisite">Prerequisite&lt;/h2>
-&lt;p>&lt;code>ClusterStagedUpdateRun&lt;/code> CR is used to deploy resources from hub cluster to member clusters with &lt;code>ClusterResourcePlacement&lt;/code> (or CRP) in a stage by stage manner. This tutorial is based on a demo fleet environment with 3 member clusters:&lt;/p>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>cluster name&lt;/th>
- &lt;th>labels&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>member1&lt;/td>
- &lt;td>environment=canary, order=2&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>member2&lt;/td>
- &lt;td>environment=staging&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>member3&lt;/td>
- &lt;td>environment=canary, order=1&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;p>To demonstrate the rollout and rollback behavior, we create a demo namespace and a sample configmap with very simple data on the hub cluster. The namespace with configmap will be deployed to the member clusters.&lt;/p></description></item><item><title>Evicting Resources and Setting up Disruption Budgets</title><link>https://kubefleet.dev/docs/how-tos/eviction-disruption-budget/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/eviction-disruption-budget/</guid><description>&lt;p>This how-to guide discusses how to create &lt;code>ClusterResourcePlacementEviction&lt;/code> objects and &lt;code>ClusterResourcePlacementDisruptionBudget&lt;/code> objects to evict resources from member clusters and protect resources on member clusters from voluntary disruption, respectively.&lt;/p>
+perform any apply op. This is most helpful in cases of experimentation and drift/diff analysis.&lt;/p></description></item><item><title>How to Roll Out and Roll Back Changes in Stage</title><link>https://kubefleet.dev/docs/how-tos/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/staged-update/</guid><description>&lt;p>This how-to guide demonstrates how to use staged updates to rollout resources to member clusters in a staged manner and rollback resources to a previous version. We&amp;rsquo;ll cover both cluster-scoped and namespace-scoped approaches to serve different organizational needs.&lt;/p>
+&lt;h2 id="overview-of-staged-update-approaches">Overview of Staged Update Approaches&lt;/h2>
+&lt;p>Kubefleet provides two staged update approaches:&lt;/p>
+&lt;p>&lt;strong>Cluster-Scoped&lt;/strong>: Use &lt;code>ClusterStagedUpdateRun&lt;/code> with &lt;code>ClusterResourcePlacement&lt;/code> (CRP) for fleet administrators managing infrastructure-level changes.&lt;/p>
+&lt;p>&lt;strong>Namespace-Scoped&lt;/strong>: Use &lt;code>StagedUpdateRun&lt;/code> with &lt;code>ResourcePlacement&lt;/code> for application teams managing rollouts within their specific namespaces.&lt;/p></description></item><item><title>Evicting Resources and Setting up Disruption Budgets</title><link>https://kubefleet.dev/docs/how-tos/eviction-disruption-budget/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/eviction-disruption-budget/</guid><description>&lt;p>This how-to guide discusses how to create &lt;code>ClusterResourcePlacementEviction&lt;/code> objects and &lt;code>ClusterResourcePlacementDisruptionBudget&lt;/code> objects to evict resources from member clusters and protect resources on member clusters from voluntary disruption, respectively.&lt;/p>
 &lt;h2 id="evicting-resources-from-member-clusters-using-clusterresourceplacementeviction">Evicting Resources from Member Clusters using ClusterResourcePlacementEviction&lt;/h2>
 &lt;p>The &lt;code>ClusterResourcePlacementEviction&lt;/code> object is used to remove resources from a member cluster once the resources have already been propagated from the hub cluster.&lt;/p>
 &lt;p>To successfully evict resources from a cluster, the user needs to specify:&lt;/p></description></item><item><title>Scheduling AI Jobs with Kueue and Fleet</title><link>https://kubefleet.dev/docs/how-tos/ai-job-scheduling-kueue-integration/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/ai-job-scheduling-kueue-integration/</guid><description>&lt;h1 id="scheduling-ai-jobs-with-kueue-and-placement">Scheduling AI Jobs with Kueue and Placement&lt;/h1>

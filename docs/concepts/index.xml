@@ -93,12 +93,13 @@ to the target cluster by the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/p>
 clusters while &lt;code>ResourceOverride&lt;/code> will apply to resources in the same namespace as the namespace-wide policy.&lt;/p>
 &lt;blockquote>
 &lt;p>&lt;strong>Note:&lt;/strong> If a namespace is selected by the &lt;code>ClusterResourceOverride&lt;/code>, ALL the resources under the namespace are selected
-automatically.&lt;/p></description></item><item><title>Staged Update</title><link>https://kubefleet.dev/docs/concepts/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/staged-update/</guid><description>&lt;p>While users rely on the &lt;code>RollingUpdate&lt;/code> rollout strategy to safely roll out their workloads,
-there is also a requirement for a staged rollout mechanism at the cluster level to enable more controlled and systematic continuous delivery (CD) across the fleet.
-Introducing a staged update run feature would address this need by enabling gradual deployments, reducing risk, and ensuring greater reliability and consistency in workload updates across clusters.&lt;/p>
-&lt;p>&lt;img src="https://kubefleet.dev/images/en/docs/concepts/staged-update/updaterun.jpg" alt="">&lt;/p>
-&lt;h2 id="overview">Overview&lt;/h2>
-&lt;p>We introduce two new Custom Resources, &lt;code>ClusterStagedUpdateStrategy&lt;/code> and &lt;code>ClusterStagedUpdateRun&lt;/code>.&lt;/p></description></item><item><title>Eviction and Placement Disruption Budget</title><link>https://kubefleet.dev/docs/concepts/eviction-pdb/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/eviction-pdb/</guid><description>&lt;p>This document explains the concept of &lt;code>Eviction&lt;/code> and &lt;code>Placement Disruption Budget&lt;/code> in the context of the fleet.&lt;/p>
+automatically.&lt;/p></description></item><item><title>Staged Update</title><link>https://kubefleet.dev/docs/concepts/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/staged-update/</guid><description>&lt;p>While users can rely on the &lt;code>RollingUpdate&lt;/code> rollout strategy in the placement to safely roll out their workloads,
+many organizations require more sophisticated deployment control mechanisms for their fleet operations.
+Standard rolling updates, while effective for individual rollout, lack the granular control and coordination capabilities needed for complex, multi-cluster environments.&lt;/p>
+&lt;h2 id="why-staged-rollouts">Why Staged Rollouts?&lt;/h2>
+&lt;p>Staged rollouts address critical deployment challenges that organizations face when managing workloads across distributed environments:&lt;/p>
+&lt;h3 id="strategic-grouping-and-ordering">Strategic Grouping and Ordering&lt;/h3>
+&lt;p>Traditional rollout strategies treat all target clusters uniformly, but real-world deployments often require strategic sequencing. Staged rollouts enable you to:&lt;/p></description></item><item><title>Eviction and Placement Disruption Budget</title><link>https://kubefleet.dev/docs/concepts/eviction-pdb/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/eviction-pdb/</guid><description>&lt;p>This document explains the concept of &lt;code>Eviction&lt;/code> and &lt;code>Placement Disruption Budget&lt;/code> in the context of the fleet.&lt;/p>
 &lt;h2 id="overview">Overview&lt;/h2>
 &lt;p>&lt;code>Eviction&lt;/code> provides a way to force remove resources from a target cluster once the resources have already been propagated from the hub cluster by a &lt;code>Placement&lt;/code> object.
 &lt;code>Eviction&lt;/code> is considered as an voluntary disruption triggered by the user. &lt;code>Eviction&lt;/code> alone doesn&amp;rsquo;t guarantee that resources won&amp;rsquo;t be propagated to target cluster again by the scheduler.

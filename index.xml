@@ -198,7 +198,7 @@ while also scaling up the number of replicas, using Fleet.&lt;/p>
 &lt;p>&lt;strong>Important&lt;/strong>: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace.
 Before creating a ResourcePlacement:&lt;/p></description></item><item><title>CRP Rollout Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementrolloutstarted/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementrolloutstarted/</guid><description>&lt;p>When using the &lt;code>ClusterResourcePlacement&lt;/code> API object in Azure Kubernetes Fleet Manager to propagate resources, the selected resources aren&amp;rsquo;t rolled out in all scheduled clusters and the &lt;code>ClusterResourcePlacementRolloutStarted&lt;/code> condition status shows as &lt;code>False&lt;/code>.&lt;/p>
 &lt;p>&lt;em>This TSG only applies to the &lt;code>RollingUpdate&lt;/code> rollout strategy, which is the default strategy if you don&amp;rsquo;t specify in the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/em>
-&lt;em>To troubleshoot the update run strategy as you specify &lt;code>External&lt;/code> in the &lt;code>ClusterResourcePlacement&lt;/code>, please refer to the &lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterstagedupdaterun/">Staged Update Run Troubleshooting Guide&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>Getting started with Fleet using KinD clusters</title><link>https://kubefleet.dev/docs/getting-started/kind/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/getting-started/kind/</guid><description>&lt;p>In this tutorial, you will try Fleet out using
+&lt;em>To troubleshoot the update run strategy as you specify &lt;code>External&lt;/code> in the &lt;code>ClusterResourcePlacement&lt;/code>, please refer to the &lt;a href="ClusterStagedUpdateRun">Staged Update Run Troubleshooting Guide&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>Getting started with Fleet using KinD clusters</title><link>https://kubefleet.dev/docs/getting-started/kind/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/getting-started/kind/</guid><description>&lt;p>In this tutorial, you will try Fleet out using
 &lt;a href="https://kind.sigs.k8s.io/">KinD&lt;/a> clusters, which are Kubernetes clusters running on your own
 local machine via &lt;a href="https://docker.com">Docker&lt;/a> containers. This is the easiest way
 to get started with Fleet, which can help you understand how Fleet simiplify the day-to-day multi-cluster management experience with very little setup needed.&lt;/p>
@@ -519,10 +519,19 @@ won&amp;rsquo;t affect all the running instances all at once.&lt;/p></descriptio
 &lt;p>&lt;code>ResourceOverride&lt;/code> is a Fleet API that allows you to modify or override specific attributes of
 existing resources within your cluster. With ResourceOverride, you can define rules based on cluster
 labels or other criteria, specifying changes to be applied to resources such as Deployments, StatefulSets, ConfigMaps, or Secrets.
-These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters.&lt;/p></description></item><item><title>ClusterStagedUpdateRun TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterstagedupdaterun/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterstagedupdaterun/</guid><description>&lt;p>This guide provides troubleshooting steps for common issues related to Staged Update Run.&lt;/p>
+These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters.&lt;/p></description></item><item><title>Override</title><link>https://kubefleet.dev/docs/concepts/override/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/override/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>The &lt;code>ClusterResourceOverride&lt;/code> and &lt;code>ResourceOverride&lt;/code> provides a way to customize resource configurations before they are propagated
+to the target cluster by the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/p>
+&lt;h2 id="difference-between-clusterresourceoverride-and-resourceoverride">Difference Between &lt;code>ClusterResourceOverride&lt;/code> And &lt;code>ResourceOverride&lt;/code>&lt;/h2>
+&lt;p>&lt;code>ClusterResourceOverride&lt;/code> represents the cluster-wide policy that overrides the cluster scoped resources to one or more
+clusters while &lt;code>ResourceOverride&lt;/code> will apply to resources in the same namespace as the namespace-wide policy.&lt;/p>
 &lt;blockquote>
-&lt;p>Note: To get more information about why the scheduling fails, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/updaterun/controller.go">updateRun controller&lt;/a> logs.&lt;/p>&lt;/blockquote>
-&lt;h2 id="crp-status-without-staged-update-run">CRP status without Staged Update Run&lt;/h2>
+&lt;p>&lt;strong>Note:&lt;/strong> If a namespace is selected by the &lt;code>ClusterResourceOverride&lt;/code>, ALL the resources under the namespace are selected
+automatically.&lt;/p></description></item><item><title>Staged Update Run TSG</title><link>https://kubefleet.dev/docs/troubleshooting/stagedupdaterun/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/stagedupdaterun/</guid><description>&lt;p>This guide provides troubleshooting steps for common issues related to both cluster-scoped and namespace-scoped Staged Update Runs.&lt;/p>
+&lt;blockquote>
+&lt;p>Note: To get more information about failures, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/updaterun/controller.go">updateRun controller&lt;/a> logs.&lt;/p>&lt;/blockquote>
+&lt;h2 id="cluster-scoped-troubleshooting">Cluster-Scoped Troubleshooting&lt;/h2>
+&lt;h3 id="crp-status-without-staged-update-run">CRP status without Staged Update Run&lt;/h3>
 &lt;p>When a &lt;code>ClusterResourcePlacement&lt;/code> is created with &lt;code>spec.strategy.type&lt;/code> set to &lt;code>External&lt;/code>, the rollout does not start immediately.&lt;/p>
 &lt;p>A sample status of such &lt;code>ClusterResourcePlacement&lt;/code> is as follows:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl describe crp example-placement
@@ -574,15 +583,7 @@ These changes can include updates to container images, environment variables, re
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Selected Resources:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Events: &amp;lt;none&amp;gt;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>SchedulingPolicyFulfilled&lt;/code> condition indicates the CRP has been fully scheduled, while &lt;code>RolloutStartedUnknown&lt;/code> condition shows that the rollout has not started.&lt;/p></description></item><item><title>Override</title><link>https://kubefleet.dev/docs/concepts/override/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/override/</guid><description>&lt;h2 id="overview">Overview&lt;/h2>
-&lt;p>The &lt;code>ClusterResourceOverride&lt;/code> and &lt;code>ResourceOverride&lt;/code> provides a way to customize resource configurations before they are propagated
-to the target cluster by the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/p>
-&lt;h2 id="difference-between-clusterresourceoverride-and-resourceoverride">Difference Between &lt;code>ClusterResourceOverride&lt;/code> And &lt;code>ResourceOverride&lt;/code>&lt;/h2>
-&lt;p>&lt;code>ClusterResourceOverride&lt;/code> represents the cluster-wide policy that overrides the cluster scoped resources to one or more
-clusters while &lt;code>ResourceOverride&lt;/code> will apply to resources in the same namespace as the namespace-wide policy.&lt;/p>
-&lt;blockquote>
-&lt;p>&lt;strong>Note:&lt;/strong> If a namespace is selected by the &lt;code>ClusterResourceOverride&lt;/code>, ALL the resources under the namespace are selected
-automatically.&lt;/p></description></item><item><title>Using Envelope Objects to Place Resources</title><link>https://kubefleet.dev/docs/how-tos/envelope-object/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/envelope-object/</guid><description>&lt;h2 id="propagating-resources-with-envelope-objects">Propagating Resources with Envelope Objects&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>SchedulingPolicyFulfilled&lt;/code> condition indicates the CRP has been fully scheduled, while &lt;code>RolloutStartedUnknown&lt;/code> condition shows that the rollout has not started.&lt;/p></description></item><item><title>Using Envelope Objects to Place Resources</title><link>https://kubefleet.dev/docs/how-tos/envelope-object/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/envelope-object/</guid><description>&lt;h2 id="propagating-resources-with-envelope-objects">Propagating Resources with Envelope Objects&lt;/h2>
 &lt;p>This guide provides instructions on propagating a set of resources from the hub cluster to joined member clusters within an envelope object.&lt;/p>
 &lt;h2 id="why-use-envelope-objects">Why Use Envelope Objects?&lt;/h2>
 &lt;p>When propagating resources to member clusters using Fleet, it&amp;rsquo;s important to understand that the hub cluster itself is also a Kubernetes cluster. Without envelope objects, any resource you want to propagate would first be applied directly to the hub cluster, which can lead to some potential side effects:&lt;/p></description></item><item><title>ClusterResourcePlacementEviction TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</guid><description>&lt;p>This guide provides troubleshooting steps for issues related to placement eviction.&lt;/p>
@@ -609,37 +610,17 @@ which are often brought by temporary fixes, inadvertent changes, and failed auto
 easily evaluate how things will change in the system without the risk of incurring unexpected
 changes. In this mode, Fleet will check for configuration differences between the hub cluster
 resource templates and their corresponding resources on the member clusters, but will not
-perform any apply op. This is most helpful in cases of experimentation and drift/diff analysis.&lt;/p></description></item><item><title>How to Roll Out and Roll Back Changes in Stage</title><link>https://kubefleet.dev/docs/how-tos/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/staged-update/</guid><description>&lt;p>This how-to guide demonstrates how to use &lt;code>ClusterStagedUpdateRun&lt;/code> to rollout resources to member clusters in a staged manner and rollback resources to a previous version.&lt;/p>
-&lt;h2 id="prerequisite">Prerequisite&lt;/h2>
-&lt;p>&lt;code>ClusterStagedUpdateRun&lt;/code> CR is used to deploy resources from hub cluster to member clusters with &lt;code>ClusterResourcePlacement&lt;/code> (or CRP) in a stage by stage manner. This tutorial is based on a demo fleet environment with 3 member clusters:&lt;/p>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>cluster name&lt;/th>
- &lt;th>labels&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>member1&lt;/td>
- &lt;td>environment=canary, order=2&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>member2&lt;/td>
- &lt;td>environment=staging&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>member3&lt;/td>
- &lt;td>environment=canary, order=1&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;p>To demonstrate the rollout and rollback behavior, we create a demo namespace and a sample configmap with very simple data on the hub cluster. The namespace with configmap will be deployed to the member clusters.&lt;/p></description></item><item><title>Staged Update</title><link>https://kubefleet.dev/docs/concepts/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/staged-update/</guid><description>&lt;p>While users rely on the &lt;code>RollingUpdate&lt;/code> rollout strategy to safely roll out their workloads,
-there is also a requirement for a staged rollout mechanism at the cluster level to enable more controlled and systematic continuous delivery (CD) across the fleet.
-Introducing a staged update run feature would address this need by enabling gradual deployments, reducing risk, and ensuring greater reliability and consistency in workload updates across clusters.&lt;/p>
-&lt;p>&lt;img src="https://kubefleet.dev/images/en/docs/concepts/staged-update/updaterun.jpg" alt="">&lt;/p>
-&lt;h2 id="overview">Overview&lt;/h2>
-&lt;p>We introduce two new Custom Resources, &lt;code>ClusterStagedUpdateStrategy&lt;/code> and &lt;code>ClusterStagedUpdateRun&lt;/code>.&lt;/p></description></item><item><title>Eviction and Placement Disruption Budget</title><link>https://kubefleet.dev/docs/concepts/eviction-pdb/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/eviction-pdb/</guid><description>&lt;p>This document explains the concept of &lt;code>Eviction&lt;/code> and &lt;code>Placement Disruption Budget&lt;/code> in the context of the fleet.&lt;/p>
+perform any apply op. This is most helpful in cases of experimentation and drift/diff analysis.&lt;/p></description></item><item><title>How to Roll Out and Roll Back Changes in Stage</title><link>https://kubefleet.dev/docs/how-tos/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/staged-update/</guid><description>&lt;p>This how-to guide demonstrates how to use staged updates to rollout resources to member clusters in a staged manner and rollback resources to a previous version. We&amp;rsquo;ll cover both cluster-scoped and namespace-scoped approaches to serve different organizational needs.&lt;/p>
+&lt;h2 id="overview-of-staged-update-approaches">Overview of Staged Update Approaches&lt;/h2>
+&lt;p>Kubefleet provides two staged update approaches:&lt;/p>
+&lt;p>&lt;strong>Cluster-Scoped&lt;/strong>: Use &lt;code>ClusterStagedUpdateRun&lt;/code> with &lt;code>ClusterResourcePlacement&lt;/code> (CRP) for fleet administrators managing infrastructure-level changes.&lt;/p>
+&lt;p>&lt;strong>Namespace-Scoped&lt;/strong>: Use &lt;code>StagedUpdateRun&lt;/code> with &lt;code>ResourcePlacement&lt;/code> for application teams managing rollouts within their specific namespaces.&lt;/p></description></item><item><title>Staged Update</title><link>https://kubefleet.dev/docs/concepts/staged-update/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/staged-update/</guid><description>&lt;p>While users can rely on the &lt;code>RollingUpdate&lt;/code> rollout strategy in the placement to safely roll out their workloads,
+many organizations require more sophisticated deployment control mechanisms for their fleet operations.
+Standard rolling updates, while effective for individual rollout, lack the granular control and coordination capabilities needed for complex, multi-cluster environments.&lt;/p>
+&lt;h2 id="why-staged-rollouts">Why Staged Rollouts?&lt;/h2>
+&lt;p>Staged rollouts address critical deployment challenges that organizations face when managing workloads across distributed environments:&lt;/p>
+&lt;h3 id="strategic-grouping-and-ordering">Strategic Grouping and Ordering&lt;/h3>
+&lt;p>Traditional rollout strategies treat all target clusters uniformly, but real-world deployments often require strategic sequencing. Staged rollouts enable you to:&lt;/p></description></item><item><title>Eviction and Placement Disruption Budget</title><link>https://kubefleet.dev/docs/concepts/eviction-pdb/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/eviction-pdb/</guid><description>&lt;p>This document explains the concept of &lt;code>Eviction&lt;/code> and &lt;code>Placement Disruption Budget&lt;/code> in the context of the fleet.&lt;/p>
 &lt;h2 id="overview">Overview&lt;/h2>
 &lt;p>&lt;code>Eviction&lt;/code> provides a way to force remove resources from a target cluster once the resources have already been propagated from the hub cluster by a &lt;code>Placement&lt;/code> object.
 &lt;code>Eviction&lt;/code> is considered as an voluntary disruption triggered by the user. &lt;code>Eviction&lt;/code> alone doesn&amp;rsquo;t guarantee that resources won&amp;rsquo;t be propagated to target cluster again by the scheduler.
