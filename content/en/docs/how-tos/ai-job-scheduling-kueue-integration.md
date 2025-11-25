@@ -29,7 +29,7 @@ Before proceeding with the installation, keep in mind that you'll need to switch
 
 ```bash
 # Set the Kueue version you want to install
-VERSION=v0.9.0  # Replace with the latest version, or working version you like
+VERSION=v0.14.4  # Replace with the latest version, or working version you like
 
 # Switch to your member cluster context
 kubectl config use-context <member-cluster-context>
