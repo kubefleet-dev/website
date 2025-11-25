@@ -101,8 +101,8 @@ Status:
   Policy Snapshot Index Used:     0
 ...
 ```
-The condition clearly indicates the initialization failed. And the condition message gives more details about the failure. 
-In this case, I used a not-existing resource snapshot index `1` for the updateRun.
+The condition clearly indicates the initialization failed. The condition message gives more details about the failure. 
+In this case, a non-existing resource snapshot index `1` was used for the updateRun.
 
 ### Investigate ClusterStagedUpdateRun execution failure
 
@@ -134,7 +134,7 @@ If any failure happens during validation, the updateRun execution fails with the
        status: "False"
        type: Progressing
      - lastTransitionTime: "2025-05-13T22:15:23Z"
-       message: 'cannot continue the ClusterStagedUpdateRun: failed to initialize the
+       message: 'cannot continue the ClusterStagedUpdateRun: failed to execute the
          clusterStagedUpdateRun: failed to process the request due to a client error:
          parent clusterResourcePlacement not found'
        observedGeneration: 1

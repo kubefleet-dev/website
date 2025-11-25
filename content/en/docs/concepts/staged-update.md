@@ -29,7 +29,6 @@ Automated rollouts provide speed but can propagate issues rapidly across your en
 - **Manual approval gates** between stages allow human validation of rollout health
 - **Automated wait periods** provide time for monitoring and observation
 
-
 ## Dual-Scope Architecture
 
 Kubefleet provides staged update capabilities at two different scopes to address different organizational roles and operational requirements:
@@ -37,7 +36,7 @@ Kubefleet provides staged update capabilities at two different scopes to address
 1. **Cluster-scoped staged updates** for fleet administrators who need to manage rollouts across entire clusters
 2. **Namespace-scoped staged updates** for application teams who need to manage rollouts within their specific namespaces
 
-This dual approach enables fleet administrators maintain oversight of infrastructure-level changes while empowering application teams with autonomous control over their specific workloads.
+This dual approach enables fleet administrators to maintain oversight of infrastructure-level changes while empowering application teams with autonomous control over their specific workloads.
 
 ![](/images/en/docs/concepts/staged-update/updaterun.jpg)
 
@@ -62,7 +61,7 @@ Both systems follow the same pattern:
 | **Resources** | `ClusterStagedUpdateStrategy`, `ClusterStagedUpdateRun`, `ClusterApprovalRequest` | `StagedUpdateStrategy`, `StagedUpdateRun`, `ApprovalRequest` |
 | **Target** | `ClusterResourcePlacement` | `ResourcePlacement` (namespace-scoped) |
 | **Use Cases** | Fleet-wide updates, infrastructure changes | Application rollouts, service updates |
-| **Autonomy** | Requires cluster-admin permissions | Operates within namespace boundaries |
+| **Permission** | Requires cluster-admin permissions | Operates within namespace boundaries |
 
 ## Configure External Rollout Strategy
 
@@ -107,7 +106,7 @@ spec:
 
 ## Define Staged Update Strategies
 
-Staged update strategies define reusable orchestration patterns that organize targets into stages with specific rollout sequences and approval gates. Both scopes use similar configurations but operate at different levels.
+Staged update strategies define reusable orchestration patterns that organize target clusters into stages with specific rollout sequences and approval gates. Both scopes use similar configurations but operate at different levels.
 
 ### Cluster-Scoped Strategy
 
@@ -117,7 +116,7 @@ Staged update strategies define reusable orchestration patterns that organize ta
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterStagedUpdateStrategy
 metadata:
-  name: example-strategy
+  name: cluster-config-strategy
 spec:
   stages:
     - name: staging

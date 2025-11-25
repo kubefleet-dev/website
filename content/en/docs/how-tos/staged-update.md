@@ -55,7 +55,8 @@ spec:
 EOF
 ```
 **Note that `spec.strategy.type` is set to `External` to allow rollout triggered with a ClusterStagedUpdateRun.**
-Both clusters should be scheduled since we use the `PickAll` policy but at the moment no resource should be deployed on the member clusters because we haven't created a `ClusterStagedUpdateRun` yet. The CRP is not AVAILABLE yet.
+All clusters should be scheduled since we use the `PickAll` policy but at the moment no resource should be deployed on the member clusters because we haven't created a `ClusterStagedUpdateRun` yet. The CRP is not **AVAILABLE** yet.
+
 ```bash
 kubectl get crp example-placement
 NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
@@ -600,7 +601,9 @@ EOF
 
 Check the resource snapshots for the namespace-scoped placement:
 ```bash
-kubectl get resourcesnapshots -n my-app-namespace --show-labels
+kubectl get resourcesnapshots -n my-app-namespace 
+NAME                         GEN    AGE    LABELS  
+web-app-placement-0-snapshot  1     63s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
 ```
 
 Update the deployment to a new version:
@@ -611,6 +614,9 @@ kubectl set image deployment/web-app web-app=nginx:1.21 -n my-app-namespace
 Verify the new snapshot is created:
 ```bash
 kubectl get resourcesnapshots -n my-app-namespace --show-labels
+NAME                         GEN    AGE    LABELS  
+web-app-placement-0-snapshot  1     263s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
+web-app-placement-1-snapshot  1     23s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=1
 ```
 
 ### Deploy a StagedUpdateStrategy
