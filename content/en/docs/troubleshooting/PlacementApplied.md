@@ -15,7 +15,7 @@ Instances where this condition may arise:
 
 ## Investigation steps
 
-1. **Check `placementStatuses`**: In the placement status section, inspect the `placementStatuses` to identify which clusters have the `Applied` condition set to `false` and note down their `clusterName`.
+1. **Check `placementStatuses`**: In the placement status section, inspect the `placementStatuses` to identify which clusters have the `ClusterResourcePlacementApplied` (for ClusterResourcePlacement) or `ResourcePlacementApplied` (for ResourcePlacement) condition set to `false` and note down their `clusterName`.
 2. **Locate the `Work` Object in Hub Cluster**: Use the identified `clusterName` to locate the `Work` object associated with the member cluster. 
    - For ClusterResourcePlacement, refer to [this section](ClusterResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement)
    - For ResourcePlacement, refer to [this section](ResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-resourceplacement)
@@ -177,7 +177,7 @@ status:
 
 In the ClusterResourcePlacement status, within the `failedPlacements` section for `kind-cluster-1`, we get a clear message
 as to why the resource failed to apply on the member cluster. In the preceding `conditions` section,
-the `Applied` condition for `kind-cluster-1` is flagged as false and shows the `NotAllWorkHaveBeenApplied` reason.
+the `ClusterResourcePlacementApplied` condition for `kind-cluster-1` is flagged as false and shows the `NotAllWorkHaveBeenApplied` reason.
 This indicates that the Work object intended for the member cluster `kind-cluster-1` has not been applied.
 
 To inspect the Work object for more details, follow the steps in the [Investigation steps](#investigation-steps) section above.

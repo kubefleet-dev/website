@@ -143,7 +143,7 @@ status:
 ```
 The CRP attempted to override a propagated resource utilizing an applicable `ClusterResourceOverrideSnapshot`.
 However, as the `ClusterResourcePlacementOverridden` condition remains false, looking at the placement status for the cluster
-where the condition `Overridden` failed will offer insights into the exact cause of the failure.
+where the condition `ClusterResourcePlacementOverridden` (for ClusterResourcePlacement) or `ResourcePlacementOverridden` (for ResourcePlacement) failed will offer insights into the exact cause of the failure.
 
 In this situation, the message indicates that the override failed because the path `/metadata/labels/new-label` and its corresponding value are missing.
 Based on the previous example of the cluster role `secret-reader`, you can see that the path `/metadata/labels/` doesn't exist. This means that `labels` doesn't exist.
@@ -161,4 +161,4 @@ jsonPatchOverrides:
 This will successfully add the new label `newlabel` with the value `new-value` to the `ClusterRole` `secret-reader`, as we are creating the `labels` field and adding a new value `newlabel: new-value` to it.
 
 ## General Notes
-For ResourcePlacement the override flow is identical; use `ResourceOverride` instead of `ClusterResourceOverride` and expect `ResourcePlacementOverridden` in conditions.
+For ResourcePlacement the override flow is identical except that all the resources reside in the same namespace; use `ResourceOverride` instead of `ClusterResourceOverride` and expect `ResourcePlacementOverridden` in conditions.

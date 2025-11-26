@@ -4,7 +4,7 @@ description: Troubleshooting guide for "RolloutStarted" condition set to false (
 weight: 3
 ---
 
-When using placement APIs (ClusterResourcePlacement or ResourcePlacement) to propagate resources, selected resources may not begin rolling out and the `RolloutStarted` condition shows `False`.
+When using placement APIs (ClusterResourcePlacement or ResourcePlacement) to propagate resources, selected resources may not begin rolling out and the `ClusterResourcePlacementRolloutStarted` (for ClusterResourcePlacement) or `ResourcePlacementRolloutStarted` (for ResourcePlacement) condition shows `False`.
 
 *This TSG only applies to the `RollingUpdate` rollout strategy, which is the default strategy if you don't specify in the `ClusterResourcePlacement`.*
 *To troubleshoot the update run strategy as you specify `External` in the `ClusterResourcePlacement`, please refer to the [Staged Update Run Troubleshooting Guide](ClusterStagedUpdateRun).*

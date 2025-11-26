@@ -23,7 +23,7 @@ set to `False` in the placement status.
 
 ## Common scenarios
 
-The `DiffReported` status condition will be set to `False` if KubeFleet cannot complete
+The `ClusterResourcePlacementDiffReported` or `ResourcePlacementDiffReported` status condition will be set to `False` if KubeFleet cannot complete
 the configuration difference checking process for one or more of the selected resources.
 
 Depending on your placement configuration, KubeFleet might use one of the three approaches for configuration
@@ -54,7 +54,7 @@ If you encounter such a failure, follow the steps below for investigation:
 * Identify the specific resources that have failed in the diff reporting process first. In the placement status,
 find out the individual member clusters that have diff reporting failures: inspect the
 `.status.placementStatuses` field of the placement object; each entry corresponds to a member cluster, and 
-for each entry, check if it has a status condition, `DiffReported`, in
+for each entry, check if it has a status condition, `ClusterResourcePlacementDiffReported` (for ClusterResourcePlacement) or `ResourcePlacementDiffReported` (for ResourcePlacement), in
 the `.status.placementStatuses[*].conditions` field, which has been set to `False`. Write down the name
 of the member cluster.
 
@@ -73,10 +73,10 @@ for the cluster in correspondence with the placement object:
 
 * For each found work object, inspect its status. The `.status.manifestConditions` field features an array of which
 each item explains about the processing result of a resource on the given member cluster. Find out all items with
-a `DiffReported` condition in the `.status.manifestConditions[*].conditions` field that has been set to `False`.
+a `ClusterResourcePlacementDiffReported` or `ResourcePlacementDiffReported` condition in the `.status.manifestConditions[*].conditions` field that has been set to `False`.
 The `.status.manifestConditions[*].identifier` field tells the GVK, namespace, and name of the failing resource.
 
-* Read the `message` field of the `DiffReported` condition (`.status.manifestConditions[*].conditions[*].message`);
+* Read the `message` field of the `ClusterResourcePlacementDiffReported` or `ResourcePlacementDiffReported` condition (`.status.manifestConditions[*].conditions[*].message`);
 KubeFleet will include the details about the diff reporting failures in the field.
 
 * If you are familiar with the cause of the error (for example, dry-run apply ops fails due to API server traffic control

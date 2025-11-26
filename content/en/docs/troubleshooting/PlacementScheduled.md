@@ -15,7 +15,7 @@ Instances where this condition may arise:
 - When the placement policy is set to `PickN`, and N clusters are specified, but there are fewer than N clusters that have joined the fleet or satisfy the placement policy.
 - When the placement resource selector selects a reserved namespace.
 
-> Note: When the placement policy is set to `PickAll`, the `Scheduled` condition is always set to `True`.
+> Note: When the placement policy is set to `PickAll`, the `ClusterResourcePlacementScheduled` or `ResourcePlacementScheduled` condition is always set to `True`.
 
 ## Case Study
 
