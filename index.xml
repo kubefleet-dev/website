@@ -133,18 +133,7 @@ the outbound network and no inbound network access.&lt;/p></description></item><
  &lt;/tbody>
 &lt;/table>
 &lt;h4 id="agenttype">AgentType&lt;/h4>
-&lt;p>&lt;em>Underlying type:&lt;/em> &lt;em>string&lt;/em>&lt;/p></description></item><item><title>CRP Schedule Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementscheduled/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementscheduled/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementScheduled&lt;/code> condition is set to &lt;code>false&lt;/code> when the scheduler cannot find all the clusters needed as specified by the scheduling policy.&lt;/p>
-&lt;blockquote>
-&lt;p>Note: To get more information about why the scheduling fails, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/scheduler/scheduler.go">scheduler&lt;/a> logs.&lt;/p>&lt;/blockquote>
-&lt;h2 id="common-scenarios">Common scenarios&lt;/h2>
-&lt;p>Instances where this condition may arise:&lt;/p>
-&lt;ul>
-&lt;li>When the placement policy is set to &lt;code>PickFixed&lt;/code>, but the specified cluster names do not match any joined member cluster name in the fleet, or the specified cluster is no longer connected to the fleet.&lt;/li>
-&lt;li>When the placement policy is set to &lt;code>PickN&lt;/code>, and N clusters are specified, but there are fewer than N clusters that have joined the fleet or satisfy the placement policy.&lt;/li>
-&lt;li>When the &lt;code>ClusterResourcePlacement&lt;/code> resource selector selects a reserved namespace.&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>Note: When the placement policy is set to &lt;code>PickAll&lt;/code>, the &lt;code>ClusterResourcePlacementScheduled&lt;/code> condition is always set to &lt;code>true&lt;/code>.&lt;/p></description></item><item><title>Managing clusters</title><link>https://kubefleet.dev/docs/how-tos/clusters/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/clusters/</guid><description>&lt;p>This how-to guide discusses how to manage clusters in a fleet, specifically:&lt;/p>
+&lt;p>&lt;em>Underlying type:&lt;/em> &lt;em>string&lt;/em>&lt;/p></description></item><item><title>Managing clusters</title><link>https://kubefleet.dev/docs/how-tos/clusters/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/clusters/</guid><description>&lt;p>This how-to guide discusses how to manage clusters in a fleet, specifically:&lt;/p>
 &lt;ul>
 &lt;li>how to join a cluster into a fleet; and&lt;/li>
 &lt;li>how to set a cluster to leave a fleet; and&lt;/li>
@@ -196,9 +185,18 @@ while also scaling up the number of replicas, using Fleet.&lt;/p>
 &lt;h2 id="important-considerations-for-resourceplacement">Important Considerations for ResourcePlacement&lt;/h2>
 &lt;h3 id="namespace-prerequisites">Namespace Prerequisites&lt;/h3>
 &lt;p>&lt;strong>Important&lt;/strong>: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace.
-Before creating a ResourcePlacement:&lt;/p></description></item><item><title>CRP Rollout Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementrolloutstarted/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementrolloutstarted/</guid><description>&lt;p>When using the &lt;code>ClusterResourcePlacement&lt;/code> API object in Azure Kubernetes Fleet Manager to propagate resources, the selected resources aren&amp;rsquo;t rolled out in all scheduled clusters and the &lt;code>ClusterResourcePlacementRolloutStarted&lt;/code> condition status shows as &lt;code>False&lt;/code>.&lt;/p>
-&lt;p>&lt;em>This TSG only applies to the &lt;code>RollingUpdate&lt;/code> rollout strategy, which is the default strategy if you don&amp;rsquo;t specify in the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/em>
-&lt;em>To troubleshoot the update run strategy as you specify &lt;code>External&lt;/code> in the &lt;code>ClusterResourcePlacement&lt;/code>, please refer to the &lt;a href="ClusterStagedUpdateRun">Staged Update Run Troubleshooting Guide&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>Getting started with Fleet using KinD clusters</title><link>https://kubefleet.dev/docs/getting-started/kind/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/getting-started/kind/</guid><description>&lt;p>In this tutorial, you will try Fleet out using
+Before creating a ResourcePlacement:&lt;/p></description></item><item><title>Scheduling Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementscheduled/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementscheduled/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementScheduled&lt;/code> (for ClusterResourcePlacement) or &lt;code>ResourcePlacementScheduled&lt;/code> (for ResourcePlacement) condition is set to &lt;code>false&lt;/code> when the scheduler cannot find all the clusters needed as specified by the scheduling policy.&lt;/p>
+&lt;blockquote>
+&lt;p>Note: To get more information about why the scheduling fails, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/scheduler/scheduler.go">scheduler&lt;/a> logs.&lt;/p>&lt;/blockquote>
+&lt;h2 id="common-scenarios">Common scenarios&lt;/h2>
+&lt;p>Instances where this condition may arise:&lt;/p>
+&lt;ul>
+&lt;li>When the placement policy is set to &lt;code>PickFixed&lt;/code>, but the specified cluster names do not match any joined member cluster name in the fleet, or the specified cluster is no longer connected to the fleet.&lt;/li>
+&lt;li>When the placement policy is set to &lt;code>PickN&lt;/code>, and N clusters are specified, but there are fewer than N clusters that have joined the fleet or satisfy the placement policy.&lt;/li>
+&lt;li>When the placement resource selector selects a reserved namespace.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>Note: When the placement policy is set to &lt;code>PickAll&lt;/code>, the &lt;code>ClusterResourcePlacementScheduled&lt;/code> or &lt;code>ResourcePlacementScheduled&lt;/code> condition is always set to &lt;code>True&lt;/code>.&lt;/p></description></item><item><title>Getting started with Fleet using KinD clusters</title><link>https://kubefleet.dev/docs/getting-started/kind/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/getting-started/kind/</guid><description>&lt;p>In this tutorial, you will try Fleet out using
 &lt;a href="https://kind.sigs.k8s.io/">KinD&lt;/a> clusters, which are Kubernetes clusters running on your own
 local machine via &lt;a href="https://docker.com">Docker&lt;/a> containers. This is the easiest way
 to get started with Fleet, which can help you understand how Fleet simiplify the day-to-day multi-cluster management experience with very little setup needed.&lt;/p>
@@ -257,7 +255,9 @@ Follow along to transform your multi-cluster challenges into streamlined, automa
 &lt;/table>
 &lt;h4 id="appliedresourcemeta">AppliedResourceMeta&lt;/h4>
 &lt;p>AppliedResourceMeta represents the group, version, resource, name and namespace of a resource.
-Since these resources have been created, they must have valid group, version, resource, namespace, and name.&lt;/p></description></item><item><title>Using the ClusterResourcePlacement API</title><link>https://kubefleet.dev/docs/how-tos/crp/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/crp/</guid><description>&lt;p>This guide provides an overview of how to use the Fleet &lt;code>ClusterResourcePlacement&lt;/code> (CRP) API to orchestrate workload distribution across your fleet.&lt;/p>
+Since these resources have been created, they must have valid group, version, resource, namespace, and name.&lt;/p></description></item><item><title>Rollout Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementrolloutstarted/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementrolloutstarted/</guid><description>&lt;p>When using placement APIs (ClusterResourcePlacement or ResourcePlacement) to propagate resources, selected resources may not begin rolling out and the &lt;code>ClusterResourcePlacementRolloutStarted&lt;/code> (for ClusterResourcePlacement) or &lt;code>ResourcePlacementRolloutStarted&lt;/code> (for ResourcePlacement) condition shows &lt;code>False&lt;/code>.&lt;/p>
+&lt;p>&lt;em>This TSG only applies to the &lt;code>RollingUpdate&lt;/code> rollout strategy, which is the default strategy if you don&amp;rsquo;t specify in the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/em>
+&lt;em>To troubleshoot the update run strategy as you specify &lt;code>External&lt;/code> in the &lt;code>ClusterResourcePlacement&lt;/code>, please refer to the &lt;a href="ClusterStagedUpdateRun">Staged Update Run Troubleshooting Guide&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>Using the ClusterResourcePlacement API</title><link>https://kubefleet.dev/docs/how-tos/crp/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/crp/</guid><description>&lt;p>This guide provides an overview of how to use the Fleet &lt;code>ClusterResourcePlacement&lt;/code> (CRP) API to orchestrate workload distribution across your fleet.&lt;/p>
 &lt;h2 id="overview">Overview&lt;/h2>
 &lt;p>The CRP API is a core Fleet API that facilitates the distribution of specific resources from the hub cluster to
 member clusters within a fleet. This API offers scheduling capabilities that allow you to target the most suitable
@@ -287,7 +287,15 @@ resource objects need to be propagated from the hub cluster to selected member c
 This selection propagates all resources that match the &amp;lt;group, version, kind&amp;gt; and label specified.&lt;/li>
 &lt;/ul>
 &lt;p>&lt;strong>Note:&lt;/strong> When a namespace is selected, all the namespace-scoped objects under this namespace are propagated to the
-selected member clusters along with this namespace.&lt;/p></description></item><item><title>CRP Override Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementoverridden/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementoverridden/</guid><description>&lt;p>The status of the &lt;code>ClusterResourcePlacementOverridden&lt;/code> condition is set to &lt;code>false&lt;/code> when there is an Override API related issue.&lt;/p>
+selected member clusters along with this namespace.&lt;/p></description></item><item><title>Getting started with Fleet using on-premises clusters</title><link>https://kubefleet.dev/docs/getting-started/on-prem/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/getting-started/on-prem/</guid><description>&lt;p>In this tutorial, you will try Fleet out using a few of your own Kubernetes clusters; Fleet can
+help you manage workloads seamlessly across these clusters, greatly simplifying the experience
+of day-to-day Kubernetes management.&lt;/p>
+&lt;blockquote>
+&lt;p>Note&lt;/p>
+&lt;p>This tutorial assumes that you have some experience of performing administrative tasks for
+Kubernetes clusters. If you are just gettings started with Kubernetes, or do not have much
+experience of setting up a Kubernetes cluster, it is recommended that you follow the
+&lt;a href="https://kubefleet.dev/docs/getting-started/kind/">Getting started with Fleet using Kind clusters&lt;/a> tutorial instead.&lt;/p></description></item><item><title>Override Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementoverridden/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementoverridden/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementOverridden&lt;/code> (CRP) or &lt;code>ResourcePlacementOverridden&lt;/code> (RP) condition is &lt;code>False&lt;/code> when an override operation fails.&lt;/p>
 &lt;blockquote>
 &lt;p>Note: To get more information, look into the logs for the overrider controller (includes
 controller for &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/overrider/clusterresource_controller.go">ClusterResourceOverride&lt;/a> and
@@ -299,15 +307,7 @@ controller for &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/
 &lt;/ul>
 &lt;h2 id="case-study">Case Study&lt;/h2>
 &lt;p>In the following example, an attempt is made to override the cluster role &lt;code>secret-reader&lt;/code> that is being propagated by the &lt;code>ClusterResourcePlacement&lt;/code> to the selected clusters.
-However, the &lt;code>ClusterResourceOverride&lt;/code> is created with an invalid path for the field within resource.&lt;/p></description></item><item><title>Getting started with Fleet using on-premises clusters</title><link>https://kubefleet.dev/docs/getting-started/on-prem/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/getting-started/on-prem/</guid><description>&lt;p>In this tutorial, you will try Fleet out using a few of your own Kubernetes clusters; Fleet can
-help you manage workloads seamlessly across these clusters, greatly simplifying the experience
-of day-to-day Kubernetes management.&lt;/p>
-&lt;blockquote>
-&lt;p>Note&lt;/p>
-&lt;p>This tutorial assumes that you have some experience of performing administrative tasks for
-Kubernetes clusters. If you are just gettings started with Kubernetes, or do not have much
-experience of setting up a Kubernetes cluster, it is recommended that you follow the
-&lt;a href="https://kubefleet.dev/docs/getting-started/kind/">Getting started with Fleet using Kind clusters&lt;/a> tutorial instead.&lt;/p></description></item><item><title>placement.kubernetes-fleet.io/v1beta1</title><link>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</guid><description>&lt;h1 id="api-reference">API Reference&lt;/h1>
+However, the &lt;code>ClusterResourceOverride&lt;/code> is created with an invalid path for the field within resource.&lt;/p></description></item><item><title>placement.kubernetes-fleet.io/v1beta1</title><link>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</guid><description>&lt;h1 id="api-reference">API Reference&lt;/h1>
 &lt;h2 id="packages">Packages&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#placementkubernetes-fleetiov1beta1">placement.kubernetes-fleet.io/v1beta1&lt;/a>&lt;/li>
@@ -383,7 +383,13 @@ for resource placement.&lt;/p>
 policy section. Each affinity term is a particular requirement that Fleet will check against clusters;
 and the fulfillment of this requirement (or the lack of) would have certain effect on whether
 Fleet would pick a cluster for resource placement.&lt;/p>
-&lt;p>Fleet currently supports two types of affinity terms:&lt;/p></description></item><item><title>CRP Work-Synchronization Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementworksynchronized/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementworksynchronized/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementWorkSynchronized&lt;/code> condition is false when the CRP has been recently updated but the associated work objects have not yet been synchronized with the changes.&lt;/p>
+&lt;p>Fleet currently supports two types of affinity terms:&lt;/p></description></item><item><title>Using Topology Spread Constraints to Spread Resources</title><link>https://kubefleet.dev/docs/how-tos/topology-spread-constraints/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/topology-spread-constraints/</guid><description>&lt;p>This how-to guide discusses how to use topology spread constraints to fine-tune how Fleet picks
+clusters for resource placement.&lt;/p>
+&lt;p>Topology spread constraints are features in the &lt;code>ClusterResourcePlacement&lt;/code> API, specifically
+the scheduling policy section. Generally speaking, these constraints can help you spread
+resources evenly across different groups of clusters in your fleet; or in other words, it
+assures that Fleet will not pick too many clusters from one group, and too little from another.
+You can use topology spread constraints to, for example:&lt;/p></description></item><item><title>Work Synchronization Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementworksynchronized/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementworksynchronized/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementWorkSynchronized&lt;/code> (CRP) or &lt;code>ResourcePlacementWorkSynchronized&lt;/code> (RP) condition is &lt;code>False&lt;/code> when the placement has been recently updated but the associated Work objects have not yet been synchronized with the latest selected resources.&lt;/p>
 &lt;blockquote>
 &lt;p>Note: In addition, it may be helpful to look into the logs for the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workgenerator/controller.go">work generator controller&lt;/a> to get more information on why the work synchronization failed.&lt;/p>&lt;/blockquote>
 &lt;h2 id="common-scenarios">Common Scenarios&lt;/h2>
@@ -393,13 +399,7 @@ Fleet would pick a cluster for resource placement.&lt;/p>
 &lt;li>The enveloped object is not well formatted.&lt;/li>
 &lt;/ul>
 &lt;h3 id="case-study">Case Study&lt;/h3>
-&lt;p>The CRP is attempting to propagate a resource to a selected cluster, but the work object has not been updated to reflect the latest changes due to the selected cluster has been terminated.&lt;/p></description></item><item><title>Using Topology Spread Constraints to Spread Resources</title><link>https://kubefleet.dev/docs/how-tos/topology-spread-constraints/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/topology-spread-constraints/</guid><description>&lt;p>This how-to guide discusses how to use topology spread constraints to fine-tune how Fleet picks
-clusters for resource placement.&lt;/p>
-&lt;p>Topology spread constraints are features in the &lt;code>ClusterResourcePlacement&lt;/code> API, specifically
-the scheduling policy section. Generally speaking, these constraints can help you spread
-resources evenly across different groups of clusters in your fleet; or in other words, it
-assures that Fleet will not pick too many clusters from one group, and too little from another.
-You can use topology spread constraints to, for example:&lt;/p></description></item><item><title>Scheduler</title><link>https://kubefleet.dev/docs/concepts/scheduler/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/scheduler/</guid><description>&lt;p>The scheduler component is a vital element in Fleet workload scheduling. Its primary responsibility is to determine the
+&lt;p>The CRP is attempting to propagate a resource to a selected cluster, but the work object has not been updated to reflect the latest changes due to the selected cluster has been terminated.&lt;/p></description></item><item><title>Scheduler</title><link>https://kubefleet.dev/docs/concepts/scheduler/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/scheduler/</guid><description>&lt;p>The scheduler component is a vital element in Fleet workload scheduling. Its primary responsibility is to determine the
 schedule decision for a bundle of resources based on the latest &lt;code>ClusterSchedulingPolicySnapshot&lt;/code>generated by the &lt;code>ClusterResourcePlacement&lt;/code>.
 By default, the scheduler operates in batch mode, which enhances performance. In this mode, it binds a &lt;code>ClusterResourceBinding&lt;/code>
 from a &lt;code>ClusterResourcePlacement&lt;/code> to multiple clusters whenever possible.&lt;/p>
@@ -427,7 +427,7 @@ instructions in this document.&lt;/p></description></item><item><title>Work-Appl
 &lt;/ul>
 &lt;h2 id="investigation-steps">Investigation steps&lt;/h2>
 &lt;ol>
-&lt;li>&lt;strong>Check &lt;code>placementStatuses&lt;/code>&lt;/strong>: In the placement status section, inspect the &lt;code>placementStatuses&lt;/code> to identify which clusters have the &lt;code>Applied&lt;/code> condition set to &lt;code>false&lt;/code> and note down their &lt;code>clusterName&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Check &lt;code>placementStatuses&lt;/code>&lt;/strong>: In the placement status section, inspect the &lt;code>placementStatuses&lt;/code> to identify which clusters have the &lt;code>ClusterResourcePlacementApplied&lt;/code> (for ClusterResourcePlacement) or &lt;code>ResourcePlacementApplied&lt;/code> (for ResourcePlacement) condition set to &lt;code>false&lt;/code> and note down their &lt;code>clusterName&lt;/code>.&lt;/li>
 &lt;li>&lt;strong>Locate the &lt;code>Work&lt;/code> Object in Hub Cluster&lt;/strong>: Use the identified &lt;code>clusterName&lt;/code> to locate the &lt;code>Work&lt;/code> object associated with the member cluster.
 &lt;ul>
 &lt;li>For ClusterResourcePlacement, refer to &lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacement/#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement">this section&lt;/a>&lt;/li>
@@ -473,8 +473,8 @@ detection results when using the KubeFleet CRP API.&lt;/p>
 &lt;blockquote>
 &lt;p>Note&lt;/p>
 &lt;p>If you are looking for troubleshooting steps on diff reporting failures, i.e., when
-the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> condition on your CRP object is set to
-&lt;code>False&lt;/code>, see the &lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/">CRP Diff Reporting Failure TSG&lt;/a>
+the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> or &lt;code>ResourcePlacementDiffReported&lt;/code> condition on your placement object is set to
+&lt;code>False&lt;/code>, see the &lt;a href="https://kubefleet.dev/docs/troubleshooting/placementdiffreported/">Diff Reporting Failure TSG&lt;/a>
 instead.&lt;/p>&lt;/blockquote>
 &lt;blockquote>
 &lt;p>Note&lt;/p>
@@ -494,9 +494,9 @@ decisions based on the property data.&lt;/p></description></item><item><title>Us
 across cluster-wide resources. With ClusterResourceOverride, you can define rules based on cluster labels or other
 criteria, specifying changes to be applied to various cluster-wide resources such as namespaces, roles, role bindings,
 or custom resource definitions. These modifications may include updates to permissions, configurations, or other
-parameters, ensuring consistent management and enforcement of configurations across your Fleet-managed Kubernetes clusters.&lt;/p></description></item><item><title>CRP Diff Reporting Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</guid><description>&lt;p>This document helps you troubleshoot diff reporting failures when using the KubeFleet CRP API,
-specifically when you find that the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> status condition has been
-set to &lt;code>False&lt;/code> in the CRP status.&lt;/p>
+parameters, ensuring consistent management and enforcement of configurations across your Fleet-managed Kubernetes clusters.&lt;/p></description></item><item><title>Diff Reporting Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementdiffreported/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementdiffreported/</guid><description>&lt;p>This document helps you troubleshoot diff reporting failures when using KubeFleet placement APIs (ClusterResourcePlacement or ResourcePlacement),
+specifically when you find that the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> (for ClusterResourcePlacement) or &lt;code>ResourcePlacementDiffReported&lt;/code> (for ResourcePlacement) status condition has been
+set to &lt;code>False&lt;/code> in the placement status.&lt;/p>
 &lt;blockquote>
 &lt;p>Note&lt;/p>
 &lt;p>If you are looking for troubleshooting steps on unexpected drift detection and/or configuration
@@ -504,10 +504,10 @@ difference detection results, see the &lt;a href="https://kubefleet.dev/docs/tro
 instead.&lt;/p>&lt;/blockquote>
 &lt;blockquote>
 &lt;p>Note&lt;/p>
-&lt;p>The &lt;code>ClusterResourcePlacementDiffReported&lt;/code> status condition will only be set if the CRP has
-an apply strategy of the &lt;code>ReportDiff&lt;/code> type. If your CRP uses &lt;code>ClientSideApply&lt;/code> (default) or
-&lt;code>ServerSideApply&lt;/code> typed apply strategies, it is perfectly normal if the &lt;code>ClusterResourcePlacementDiffReported&lt;/code>
-status condition is absent in the CRP status.&lt;/p></description></item><item><title>Safe Rollout</title><link>https://kubefleet.dev/docs/concepts/safe-rollout/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/safe-rollout/</guid><description>&lt;p>One of the most important features of Fleet is the ability to safely rollout changes across multiple clusters. We do
+&lt;p>The &lt;code>ClusterResourcePlacementDiffReported&lt;/code> or &lt;code>ResourcePlacementDiffReported&lt;/code> status condition will only be set if the placement has
+an apply strategy of the &lt;code>ReportDiff&lt;/code> type. If your placement uses &lt;code>ClientSideApply&lt;/code> (default) or
+&lt;code>ServerSideApply&lt;/code> typed apply strategies, it is perfectly normal if the diff reported
+status condition is absent in the placement status.&lt;/p></description></item><item><title>Safe Rollout</title><link>https://kubefleet.dev/docs/concepts/safe-rollout/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/safe-rollout/</guid><description>&lt;p>One of the most important features of Fleet is the ability to safely rollout changes across multiple clusters. We do
 this by rolling out the changes in a controlled manner, ensuring that we only continue to propagate the changes to the
 next target clusters if the resources are successfully applied to the previous target clusters.&lt;/p>
 &lt;h2 id="overview">Overview&lt;/h2>

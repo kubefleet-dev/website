@@ -10,18 +10,7 @@
 &lt;p>Please read the &lt;a href="https://kubefleet.dev/docs/api-reference/">Fleet API reference&lt;/a> for more details about each object.&lt;/p>
 &lt;h2 id="complete-progress-of-the-clusterresourceplacement">Complete Progress of the ClusterResourcePlacement&lt;/h2>
 &lt;p>Understanding the progression and the status of the &lt;code>ClusterResourcePlacement&lt;/code> custom resource is crucial for diagnosing and identifying failures.
-You can view the status of the &lt;code>ClusterResourcePlacement&lt;/code> custom resource by using the following command:&lt;/p></description></item><item><title>CRP Schedule Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementscheduled/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementscheduled/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementScheduled&lt;/code> condition is set to &lt;code>false&lt;/code> when the scheduler cannot find all the clusters needed as specified by the scheduling policy.&lt;/p>
-&lt;blockquote>
-&lt;p>Note: To get more information about why the scheduling fails, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/scheduler/scheduler.go">scheduler&lt;/a> logs.&lt;/p>&lt;/blockquote>
-&lt;h2 id="common-scenarios">Common scenarios&lt;/h2>
-&lt;p>Instances where this condition may arise:&lt;/p>
-&lt;ul>
-&lt;li>When the placement policy is set to &lt;code>PickFixed&lt;/code>, but the specified cluster names do not match any joined member cluster name in the fleet, or the specified cluster is no longer connected to the fleet.&lt;/li>
-&lt;li>When the placement policy is set to &lt;code>PickN&lt;/code>, and N clusters are specified, but there are fewer than N clusters that have joined the fleet or satisfy the placement policy.&lt;/li>
-&lt;li>When the &lt;code>ClusterResourcePlacement&lt;/code> resource selector selects a reserved namespace.&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>Note: When the placement policy is set to &lt;code>PickAll&lt;/code>, the &lt;code>ClusterResourcePlacementScheduled&lt;/code> condition is always set to &lt;code>true&lt;/code>.&lt;/p></description></item><item><title>ResourcePlacement TSG</title><link>https://kubefleet.dev/docs/troubleshooting/resourceplacement/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/resourceplacement/</guid><description>&lt;p>This TSG is meant to help you troubleshoot issues with the ResourcePlacement API in Fleet.&lt;/p>
+You can view the status of the &lt;code>ClusterResourcePlacement&lt;/code> custom resource by using the following command:&lt;/p></description></item><item><title>ResourcePlacement TSG</title><link>https://kubefleet.dev/docs/troubleshooting/resourceplacement/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/resourceplacement/</guid><description>&lt;p>This TSG is meant to help you troubleshoot issues with the ResourcePlacement API in Fleet.&lt;/p>
 &lt;h2 id="resource-placement">Resource Placement&lt;/h2>
 &lt;p>Internal Objects to keep in mind when troubleshooting RP related errors on the hub cluster:&lt;/p>
 &lt;ul>
@@ -34,9 +23,20 @@ You can view the status of the &lt;code>ClusterResourcePlacement&lt;/code> custo
 &lt;h2 id="important-considerations-for-resourceplacement">Important Considerations for ResourcePlacement&lt;/h2>
 &lt;h3 id="namespace-prerequisites">Namespace Prerequisites&lt;/h3>
 &lt;p>&lt;strong>Important&lt;/strong>: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace.
-Before creating a ResourcePlacement:&lt;/p></description></item><item><title>CRP Rollout Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementrolloutstarted/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementrolloutstarted/</guid><description>&lt;p>When using the &lt;code>ClusterResourcePlacement&lt;/code> API object in Azure Kubernetes Fleet Manager to propagate resources, the selected resources aren&amp;rsquo;t rolled out in all scheduled clusters and the &lt;code>ClusterResourcePlacementRolloutStarted&lt;/code> condition status shows as &lt;code>False&lt;/code>.&lt;/p>
+Before creating a ResourcePlacement:&lt;/p></description></item><item><title>Scheduling Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementscheduled/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementscheduled/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementScheduled&lt;/code> (for ClusterResourcePlacement) or &lt;code>ResourcePlacementScheduled&lt;/code> (for ResourcePlacement) condition is set to &lt;code>false&lt;/code> when the scheduler cannot find all the clusters needed as specified by the scheduling policy.&lt;/p>
+&lt;blockquote>
+&lt;p>Note: To get more information about why the scheduling fails, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/scheduler/scheduler.go">scheduler&lt;/a> logs.&lt;/p>&lt;/blockquote>
+&lt;h2 id="common-scenarios">Common scenarios&lt;/h2>
+&lt;p>Instances where this condition may arise:&lt;/p>
+&lt;ul>
+&lt;li>When the placement policy is set to &lt;code>PickFixed&lt;/code>, but the specified cluster names do not match any joined member cluster name in the fleet, or the specified cluster is no longer connected to the fleet.&lt;/li>
+&lt;li>When the placement policy is set to &lt;code>PickN&lt;/code>, and N clusters are specified, but there are fewer than N clusters that have joined the fleet or satisfy the placement policy.&lt;/li>
+&lt;li>When the placement resource selector selects a reserved namespace.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>Note: When the placement policy is set to &lt;code>PickAll&lt;/code>, the &lt;code>ClusterResourcePlacementScheduled&lt;/code> or &lt;code>ResourcePlacementScheduled&lt;/code> condition is always set to &lt;code>True&lt;/code>.&lt;/p></description></item><item><title>Rollout Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementrolloutstarted/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementrolloutstarted/</guid><description>&lt;p>When using placement APIs (ClusterResourcePlacement or ResourcePlacement) to propagate resources, selected resources may not begin rolling out and the &lt;code>ClusterResourcePlacementRolloutStarted&lt;/code> (for ClusterResourcePlacement) or &lt;code>ResourcePlacementRolloutStarted&lt;/code> (for ResourcePlacement) condition shows &lt;code>False&lt;/code>.&lt;/p>
 &lt;p>&lt;em>This TSG only applies to the &lt;code>RollingUpdate&lt;/code> rollout strategy, which is the default strategy if you don&amp;rsquo;t specify in the &lt;code>ClusterResourcePlacement&lt;/code>.&lt;/em>
-&lt;em>To troubleshoot the update run strategy as you specify &lt;code>External&lt;/code> in the &lt;code>ClusterResourcePlacement&lt;/code>, please refer to the &lt;a href="ClusterStagedUpdateRun">Staged Update Run Troubleshooting Guide&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>CRP Override Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementoverridden/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementoverridden/</guid><description>&lt;p>The status of the &lt;code>ClusterResourcePlacementOverridden&lt;/code> condition is set to &lt;code>false&lt;/code> when there is an Override API related issue.&lt;/p>
+&lt;em>To troubleshoot the update run strategy as you specify &lt;code>External&lt;/code> in the &lt;code>ClusterResourcePlacement&lt;/code>, please refer to the &lt;a href="ClusterStagedUpdateRun">Staged Update Run Troubleshooting Guide&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>Override Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementoverridden/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementoverridden/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementOverridden&lt;/code> (CRP) or &lt;code>ResourcePlacementOverridden&lt;/code> (RP) condition is &lt;code>False&lt;/code> when an override operation fails.&lt;/p>
 &lt;blockquote>
 &lt;p>Note: To get more information, look into the logs for the overrider controller (includes
 controller for &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/overrider/clusterresource_controller.go">ClusterResourceOverride&lt;/a> and
@@ -48,7 +48,7 @@ controller for &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/
 &lt;/ul>
 &lt;h2 id="case-study">Case Study&lt;/h2>
 &lt;p>In the following example, an attempt is made to override the cluster role &lt;code>secret-reader&lt;/code> that is being propagated by the &lt;code>ClusterResourcePlacement&lt;/code> to the selected clusters.
-However, the &lt;code>ClusterResourceOverride&lt;/code> is created with an invalid path for the field within resource.&lt;/p></description></item><item><title>CRP Work-Synchronization Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementworksynchronized/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementworksynchronized/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementWorkSynchronized&lt;/code> condition is false when the CRP has been recently updated but the associated work objects have not yet been synchronized with the changes.&lt;/p>
+However, the &lt;code>ClusterResourceOverride&lt;/code> is created with an invalid path for the field within resource.&lt;/p></description></item><item><title>Work Synchronization Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementworksynchronized/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementworksynchronized/</guid><description>&lt;p>The &lt;code>ClusterResourcePlacementWorkSynchronized&lt;/code> (CRP) or &lt;code>ResourcePlacementWorkSynchronized&lt;/code> (RP) condition is &lt;code>False&lt;/code> when the placement has been recently updated but the associated Work objects have not yet been synchronized with the latest selected resources.&lt;/p>
 &lt;blockquote>
 &lt;p>Note: In addition, it may be helpful to look into the logs for the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workgenerator/controller.go">work generator controller&lt;/a> to get more information on why the work synchronization failed.&lt;/p>&lt;/blockquote>
 &lt;h2 id="common-scenarios">Common Scenarios&lt;/h2>
@@ -70,7 +70,7 @@ However, the &lt;code>ClusterResourceOverride&lt;/code> is created with an inval
 &lt;/ul>
 &lt;h2 id="investigation-steps">Investigation steps&lt;/h2>
 &lt;ol>
-&lt;li>&lt;strong>Check &lt;code>placementStatuses&lt;/code>&lt;/strong>: In the placement status section, inspect the &lt;code>placementStatuses&lt;/code> to identify which clusters have the &lt;code>Applied&lt;/code> condition set to &lt;code>false&lt;/code> and note down their &lt;code>clusterName&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Check &lt;code>placementStatuses&lt;/code>&lt;/strong>: In the placement status section, inspect the &lt;code>placementStatuses&lt;/code> to identify which clusters have the &lt;code>ClusterResourcePlacementApplied&lt;/code> (for ClusterResourcePlacement) or &lt;code>ResourcePlacementApplied&lt;/code> (for ResourcePlacement) condition set to &lt;code>false&lt;/code> and note down their &lt;code>clusterName&lt;/code>.&lt;/li>
 &lt;li>&lt;strong>Locate the &lt;code>Work&lt;/code> Object in Hub Cluster&lt;/strong>: Use the identified &lt;code>clusterName&lt;/code> to locate the &lt;code>Work&lt;/code> object associated with the member cluster.
 &lt;ul>
 &lt;li>For ClusterResourcePlacement, refer to &lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacement/#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement">this section&lt;/a>&lt;/li>
@@ -97,8 +97,8 @@ detection results when using the KubeFleet CRP API.&lt;/p>
 &lt;blockquote>
 &lt;p>Note&lt;/p>
 &lt;p>If you are looking for troubleshooting steps on diff reporting failures, i.e., when
-the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> condition on your CRP object is set to
-&lt;code>False&lt;/code>, see the &lt;a href="https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/">CRP Diff Reporting Failure TSG&lt;/a>
+the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> or &lt;code>ResourcePlacementDiffReported&lt;/code> condition on your placement object is set to
+&lt;code>False&lt;/code>, see the &lt;a href="https://kubefleet.dev/docs/troubleshooting/placementdiffreported/">Diff Reporting Failure TSG&lt;/a>
 instead.&lt;/p>&lt;/blockquote>
 &lt;blockquote>
 &lt;p>Note&lt;/p>
@@ -106,9 +106,9 @@ instead.&lt;/p>&lt;/blockquote>
 results. If you have encountered drift and configuration difference detection
 failures (e.g., no detection results at all with the &lt;code>ClusterResourcePlacementApplied&lt;/code>
 condition being set to &lt;code>False&lt;/code> with a detection related error), see the
-&lt;a href="https://kubefleet.dev/docs/troubleshooting/placementapplied/">Work-Application Failure TSG&lt;/a> instead.&lt;/p></description></item><item><title>CRP Diff Reporting Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementdiffreported/</guid><description>&lt;p>This document helps you troubleshoot diff reporting failures when using the KubeFleet CRP API,
-specifically when you find that the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> status condition has been
-set to &lt;code>False&lt;/code> in the CRP status.&lt;/p>
+&lt;a href="https://kubefleet.dev/docs/troubleshooting/placementapplied/">Work-Application Failure TSG&lt;/a> instead.&lt;/p></description></item><item><title>Diff Reporting Failure TSG</title><link>https://kubefleet.dev/docs/troubleshooting/placementdiffreported/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/placementdiffreported/</guid><description>&lt;p>This document helps you troubleshoot diff reporting failures when using KubeFleet placement APIs (ClusterResourcePlacement or ResourcePlacement),
+specifically when you find that the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> (for ClusterResourcePlacement) or &lt;code>ResourcePlacementDiffReported&lt;/code> (for ResourcePlacement) status condition has been
+set to &lt;code>False&lt;/code> in the placement status.&lt;/p>
 &lt;blockquote>
 &lt;p>Note&lt;/p>
 &lt;p>If you are looking for troubleshooting steps on unexpected drift detection and/or configuration
@@ -116,10 +116,10 @@ difference detection results, see the &lt;a href="https://kubefleet.dev/docs/tro
 instead.&lt;/p>&lt;/blockquote>
 &lt;blockquote>
 &lt;p>Note&lt;/p>
-&lt;p>The &lt;code>ClusterResourcePlacementDiffReported&lt;/code> status condition will only be set if the CRP has
-an apply strategy of the &lt;code>ReportDiff&lt;/code> type. If your CRP uses &lt;code>ClientSideApply&lt;/code> (default) or
-&lt;code>ServerSideApply&lt;/code> typed apply strategies, it is perfectly normal if the &lt;code>ClusterResourcePlacementDiffReported&lt;/code>
-status condition is absent in the CRP status.&lt;/p></description></item><item><title>Staged Update Run TSG</title><link>https://kubefleet.dev/docs/troubleshooting/stagedupdaterun/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/stagedupdaterun/</guid><description>&lt;p>This guide provides troubleshooting steps for common issues related to both cluster-scoped and namespace-scoped Staged Update Runs.&lt;/p>
+&lt;p>The &lt;code>ClusterResourcePlacementDiffReported&lt;/code> or &lt;code>ResourcePlacementDiffReported&lt;/code> status condition will only be set if the placement has
+an apply strategy of the &lt;code>ReportDiff&lt;/code> type. If your placement uses &lt;code>ClientSideApply&lt;/code> (default) or
+&lt;code>ServerSideApply&lt;/code> typed apply strategies, it is perfectly normal if the diff reported
+status condition is absent in the placement status.&lt;/p></description></item><item><title>Staged Update Run TSG</title><link>https://kubefleet.dev/docs/troubleshooting/stagedupdaterun/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/stagedupdaterun/</guid><description>&lt;p>This guide provides troubleshooting steps for common issues related to both cluster-scoped and namespace-scoped Staged Update Runs.&lt;/p>
 &lt;blockquote>
 &lt;p>Note: To get more information about failures, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/updaterun/controller.go">updateRun controller&lt;/a> logs.&lt;/p>&lt;/blockquote>
 &lt;h2 id="cluster-scoped-troubleshooting">Cluster-Scoped Troubleshooting&lt;/h2>
