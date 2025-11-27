@@ -140,7 +140,7 @@ status:
  ```
 In the ClusterResourcePlacement status, within the `failedPlacements` section for `kind-cluster-1`, we get a clear message
 as to why the resource is not available on the member cluster. In the preceding `conditions` section,
-the `Available` condition for `kind-cluster-1` is flagged as `false` and shows `NotAllWorkAreAvailable` reason.
+the `ClusterResourcePlacementAvailable` condition for `kind-cluster-1` is flagged as `false` and shows `NotAllWorkAreAvailable` reason.
 This signifies that the Work object intended for the member cluster `kind-cluster-1` is not yet available.
 
 For more information on finding the correct Work resource:

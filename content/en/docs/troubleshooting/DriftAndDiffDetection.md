@@ -10,8 +10,8 @@ detection results when using the KubeFleet CRP API.
 > Note
 >
 > If you are looking for troubleshooting steps on diff reporting failures, i.e., when
-> the `ClusterResourcePlacementDiffReported` condition on your CRP object is set to
-> `False`, see the [CRP Diff Reporting Failure TSG](ClusterResourcePlacementDiffReported)
+> the `ClusterResourcePlacementDiffReported` or `ResourcePlacementDiffReported` condition on your placement object is set to
+> `False`, see the [Diff Reporting Failure TSG](PlacementDiffReported)
 > instead.
 
 > Note
