@@ -85,6 +85,7 @@ kubectl config use-context $HUB_CLUSTER_CONTEXT
 export REGISTRY="YOUR CONTAINER REGISTRY" # Replace with your own container registry
 export TARGET_ARCH="amd64" # Replace with your architecture, we support amd64 and arm64
 export TAG=$(curl "https://api.github.com/repos/kubefleet-dev/kubefleet/tags" | jq -r '.[0].name') # Replace with your desired tag
+export HUB_AGENT_IMAGE="hub-agent"
 
 # Clone the KubeFleet repository from GitHub and navigate to the root directory of the repository.
 git clone https://github.com/kubefleet-dev/kubefleet.git
@@ -126,14 +127,23 @@ For your convenience, Fleet provides a script that can automate the process of j
 into a fleet. To use the script, follow the steps below:
 
 ```sh
-# Query the API server address of the hub cluster.
-export HUB_CLUSTER_ADDRESS="https://$(docker inspect $HUB_CLUSTER-control-plane --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'):6443"
+# Replace the value of MEMBER_CLUSTER with the name you would like to assign to the new member
+# cluster.
+#
+# Note that Fleet will recognize your cluster with this name once it joins.
+export MEMBER_CLUSTER=YOUR-MEMBER-CLUSTER
+# Replace the value of MEMBER_CLUSTER_CONTEXT with the name of the kubeconfig context you use
+# for accessing your member cluster.
+export MEMBER_CLUSTER_CONTEXT=YOUR-MEMBER-CLUSTER-CONTEXT
 
-export MEMBER_CLUSTER_CONTEXT=kind-$MEMBER_CLUSTER
+
+# Build and push the member agent image to your container registry. 
+make docker-build-member-agent
+make docker-build-refresh-token
 
 # Run the script.
-chmod +x ./hack/membership/join.sh
-./hack/membership/join.sh
+chmod +x ./hack/membership/joinMC.sh
+./hack/membership/joinMC.sh  $TAG <HUB-CLUSTER-NAME> <MEMBER-CLUSTER-NAME>
 ```
 
 It may take a few minutes for the script to finish running. Once it is completed, verify

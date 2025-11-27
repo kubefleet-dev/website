@@ -58,6 +58,7 @@ kubectl config use-context $HUB_CLUSTER_CONTEXT
 export REGISTRY="YOUR CONTAINER REGISTRY" # Replace with your own container registry
 export TARGET_ARCH="amd64" # Replace with your architecture, we support amd64 and arm64
 export TAG=$(curl "https://api.github.com/repos/kubefleet-dev/kubefleet/tags" | jq -r '.[0].name') # Replace with your desired tag
+export HUB_AGENT_IMAGE="hub-agent"
 
 # Clone the KubeFleet repository from GitHub and navigate to the root directory of the repository.
 git clone https://github.com/kubefleet-dev/kubefleet.git
