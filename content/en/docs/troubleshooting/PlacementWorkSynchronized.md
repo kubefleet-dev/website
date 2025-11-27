@@ -1,10 +1,10 @@
 ---
-title: CRP Work-Synchronization Failure TSG
-description: Troubleshooting guide for CRP status "ClusterResourcePlacementWorkSynchronized" condition set to false
+title: Work Synchronization Failure TSG
+description: Troubleshooting guide for "WorkSynchronized" condition set to false (ClusterResourcePlacementWorkSynchronized / ResourcePlacementWorkSynchronized)
 weight: 5
 ---
 
-The `ClusterResourcePlacementWorkSynchronized` condition is false when the CRP has been recently updated but the associated work objects have not yet been synchronized with the changes.
+The `ClusterResourcePlacementWorkSynchronized` (CRP) or `ResourcePlacementWorkSynchronized` (RP) condition is `False` when the placement has been recently updated but the associated Work objects have not yet been synchronized with the latest selected resources.
 > Note: In addition, it may be helpful to look into the logs for the [work generator controller](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workgenerator/controller.go) to get more information on why the work synchronization failed.
 
 ## Common Scenarios
@@ -118,3 +118,6 @@ To address the issue at hand, there are several potential solutions:
 - Rejoin the member cluster. The namespace can only be regenerated after rejoining the cluster.
 
 In other situations, you might opt to wait for the work to finish propagating.
+
+## General Notes
+For ResourcePlacement the investigation is identical — inspect `.status.placementStatuses[*].conditions` for `WorkSynchronized` and check the associated Work in the `fleet-member-{clusterName}` namespace.

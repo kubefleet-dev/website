@@ -57,14 +57,14 @@ kubectl describe resourceplacement <name> -n <namespace>
 The complete progression of `ResourcePlacement` is as follows:
 
 1. `ResourcePlacementScheduled`: Indicates a resource has been scheduled for placement.
-   - If this condition is false, refer to [CRP Schedule Failure TSG](ClusterResourcePlacementScheduled.md).
+   - If this condition is false, refer to [Scheduling Failure TSG](PlacementScheduled.md).
 2. `ResourcePlacementRolloutStarted`: Indicates the rollout process has begun.
-   - If this condition is false, refer to [CRP Rollout Failure TSG](ClusterResourcePlacementRolloutStarted.md).
+   - If this condition is false, refer to [Rollout Failure TSG](PlacementRolloutStarted.md).
    - If you are triggering a rollout with a staged update run, refer to [ClusterStagedUpdateRun TSG](ClusterStagedUpdateRun.md).
 3. `ResourcePlacementOverridden`: Indicates the resource has been overridden.
-   - If this condition is false, refer to [CRP Override Failure TSG](ClusterResourcePlacementOverridden.md).
+   - If this condition is false, refer to [Override Failure TSG](PlacementOverridden.md).
 4. `ResourcePlacementWorkSynchronized`: Indicates the work objects have been synchronized.
-   - If this condition is false, refer to [CRP Work-Synchronization Failure TSG](ClusterResourcePlacementWorkSynchronized.md).
+   - If this condition is false, refer to [Work Synchronization Failure TSG](PlacementWorkSynchronized.md).
 5. `ResourcePlacementApplied`: Indicates the resource has been applied. This condition will only be populated if the
 apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideApply`.
    - If this condition is false, refer to [Work-Application Failure TSG](PlacementApplied.md).
@@ -73,7 +73,7 @@ apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideA
    - If this condition is false, refer to [Availability Failure TSG](PlacementAvailable.md).
 7. `ResourcePlacementDiffreported`: Indicates whether diff reporting has completed on all resources. This condition
 will only be populated if the apply strategy in use is of the type `ReportDiff`.
-   - If this condition is false, refer to the [CRP Diff Reporting Failure TSG](ClusterResourcePlacementDiffReported.md) for more information.
+   - If this condition is false, refer to the [Diff Reporting Failure TSG](PlacementDiffReported.md) for more information.
 
 > **Note**: ResourcePlacement and ClusterResourcePlacement share the same underlying architecture with a 1-to-1 mapping of condition types. 
 > The condition types follow a naming convention where RP conditions use the `ResourcePlacement` prefix while CRP conditions use the 
