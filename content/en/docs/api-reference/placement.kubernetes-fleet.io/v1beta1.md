@@ -2273,10 +2273,9 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `Initialize` | StateNotStarted describes user intent to initialize but not execute the update run.<br />This is the default state when an update run is created.<br /> |
-| `Execute` | StateStarted describes user intent to execute (or resume execution if paused).<br />Users can subsequently set the state to Pause or Abandon.<br /> |
-| `Pause` | StateStopped describes user intent to pause the update run.<br />Users can subsequently set the state to Execute or Abandon.<br /> |
-| `Abandon` | StateAbandoned describes user intent to abandon the update run.<br />This is a terminal state; once set, it cannot be changed.<br /> |
+| `Initialize` | StateInitialize describes user intent to initialize but not run the update run.<br />This is the default state when an update run is created.<br />Users can subsequently set the state to Run.<br /> |
+| `Run` | StateRun describes user intent to execute (or resume execution if stopped).<br />Users can subsequently set the state to Stop.<br /> |
+| `Stop` | StateStop describes user intent to stop the update run.<br />Users can subsequently set the state to Run.<br /> |
 
 
 #### StatusReportingScope
@@ -2377,7 +2376,7 @@ _Appears in:_
 | `placementName` _string_ | PlacementName is the name of placement that this update run is applied to.<br />There can be multiple active update runs for each placement, but<br />it's up to the DevOps team to ensure they don't conflict with each other. |  | MaxLength: 255 <br />Required: \{\} <br /> |
 | `resourceSnapshotIndex` _string_ | The resource snapshot index of the selected resources to be updated across clusters.<br />The index represents a group of resource snapshots that includes all the resources a ResourcePlacement selected. |  | Optional: \{\} <br /> |
 | `stagedRolloutStrategyName` _string_ | The name of the update strategy that specifies the stages and the sequence<br />in which the selected resources will be updated on the member clusters. The stages<br />are computed according to the referenced strategy when the update run starts<br />and recorded in the status field. |  | Required: \{\} <br /> |
-| `state` _[State](#state)_ | State indicates the desired state of the update run.<br />Initialize: The update run should be initialized but execution should not start (default).<br />Execute: The update run should execute or resume execution.<br />Pause: The update run should pause execution.<br />Abandon: The update run should be abandoned and terminated. | Initialize | Enum: [Initialize Execute Pause Abandon] <br />Optional: \{\} <br /> |
+| `state` _[State](#state)_ | State indicates the desired state of the update run.<br />Initialize: The update run should be initialized but execution should not start (default).<br />Run: The update run should execute or resume execution.<br />Stop: The update run should stop execution. | Initialize | Enum: [Initialize Run Stop] <br />Optional: \{\} <br /> |
 
 
 
