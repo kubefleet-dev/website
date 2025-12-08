@@ -215,6 +215,7 @@ The request object MUST have the following labels:
   - `TargetUpdateRun`: Points to the staged update run that this approval request is for.
   - `TargetStage`: The name of the stage that this approval request is for.
   - `IsLatestUpdateRunApproval`: Indicates whether this approval request is the latest one related to this update run.
+  - `TaskType`: Indicates whether this approval request is for the before or after stage task.
 
 
 
@@ -351,6 +352,7 @@ The request object MUST have the following labels:
   - `TargetUpdateRun`: Points to the cluster staged update run that this approval request is for.
   - `TargetStage`: The name of the stage that this approval request is for.
   - `IsLatestUpdateRunApproval`: Indicates whether this approval request is the latest one related to this update run.
+  - `TaskType`: Indicates whether this approval request is for the before or after stage task.
 
 
 
