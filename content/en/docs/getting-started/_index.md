@@ -12,4 +12,3 @@ If you are not sure about which one is the best option, for simplicity reasons, 
 recommended that you start with the
 [Getting started with Fleet using KinD clusters](/docs/getting-started/kind.md).
 {{% /pageinfo %}}
-
