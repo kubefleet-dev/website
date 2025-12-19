@@ -14,29 +14,24 @@ title: KubeFleet
 {{< blocks/link-down color="info" >}}
 {{< /blocks/custom-cover >}}
 
-
 {{% blocks/custom-showcase color="primary" %}}
 KubeFleet是一个强大的<span class="text-white bg-dark"><b>开源Kubernetes多集群管理平台</b></span>。
 KubeFleet可以帮助您智慧调度工作负载，渐进式应用代码更新，以及轻松执行各种多集群日常管理任务。
 <span class="text-white bg-dark"><b>不论您的集群是运行在公有云还是私有云上</b></span>，KubeFleet都可以发挥作用。
 {{< /blocks/custom-showcase >}}
 
-
 {{% blocks/section color="dark" type="row" %}}
 {{% blocks/feature icon="fab fa-hubspot" title="统一集中管理" %}}
 通过设置一个主集群，KubeFleet可以帮助开发者和运维人员在一个位置统一集中执行多集群操作。
 {{% /blocks/feature %}}
 
-
 {{% blocks/feature icon="fa-solid fa-brain" title="智慧调度"%}}
 您可以利用KubeFleet的智慧调度能力，使您的工作负载始终在最合适的Kubernetes集群上运行，从而提升性能、改善可用性，并减少开销。
 {{% /blocks/feature %}}
 
-
 {{% blocks/feature icon="fa-solid fa-bars-progress" title="简化管理" %}}
 KubeFleet可以帮助您执行各种日常管理操作。您可以利用KubeFleet应用各类策略，检查应用状态，防止意外或临时操作造成的配置漂移，甚至是在不同集群间迁移工作负载。
 {{% /blocks/feature %}}
-
 
 {{% /blocks/section %}}
 
@@ -58,13 +53,12 @@ KubeFleet可以帮助您执行各种日常管理操作。您可以利用KubeFlee
 </div>
 <p>
   <h3 class="text-center">
-  如果您准备参加四月一日至四日的KubeCon + CloudNativeCon Europe 2025，您可以在<a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/program/schedule/">这些活动</a>中了解更多有关KubeFleet的信息。 
+  如果您准备参加四月一日至四日的KubeCon + CloudNativeCon Europe 2025，您可以在<a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/program/schedule/">这些活动</a>中了解更多有关KubeFleet的信息。
   </h3><br><br>
 </p>
 <br>
 
 {{% /blocks/section %}}
-
 
 {{% blocks/section type="row" %}}
 
@@ -82,4 +76,3 @@ KubeFleet可以帮助您执行各种日常管理操作。您可以利用KubeFlee
 {{% /blocks/feature %}}
 
 {{% /blocks/section %}}
-

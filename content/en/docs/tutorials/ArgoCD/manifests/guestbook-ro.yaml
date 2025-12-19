@@ -10,7 +10,7 @@ spec:
     overrideRules:
     - clusterSelector:
         clusterSelectorTerms:
-        - labelSelector: 
+        - labelSelector:
             matchExpressions:
             - key: environment
               operator: Exists

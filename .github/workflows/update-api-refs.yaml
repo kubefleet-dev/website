@@ -15,31 +15,31 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    
+
     steps:
       - name: Checkout website repository
         uses: actions/checkout@v4
-      
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: 'stable'
-      
+
       - name: Install tools
         run: make install-tools
-      
+
       - name: Update API references
         run: make update-api-refs-ci
-      
+
       - name: Clean up
         if: always()
         run: make clean
-      
+
       - name: Check for changes
         id: git-check
         run: |
           git diff --exit-code content/en/docs/api-reference/ || echo "has_changes=true" >> $GITHUB_OUTPUT
-      
+
       - name: Create Pull Request
         if: steps.git-check.outputs.has_changes == 'true'
         uses: peter-evans/create-pull-request@v6
@@ -47,7 +47,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: |
             docs: update API references from kubefleet main
-            
+
             Signed-off-by: GitHub Actions Bot <actions@github.com>
           committer: GitHub Actions Bot <actions@github.com>
           author: GitHub Actions Bot <actions@github.com>
@@ -57,20 +57,20 @@ jobs:
           title: 'Update API references from KubeFleet main'
           body: |
             ## Automated API Reference Update
-            
+
             This PR updates the API reference documentation by regenerating it from the latest KubeFleet main branch.
-            
+
             ### Changes
             - Regenerated API references from `kubefleet-dev/kubefleet` main branch
             - Updated documentation for cluster.kubernetes-fleet.io/v1 and v1beta1
             - Updated documentation for placement.kubernetes-fleet.io/v1 and v1beta1
-            
+
             ### Review Notes
             Please review the changes to ensure:
             - [ ] All API changes are accurately reflected
             - [ ] Hugo front matter is correctly applied
             - [ ] No unexpected changes were introduced
-            
+
             ---
             🤖 This PR was automatically created by the API reference update workflow.
           labels: |
