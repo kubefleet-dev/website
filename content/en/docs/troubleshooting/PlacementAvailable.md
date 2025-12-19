@@ -22,7 +22,7 @@ The example output below demonstrates a scenario where a ClusterResourcePlacemen
 
 ### ClusterResourcePlacement spec
 
-```
+```yaml
 spec:
   resourceSelectors:
     - group: ""
@@ -38,7 +38,7 @@ spec:
 
 ### ClusterResourcePlacement status
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2024-05-14T18:52:30Z"
@@ -156,7 +156,7 @@ For more information on finding the correct Work resource:
 
 ### Work status of kind-cluster-1
 
-```
+```yaml
 status:
 conditions:
 - lastTransitionTime: "2024-05-14T18:52:31Z"

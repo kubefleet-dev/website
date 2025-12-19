@@ -32,7 +32,7 @@ and the fleet currently comprises two member clusters named `kind-cluster-1` and
 
 ### ClusterResourcePlacement spec
 
-```
+```yaml
 spec:
   policy:
     numberOfClusters: 3
@@ -49,7 +49,7 @@ spec:
 
 ### ClusterResourcePlacement status
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2024-05-07T23:08:53Z"
@@ -185,7 +185,7 @@ To ensure seamless propagation of the namespace across the relevant clusters, pr
 
 ### ClusterResourcePlacement status after namespace test-ns is created on the hub cluster
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2024-05-07T23:08:53Z"
@@ -248,7 +248,7 @@ Check the latest `ClusterResourceSnapshot` by running the command in [How can I 
 
 ### Latest ClusterResourceSnapshot
 
-```
+```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourceSnapshot
 metadata:
@@ -292,7 +292,7 @@ Check the `ClusterResourceBinding` for `kind-cluster-1` by running the command i
 
 ### ClusterResourceBinding for kind-cluster-1
 
-```
+```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourceBinding
 metadata:

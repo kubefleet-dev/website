@@ -22,7 +22,7 @@ However, the `ClusterResourceOverride` is created with an invalid path for the f
 
 ### ClusterRole
 
-```
+```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -45,7 +45,7 @@ The `ClusterRole` `secret-reader` that is being propagated to the member cluster
 
 ### ClusterResourceOverride spec
 
-```
+```yaml
 spec:
   clusterResourceSelectors:
   - group: rbac.authorization.k8s.io
@@ -70,7 +70,7 @@ that has the value `new-value` for the clusters with the label `env: canary`.
 
 ### ClusterResourcePlacement Spec
 
-```
+```yaml
 spec:
   resourceSelectors:
     - group: rbac.authorization.k8s.io
@@ -95,7 +95,7 @@ spec:
 
 ### ClusterResourcePlacement Status
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2024-05-14T16:16:18Z"
@@ -163,7 +163,7 @@ Therefore, a new label can't be added.
 
 To successfully override the cluster role `secret-reader`, correct the path and value in `ClusterResourceOverride`, as shown in the following code:
 
-```
+```yaml
 jsonPatchOverrides:
   - op: add
     path: /metadata/labels

@@ -20,7 +20,7 @@ The CRP is attempting to propagate a resource to a selected cluster, but the wor
 
 ### ClusterResourcePlacement Spec
 
-```
+```yaml
 spec:
   resourceSelectors:
     - group: rbac.authorization.k8s.io
@@ -36,7 +36,7 @@ spec:
 
 ### ClusterResourcePlacement Status
 
-```
+```yaml
 spec:
   policy:
     numberOfClusters: 1

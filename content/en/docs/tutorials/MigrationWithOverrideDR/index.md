@@ -21,9 +21,9 @@ Due to a sudden increase in traffic and resource demands in your WestUS clusters
 
 The following resources are currently deployed in the WestUS clusters:
 
-#### Service
+### Service
 
-> Note: Service test file located [here](./testfiles/nginx-service.yaml).
+> Note: [Service test file located here](./testfiles/nginx-service.yaml).
 
 ```yaml
 apiVersion: v1
@@ -47,9 +47,9 @@ Summary:
 - The service is of type LoadBalancer, meaning it exposes the application to the internet.
 - It targets pods with the label app: nginx and forwards traffic to port 80 on the pods.
 
-#### Deployment
+### Deployment
 
-> Note: Deployment test file located [here](./testfiles/nginx-deployment.yaml).
+> Note: [Deployment test file located here](./testfiles/nginx-deployment.yaml).
 
 ```yaml
 apiVersion: apps/v1
@@ -83,9 +83,9 @@ Summary:
 - The deployment ensures that the specified number of pods (replicas) are running and available.
 - The pods are labeled with `app: nginx` and expose port 80.
 
-#### ClusterResourcePlacement
+### ClusterResourcePlacement
 
-> Note: CRP Availability test file located [here](./testfiles/crp-availability.yaml)
+> Note: [CRP Availability test file located here](./testfiles/crp-availability.yaml)
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -262,7 +262,7 @@ Summary:
 - The placement policy PickN selects 2 clusters. The clusters are selected based on the label `fleet.azure.com/location: westus`.
 - It targets resources in the `test-app` namespace.
 
-### Identify Clusters with More Availability
+## Identify Clusters with More Availability
 
 To identify clusters with more availability, you can check the member cluster properties.
 
@@ -290,7 +290,7 @@ For this tutorial, we will move them to WestEurope.
 
 ## Create Resource Override
 
-> Note: Cluster resource override test file located [here](./testfiles/ro-1.yaml)
+> Note: [Cluster resource override test file located here](./testfiles/ro-1.yaml)
 
 To scale up during migration, apply this override before updating crp:
 
@@ -322,7 +322,7 @@ spec:
 
 This override updates the `nginx-deployment` Deployment in the `test-app` namespace by setting the number of replicas to "4" for clusters located in the westeurope region.
 
-#### Update the CRP for Migration
+### Update the CRP for Migration
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -370,7 +370,7 @@ kubectl get crp crp-availability -o yaml
 
 You should see a status indicating that the application is now running in the WestEurope clusters, similar to the following:
 
-#### CRP Status
+### CRP Status
 
 ```yaml
 ...

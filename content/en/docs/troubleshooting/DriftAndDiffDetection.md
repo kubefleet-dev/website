@@ -13,7 +13,7 @@ detection results when using the KubeFleet CRP API.
 > the `ClusterResourcePlacementDiffReported` or `ResourcePlacementDiffReported` condition on your placement object is set to
 > `False`, see the [Diff Reporting Failure TSG](PlacementDiffReported)
 > instead.
-
+>
 > Note
 >
 > This document focuses on unexpected drift and configuration difference detection

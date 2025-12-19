@@ -24,7 +24,7 @@ The two clusters, named `kind-cluster-1` and `kind-cluster-2`, have joined the f
 
 ### CRP spec
 
-```
+```yaml
 spec:
   policy:
     affinity:
@@ -45,7 +45,7 @@ spec:
 
 ### ClusterResourcePlacement status
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2024-05-07T22:36:33Z"
@@ -150,7 +150,7 @@ The corresponding `ClusterSchedulingPolicySnapshot` spec and status gives us eve
 
 ### Latest ClusterSchedulingPolicySnapshot
 
-```
+```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterSchedulingPolicySnapshot
 metadata:

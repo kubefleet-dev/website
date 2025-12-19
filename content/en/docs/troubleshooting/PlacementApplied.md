@@ -29,25 +29,25 @@ In the following example, a `ClusterResourcePlacement` is trying to propagate a 
 
 ### ClusterResourcePlacement spec
 
-```
-  policy:
-    clusterNames:
-    - kind-cluster-1
-    - kind-cluster-2
-    placementType: PickFixed
-  resourceSelectors:
-  - group: ""
-    kind: Namespace
-    name: test-ns
-    version: v1
-  revisionHistoryLimit: 10
-  strategy:
-    type: RollingUpdate
+```yaml
+policy:
+  clusterNames:
+  - kind-cluster-1
+  - kind-cluster-2
+  placementType: PickFixed
+resourceSelectors:
+- group: ""
+  kind: Namespace
+  name: test-ns
+  version: v1
+revisionHistoryLimit: 10
+strategy:
+  type: RollingUpdate
 ```
 
 ### ClusterResourcePlacement status
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2024-05-07T23:32:40Z"
@@ -189,7 +189,7 @@ To inspect the Work object for more details, follow the steps in the [Investigat
 
 ### Work status of kind-cluster-1
 
-```
+```yaml
  status:
   conditions:
   - lastTransitionTime: "2024-05-07T23:32:40Z"

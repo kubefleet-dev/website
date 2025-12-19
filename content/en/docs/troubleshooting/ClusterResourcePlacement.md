@@ -99,7 +99,7 @@ In this case we have `ClusterResourcePlacement` called test-crp.
 
 1. List the `ClusterResourcePlacement` to get the name of the CRP,
 
-```
+```text
 kubectl get crp test-crp
 NAME       GEN   SCHEDULED   SCHEDULEDGEN   APPLIED   APPLIEDGEN   AGE
 test-crp   1     True        1              True      1            15s
@@ -114,7 +114,7 @@ kubectl describe clusterresourceplacement test-crp
 3. Here's an example output. From the `placementStatuses` section of the `test-crp` status, notice that it has distributed
 resources to two member clusters and, therefore, has two `ClusterResourceBindings` instances:
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2023-11-23T00:49:29Z"
@@ -140,7 +140,7 @@ status:
 
 4. The output lists all `ClusterResourceBindings` instances that are associated with `test-crp`.
 
-```
+```text
 kubectl get clusterresourcebinding -l kubernetes-fleet.io/parent-CRP=test-crp
 NAME                               WORKCREATED   RESOURCESAPPLIED   AGE
 test-crp-kind-cluster-1-be990c3e   True          True               33s
@@ -154,7 +154,7 @@ Find the `ClusterResourceBinding` for the target cluster you are looking for bas
 
 To find the latest ClusterResourceSnapshot resource, run the following command:
 
-```
+```bash
 kubectl get clusterresourcesnapshot -l kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP={CRPName}
 ```
 
@@ -167,7 +167,7 @@ To find the correct work resource, follow these steps:
 1. Identify the member cluster namespace and the `ClusterResourcePlacement` name. The format for the namespace is `fleet-member-{clusterName}`.
 2. To get the work resource, run the following command:
 
-```
+```bash
 kubectl get work -n fleet-member-{clusterName} -l kubernetes-fleet.io/parent-CRP={CRPName}
 ```
 

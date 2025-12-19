@@ -62,7 +62,7 @@ spec:
 
 The examples in the tutorial will pick a `Deployment` named `my-deployment` from the namespace `test-namespace`, as shown below, to be overridden.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -251,7 +251,7 @@ The `ResourceOverride` object above will replace the image of the container in t
 with the image `nginx:1.20.0` on all clusters with the label `env: prod` selected by the clusterResourcePlacement `crp-example`.
 > The ResourceOverride mentioned above utilizes the deployment displayed below:
 >
-> ```
+> ```yaml
 > apiVersion: apps/v1
 > kind: Deployment
 > metadata:
@@ -352,7 +352,7 @@ with the image `nginx:1.20.0` on all clusters with the label `env: prod` and the
 
 > The ResourceOverride mentioned above utilizes the deployment displayed below:
 >
-> ```
+> ```yaml
 > apiVersion: apps/v1
 > kind: Deployment
 > metadata:
@@ -459,26 +459,26 @@ check resources in the selected clusters:
 Upon inspecting the member cluster, it was found that the selected cluster had the label env: prod.
 Consequently, the image on deployment `my-deployment` was modified to be `nginx:1.20.0` on selected cluster.
 
-   ```
-   apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      ...
-      name: my-deployment
-      namespace: test-namespace
-      ...
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  ...
+  name: my-deployment
+  namespace: test-namespace
+  ...
+spec:
+  ...
+  template:
+    ...
     spec:
+      containers:
+      - image: nginx:1.20.0
+        imagePullPolicy: IfNotPresent
+        name: nginx
+        ports:
+        ...
       ...
-      template:
-        ...
-        spec:
-          containers:
-          - image: nginx:1.20.0
-            imagePullPolicy: IfNotPresent
-            name: nginx
-            ports:
-           ...
-          ...
-    status:
-        ...
+status:
+    ...
 ```

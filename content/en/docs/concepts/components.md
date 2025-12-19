@@ -8,7 +8,7 @@ weight: 1
 
 This document provides an overview of the components required for a fully functional and operational Fleet setup.
 
-![](/images/en/docs/concepts/components/architecture.jpg)
+![Component architecture diagram](/images/en/docs/concepts/components/architecture.jpg)
 
 The fleet consists of the following components:
 

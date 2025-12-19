@@ -13,7 +13,7 @@ set to `False` in the placement status.
 > If you are looking for troubleshooting steps on unexpected drift detection and/or configuration
 > difference detection results, see the [Drift Detection and Configuration Difference Detection Failure TSG](DriftAndDiffDetection)
 > instead.
-
+>
 > Note
 >
 > The `ClusterResourcePlacementDiffReported` or `ResourcePlacementDiffReported` status condition will only be set if the placement has

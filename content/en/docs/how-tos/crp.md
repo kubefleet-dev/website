@@ -130,11 +130,11 @@ under it) and the cluster role `secretReader`.
 Each scheduling policy is associated with a placement type, which determines how Fleet will
 pick clusters. The `ClusterResourcePlacement` API supports the following placement types:
 
-| Placement type | Description |
-|----------------|-------------|
-| `PickFixed`      | Pick a specific set of clusters by their names. |
-| `PickAll`        | Pick all the clusters in the fleet, per some standard. |
-| `PickN`          | Pick a count of N clusters in the fleet, per some standard. |
+| Placement type | Description                                                 |
+| -------------- | ----------------------------------------------------------- |
+| `PickFixed`    | Pick a specific set of clusters by their names.             |
+| `PickAll`      | Pick all the clusters in the fleet, per some standard.      |
+| `PickN`        | Pick a count of N clusters in the fleet, per some standard. |
 
 > Note
 >
@@ -349,12 +349,12 @@ For more information, see the
 The table below summarizes the available scheduling policy fields for each placement type:
 
 |                             | `PickFixed` | `PickAll` | `PickN` |
-|-----------------------------|-------------|-----------|---------|
-| `placementType`             | ✅ | ✅ | ✅ |
-| `numberOfClusters`          | ❌ | ❌ | ✅ |
-| `clusterNames`              | ✅ | ❌ | ❌ |
-| `affinity`                  | ❌ | ✅ | ✅ |
-| `topologySpreadConstraints` | ❌ | ❌ | ✅ |
+| --------------------------- | ----------- | --------- | ------- |
+| `placementType`             | ✅          | ✅        | ✅      |
+| `numberOfClusters`          | ❌          | ❌        | ✅      |
+| `clusterNames`              | ✅          | ❌        | ❌      |
+| `affinity`                  | ❌          | ✅        | ✅      |
+| `topologySpreadConstraints` | ❌          | ❌        | ✅      |
 
 ## Rollout strategy
 

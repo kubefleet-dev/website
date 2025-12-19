@@ -155,7 +155,7 @@ kubectl describe resourceplacement test-rp -n test-ns
 
 **Here's an example output:**
 
-```yaml
+```text
 Status:
   Conditions:
     Last Transition Time:   2025-11-13T22:25:45Z

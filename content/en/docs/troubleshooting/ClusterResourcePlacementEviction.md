@@ -25,7 +25,7 @@ a terminal state or not.
 
 Example status with missing `CRP` object:
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2025-04-17T22:16:59Z"
@@ -38,7 +38,7 @@ status:
 
 Example status with deleting `CRP` object:
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2025-04-21T19:53:42Z"
@@ -57,7 +57,7 @@ The user should verify if the `ClusterResourcePlacement` object is missing or if
 
 Example status with missing `CRB` object:
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2025-04-17T22:21:51Z"
@@ -72,7 +72,7 @@ status:
 > **Note:** The user can find the corresponding `ClusterResourceBinding` object by listing all `ClusterResourceBinding`
 > objects for the `ClusterResourcePlacement` object
 >
-> ```
+> ```bash
 > kubectl get rb -l kubernetes-fleet.io/parent-CRP=<CRPName>
 > ```
 >
@@ -90,7 +90,7 @@ was not created and try to create an eviction object once `ClusterResourceBindin
 
 Example status with multiple `CRB` objects:
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2025-04-17T23:48:08Z"
@@ -111,7 +111,7 @@ to the member cluster being selected again, and it will normally resolve quickly
 
 Example status for `ClusterResourcePlacementEviction` object targeting a PickFixed `ClusterResourcePlacement` object:
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2025-04-21T23:19:06Z"
@@ -132,7 +132,7 @@ remove the member cluster name from the `clusterNames` field in the policy of th
 
 ### Eviction blocked because placement is missing
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2025-04-23T23:54:03Z"
@@ -157,13 +157,13 @@ for the targeted `ClusterResourcePlacement` the corresponding `ClusterResourceBi
 > **Note:** The user can find the corresponding `ClusterResourceBinding` object by listing all `ClusterResourceBinding`
 > objects for the `ClusterResourcePlacement` object
 >
-> ```
+> ```bash
 > kubectl get rb -l kubernetes-fleet.io/parent-CRP=<CRPName>
 > ```
 >
 > The `ClusterResourceBinding` object name is formatted as `<CRPName>-<ClusterName>-randomsuffix`.
 
-```
+```yaml
 spec:
   applyStrategy:
     type: ClientSideApply
@@ -189,7 +189,7 @@ happen at all, in that case the user should verify if rollout is stuck for `Clus
 
 Example status for `ClusterResourcePlacementEviction` object with invalid `ClusterResourcePlacementDisruptionBudget`,
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2025-04-21T23:39:42Z"
@@ -219,7 +219,7 @@ placements is non-deterministic.
 Example status for `ClusterResourcePlacementEviction` object blocked by a `ClusterResourcePlacementDisruptionBudget`
 object,
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2025-04-24T18:54:30Z"
@@ -244,7 +244,7 @@ is protecting all placements propagated by the `ClusterResourcePlacement` object
 
 Taking a look at the `ClusterResourcePlacementDisruptionBudget` object,
 
-```
+```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacementDisruptionBudget
 metadata:
@@ -265,7 +265,7 @@ We can see that the `minAvailable` is set to `2`, which means that at least 2 pl
 
 Let's take a look at the `ClusterResourcePlacement` object's status to verify the list of available placements,
 
-```
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2025-04-24T18:46:38Z"
