@@ -44,13 +44,13 @@ After applying the above `MemberCluster`, we will apply a `ClusterResourcePlacem
   resourceSelectors:
     - group: ""
       kind: Namespace
-      version: v1          
+      version: v1
       name: test-ns
   policy:
     placementType: PickAll
 ```
 
-The `ClusterResourcePlacement` CR should not propagate the `test-ns` namespace to the member cluster because of the taint, 
+The `ClusterResourcePlacement` CR should not propagate the `test-ns` namespace to the member cluster because of the taint,
 looking at the status of the CR should show the following:
 
 ```yaml
@@ -82,7 +82,7 @@ status:
     version: v1
 ```
 
-Looking at the `ClusterResourcePlacementSynchronized`, `ClusterResourcePlacementApplied` conditions and reading the message fields 
+Looking at the `ClusterResourcePlacementSynchronized`, `ClusterResourcePlacementApplied` conditions and reading the message fields
 we can see that no clusters were selected to place the resources.
 
 ## Removing taint from MemberCluster
@@ -324,5 +324,5 @@ status:
 ```
 
 Nothing changes in the status because even if the new taint is not tolerated, the exising resources on the `MemberCluster`
-will continue to run because the taint effect is `NoSchedule` and the cluster was already selected for resource propagation in a 
+will continue to run because the taint effect is `NoSchedule` and the cluster was already selected for resource propagation in a
 previous scheduling cycle.

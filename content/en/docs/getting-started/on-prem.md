@@ -20,16 +20,16 @@ of day-to-day Kubernetes management.
 To complete this tutorial, you will need:
 
 * At least two Kubernetes clusters of your own.
-    * Note that one of these clusters will serve as your hub cluster; other clusters must be able
+  * Note that one of these clusters will serve as your hub cluster; other clusters must be able
     to reach it via the network.
 * The following tools on your local machine:
-    * `docker`, to build kubefleet agent images.
-    * `kubectl`, the Kubernetes CLI tool.
-    * `git`
-    * `curl`
-    * `helm`, the Kubernetes package manager
-    * `jq`
-    * `base64`
+  * `docker`, to build kubefleet agent images.
+  * `kubectl`, the Kubernetes CLI tool.
+  * `git`
+  * `curl`
+  * `helm`, the Kubernetes package manager
+  * `jq`
+  * `base64`
 
 ## Set up a Fleet hub cluster
 
@@ -43,7 +43,7 @@ primarily orchestrating workloads across different clusters.
 hub cluster.
 
 Any Kubernetes cluster running a supported version of Kubernetes can serve as the hub cluster;
-it is recommended that you reserve a cluster specifically for this responsibility, and do not run heavy workloads on it. 
+it is recommended that you reserve a cluster specifically for this responsibility, and do not run heavy workloads on it.
 
 To set up the hub cluster, run the commands below:
 
@@ -64,7 +64,7 @@ export HUB_AGENT_IMAGE="hub-agent"
 git clone https://github.com/kubefleet-dev/kubefleet.git
 cd kubefleet
 
-# Build and push the hub agent image to your container registry. 
+# Build and push the hub agent image to your container registry.
 export OUTPUT_TYPE="type=registry"
 make docker-build-hub-agent
 
@@ -79,8 +79,9 @@ helm upgrade --install hub-agent ./charts/hub-agent/ \
         --set forceDeleteWaitTime="3m0s" \
         --set clusterUnhealthyThreshold="5m0s" \
         --set logFileMaxSize=100000 \
-        --set MaxConcurrentClusterPlacement=200 
+        --set MaxConcurrentClusterPlacement=200
 ```
+
 It may take a few seconds for the installation to complete. Once it finishes, verify that
 the Fleet hub agents are up and running with the commands below:
 
@@ -108,7 +109,7 @@ export MEMBER_CLUSTER=YOUR-MEMBER-CLUSTER
 # for accessing your member cluster.
 export MEMBER_CLUSTER_CONTEXT=YOUR-MEMBER-CLUSTER-CONTEXT
 
-# Build and push the member agent image to your container registry. 
+# Build and push the member agent image to your container registry.
 make docker-build-member-agent
 make docker-build-refresh-token
 
@@ -117,8 +118,9 @@ chmod +x ./hack/membership/joinMC.sh
 ./hack/membership/joinMC.sh  $TAG <HUB-CLUSTER-NAME> <MEMBER-CLUSTER-NAME-1> <MEMBER-CLUSTER-NAME-2> <MEMBER-CLUSTER-CONTEXT-3> ...
 ```
 
-It may take a few minutes for the script to finish running. Once it is completed, the script will print out something 
+It may take a few minutes for the script to finish running. Once it is completed, the script will print out something
 like this:
+
 ```sh
 NAME              JOINED   AGE   MEMBER-AGENT-LAST-SEEN   NODE-COUNT   AVAILABLE-CPU   AVAILABLE-MEMORY
 routing-cluster   True     30s   28s                      2            5748m           28780328Ki
@@ -129,9 +131,7 @@ the cluster is still in an unknown state, it might be that the member cluster
 is still connecting to the hub cluster. Should this state persist for a prolonged
 period, refer to the [Troubleshooting Guide](/docs/troubleshooting) for more information.
 
-
-
-## Use the `ClusterResourcePlacement` API to orchestrate resources among member clusters.
+## Use the `ClusterResourcePlacement` API to orchestrate resources among member clusters
 
 Fleet offers an API, `ClusterResourcePlacement`, which helps orchestrate workloads, i.e., any group
 Kubernetes resources, among all member clusters. In this last part of the tutorial, you will use

@@ -10,9 +10,9 @@ which are often brought by temporary fixes, inadvertent changes, and failed auto
 
 > Before you begin
 >
-> The new drift detection experience is currently in preview. 
+> The new drift detection experience is currently in preview.
 >
-> Note that the APIs for the new experience are only available in the Fleet v1beta1 API, not the v1 API. If you do not see the new APIs in command outputs, verify that you are explicitly requesting the v1beta1 API objects, as opposed to the v1 API objects (the default). 
+> Note that the APIs for the new experience are only available in the Fleet v1beta1 API, not the v1 API. If you do not see the new APIs in command outputs, verify that you are explicitly requesting the v1beta1 API objects, as opposed to the v1 API objects (the default).
 
 ## What is a drift?
 
@@ -51,7 +51,7 @@ See the steps below for an example; the code assumes that you have a Fleet of tw
         - group: ""
           kind: Namespace
           version: v1
-          # Select all namespaces with the label app=work.      
+          # Select all namespaces with the label app=work.
           labelSelector:
             matchLabels:
               app: work
@@ -60,11 +60,11 @@ See the steps below for an example; the code assumes that you have a Fleet of tw
       strategy:
         # For simplicity reasons, the CRP is configured to roll out changes to
         # all member clusters at once. This is not a setup recommended for production
-        # use.         
+        # use.
         type: RollingUpdate
         rollingUpdate:
           maxUnavailable: 100%
-          unavailablePeriodSeconds: 1            
+          unavailablePeriodSeconds: 1
     EOF
     ```
 
@@ -88,7 +88,7 @@ See the steps below for an example; the code assumes that you have a Fleet of tw
     kubectl get ns work --show-labels
     ```
 
-    The output should look as follows; note that all the labels have been set 
+    The output should look as follows; note that all the labels have been set
     (the `kubernetes.io/metadata.name` label is added by the Kubernetes system automatically):
 
     ```
@@ -106,7 +106,7 @@ for example, one can set the `owner` label to a different value:
 
     **Now the namespace has drifted from its intended state.**
 
-Note that drifts are not necessarily a bad thing: to ensure system availability, often developers 
+Note that drifts are not necessarily a bad thing: to ensure system availability, often developers
 and admins would need to make ad-hoc changes to the system; for example, one might need to set a
 Deployment on a member cluster to use a different image from its template (as kept on the hub
 cluster) to test a fix. In the current version of Fleet, the system is not drift-aware, which
@@ -155,7 +155,7 @@ illustrated by the steps below:
         - group: ""
           kind: Namespace
           version: v1
-          # Select all namespaces with the label app=work. 
+          # Select all namespaces with the label app=work.
           labelSelector:
             matchLabels:
               app: work
@@ -166,20 +166,20 @@ illustrated by the steps below:
           whenToApply: IfNotDrifted
         # For simplicity reasons, the CRP is configured to roll out changes to
         # all member clusters at once. This is not a setup recommended for production
-        # use.      
+        # use.
         type: RollingUpdate
         rollingUpdate:
           maxUnavailable: 100%
-          unavailablePeriodSeconds: 1                
+          unavailablePeriodSeconds: 1
     EOF
     ```
 
     The `whenToApply` field features two options:
-    
-    * `Always`: this is the default option 😑. With this setting, Fleet will periodically apply
+
+  * `Always`: this is the default option 😑. With this setting, Fleet will periodically apply
     the resource templates from the hub cluster to member clusters, with or without drifts.
     This is consistent with the behavior before the new drift detection and takeover experience.
-    * `IfNotDrifted`: this is the new option ✨ provided by the drift detection mechanism. With
+  * `IfNotDrifted`: this is the new option ✨ provided by the drift detection mechanism. With
     this setting, Fleet will check for drifts periodically; if drifts are found, Fleet will stop
     applying the resource templates and report in the CRP status.
 
@@ -270,16 +270,16 @@ reports for each cluster:
 
     Fleet will report the following information about a drift:
 
-    * `group`, `kind`, `version`, `namespace`, and `name`: the resource that has drifted from its desired state.
-    * `observationTime`: the timestamp where the current drift detail is collected.
-    * `firstDriftedObservedTime`: the timestamp where the current drift is first observed.
-    * `observedDrifts`: the drift details, specifically:
-        * `path`: A JSON path (RFC 6901) that points to the drifted field;
-        * `valueInHub`: the value at the JSON path as seen from the hub cluster resource template 
+  * `group`, `kind`, `version`, `namespace`, and `name`: the resource that has drifted from its desired state.
+  * `observationTime`: the timestamp where the current drift detail is collected.
+  * `firstDriftedObservedTime`: the timestamp where the current drift is first observed.
+  * `observedDrifts`: the drift details, specifically:
+    * `path`: A JSON path (RFC 6901) that points to the drifted field;
+    * `valueInHub`: the value at the JSON path as seen from the hub cluster resource template
         (the desired state). If this value is absent, the field does not exist in the resource template.
-        * `valueInMember`: the value at the JSON path as seen from the member cluster resource
+    * `valueInMember`: the value at the JSON path as seen from the member cluster resource
         (the current state). If this value is absent, the field does not exist in the current state.
-    * `targetClusterObservedGeneration`: the generation of the member cluster resource.
+  * `targetClusterObservedGeneration`: the generation of the member cluster resource.
 
     The following `jq` query can help you better extract the drifted clusters and the drift
     details from the CRP status output:
@@ -320,15 +320,14 @@ reports for each cluster:
     }
     ```
 
-
 * To fix the drift, consider one of the following options:
 
-    * Switch the `whenToApply` setting back to `Always`, which will instruct Fleet to overwrite
+  * Switch the `whenToApply` setting back to `Always`, which will instruct Fleet to overwrite
     the drifts using values from the hub cluster resource template; or
-    * Edit the drifted field directly on the member cluster side, so that the value is
+  * Edit the drifted field directly on the member cluster side, so that the value is
     consistent with that on the hub cluster; Fleet will periodically re-evaluate drifts
     and should report that no drifts are found soon after.
-    * Delete the resource from the member cluster. Fleet will then re-apply the resource
+  * Delete the resource from the member cluster. Fleet will then re-apply the resource
     template and re-create the resource.
 
     > Important:
@@ -373,7 +372,7 @@ spec:
 ```
 
 With this setting, Fleet will recognize the presence of any unmanaged fields (i.e., fields that
-are present on the member cluster side, but not set on the hub cluster side) as drifts as well. 
+are present on the member cluster side, but not set on the hub cluster side) as drifts as well.
 If anyone adds a field to a Fleet-managed object directly on the member cluster, it would trigger
 an apply error, which you can find out about the details the same way as illustrated in the
 section above.
@@ -390,5 +389,3 @@ Below is a summary of the synergy between the `whenToApply` and `comparisonOptio
 | `Always` | `partialComparison` | A managed field (i.e., a field that has been explicitly set in the hub cluster resource template) is edited. | N/A; the change is overwritten shortly. |
 | `Always` | `partialComparison` | An unmanaged field (i.e., a field that has not been explicitly set in the hub cluster resource template) is edited/added. | N/A; the change is left untouched, and Fleet will ignore it. |
 | `Always` | `fullComparison` | Any field is edited/added. | The change on managed fields will be overwritten shortly; Fleet will report drift details about changes on unmanaged fields, but this is not considered as an apply error. |
-
-

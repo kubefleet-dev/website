@@ -8,16 +8,20 @@ The `ClusterResourcePlacementAvailable` (for ClusterResourcePlacement) or `Resou
 > Note: To get more information about why resources are unavailable check [work applier](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier) logs.
 
 ## Common scenarios
+
 Instances where this condition may arise:
+
 - The member cluster doesn't have enough resource availability.
 - The deployment contains an invalid image name.
 - Required resources (such as persistent volumes, config maps, or secrets) are missing.
 - Resource quotas or limit ranges are preventing the resource from becoming available.
 
 ## Case Study: ClusterResourcePlacement
+
 The example output below demonstrates a scenario where a ClusterResourcePlacement is unable to propagate a deployment to a member cluster due to the deployment having a bad image name.
 
 ### ClusterResourcePlacement spec
+
 ```
 spec:
   resourceSelectors:
@@ -33,6 +37,7 @@ spec:
 ```
 
 ### ClusterResourcePlacement status
+
 ```
 status:
   conditions:
@@ -138,16 +143,19 @@ status:
     namespace: test-ns
     version: v1
  ```
+
 In the ClusterResourcePlacement status, within the `failedPlacements` section for `kind-cluster-1`, we get a clear message
 as to why the resource is not available on the member cluster. In the preceding `conditions` section,
 the `ClusterResourcePlacementAvailable` condition for `kind-cluster-1` is flagged as `false` and shows `NotAllWorkAreAvailable` reason.
 This signifies that the Work object intended for the member cluster `kind-cluster-1` is not yet available.
 
 For more information on finding the correct Work resource:
+
 - For ClusterResourcePlacement, see [this section](ClusterResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement)
 - For ResourcePlacement, see [this section](ResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-resourceplacement)
 
 ### Work status of kind-cluster-1
+
 ```
 status:
 conditions:
@@ -204,20 +212,23 @@ conditions:
     resource: deployments
     version: v1
 ```
-Check the `Available` status for `kind-cluster-1`. You can see that the `my-deployment` deployment isn't yet available on the member cluster. 
+
+Check the `Available` status for `kind-cluster-1`. You can see that the `my-deployment` deployment isn't yet available on the member cluster.
 This suggests that an issue might be affecting the deployment manifest.
 
 ### Resolution
-In this situation, a potential solution is to check the deployment in the member cluster because the message indicates that the root cause of the issue is a bad image name. 
-After this image name is identified, you can correct the deployment manifest and update it. 
+
+In this situation, a potential solution is to check the deployment in the member cluster because the message indicates that the root cause of the issue is a bad image name.
+After this image name is identified, you can correct the deployment manifest and update it.
 After you fix and update the resource manifest, the placement object (ClusterResourcePlacement or ResourcePlacement) automatically propagates the corrected resource to the member cluster.
 
-For all other situations, make sure that the propagated resource is configured correctly. 
+For all other situations, make sure that the propagated resource is configured correctly.
 Additionally, verify that the selected cluster has sufficient available capacity to accommodate the new resources.
 
 ## General Troubleshooting Notes
 
 The troubleshooting process and Work object inspection are identical for both ClusterResourcePlacement and ResourcePlacement:
+
 - Both use the same underlying Work API to apply resources to member clusters
 - The Work object status and manifestConditions have the same structure regardless of whether they were created by a ClusterResourcePlacement or ResourcePlacement
 - The `Available` condition in the Work status indicates whether the applied resources have become available on the member cluster

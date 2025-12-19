@@ -8,7 +8,9 @@ The `ClusterResourcePlacementApplied` (for ClusterResourcePlacement) or `Resourc
 > Note: To get more information about why the resources are not applied, you can check the [work applier](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workapplier) logs.
 
 ## Common scenarios
+
 Instances where this condition may arise:
+
 - The resource already exists on the cluster and isn't managed by the fleet controller.
 - Another placement (ClusterResourcePlacement or ResourcePlacement) is already managing the resource for the selected cluster by using a different apply strategy.
 - The placement doesn't apply the manifest because of syntax errors or invalid resource configurations. This might also occur if a resource is propagated through an envelope object.
@@ -16,15 +18,17 @@ Instances where this condition may arise:
 ## Investigation steps
 
 1. **Check `placementStatuses`**: In the placement status section, inspect the `placementStatuses` to identify which clusters have the `ClusterResourcePlacementApplied` (for ClusterResourcePlacement) or `ResourcePlacementApplied` (for ResourcePlacement) condition set to `false` and note down their `clusterName`.
-2. **Locate the `Work` Object in Hub Cluster**: Use the identified `clusterName` to locate the `Work` object associated with the member cluster. 
+2. **Locate the `Work` Object in Hub Cluster**: Use the identified `clusterName` to locate the `Work` object associated with the member cluster.
    - For ClusterResourcePlacement, refer to [this section](ClusterResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-clusterresourceplacement)
    - For ResourcePlacement, refer to [this section](ResourcePlacement#how-can-i-find-the-correct-work-resource-thats-associated-with-resourceplacement)
 3. **Check `Work` object status**: Inspect the status of the `Work` object to understand the specific issues preventing successful resource application.
 
 ## Case Study: ClusterResourcePlacement
+
 In the following example, a `ClusterResourcePlacement` is trying to propagate a namespace that contains a deployment to two member clusters. However, the namespace already exists on one member cluster, specifically `kind-cluster-1`.
 
 ### ClusterResourcePlacement spec
+
 ```
   policy:
     clusterNames:
@@ -42,6 +46,7 @@ In the following example, a `ClusterResourcePlacement` is trying to propagate a 
 ```
 
 ### ClusterResourcePlacement status
+
 ```
 status:
   conditions:
@@ -183,6 +188,7 @@ This indicates that the Work object intended for the member cluster `kind-cluste
 To inspect the Work object for more details, follow the steps in the [Investigation steps](#investigation-steps) section above.
 
 ### Work status of kind-cluster-1
+
 ```
  status:
   conditions:
@@ -245,15 +251,18 @@ To inspect the Work object for more details, follow the steps in the [Investigat
 From looking at the `Work` status, specifically the `manifestConditions` section, you can see that the namespace could not be applied but the deployment within the namespace got propagated from the hub to the member cluster.
 
 ### Resolution
+
 In this situation, a potential solution is to set the `AllowCoOwnership` to `true` in the ApplyStrategy policy. However, it's important to notice that this decision should be made by the user because the resources might not be shared.
 
 ## General Troubleshooting Notes
 
 The troubleshooting process and Work object inspection are identical for both ClusterResourcePlacement and ResourcePlacement:
+
 - Both use the same underlying Work API to apply resources to member clusters
 - The Work object status and manifestConditions have the same structure regardless of whether they were created by a ClusterResourcePlacement or ResourcePlacement
 - The main difference is the scope: ClusterResourcePlacement is cluster-scoped and can select both cluster-scoped and namespace-scoped resources, while ResourcePlacement is namespace-scoped and can only select namespace-scoped resources within its own namespace
 
 For ResourcePlacement-specific considerations:
+
 - Ensure the target namespace exists on member clusters before the ResourcePlacement tries to apply resources to it
 - ResourcePlacement can only select resources within the same namespace where the ResourcePlacement object itself resides

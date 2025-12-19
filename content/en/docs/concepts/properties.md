@@ -11,7 +11,7 @@ a member cluster, such as its node count and available resources for workload pl
 could also enable their property providers to expose platform-specific properties via Fleet.
 These properties can be useful in a variety of cases: for example, administrators could monitor the
 health of a member cluster using related properties; Fleet also supports making scheduling
-decisions based on the property data. 
+decisions based on the property data.
 
 ## Property provider
 
@@ -20,16 +20,16 @@ A property provider implements Fleet's property provider interface:
 ```go
 // PropertyProvider is the interface that every property provider must implement.
 type PropertyProvider interface {
-	// Collect is called periodically by the Fleet member agent to collect properties.
-	//
-	// Note that this call should complete promptly. Fleet member agent will cancel the
-	// context if the call does not complete in time.
-	Collect(ctx context.Context) PropertyCollectionResponse
-	// Start is called when the Fleet member agent starts up to initialize the property provider.
-	// This call should not block.
-	//
-	// Note that Fleet member agent will cancel the context when it exits.
-	Start(ctx context.Context, config *rest.Config) error
+ // Collect is called periodically by the Fleet member agent to collect properties.
+ //
+ // Note that this call should complete promptly. Fleet member agent will cancel the
+ // context if the call does not complete in time.
+ Collect(ctx context.Context) PropertyCollectionResponse
+ // Start is called when the Fleet member agent starts up to initialize the property provider.
+ // This call should not block.
+ //
+ // Note that Fleet member agent will cancel the context when it exits.
+ Start(ctx context.Context, config *rest.Config) error
 }
 ```
 
@@ -51,7 +51,7 @@ in the form of Kubernetes conditions.
 The Fleet member agent can run with or without a property provider. If a provider is not set up, or
 the given provider fails to start properly, the agent will collect limited properties about
 the cluster on its own, specifically the node count, plus the total/allocatable
-CPU and memory capacities of the host member cluster. 
+CPU and memory capacities of the host member cluster.
 
 ## Cluster properties
 
@@ -59,12 +59,12 @@ A cluster property is an attribute of a member cluster. There are two types of p
 
 * Resource property: the usage information of a resource in a member cluster, which consists of:
 
-    * the total capacity of the resource, which is the amount of the resource
+  * the total capacity of the resource, which is the amount of the resource
     installed in the cluster;
-    * the allocatable capacity of the resource, which is the maximum amount of the resource 
+  * the allocatable capacity of the resource, which is the maximum amount of the resource
     that can be used for running user workloads, as some amount of the resource might be
     reserved by the OS, kubelet, etc.;
-    * the available capacity of the resource, which is the amount of the resource that
+  * the available capacity of the resource, which is the amount of the resource that
     is currently free for running user workloads.
 
     Note that you may report a virtual resource via the property provider, if applicable.

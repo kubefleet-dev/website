@@ -75,14 +75,17 @@ In the `Placement Statuses` section, it displays the detailed status of each clu
 ### Investigate ClusterStagedUpdateRun initialization failure
 
 An updateRun initialization failure can be easily detected by getting the resource:
+
 ```bash
-$ kubectl get csur example-run 
+$ kubectl get csur example-run
 NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
 example-run   example-placement   1                         0                       False                     2s
 ```
+
 The `INITIALIZED` field is `False`, indicating the initialization failed.
 
 Describe the updateRun to get more details:
+
 ```bash
 $ kubectl describe csur example-run
 ...
@@ -101,23 +104,28 @@ Status:
   Policy Snapshot Index Used:     0
 ...
 ```
-The condition clearly indicates the initialization failed. The condition message gives more details about the failure. 
+
+The condition clearly indicates the initialization failed. The condition message gives more details about the failure.
 In this case, a non-existing resource snapshot index `1` was used for the updateRun.
 
 ### Investigate ClusterStagedUpdateRun execution failure
 
 An updateRun execution failure can be easily detected by getting the resource:
+
 ```bash
 $ kubectl get csur example-run
 NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
 example-run   example-placement   0                         0                       True          False       24m
 ```
+
 The `SUCCEEDED` field is `False`, indicating the execution failure.
 
-An updateRun execution failure can be caused by mainly 2 scenarios:  
-1. When the updateRun controller is triggered to reconcile an in-progress updateRun, it starts by doing a bunch of validations 
+An updateRun execution failure can be caused by mainly 2 scenarios:
+
+1. When the updateRun controller is triggered to reconcile an in-progress updateRun, it starts by doing a bunch of validations
 including retrieving the CRP and checking its rollout strategy, gathering all the bindings and regenerating the execution plan.
 If any failure happens during validation, the updateRun execution fails with the corresponding validation error.
+
    ```
    status:
      conditions:
@@ -142,11 +150,13 @@ If any failure happens during validation, the updateRun execution fails with the
        status: "False"
        type: Succeeded
    ```
+
    In above case, the CRP referenced by the updateRun is deleted during the execution. The updateRun controller detects and aborts the release.
-2. The updateRun controller triggers update to a member cluster by updating the corresponding binding spec and setting its 
-status to `RolloutStarted`. It then waits for default 15 seconds and check whether the resources have been successfully applied 
+2. The updateRun controller triggers update to a member cluster by updating the corresponding binding spec and setting its
+status to `RolloutStarted`. It then waits for default 15 seconds and check whether the resources have been successfully applied
 by checking the binding again. In case that there are multiple concurrent updateRuns, and during the 15-second wait, some other
 updateRun preempts and updates the binding with new configuration, current updateRun detects and fails with clear error message.
+
    ```
    status:
     conditions:
@@ -174,14 +184,18 @@ updateRun preempts and updates the binding with new configuration, current updat
       status: "False"
       type: Succeeded
    ```
+
    The `Succeeded` condition is set to `False` with reason `UpdateRunFailed`. In the `message`, we show `member1` cluster in `staging` stage gets preempted, and the `resourceSnapshotName` field is changed from `example-placement-0-snapshot` to `example-placement-1-snapshot` which means probably some other updateRun is rolling out a newer resource version. The message also prints current binding state and if `RolloutStarted` condition is set to true. The message gives a hint about whether these is a concurrent clusterStagedUpdateRun running. Upon such failure, the user can list updateRuns or check the binding state:
+
    ```bash
    kubectl get clusterresourcebindings
    NAME                                 WORKSYNCHRONIZED   RESOURCESAPPLIED   AGE
    example-placement-member1-2afc7d7f   True               True               51m
    example-placement-member2-fc081413                                         51m
    ```
+
    The binding is named as `<crp-name>-<cluster-name>-<suffix>`. Since the error message says `member1` cluster fails the updateRun, we can check its binding:
+
    ```bash
    kubectl get clusterresourcebindings example-placement-member1-2afc7d7f -o yaml
    ...
@@ -202,15 +216,17 @@ updateRun preempts and updates the binding with new configuration, current updat
        type: RolloutStarted
      ...
    ```
+
    As the binding `RolloutStarted` condition shows, it's updated by another updateRun `example-run-1`.
 
 The updateRun abortion due to execution failures is not recoverable at the moment. If failure happens due to validation error,
-one can fix the issue and create a new updateRun. If preemption happens, in most cases the user is releasing a new resource 
+one can fix the issue and create a new updateRun. If preemption happens, in most cases the user is releasing a new resource
 version, and they can just let the new updateRun run to complete.
 
 ### Investigate ClusterStagedUpdateRun rollout stuck
 
 A `ClusterStagedUpdateRun` can get stuck when resource placement fails on some clusters. Getting the updateRun will show the cluster name and stage that is in stuck state:
+
 ```bash
 $ kubectl get csur example-run -o yaml
 ...
@@ -231,12 +247,14 @@ status:
     type: Progressing
 ...
 ```
+
 The message shows that the updateRun is stuck waiting for the cluster `member1` in stage `staging` to finish releasing.
 The updateRun controller rolls resources to a member cluster by updating its corresponding binding. It then checks periodically
-whether the update has completed or not. If the binding is still not available after current default 5 minutes, updateRun 
+whether the update has completed or not. If the binding is still not available after current default 5 minutes, updateRun
 controller decides the rollout has stuck and reports the condition.
 
 This usually indicates something wrong happened on the cluster or the resources have some issue. To further investigate, you can check the `ClusterResourcePlacement` status:
+
 ```bash
 $ kubectl describe crp example-placement
 ...
@@ -302,6 +320,7 @@ $ kubectl describe crp example-placement
 The `Applied` condition is `False` and says not all work have been applied. And in the "failed placements" section, it shows
 the `nginx` deployment wrapped by `envelope-nginx-deploy` configMap is not ready. Check from `member1` cluster and we can see
 there's image pull failure:
+
 ```bash
 kubectl config use-context member1
 
@@ -323,6 +342,7 @@ After resolving the issue, you can create always create a new updateRun to resta
 Namespace-scoped `StagedUpdateRun` troubleshooting is a mirror image of cluster-scoped `ClusterStagedUpdateRun` troubleshooting. The concepts, failure patterns, and diagnostic approaches are exactly the same - only the resource names, scopes, and kubectl commands differ.
 
 Both follow identical troubleshooting patterns:
+
 - **Initialization failures**: Missing resource snapshots, invalid configurations
 - **Execution failures**: Validation errors, concurrent updateRun conflicts
 - **Rollout stuck scenarios**: Resource placement failures, cluster connectivity issues
@@ -330,6 +350,7 @@ Both follow identical troubleshooting patterns:
 - **Recovery approaches**: Creating new updateRuns, cleaning up stuck resources
 
 The key differences are:
+
 - **Resource scope**: Namespace-scoped vs cluster-scoped resources
 - **Commands**: Use `sur` (StagedUpdateRun) instead of `csur` (ClusterStagedUpdateRun)
 - **Target resources**: `ResourcePlacement` instead of `ClusterResourcePlacement`
@@ -384,14 +405,17 @@ Events:         <none>
 ### Investigate StagedUpdateRun initialization failure
 
 A namespace-scoped updateRun initialization failure can be easily detected by getting the resource:
+
 ```bash
 $ kubectl get sur web-app-rollout -n my-app-namespace
 NAME              PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
 web-app-rollout   web-app-placement   1                         0                       False                     2s
 ```
+
 The `INITIALIZED` field is `False`, indicating the initialization failed.
 
 Describe the updateRun to get more details:
+
 ```bash
 $ kubectl describe sur web-app-rollout -n my-app-namespace
 ...
@@ -410,22 +434,26 @@ Status:
   Policy Snapshot Index Used:     0
 ...
 ```
+
 The condition clearly indicates the initialization failed. The condition message gives more details about the failure.
 In this case, a non-existing resource snapshot index `1` was used for the updateRun.
 
 ### Investigate StagedUpdateRun execution failure
 
 A namespace-scoped updateRun execution failure can be easily detected by getting the resource:
+
 ```bash
 $ kubectl get sur web-app-rollout -n my-app-namespace
 NAME              PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
 web-app-rollout   web-app-placement   0                         0                       True          False       24m
 ```
+
 The `SUCCEEDED` field is `False`, indicating the execution failure.
 
 The execution failure scenarios are similar to cluster-scoped updateRuns:
 
 1. **Validation errors during reconciliation**: The updateRun controller validates the ResourcePlacement, gathers bindings, and regenerates the execution plan. If any failure occurs, the updateRun execution fails:
+
    ```yaml
    status:
      conditions:
@@ -452,6 +480,7 @@ The execution failure scenarios are similar to cluster-scoped updateRuns:
    ```
 
 2. **Concurrent updateRun preemption**: When multiple updateRuns target the same ResourcePlacement, they may conflict:
+
    ```yaml
    status:
     conditions:
@@ -468,6 +497,7 @@ The execution failure scenarios are similar to cluster-scoped updateRuns:
    ```
 
    To investigate concurrent updateRuns, check the namespace-scoped resource bindings:
+
    ```bash
    $ kubectl get resourcebindings -n my-app-namespace
    NAME                                 WORKSYNCHRONIZED   RESOURCESAPPLIED   AGE
@@ -478,6 +508,7 @@ The execution failure scenarios are similar to cluster-scoped updateRuns:
 ### Investigate StagedUpdateRun rollout stuck
 
 A `StagedUpdateRun` can get stuck when resource placement fails on some clusters:
+
 ```bash
 $ kubectl get sur web-app-rollout -n my-app-namespace -o yaml
 ...
@@ -500,6 +531,7 @@ status:
 ```
 
 To investigate further, check the `ResourcePlacement` status:
+
 ```bash
 $ kubectl describe rp web-app-placement -n my-app-namespace
 ...
@@ -545,6 +577,7 @@ $ kubectl describe rp web-app-placement -n my-app-namespace
 ```
 
 Check the target cluster to diagnose the specific issue:
+
 ```bash
 kubectl config use-context member1
 

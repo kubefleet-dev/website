@@ -6,27 +6,28 @@ weight: 4
 
 ## Overview
 
-`ClusterResourcePlacement` concept is used to dynamically select cluster scoped resources (especially namespaces and all 
+`ClusterResourcePlacement` concept is used to dynamically select cluster scoped resources (especially namespaces and all
 objects within it) and control how they are propagated to all or a subset of the member clusters.
 A `ClusterResourcePlacement` mainly consists of three parts:
+
 - **Resource selection**: select which cluster-scoped Kubernetes
-resource objects need to be propagated from the hub cluster to selected member clusters. 
-  
+resource objects need to be propagated from the hub cluster to selected member clusters.
+
   It supports the following forms of resource selection:
-  - Select resources by specifying just the <group, version, kind>. This selection propagates all resources with matching <group, version, kind>. 
-  - Select resources by specifying the <group, version, kind> and name. This selection propagates only one resource that matches the <group, version, kind> and name. 
-  - Select resources by specifying the <group, version, kind> and a set of labels using ClusterResourcePlacement -> LabelSelector. 
+  - Select resources by specifying just the <group, version, kind>. This selection propagates all resources with matching <group, version, kind>.
+  - Select resources by specifying the <group, version, kind> and name. This selection propagates only one resource that matches the <group, version, kind> and name.
+  - Select resources by specifying the <group, version, kind> and a set of labels using ClusterResourcePlacement -> LabelSelector.
 This selection propagates all resources that match the <group, version, kind> and label specified.
 
-  **Note:** When a namespace is selected, all the namespace-scoped objects under this namespace are propagated to the 
+  **Note:** When a namespace is selected, all the namespace-scoped objects under this namespace are propagated to the
 selected member clusters along with this namespace.
 
 - **Placement policy**: limit propagation of selected resources to a specific subset of member clusters.
   The following types of target cluster selection are supported:
-    - **PickAll (Default)**: select any member clusters with matching cluster `Affinity` scheduling rules. If the `Affinity` 
+  - **PickAll (Default)**: select any member clusters with matching cluster `Affinity` scheduling rules. If the `Affinity`
 is not specified, it will select all joined and healthy member clusters.
-    - **PickFixed**: select a fixed list of member clusters defined in the `ClusterNames`.
-    - **PickN**: select a `NumberOfClusters` of member clusters with optional matching cluster `Affinity` scheduling rules or topology spread constraints `TopologySpreadConstraints`.
+  - **PickFixed**: select a fixed list of member clusters defined in the `ClusterNames`.
+  - **PickN**: select a `NumberOfClusters` of member clusters with optional matching cluster `Affinity` scheduling rules or topology spread constraints `TopologySpreadConstraints`.
 
 - **Strategy**: how changes are rolled out (rollout strategy) and how resources are applied on the member cluster side (apply strategy).
 
@@ -61,15 +62,16 @@ spec:
 
 ## When To Use `ClusterResourcePlacement`
 
-`ClusterResourcePlacement` is useful when you want for a general way of managing and running workloads across multiple clusters. 
+`ClusterResourcePlacement` is useful when you want for a general way of managing and running workloads across multiple clusters.
 Some example scenarios include the following:
--  As a platform operator, I want to place my cluster-scoped resources (especially namespaces and all objects within it) 
+
+- As a platform operator, I want to place my cluster-scoped resources (especially namespaces and all objects within it)
 to a cluster that resides in the us-east-1.
--  As a platform operator, I want to spread my cluster-scoped resources (especially namespaces and all objects within it) 
+- As a platform operator, I want to spread my cluster-scoped resources (especially namespaces and all objects within it)
 evenly across the different regions/zones.
 - As a platform operator, I prefer to place my test resources into the staging AKS cluster.
 - As a platform operator, I would like to separate the workloads for compliance or policy reasons.
-- As a developer, I want to run my cluster-scoped resources (especially namespaces and all objects within it) on 3 clusters. 
+- As a developer, I want to run my cluster-scoped resources (especially namespaces and all objects within it) on 3 clusters.
 In addition, each time I update my workloads, the updates take place with zero downtime by rolling out to these three clusters incrementally.
 
 ## Placement Workflow
@@ -83,10 +85,11 @@ The override controller will create the corresponding snapshots by watching the 
 which captures the snapshot of the overrides.
 
 The placement workflow will be divided into several stages:
+
 1. Scheduling: multi-cluster scheduler makes the schedule decision by creating  the `clusterResourceBinding` for a bundle
 of resources based on the latest `ClusterSchedulingPolicySnapshot`generated by the `ClusterResourcePlacement`.
 2. Rolling out resources: rollout controller applies the resources to the selected member clusters based on the rollout strategy.
-3. Overriding: work generator applies the override rules defined by `ClusterResourceOverride` and `ResourceOverride` to 
+3. Overriding: work generator applies the override rules defined by `ClusterResourceOverride` and `ResourceOverride` to
 the selected resources on the target clusters.
 4. Creating or updating works:  work generator creates the work on the corresponding member cluster namespace. Each work
 contains the (overridden) manifest workload to be deployed on the member clusters.
@@ -95,9 +98,9 @@ contains the (overridden) manifest workload to be deployed on the member cluster
 
 ## Resource Selection
 
-Resource selectors identify cluster-scoped objects to include based on standard Kubernetes identifiers - namely, the `group`, 
+Resource selectors identify cluster-scoped objects to include based on standard Kubernetes identifiers - namely, the `group`,
 `kind`, `version`, and `name` of the object. Namespace-scoped objects are included automatically when the namespace they
-are part of is selected. The example `ClusterResourcePlacement` above would include the `test-deployment` namespace and 
+are part of is selected. The example `ClusterResourcePlacement` above would include the `test-deployment` namespace and
 any objects that were created in that namespace.
 
 The clusterResourcePlacement controller creates the `ClusterResourceSnapshot` to store a snapshot of selected resources
@@ -106,10 +109,11 @@ the clusterResourcePlacement controller will detect the resource changes and cre
 that resources can change independently of any modifications to the `ClusterResourceSnapshot`. In other words, resource
 changes can occur without directly affecting the `ClusterResourceSnapshot` itself.
 
-The total amount of selected resources may exceed the 1MB limit for a single Kubernetes object. As a result, the controller 
+The total amount of selected resources may exceed the 1MB limit for a single Kubernetes object. As a result, the controller
 may produce more than one `ClusterResourceSnapshot`s for all the selected resources.
 
 `ClusterResourceSnapshot` sample:
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourceSnapshot
@@ -163,6 +167,7 @@ generated whenever policy changes are made to the `ClusterResourcePlacement` tha
 `ClusterResourceSnapshot`, its spec is immutable.
 
 `ClusterSchedulingPolicySnapshot` sample:
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterSchedulingPolicySnapshot
@@ -214,29 +219,29 @@ status:
     selected: true
 ```
 
-
 ![](/images/en/docs/concepts/crpc/scheduling.jpg)
 
 In contrast to the original scheduler framework in Kubernetes, the multi-cluster scheduling process involves selecting a cluster for placement through a structured 5-step operation:
+
 1. Batch & PostBatch
-2. Filter 
+2. Filter
 3. Score
 4. Sort
 5. Bind
 
-The _batch & postBatch_ step is to define the batch size according to the desired and current `ClusterResourceBinding`. 
+The _batch & postBatch_ step is to define the batch size according to the desired and current `ClusterResourceBinding`.
 The postBatch is to adjust the batch size if needed.
 
 The _filter_ step finds the set of clusters where it's feasible to schedule the placement, for example, whether the cluster
-is matching required `Affinity` scheduling rules specified in the `Policy`. It also filters out any clusters which are 
+is matching required `Affinity` scheduling rules specified in the `Policy`. It also filters out any clusters which are
 leaving the fleet or no longer connected to the fleet, for example, its heartbeat has been stopped for a prolonged period of time.
 
 In the _score_ step (only applied to the pickN type), the scheduler assigns a score to each cluster that survived filtering.
 Each cluster is given a topology spread score (how much a cluster would satisfy the topology spread
 constraints specified by the user), and an affinity score (how much a cluster would satisfy the preferred affinity terms
-specified by the user). 
+specified by the user).
 
-In the _sort_ step (only applied to the pickN type), it sorts all eligible clusters by their scores, sorting first by topology 
+In the _sort_ step (only applied to the pickN type), it sorts all eligible clusters by their scores, sorting first by topology
 spread score and breaking ties based on the affinity score.
 
 The _bind_ step is to create/update/delete the `ClusterResourceBinding` based on the desired and current member cluster list.
@@ -248,10 +253,10 @@ The _bind_ step is to create/update/delete the `ClusterResourceBinding` based on
 Use rollout strategy to control how KubeFleet rolls out a resource change made on the hub cluster to all member clusters.
 Right now KubeFleet supports two types of rollout strategies out of the box:
 
-* Rolling update: this rollout strategy helps roll out changes incrementally in a way that ensures system
+- Rolling update: this rollout strategy helps roll out changes incrementally in a way that ensures system
 availability, akin to how the Kubernetes Deployment API handles updates. For more information, see the
 [Safe Rollout](safe-rollout) concept.
-* Staged update: this rollout strategy helps roll out changes in different stages; users may group clusters
+- Staged update: this rollout strategy helps roll out changes in different stages; users may group clusters
 into different stages and specify the order in which each stage receives the update. The strategy also allows
 users to set up timed or approval-based gates between stages to fine-control the flow. For more information, see
 the [Staged Update](staged-update) concept and [Staged Update How-To Guide](../how-tos/staged-update.md).
@@ -261,10 +266,10 @@ the [Staged Update](staged-update) concept and [Staged Update How-To Guide](../h
 Use apply strategy to control how KubeFleet applies a resource to a member cluster. KubeFleet currently features
 three different types of apply strategies:
 
-* Client-side apply: this apply strategy sets up KubeFleet to apply resources in a three-way merge that is similar to how
+- Client-side apply: this apply strategy sets up KubeFleet to apply resources in a three-way merge that is similar to how
 the Kubernetes CLI, `kubectl`, performs client-side apply.
-* Server-side apply: this apply strategy sets up KubeFleet to apply resources via the new server-side apply mechanism.
-* Report Diff mode: this apply strategy instructs KubeFleet to check for configuration differences between the resource
+- Server-side apply: this apply strategy sets up KubeFleet to apply resources via the new server-side apply mechanism.
+- Report Diff mode: this apply strategy instructs KubeFleet to check for configuration differences between the resource
 on the hub cluster and its counterparts among the member clusters; no apply op will be performed. For more information,
 see the [ReportDiff Mode How-To Guide](../how-tos/reportdiff.md).
 
@@ -274,11 +279,11 @@ see the [ReportDiff Mode How-To Guide](../how-tos/reportdiff.md).
 KubeFleet apply strategy is also the place where users can set up KubeFleet's drift detection capabilities and takeover
 settings:
 
-* Drift detection helps users identify and resolve configuration drifts that are commonly observed in a multi-cluster
-environment; through this feature, KubeFleet can detect the presence of drifts, reveal their details, and let users 
+- Drift detection helps users identify and resolve configuration drifts that are commonly observed in a multi-cluster
+environment; through this feature, KubeFleet can detect the presence of drifts, reveal their details, and let users
 decide how and when to handle them. See the [Drift Detection How-To Guide](../how-tos/drift-detection.md) for more
 information.
-* Takeover settings allows users to decide how KubeFleet can best handle pre-existing resources. When you join a cluster
+- Takeover settings allows users to decide how KubeFleet can best handle pre-existing resources. When you join a cluster
 with running workloads into a fleet, these settings can help bring the workloads under KubeFleet's management in a
 way that avoids interruptions. For specifics, see the [Takeover Settings How-To Guide](../how-tos/takeover.md).
 
@@ -286,7 +291,7 @@ way that avoids interruptions. For specifics, see the [Takeover Settings How-To 
 
 After a `ClusterResourcePlacement` is created, details on current status can be seen by performing a `kubectl describe crp <name>`.
 The status output will indicate both placement conditions and individual placement statuses on each member cluster that was selected.
-The list of resources that are selected for placement will also be included in the describe output. 
+The list of resources that are selected for placement will also be included in the describe output.
 
 Sample output:
 
@@ -490,24 +495,25 @@ Events:
 
 The `ClusterResourcePlacementStatus` (CRPS) is a **namespaced resource** that mirrors the PlacementStatus of a corresponding **cluster-scoped** `ClusterResourcePlacement` (CRP) object. It provides namespace-scoped access to cluster-scoped placement status information.
 
-*   **Namespace-scoped access**: Allows users with namespace-level permissions to view placement status without requiring cluster-scoped access
-*   **Status mirroring**: Contains the same placement status information as the parent CRP, but accessible within a specific namespace
-*   **Optional feature**: Only created when `StatusReportingScope` is set to `NamespaceAccessible`. Once set, `StatusReportingScope` is immutable.
+- **Namespace-scoped access**: Allows users with namespace-level permissions to view placement status without requiring cluster-scoped access
+- **Status mirroring**: Contains the same placement status information as the parent CRP, but accessible within a specific namespace
+- **Optional feature**: Only created when `StatusReportingScope` is set to `NamespaceAccessible`. Once set, `StatusReportingScope` is immutable.
 
-
-When `StatusReportingScope` is set to `NamespaceAccessible` for a` ClusterResourcePlacement`, only one namespace resource selector is allowed, and it is immutable. Therefore, the namespace resource selector cannot be changed after creation.
+When `StatusReportingScope` is set to `NamespaceAccessible` for a`ClusterResourcePlacement`, only one namespace resource selector is allowed, and it is immutable. Therefore, the namespace resource selector cannot be changed after creation.
 
 For detailed instructions, please refer to this [document](/docs/how-tos/crp#statusreportingscope).
 
 ## Advanced Features
+
 ### Tolerations
 
 Tolerations are a mechanism to allow the Fleet Scheduler to schedule resources to a `MemberCluster` that has taints specified on it.
-We adopt the concept of [taints & tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) 
+We adopt the concept of [taints & tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 introduced in Kubernetes to the multi-cluster use case.
 
 The `ClusterResourcePlacement` CR supports the specification of list of tolerations, which are applied to the `ClusterResourcePlacement`
 object. Each Toleration object comprises the following fields:
+
 - `key`: The key of the toleration.
 - `value`: The value of the toleration.
 - `effect`: The effect of the toleration, which can be `NoSchedule` for now.

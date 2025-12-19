@@ -5,8 +5,8 @@ weight: 3
 ---
 
 This hands-on guide of KubeFleet and ArgoCD integration shows how these powerful tools work in concert to revolutionize multi-cluster application management.
-Discover how KubeFleet's intelligent orchestration capabilities complement ArgoCD's popular GitOps approach, enabling seamless deployments across diverse environments while maintaining consistency and control. 
-This tutorial illuminates practical strategies for targeted deployments, environment-specific configurations, and safe, controlled rollouts. 
+Discover how KubeFleet's intelligent orchestration capabilities complement ArgoCD's popular GitOps approach, enabling seamless deployments across diverse environments while maintaining consistency and control.
+This tutorial illuminates practical strategies for targeted deployments, environment-specific configurations, and safe, controlled rollouts.
 Follow along to transform your multi-cluster challenges into streamlined, automated workflows that enhance both developer productivity and operational reliability.
 
 Suppose in a multi-cluster, multi-tenant organization, team A wants to deploy the resources ONLY to the clusters they own.
@@ -22,6 +22,7 @@ Our tutorial will walk you through a hands-on experience of how to achieve this.
 In this tutorial, we prepare a fleet environment with one hub cluster and four member clusters.
 The member clusters are labeled to indicate their environment and team ownership.
 From the hub cluster, we can verify the clustermembership and their labels:
+
 ```bash
 kubectl config use-context hub
 kubectl get memberclusters --show-labels
@@ -31,7 +32,9 @@ member2   True     84d    14s                      3            4038m           
 member3   True     144m   6s                       3            3676m           12458504Ki         environment=production,team=A,...
 member4   True     6m7s   15s                      3            4036m           13347336Ki         team=B,...
 ```
+
 From above output, we can see that:
+
 - `member1` is in `staging` environment and owned by team `A`.
 - `member2` is in `canary` environment and owned by team `A`.
 - `member3` is in `production` environment and owned by team `A`.
@@ -41,33 +44,42 @@ From above output, we can see that:
 
 In this tutorial, we expect ArgoCD controllers to be installed on each member cluster. Only ArgoCD CRDs need to be installed on the hub cluster so that ArgoCD `Applications` can be created.
 
-* **Option 1: Install ArgoCD on each member cluster directly (RECOMMENDED)**
+- **Option 1: Install ArgoCD on each member cluster directly (RECOMMENDED)**
 
-  It's straightforward to install ArgoCD on each member cluster. You can follow the instructions in [ArgoCD Getting Started](https://argo-cd.readthedocs.io/en/stable/getting_started/).  
+  It's straightforward to install ArgoCD on each member cluster. You can follow the instructions in [ArgoCD Getting Started](https://argo-cd.readthedocs.io/en/stable/getting_started/).
   To install only CRDs on the hub cluster, you can run the following command:
+
   ```bash
   kubectl config use-context hub
   kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds?ref=stable --server-side=true
   ```
-* **Option 2: Use KubeFleet ClusterResourcePlacement (CRP) to install ArgoCD on member clusters (Experimental)**
+
+- **Option 2: Use KubeFleet ClusterResourcePlacement (CRP) to install ArgoCD on member clusters (Experimental)**
 
   Alternatively, you can first install all the ArgoCD manifests on the hub cluster, and then use KubeFleet `ClusterResourcePlacement` to populate to the member clusters.
   Install the CRDs on the hub cluster:
+
   ```bash
   kubectl config use-context hub
   kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds?ref=stable --server-side=true
   ```
+
   Then apply the resource manifest we prepared ([argocd-install.yaml](./manifests/argocd-install.yaml)) to the hub cluster:
+
   ```bash
   kubectl config use-context hub
   kubectl create ns argocd && kubectl apply -f ./manifests/argocd-install.yaml -n argocd --server-side=true
   ```
+
   We then use a `ClusterResourcePlacement` (refer to [argocd-crp.yaml](./manifests/argocd-crp.yaml)) to populate the manifests to the member clusters:
+
   ```bash
   kubectl config use-context hub
   kubectl apply -f ./manifests/argocd-crp.yaml
   ```
+
   Verify the CRP becomes available:
+
   ```bash
   kubectl get crp
   NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
@@ -79,11 +91,12 @@ In this tutorial, we expect ArgoCD controllers to be installed on each member cl
 In this tutorial, we are going to deploy an ArgoCD `Application` in the guestbook namespace.
 Enabling "Applications in any namespace" feature, application teams can manage their applications in a more flexible way without the risk of a privilege escalation. In this tutorial, we need to enable `Applications` to be created in the `guestbook` namespace.
 
-* **Option 1: Enable on each member cluster manually**
-  
-  You can follow the instructions in [ArgoCD Applications-in-any-namespace](https://argo-cd.readthedocs.io/en/latest/operator-manual/app-any-namespace/) documentation to enable this feature on each member cluster manually.   
-  It generally involves updating the `argocd-cmd-params-cm` configmap and restarting the `argocd-application-controller` statefulset and `argocd-server` deployment.   
+- **Option 1: Enable on each member cluster manually**
+
+  You can follow the instructions in [ArgoCD Applications-in-any-namespace](https://argo-cd.readthedocs.io/en/latest/operator-manual/app-any-namespace/) documentation to enable this feature on each member cluster manually.
+  It generally involves updating the `argocd-cmd-params-cm` configmap and restarting the `argocd-application-controller` statefulset and `argocd-server` deployment.
   You will also want to create an ArgoCD `AppProject` in the `argocd` namespace for `Applications` to refer to. You can find the manifest at [guestbook-appproject.yaml](./manifests/guestbook-appproject.yaml).
+
   ```bash
   cat ./manifests/guestbook-appproject.yaml
   apiVersion: argoproj.io/v1alpha1
@@ -103,7 +116,8 @@ Enabling "Applications in any namespace" feature, application teams can manage t
   kubectl config use-context member<*>
   kubectl apply -f ./manifests/guestbook-appproject.yaml
   ```
-* **Option 2: Populate ArgoCD AppProject to member clusters with CRP (Experimental)**
+
+- **Option 2: Populate ArgoCD AppProject to member clusters with CRP (Experimental)**
 
   If you tried above Option 2 to install ArgoCD from hub cluster to member clusters, you gain the flexibility by just updating the `argocd-cmd-params-cm` configmap, and adding the [guestbook-appproject](./manifests/guestbook-appproject.yaml) to the `argocd` namespace, and [existing CRP](./manifests/argocd-crp.yaml) will populate the resources automatically to the member clusters. *Note: you probably also want to update the `argocd-application-controller` and `argocd-server` a bit to trigger pod restarts.*
 
@@ -111,8 +125,9 @@ Enabling "Applications in any namespace" feature, application teams can manage t
 
 We have prepared one `guestbook-ui` deployment with corresponding service for each environment.
 The deployments are same except for the replica count. This simulates different configurations for different clusters. You may find the manifests [here](./manifests/guestbook/production/guestbook-ui.yaml).
+
 ```
-guestbook  
+guestbook
 │
 └───staging
 │   │   guestbook-ui.yaml
@@ -128,6 +143,7 @@ guestbook
 
 Team A want to create an ArgoCD `Application` to automatically sync the manifests from git repository to the member clusters.
 The `Application` should be created on the hub cluster and placed onto the member clusters team A owns. The `Application` example can be found at [guestbook-app.yaml](./manifests/guestbook-app.yaml).
+
 ```bash
 kubectl config use-context hub
 kubectl create ns guestbook
@@ -136,7 +152,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: guestbook-app
-  namespace: guestbook 
+  namespace: guestbook
 spec:
   destination:
     namespace: guestbook
@@ -167,10 +183,11 @@ EOF
 ### Place ArgoCD Application to member clusters with CRP
 
 A `ClusterResourcePlacement` (CRP) is used to place resources on the hub cluster to member clusters.
-Team A is able to select their own member clusters by specifying cluster labels. 
+Team A is able to select their own member clusters by specifying cluster labels.
 In `spec.resourceSelectors`, specifying `guestbook` namespace includes all resources in it including the `Application` just deployed.
 The `spec.strategy.type` is set to `External` so that CRP is not rolled out immediately. Instead, rollout will be triggered separately in next steps.
 The CRP resource can be found at [guestbook-crp.yaml](./manifests/guestbook-crp.yaml).
+
 ```bash
 kubectl config use-context hub
 kubectl apply -f - << EOF
@@ -200,6 +217,7 @@ EOF
 ```
 
 Verify the CRP status and it's clear that only `member1`, `member2`, and `member3` are selected with `team=A` label are selected, and rollout has not started yet.
+
 ```bash
 kubectl get crp guestbook-crp -o yaml
 ...
@@ -279,6 +297,7 @@ By default, every member cluster selected receives the same `Application` resour
 In this tutorial, member clusters from different environments should receive different manifests, as configured in different folders in the git repo.
 To achieve this, a `ResourceOverride` is used to override the `Application` resource for each member cluster.
 The `ResourceOverride` resource can be found at [guestbook-ro.yaml](./manifests/guestbook-ro.yaml).
+
 ```bash
 kubectl config use-context hub
 kubectl apply -f - << EOF
@@ -294,7 +313,7 @@ spec:
     overrideRules:
     - clusterSelector:
         clusterSelectorTerms:
-        - labelSelector: 
+        - labelSelector:
             matchExpressions:
             - key: environment
               operator: Exists
@@ -315,11 +334,12 @@ EOF
 
 A `ClusterStagedUpdateRun` (or updateRun for short) is used to trigger the rollout of the CRP in a progressive, stage-by-stage manner by following a pre-defined rollout strategy, namely `ClusterStagedUpdateStrategy`.
 
-A `ClusterStagedUpdateStrategy` is provided at [teamA-strategy.yaml](./manifests/teamA-strategy.yaml). 
-It defines 3 stages: staging, canary, and production. Clusters are grouped by label `environment` into different stages. 
+A `ClusterStagedUpdateStrategy` is provided at [teamA-strategy.yaml](./manifests/teamA-strategy.yaml).
+It defines 3 stages: staging, canary, and production. Clusters are grouped by label `environment` into different stages.
 The `TimedWait` after-stage task in `staging` stageis used to pause the rollout for 1 minute before moving to `canary` stage.s
 The `Approval` after-stage task in `canary` stage waits for manual approval before moving to `production` stage.
 After applying the strategy, a `ClusterStagedUpdateRun` can then reference it to generate the concrete test plan.
+
 ```bash
 kubectl config use-context hub
 kubectl apply -f - << EOF
@@ -351,6 +371,7 @@ EOF
 
 Now it's time to trigger the rollout. A sample `ClusterStagedUpdateRun` can be found at [guestbook-updaterun.yaml](./manifests/guestbook-updaterun.yaml).
 It's pretty straightforward, just specifying the CRP resource name, the strategy name, and resource version.
+
 ```bash
 kubectl config use-context hub
 kubectl apply -f - << EOF
@@ -366,6 +387,7 @@ EOF
 ```
 
 Checking the updateRun status to see the rollout progress, `member1` in `staging` stage has been updated, and it's pausing at the `after-stage` task before moving to `canary` stage.
+
 ```bash
 kubectl config use-context hub
 kubectl get crsur gestbook-updaterun -o yaml
@@ -419,15 +441,18 @@ stagesStatus:
 ```
 
 Checking the `Application` status on each member cluster, and it's synced and healthy:
+
 ```bash
 kubectl config use-context member1
 kubectl get Applications -n guestbook
 NAMESPACE   NAME            SYNC STATUS   HEALTH STATUS
 guestbook   guestbook-app   Synced        Healthy
 ```
+
 At the same time, there's no `Application` in `member2` or `member3` as they are not rolled out yet.
 
 After 1 minute, the `staging` stage is completed, and `member2` in `canary` stage is updated.
+
 ```bash
 kubectl config use-context hub
 kubectl get crsur guestbook-updaterun -o yaml
@@ -471,9 +496,11 @@ kubectl get crsur guestbook-updaterun -o yaml
     startTime: "2025-03-24T00:48:56Z"
 ...
 ```
+
 `canary` stage requires manual approval to complete. The controller generates a `ClusterApprovalRequest` object for user to approve.
 The name is included in the updateRun status, as shown above, `approvalRequestName: guestbook-updaterun-canary`.
 Team A can verify everything works properly and then approve the request to proceed to `production` stage:
+
 ```bash
 kubectl config use-context hub
 
@@ -489,6 +516,7 @@ guestbook-updaterun-canary   guestbook-updaterun   canary   True       True     
 ```
 
 Not the updateRun moves on to `production` stage, and `member3` is updated. The whole updateRun is completed:
+
 ```bash
 kubectl config use-context hub
 
@@ -558,6 +586,7 @@ status:
 
 Now we are able to see the `Application` is created, synced, and healthy on all member clusters except `member4` as it does not belong to team A.
 We can also verify that the configMaps synced from git repo are different for each member cluster:
+
 ```bash
 kubectl config use-context member1
 kubectl get app -n guestbook
@@ -607,11 +636,13 @@ No resources found
 
 When team A makes some changes and decides to release a new version, they can cut a new branch or tag in the git repo.
 To rollout this new version progressively, they can simply:
+
 1. Update the `targetRevision` in the `Application` resource to the new branch or tag on the hub cluster.
 2. Create a new `ClusterStagedUpdateRun` with the new resource snapshot index.
 
 Suppose now we cut a new release on branch `v0.0.1`.
 Updating the `spec.source.targetRevision` in the `Application` resource to `v0.0.1` will not trigger rollout instantly.
+
 ```bash
 kubectl config use-context hub
 kubectl edit app guestbook-app -n guestbook
@@ -623,6 +654,7 @@ spec:
 ```
 
 Checking the crp, and it's clear that the new `Application` is not available yet:
+
 ```bash
 kubectl config use-context hub
 kubectl get crp
@@ -631,6 +663,7 @@ guestbook-crp   1     True        1                                           13
 ```
 
 Check a new version of `ClusterResourceSnapshot` is generated:
+
 ```bash
 kubectl config use-context hub
 kubectl get clusterresourcesnapshots --show-labels
@@ -638,9 +671,11 @@ NAME                       GEN   AGE     LABELS
 guestbook-crp-0-snapshot   1     133m    kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=guestbook-crp,kubernetes-fleet.io/resource-index=0
 guestbook-crp-1-snapshot   1     3m46s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=guestbook-crp,kubernetes-fleet.io/resource-index=1
 ```
+
 Notice that `guestbook-crp-1-snapshot` is latest with `resource-index` set to `1`.
 
 Create a new `ClusterStagedUpdateRun` with the new resource snapshot index:
+
 ```bash
 kubectl config use-context hub
 kubectl apply -f - << EOF
@@ -662,6 +697,7 @@ Following the same steps as before, we can see the new version is rolled out pro
 KubeFleet and ArgoCD integration offers a powerful solution for multi-cluster application management, combining KubeFleet's intelligent orchestration with ArgoCD's popular GitOps approach. This tutorial showcased how teams can deploy applications across diverse environments with cluster-specific configurations while maintaining complete control over the rollout process. Through practical examples, we demonstrated targeted deployments using cluster labels, environment-specific configurations via overrides, and safe, controlled rollouts with staged update runs. This integration enables teams to transform multi-cluster challenges into streamlined, automated workflows that enhance both developer productivity and operational reliability.
 
 ## Next steps
-* Learn more about [ClusterResourcePlacements](docs/concepts/crp).
-* Learn more about [ClusterResourceOverrides and ResourceOverrides](docs/concepts/override).
-* Learn more about [ClusterStagedUpdateRun](docs/concepts/staged-update).
+
+- Learn more about [ClusterResourcePlacements](docs/concepts/crp).
+- Learn more about [ClusterResourceOverrides and ResourceOverrides](docs/concepts/override).
+- Learn more about [ClusterStagedUpdateRun](docs/concepts/staged-update).

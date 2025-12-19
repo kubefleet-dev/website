@@ -6,13 +6,14 @@ weight: 11
 
 This guide provides troubleshooting steps for issues related to placement eviction.
 
-An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states 
+An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
 for eviction are:
+
 - Eviction is Invalid
 - Eviction is Valid, Eviction failed to Execute
 - Eviction is Valid, Eviction executed successfully
 
-> **Note:** If an eviction object doesn't reach a terminal state i.e. neither valid condition nor executed condition is 
+> **Note:** If an eviction object doesn't reach a terminal state i.e. neither valid condition nor executed condition is
 > set it is likely due to a failure in the reconciliation process where the controller is unable to reach the api server.
 
 The first step in troubleshooting is to check the status of the eviction object to understand if the eviction reached
@@ -23,6 +24,7 @@ a terminal state or not.
 ### Missing/Deleting CRP object
 
 Example status with missing `CRP` object:
+
 ```
 status:
   conditions:
@@ -35,6 +37,7 @@ status:
 ```
 
 Example status with deleting `CRP` object:
+
 ```
 status:
   conditions:
@@ -46,13 +49,14 @@ status:
     type: Valid
 ```
 
-In both cases the Eviction object reached a terminal state, its status has `Valid` condition set to `False`. 
-The user should verify if the `ClusterResourcePlacement` object is missing or if it is being deleted and recreate the 
+In both cases the Eviction object reached a terminal state, its status has `Valid` condition set to `False`.
+The user should verify if the `ClusterResourcePlacement` object is missing or if it is being deleted and recreate the
 `ClusterResourcePlacement` object if needed and retry eviction.
 
 ### Missing CRB object
 
 Example status with missing `CRB` object:
+
 ```
 status:
   conditions:
@@ -67,22 +71,25 @@ status:
 
 > **Note:** The user can find the corresponding `ClusterResourceBinding` object by listing all `ClusterResourceBinding`
 > objects for the `ClusterResourcePlacement` object
+>
 > ```
 > kubectl get rb -l kubernetes-fleet.io/parent-CRP=<CRPName>
 > ```
+>
 > The `ClusterResourceBinding` object name is formatted as `<CRPName>-<ClusterName>-randomsuffix`
 
 In this case the Eviction object reached a terminal state, its status has `Valid` condition set to `False`, because the
-`ClusterResourceBinding` object or Placement for target cluster is not found. The user should verify to see if the 
+`ClusterResourceBinding` object or Placement for target cluster is not found. The user should verify to see if the
 `ClusterResourcePlacement` object is propagating resources to the target cluster,
 
-- If yes, the next step is to check if the `ClusterResourceBinding` object is present for the target cluster or why it 
+- If yes, the next step is to check if the `ClusterResourceBinding` object is present for the target cluster or why it
 was not created and try to create an eviction object once `ClusterResourceBinding` is created.
 - If no, the cluster is not picked by the scheduler and hence no need to retry eviction.
 
 ### Multiple CRB is present
 
 Example status with multiple `CRB` objects:
+
 ```
 status:
   conditions:
@@ -96,13 +103,14 @@ status:
 ```
 
 In this case the Eviction object reached a terminal state, its status has `Valid` condition set to `False`, because
-there is more than one `ClusterResourceBinding` object or Placement present for the `ClusterResourcePlacement` object 
-targeting the member cluster. This is a rare scenario, it's an in-between state where bindings are being-recreated due 
+there is more than one `ClusterResourceBinding` object or Placement present for the `ClusterResourcePlacement` object
+targeting the member cluster. This is a rare scenario, it's an in-between state where bindings are being-recreated due
 to the member cluster being selected again, and it will normally resolve quickly.
 
 ### PickFixed CRP is targeted by CRP Eviction
 
 Example status for `ClusterResourcePlacementEviction` object targeting a PickFixed `ClusterResourcePlacement` object:
+
 ```
 status:
   conditions:
@@ -116,8 +124,8 @@ status:
 ```
 
 In this case the Eviction object reached a terminal state, its status has `Valid` condition set to `False`, because
-the `ClusterResourcePlacement` object is of type `PickFixed`. Users cannot use `ClusterResourcePlacementEviction` 
-objects to evict resources propagated by `ClusterResourcePlacement` objects of type `PickFixed`. The user can instead 
+the `ClusterResourcePlacement` object is of type `PickFixed`. Users cannot use `ClusterResourcePlacementEviction`
+objects to evict resources propagated by `ClusterResourcePlacement` objects of type `PickFixed`. The user can instead
 remove the member cluster name from the `clusterNames` field in the policy of the `ClusterResourcePlacement` object.
 
 ## Failed to execute eviction
@@ -143,14 +151,16 @@ status:
 ```
 
 In this case the Eviction object reached a terminal state, its status has `Executed` condition set to `False`, because
-for the targeted `ClusterResourcePlacement` the corresponding `ClusterResourceBinding` object's spec is set to 
+for the targeted `ClusterResourcePlacement` the corresponding `ClusterResourceBinding` object's spec is set to
 `Scheduled` meaning the rollout of resources is not started yet.
 
 > **Note:** The user can find the corresponding `ClusterResourceBinding` object by listing all `ClusterResourceBinding`
 > objects for the `ClusterResourcePlacement` object
+>
 > ```
 > kubectl get rb -l kubernetes-fleet.io/parent-CRP=<CRPName>
 > ```
+>
 > The `ClusterResourceBinding` object name is formatted as `<CRPName>-<ClusterName>-randomsuffix`.
 
 ```
@@ -178,6 +188,7 @@ happen at all, in that case the user should verify if rollout is stuck for `Clus
 ### Eviction blocked by Invalid CRPDB
 
 Example status for `ClusterResourcePlacementEviction` object with invalid `ClusterResourcePlacementDisruptionBudget`,
+
 ```
 status:
   conditions:
@@ -198,15 +209,16 @@ status:
 ```
 
 In this cae the Eviction object reached a terminal state, its status has `Executed` condition set to `False`, because
-the `ClusterResourcePlacementDisruptionBudget` object is invalid. For `ClusterResourcePlacement` objects of type 
-`PickAll`, when specifying a `ClusterResourcePlacementDisruptionBudget` the `minAvailable` field should be set to an 
-absolute number and not a percentage and the `maxUnavailable` field should not be set since the total number of 
+the `ClusterResourcePlacementDisruptionBudget` object is invalid. For `ClusterResourcePlacement` objects of type
+`PickAll`, when specifying a `ClusterResourcePlacementDisruptionBudget` the `minAvailable` field should be set to an
+absolute number and not a percentage and the `maxUnavailable` field should not be set since the total number of
 placements is non-deterministic.
 
 ### Eviction blocked by specified CRPDB
 
-Example status for `ClusterResourcePlacementEviction` object blocked by a `ClusterResourcePlacementDisruptionBudget` 
+Example status for `ClusterResourcePlacementEviction` object blocked by a `ClusterResourcePlacementDisruptionBudget`
 object,
+
 ```
 status:
   conditions:
@@ -225,7 +237,7 @@ status:
     type: Executed
 ```
 
-In this cae the Eviction object reached a terminal state, its status has `Executed` condition set to `False`, because 
+In this cae the Eviction object reached a terminal state, its status has `Executed` condition set to `False`, because
 the `ClusterResourcePlacementDisruptionBudget` object is blocking the eviction. The message from `Executed` condition
 reads available placements is 2 and total placements is 2, which means that the `ClusterResourcePlacementDisruptionBudget`
 is protecting all placements propagated by the `ClusterResourcePlacement` object.
@@ -248,7 +260,7 @@ spec:
   minAvailable: 2
 ```
 
-We can see that the `minAvailable` is set to `2`, which means that at least 2 placements should be available for the 
+We can see that the `minAvailable` is set to `2`, which means that at least 2 placements should be available for the
 `ClusterResourcePlacement` object.
 
 Let's take a look at the `ClusterResourcePlacement` object's status to verify the list of available placements,
@@ -380,12 +392,12 @@ status:
     version: v1
 ```
 
-from the status we can see that the `ClusterResourcePlacement` object has 2 placements available, where resources have 
+from the status we can see that the `ClusterResourcePlacement` object has 2 placements available, where resources have
 been successfully applied and are available in kind-cluster-1 and kind-cluster-2. The users can check the individual
-member clusters to verify the resources are available but the users are recommended to check the`ClusterResourcePlacement` 
+member clusters to verify the resources are available but the users are recommended to check the`ClusterResourcePlacement`
 object status to verify placement availability since the status is aggregated and updated by the controller.
 
 Here the user can either remove the `ClusterResourcePlacementDisruptionBudget` object or update the `minAvailable` to
-`1` to allow `ClusterResourcePlacementEviction` object to execute successfully. In general the user should carefully 
+`1` to allow `ClusterResourcePlacementEviction` object to execute successfully. In general the user should carefully
 check the availability of placements and act accordingly when changing the `ClusterResourcePlacementDisruptionBudget`
 object.

@@ -26,7 +26,7 @@ Guide.
 The `requiredDuringSchedulingIgnoredDuringExecution` type of affinity terms serves as a hard
 constraint that **a cluster must satisfy** before it can be picked. Each term may feature:
 
-* a label selector, which specifies a set of labels that a cluster must have or not have before 
+* a label selector, which specifies a set of labels that a cluster must have or not have before
 it can be picked;
 * a property selector, which specifies a cluster property requirement that a cluster must satisfy
 before it can be picked;
@@ -77,10 +77,10 @@ includes:
 
     Supported operators include:
 
-    * `In`: the cluster must have a label key with one of the listed values.
-    * `NotIn`: the cluster must have a label key that is not associated with any of the listed values.
-    * `Exists`: the cluster must have the label key present; any value is acceptable.
-    * `NotExists`: the cluster must not have the label key.
+  * `In`: the cluster must have a label key with one of the listed values.
+  * `NotIn`: the cluster must have a label key that is not associated with any of the listed values.
+  * `Exists`: the cluster must have the label key present; any value is acceptable.
+  * `NotExists`: the cluster must not have the label key.
 
     If you plan to use `Exists` and/or `NotExists`, you must leave the list of values empty.
 
@@ -184,7 +184,7 @@ With these two affinity terms, any cluster picked must:
 The `preferredDuringSchedulingIgnoredDuringExecution` type of affinity terms serves as a soft
 constraint for clusters; any cluster that satisfy such terms would receive an affinity score,
 which Fleet uses to rank clusters when processing `ClusterResourcePlacement` with scheduling
-policy of the `PickN` placement type. 
+policy of the `PickN` placement type.
 
 Each term features:
 

@@ -9,18 +9,18 @@ incorporating several modifications and tailored functionalities.
 
 ![](/images/en/docs/concepts/scheduling-framework/scheduling-framework.jpg)
 
-The primary advantage of this framework lies in its capability to compile plugins directly into the scheduler. Its API 
+The primary advantage of this framework lies in its capability to compile plugins directly into the scheduler. Its API
 facilitates the implementation of diverse scheduling features as plugins, thereby ensuring a lightweight and maintainable
-core. 
+core.
 
 The fleet scheduler integrates three fundamental built-in plugin types:
+
 * **Topology Spread Plugin**: Supports the TopologySpreadConstraints stipulated in the placement policy.
 * **Cluster Affinity Plugin**: Facilitates the Affinity clause of the placement policy.
-* **Same Placement Affinity Plugin**: Uniquely designed for the fleet, preventing multiple replicas (selected resources) from 
+* **Same Placement Affinity Plugin**: Uniquely designed for the fleet, preventing multiple replicas (selected resources) from
 being placed within the same cluster. This distinguishes it from Kubernetes, which allows multiple pods on a node.
 * **Cluster Eligibility Plugin**: Enables cluster selection based on specific status criteria.
-* ** Taint & Toleration Plugin**: Enables cluster selection based on taints on the cluster & tolerations on the ClusterResourcePlacement.
-
+* **Taint & Toleration Plugin**: Enables cluster selection based on taints on the cluster & tolerations on the ClusterResourcePlacement.
 
 Compared to the Kubernetes scheduling framework, the fleet framework introduces additional stages for the pickN placement type:
 
@@ -46,8 +46,8 @@ The scheduler includes default plugins, each associated with distinct extension 
 | Cluster Eligibility          | ❌         | ✅      | ❌     |
 | Taint & Toleration           | ❌         | ✅      | ❌     |
 
-
 The Cluster Affinity Plugin serves as an illustrative example and operates within the following extension points:
+
 1. **PreFilter**:
 Verifies whether the policy contains any required cluster affinity terms. If absent, the plugin bypasses the subsequent
 Filter stage.

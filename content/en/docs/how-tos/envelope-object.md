@@ -113,7 +113,7 @@ data:
 
 We apply our envelope objects on the hub cluster and then use a `ClusterResourcePlacement` object to propagate these resources from the hub to member clusters.
 
-### Example CRP spec for propagating a ResourceEnvelope:
+### Example CRP spec for propagating a ResourceEnvelope
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -135,7 +135,7 @@ spec:
     type: RollingUpdate
 ```
 
-### Example CRP spec for propagating a ClusterResourceEnvelope:
+### Example CRP spec for propagating a ClusterResourceEnvelope
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -157,7 +157,7 @@ spec:
     type: RollingUpdate
 ```
 
-### CRP status for ResourceEnvelope:
+### CRP status for ResourceEnvelope
 
 ```yaml
 status:
@@ -220,7 +220,7 @@ Upon inspection of the `selectedResources`, it indicates that the namespace `app
 
 ## Example CRP status where resources within an envelope object failed to apply
 
-### CRP status with failed ResourceEnvelope resource:
+### CRP status with failed ResourceEnvelope resource
 
 In the example below, within the `placementStatus` section for `kind-cluster-1`, the `failedPlacements` section provides details on a resource that failed to apply along with information about the envelope object which contained the resource.
 
@@ -295,7 +295,7 @@ status:
     version: v1beta1
 ```
 
-### CRP status with failed ClusterResourceEnvelope resource:
+### CRP status with failed ClusterResourceEnvelope resource
 
 Similar to namespace-scoped resources, cluster-scoped resources within a ClusterResourceEnvelope can also fail to apply:
 

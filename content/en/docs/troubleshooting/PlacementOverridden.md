@@ -5,19 +5,23 @@ weight: 4
 ---
 
 The `ClusterResourcePlacementOverridden` (CRP) or `ResourcePlacementOverridden` (RP) condition is `False` when an override operation fails.
-> Note: To get more information, look into the logs for the overrider controller (includes 
-> controller for [ClusterResourceOverride](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/overrider/clusterresource_controller.go) and 
+> Note: To get more information, look into the logs for the overrider controller (includes
+> controller for [ClusterResourceOverride](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/overrider/clusterresource_controller.go) and
 > [ResourceOverride](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/overrider/resource_controller.go)).
 
 ## Common scenarios
+
 Instances where this condition may arise:
+
 - The `ClusterResourceOverride` or `ResourceOverride`  is created with an invalid field path for the resource.
 
 ## Case Study
+
 In the following example, an attempt is made to override the cluster role `secret-reader` that is being propagated by the `ClusterResourcePlacement` to the selected clusters.
 However, the `ClusterResourceOverride` is created with an invalid path for the field within resource.
 
 ### ClusterRole
+
 ```
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -36,9 +40,11 @@ rules:
   - watch
   - list
 ```
+
 The `ClusterRole` `secret-reader` that is being propagated to the member clusters by the `ClusterResourcePlacement`.
 
 ### ClusterResourceOverride spec
+
 ```
 spec:
   clusterResourceSelectors:
@@ -58,10 +64,12 @@ spec:
         path: /metadata/labels/new-label
         value: new-value
 ```
+
 The `ClusterResourceOverride` is created to override the `ClusterRole` `secret-reader` by adding a new label (`new-label`)
 that has the value `new-value` for the clusters with the label `env: canary`.
 
 ### ClusterResourcePlacement Spec
+
 ```
 spec:
   resourceSelectors:
@@ -86,6 +94,7 @@ spec:
 ```
 
 ### ClusterResourcePlacement Status
+
 ```
 status:
   conditions:
@@ -141,6 +150,7 @@ status:
     name: secret-reader
     version: v1
 ```
+
 The CRP attempted to override a propagated resource utilizing an applicable `ClusterResourceOverrideSnapshot`.
 However, as the `ClusterResourcePlacementOverridden` condition remains false, looking at the placement status for the cluster
 where the condition `ClusterResourcePlacementOverridden` (for ClusterResourcePlacement) or `ResourcePlacementOverridden` (for ResourcePlacement) failed will offer insights into the exact cause of the failure.
@@ -150,15 +160,19 @@ Based on the previous example of the cluster role `secret-reader`, you can see t
 Therefore, a new label can't be added.
 
 ### Resolution
+
 To successfully override the cluster role `secret-reader`, correct the path and value in `ClusterResourceOverride`, as shown in the following code:
+
 ```
 jsonPatchOverrides:
   - op: add
     path: /metadata/labels
-    value: 
+    value:
       newlabel: new-value
 ```
+
 This will successfully add the new label `newlabel` with the value `new-value` to the `ClusterRole` `secret-reader`, as we are creating the `labels` field and adding a new value `newlabel: new-value` to it.
 
 ## General Notes
+
 For ResourcePlacement the override flow is identical except that all the resources reside in the same namespace; use `ResourceOverride` instead of `ClusterResourceOverride` and expect `ResourcePlacementOverridden` in conditions.

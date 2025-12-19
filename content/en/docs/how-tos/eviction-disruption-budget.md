@@ -11,10 +11,11 @@ This how-to guide discusses how to create `ClusterResourcePlacementEviction` obj
 The `ClusterResourcePlacementEviction` object is used to remove resources from a member cluster once the resources have already been propagated from the hub cluster.
 
 To successfully evict resources from a cluster, the user needs to specify:
+
 - The name of the `ClusterResourcePlacement` object which propagated resources to the target cluster.
 - The name of the target cluster from which we need to evict resources.
 
-In this example, we will create a `ClusterResourcePlacement` object with PickAll placement policy to propagate resources to an existing `MemberCluster`, add a taint to the member cluster 
+In this example, we will create a `ClusterResourcePlacement` object with PickAll placement policy to propagate resources to an existing `MemberCluster`, add a taint to the member cluster
 resource and then create a `ClusterResourcePlacementEviction` object to evict resources from the `MemberCluster`.
 
 We will first create a namespace that we will propagate to the member cluster.
@@ -95,7 +96,7 @@ from the object we can clearly tell that the resources were evicted since the `A
 ## Protecting resources from voluntary disruptions using ClusterResourcePlacementDisruptionBudget
 
 In this example, we will create a `ClusterResourcePlacement` object with PickN placement policy to propagate resources to an existing MemberCluster,
-then create a `ClusterResourcePlacementDisruptionBudget` object to protect resources on the MemberCluster from voluntary disruption and 
+then create a `ClusterResourcePlacementDisruptionBudget` object to protect resources on the MemberCluster from voluntary disruption and
 then try to evict resources from the MemberCluster using `ClusterResourcePlacementEviction`.
 
 We will first create a namespace that we will propagate to the member cluster.

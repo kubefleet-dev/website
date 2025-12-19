@@ -49,6 +49,7 @@ Kubefleet provides staged update capabilities at two scopes to serve different o
 **Namespace-Scoped**: `StagedUpdateStrategy`, `StagedUpdateRun`, and `ApprovalRequest` for application teams managing rollouts within their specific namespaces.
 
 Both systems follow the same pattern:
+
 1. **Strategy** resources define reusable orchestration patterns with stages, ordering, and approval gates
 2. **UpdateRun** resources execute the strategy for specific rollouts using a target placement, resource snapshot, and strategy name
 3. **External rollout** strategy must be set on the target placement to enable staged updates
@@ -68,6 +69,7 @@ Both systems follow the same pattern:
 Both placement types require setting the rollout strategy to `External` to enable staged updates:
 
 **Cluster-scoped example:**
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacement
@@ -86,6 +88,7 @@ spec:
 ```
 
 **Namespace-scoped example:**
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
@@ -181,6 +184,7 @@ spec:
 ### Stage Configuration
 
 Each stage includes:
+
 - **name**: Unique identifier for the stage
 - **labelSelector**: Selects target clusters for this stage
 - **sortingLabelKey** (optional): Label whose integer value determines update sequence within the stage
@@ -190,7 +194,10 @@ Each stage includes:
 
 ### Stage Tasks
 
-Stage tasks provide control gates at different points in the rollout lifecycle:
+Two task types to control stage progression:
+
+- **TimedWait**: Waits for a specified duration before proceeding
+- **Approval**: Requires manual approval via an approval request object
 
 #### Before-Stage Tasks
 
@@ -215,6 +222,7 @@ For all approval tasks, the approval request type depends on the scope:
 - **Namespace-scoped**: Creates `ApprovalRequest` (short name: `areq`) within the same namespace - a namespace-scoped resource with the same spec structure as `ClusterApprovalRequest`.
 
 Both approval request types use status conditions to track approval state:
+
 - `Approved` condition (status `True`): indicates the request was approved by a user
 - `ApprovalAccepted` condition (status `True`): indicates the approval was processed and accepted by the system
 
@@ -244,6 +252,7 @@ kubectl patch approvalrequests example-run-before-canary -n test-namespace --typ
 UpdateRun resources execute strategies for specific rollouts. Both scopes follow the same pattern:
 
 **Cluster-scoped example:**
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterStagedUpdateRun
@@ -257,6 +266,7 @@ spec:
 ```
 
 **Namespace-scoped example:**
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: StagedUpdateRun
@@ -319,13 +329,14 @@ kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
 ### UpdateRun Execution
 
 UpdateRuns execute in two phases:
-1. **Initialization**: Validates placement, captures latest strategy snapshot, collects target bindings, generates cluster update sequence, captures specified resource snapshot or latest resource snapshot if unspecified & records override snapshots. Occurs once on creation when state is `Initialize`, `Run` or `Stop`.
-2. **Execution**: Processes stages sequentially, updates clusters within each stage (respecting maxConcurrency), enforces before-stage and after-stage tasks. Only occurs when state is `Run`
-3. **Stopping/Stopped** When state is `Stop`, the updateRun pauses execution at the current cluster/stage and can be resumed by changing state back to `Run`. If there are updating/deleting clusters we wait after marking updateRun as `Stopping` for the in-progress clusters to reach a deterministic state: succeeded, failed or stuck before marking updateRun as `Stopped`
+
+1. **Initialization**: Captures strategy snapshot, collects target bindings, generates cluster update sequence
+2. **Execution**: Processes stages sequentially, updates clusters within each stage, enforces after-stage tasks
 
 ### Important Constraints and Validation
 
 **Immutable Fields**: Once created, the following UpdateRun spec fields cannot be modified:
+
 - `placementName`: Target placement resource name
 - `resourceSnapshotIndex`: Resource version to deploy (empty string if omitted, becomes latest at initialization)
 - `stagedRolloutStrategyName`: Strategy to execute
@@ -352,6 +363,7 @@ UpdateRun status provides detailed information about rollout progress across sta
 - **Policy snapshot used**: The policy snapshot index used during initialization
 
 Use `kubectl describe` to view detailed status:
+
 ```bash
 # Cluster-scoped (can use short name 'csur')
 kubectl describe clusterstagedupdaterun example-run
@@ -382,18 +394,21 @@ When you create a Placement with `strategy.type: External`, the system schedules
 Once you create an UpdateRun, the system begins executing the staged rollout. Both resources provide status information, but at different levels of detail:
 
 **UpdateRun Status** - High-level rollout orchestration:
+
 - Which stage is currently executing
 - Which clusters have started/completed updates
 - Whether after-stage tasks (approvals, waits) are complete
 - Overall rollout progression through stages
 
 **Placement Status** - Detailed deployment information for each cluster:
+
 - Success or failure of individual resource creation (e.g., did the Deployment create successfully?)
 - Whether overrides were applied correctly
 - Specific error messages if resources failed to deploy
 - Detailed conditions for troubleshooting
 
 This separation of concerns allows you to:
+
 1. Monitor high-level rollout progress and stage execution through the UpdateRun
 2. Drill down into specific deployment issues on individual clusters through the Placement
 3. Understand whether a problem is with the staged rollout orchestration or with resource deployment itself
@@ -403,5 +418,6 @@ This separation of concerns allows you to:
 Multiple UpdateRuns can execute concurrently for the same placement with one constraint: all concurrent runs must use identical strategy configurations to ensure consistent behavior.
 
 ## Next Steps
-* Learn how to [rollout and rollback CRP resources with Staged Update Run](docs/how-tos/staged-update)
-* Learn how to [troubleshoot a Staged Update Run](docs/troubleshooting/ClusterStagedUpdateRun)
+
+- Learn how to [rollout and rollback CRP resources with Staged Update Run](docs/how-tos/staged-update)
+- Learn how to [troubleshoot a Staged Update Run](docs/troubleshooting/ClusterStagedUpdateRun)
