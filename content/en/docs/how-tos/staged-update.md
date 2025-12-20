@@ -149,6 +149,7 @@ spec:
       labelSelector:
         matchLabels:
           environment: staging
+      maxConcurrency: 1  # Update clusters sequentially in staging
       afterStageTasks:
         - type: TimedWait
           waitTime: 1m
@@ -157,8 +158,11 @@ spec:
         matchLabels:
           environment: canary
       sortingLabelKey: order
+      maxConcurrency: 2  # Update 2 canary clusters concurrently
+      beforeStageTasks:
+        - type: Approval  # Require approval before starting canary
       afterStageTasks:
-        - type: Approval
+        - type: Approval  # Require approval after canary completes
 EOF
 ```
 
@@ -175,7 +179,18 @@ spec:
   placementName: example-placement
   resourceSnapshotIndex: "1"
   stagedRolloutStrategyName: example-strategy
+  state: Initialize  # Initialize but don't start execution yet
 EOF
+```
+
+The UpdateRun starts in `Initialize` state, which computes the stages without executing. This allows you to review the computed stages before starting:
+```bash
+kubectl get csur example-run -o yaml  # Review computed stages in status
+```
+
+Once satisfied with the plan, start the rollout by changing the state to `Run`:
+```bash
+kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
 ```
 
 The staged update run is initialized and running:
@@ -224,12 +239,16 @@ status:
       labelSelector:
         matchLabels:
           environment: staging
+      maxConcurrency: 1
       name: staging
     - afterStageTasks:
+      - type: Approval
+      beforeStageTasks:
       - type: Approval
       labelSelector:
         matchLabels:
           environment: canary
+      maxConcurrency: 2
       name: canary
       sortingLabelKey: order
   stagesStatus: # detailed status for each stage
@@ -273,8 +292,18 @@ status:
     endTime: ...
     stageName: staging
     startTime: ...
-  - afterStageTaskStatus:
-    - approvalRequestName: example-run-canary # ClusterApprovalRequest name for this stage
+  - beforeStageTaskStatus:
+    - approvalRequestName: example-run-canary-before # Approval needed before starting
+      conditions:
+      - lastTransitionTime: ...
+        message: ""
+        observedGeneration: 1
+        reason: BeforeStageTaskApprovalRequestCreated
+        status: "True"
+        type: ApprovalRequestCreated
+      type: Approval
+    afterStageTaskStatus:
+    - approvalRequestName: example-run-canary-after # Approval needed after completing
       type: Approval
     clusters:
     - clusterName: member3 # according the labelSelector and sortingLabelKey, member3 is selected first in this stage
@@ -309,42 +338,58 @@ status:
     stageName: canary
     startTime: ...
 ```
-Wait a little bit more, and we can see stage `canary` finishes cluster update and is waiting for the Approval task.
-We can check the `ClusterApprovalRequest` generated and not approved yet:
+After stage `staging` completes, the canary stage requires approval **before** it starts (due to beforeStageTasks). Check for the before-stage approval request:
 ```bash
 kubectl get clusterapprovalrequest
-NAME                 UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary   example-run   canary                                 2m2s
+NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-canary-before   example-run   canary                                 15s
 ```
-We can approve the `ClusterApprovalRequest` by patching its status:
+
+Approve the before-stage task to allow canary stage to start:
 ```bash
-kubectl patch clusterapprovalrequests example-run-canary --type=merge -p {"status":{"conditions":[{"type":"Approved","status":"True","reason":"lgtm","message":"lgtm","lastTransitionTime":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","observedGeneration":1}]}} --subresource=status
-clusterapprovalrequest.placement.kubernetes-fleet.io/example-run-canary patched
+kubectl patch clusterapprovalrequests example-run-canary-before --type=merge -p {"status":{"conditions":[{"type":"Approved","status":"True","reason":"lgtm","message":"approved to start canary","lastTransitionTime":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","observedGeneration":1}]}} --subresource=status
+clusterapprovalrequest.placement.kubernetes-fleet.io/example-run-canary-before patched
 ```
-This can be done equivalently by creating a json patch file and applying it:
+
+Once approved, the canary stage begins updating clusters. With `maxConcurrency: 2`, it updates up to 2 clusters concurrently.
+
+Wait for the canary stage to finish cluster updates. It will then wait for the after-stage Approval task:
+```bash
+kubectl get clusterapprovalrequest
+NAME                       UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-canary-after   example-run   canary                                 2m2s
+```
+
+Approve the after-stage task to complete the rollout:
+```bash
+kubectl patch clusterapprovalrequests example-run-canary-after --type=merge -p {"status":{"conditions":[{"type":"Approved","status":"True","reason":"lgtm","message":"canary successful","lastTransitionTime":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","observedGeneration":1}]}} --subresource=status
+clusterapprovalrequest.placement.kubernetes-fleet.io/example-run-canary-after patched
+```
+Alternatively, you can approve using a json patch file:
 ```bash
 cat << EOF > approval.json
 "status": {
     "conditions": [
         {
             "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "message": "lgtm",
+            "message": "approved",
             "observedGeneration": 1,
-            "reason": "lgtm",
+            "reason": "approved",
             "status": "True",
             "type": "Approved"
         }
     ]
 }
 EOF
-kubectl patch clusterapprovalrequests example-run-canary --type='merge' --subresource=status --patch-file approval.json
+kubectl patch clusterapprovalrequests example-run-canary-after --type='merge' --subresource=status --patch-file approval.json
 ```
 
-Then verify it's approved:
+Verify both approvals are accepted:
 ```bash
 kubectl get clusterapprovalrequest
-NAME                 UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary   example-run   canary   True       True               2m30s
+NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-canary-before   example-run   canary   True       True               3m15s
+example-run-canary-after    example-run   canary   True       True               2m30s
 ```
 The updateRun now is able to proceed and complete:
 ```bash
@@ -364,6 +409,53 @@ data:
   key: value2
 ```
 
+### Using Latest Snapshot Automatically
+
+Instead of specifying a resource snapshot index, you can omit `resourceSnapshotIndex` to automatically use the latest snapshot. This is useful for continuous delivery workflows:
+
+```bash
+kubectl apply -f - << EOF
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateRun
+metadata:
+  name: example-run-latest
+spec:
+  placementName: example-placement
+  # resourceSnapshotIndex omitted - uses latest automatically
+  stagedRolloutStrategyName: example-strategy
+  state: Run  # Start immediately
+EOF
+```
+
+The system will determine the latest snapshot at initialization time. Check which snapshot was used:
+```bash
+kubectl get csur example-run-latest -o jsonpath='{.status.resourceSnapshotIndexUsed}'
+```
+
+### Pausing and Resuming a Rollout
+
+You can pause an in-progress rollout to investigate issues or wait for off-peak hours:
+
+```bash
+# Pause the rollout
+kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Stop"}}'
+```
+
+Verify the rollout is stopped:
+```bash
+kubectl get csur example-run
+NAME          PLACEMENT           RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+example-run   example-placement   1                   0                 True          False                     8m
+```
+
+The rollout pauses at its current position (current cluster/stage). Resume when ready:
+```bash
+# Resume the rollout
+kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
+```
+
+The rollout continues from where it was paused.
+
 ### Deploy a second ClusterStagedUpdateRun to rollback to a previous version
 
 Now suppose the workload admin wants to rollback the configmap change, reverting the value `value2` back to `value1`.
@@ -376,8 +468,9 @@ metadata:
   name: example-run-2
 spec:
   placementName: example-placement
-  resourceSnapshotIndex: "0"
+  resourceSnapshotIndex: "0"  # Rollback to previous version
   stagedRolloutStrategyName: example-strategy
+  state: Run  # Start rollback immediately
 EOF
 ```
 
@@ -490,8 +583,24 @@ status:
     endTime: ...
     stageName: staging
     startTime: ...
-  - afterStageTaskStatus:
-    - approvalRequestName: example-run-2-canary
+  - beforeStageTaskStatus:
+    - approvalRequestName: example-run-2-canary-before
+      conditions:
+      - lastTransitionTime: ...
+        message: ""
+        observedGeneration: 1
+        reason: BeforeStageTaskApprovalRequestCreated
+        status: "True"
+        type: ApprovalRequestCreated
+      - lastTransitionTime: ...
+        message: ""
+        observedGeneration: 1
+        reason: BeforeStageTaskApprovalRequestApproved
+        status: "True"
+        type: ApprovalRequestApproved
+      type: Approval
+    afterStageTaskStatus:
+    - approvalRequestName: example-run-2-canary-after
       conditions:
       - lastTransitionTime: ...
         message: ""
@@ -635,6 +744,7 @@ spec:
       labelSelector:
         matchLabels:
           environment: staging
+      maxConcurrency: 2  # Update 2 dev clusters concurrently
       afterStageTasks:
         - type: TimedWait
           waitTime: 30s
@@ -643,8 +753,11 @@ spec:
         matchLabels:
           environment: canary
       sortingLabelKey: order
+      maxConcurrency: 1  # Sequential production updates
+      beforeStageTasks:
+        - type: Approval  # Require approval before production
       afterStageTasks:
-        - type: Approval
+        - type: Approval  # Require approval after production
 EOF
 ```
 
@@ -662,6 +775,7 @@ spec:
   placementName: web-app-placement
   resourceSnapshotIndex: "1"  # Latest snapshot with nginx:1.21
   stagedRolloutStrategyName: app-rollout-strategy
+  state: Run  # Start rollout immediately
 EOF
 ```
 
@@ -672,15 +786,28 @@ Check the status of the staged update run:
 kubectl describe sur web-app-rollout-v1-21 -n my-app-namespace
 ```
 
-Wait for the first stage to complete, then check for approval requests:
+Wait for the first stage to complete. The prod-clusters stage requires approval before starting:
 ```bash
 kubectl get approvalrequests -n my-app-namespace
+NAME                                      UPDATE-RUN               STAGE          APPROVED   APPROVALACCEPTED   AGE
+web-app-rollout-v1-21-prod-clusters-before web-app-rollout-v1-21   prod-clusters                                15s
 ```
 
-Approve the staging gate to proceed to production clusters:
+Approve the before-stage task to start production rollout:
 ```bash
-kubectl patch approvalrequests web-app-rollout-v1-21-prod-clusters -n my-app-namespace --type='merge' \
-  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved"}]}}' \
+kubectl patch approvalrequests web-app-rollout-v1-21-prod-clusters-before -n my-app-namespace --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved to start prod"}]}}' \
+  --subresource=status
+```
+
+After production clusters complete updates, approve the after-stage task:
+```bash
+kubectl get approvalrequests -n my-app-namespace
+NAME                                     UPDATE-RUN               STAGE          APPROVED   APPROVALACCEPTED   AGE
+web-app-rollout-v1-21-prod-clusters-after web-app-rollout-v1-21   prod-clusters                                2m
+
+kubectl patch approvalrequests web-app-rollout-v1-21-prod-clusters-after -n my-app-namespace --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"prod rollout successful"}]}}' \
   --subresource=status
 ```
 
@@ -704,10 +831,32 @@ spec:
   placementName: web-app-placement
   resourceSnapshotIndex: "0"  # Previous snapshot with nginx:1.20
   stagedRolloutStrategyName: app-rollout-strategy
+  state: Run  # Start rollback immediately
 EOF
 ```
 
 Follow the same monitoring and approval process as above to complete the rollback.
+
+## Best Practices and Tips
+
+### MaxConcurrency Guidelines
+
+- **Development/Staging**: Use higher values (e.g., `maxConcurrency: 3` or `50%`) to speed up rollouts in non-critical environments
+- **Production**: Use `maxConcurrency: 1` for sequential updates to minimize risk and allow early detection of issues
+- **Large fleets**: Use percentages (e.g., `10%`, `25%`) to scale with cluster growth automatically
+- **Small fleets**: Use absolute numbers for predictable behavior
+
+### State Management
+
+- **Initialize state**: Use to review computed stages before execution. Useful for validating strategy configuration
+- **Run state**: Start execution or resume from stopped state
+- **Stop state**: Pause rollout to investigate issues, wait for maintenance windows, or coordinate with other activities
+
+### Approval Strategies
+
+- **Before-stage approvals**: Use when stage selection requires validation (e.g., ensure all production prerequisites are met)
+- **After-stage approvals**: Use to validate rollout success before proceeding (e.g., check metrics, run tests)
+- **Both**: Combine for critical stages requiring validation at both entry and exit points
 
 ## Key Differences Summary
 
