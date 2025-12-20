@@ -123,6 +123,7 @@ spec:
       labelSelector:
         matchLabels:
           environment: staging
+      maxConcurrency: 2  # Update 2 clusters concurrently
       afterStageTasks:
         - type: TimedWait
           waitTime: 1h
@@ -130,6 +131,9 @@ spec:
       labelSelector:
         matchLabels:
           environment: canary
+      maxConcurrency: 1  # Sequential updates (default)
+      beforeStageTasks:
+        - type: Approval  # Require approval before starting canary stage
       afterStageTasks:
         - type: Approval
     - name: production
@@ -137,6 +141,7 @@ spec:
         matchLabels:
           environment: production
       sortingLabelKey: order
+      maxConcurrency: 50%  # Update 50% of production clusters at once
       afterStageTasks:
         - type: Approval
         - type: TimedWait
@@ -159,6 +164,7 @@ spec:
       labelSelector:
         matchLabels:
           environment: development
+      maxConcurrency: 3  # Update 3 dev clusters at once
       afterStageTasks:
         - type: TimedWait
           waitTime: 30m
@@ -167,6 +173,7 @@ spec:
         matchLabels:
           environment: production
       sortingLabelKey: deployment-order
+      maxConcurrency: 1  # Sequential production updates
       afterStageTasks:
         - type: Approval
 ```
@@ -177,15 +184,33 @@ Each stage includes:
 - **name**: Unique identifier for the stage
 - **labelSelector**: Selects target clusters for this stage
 - **sortingLabelKey** (optional): Label whose integer value determines update sequence within the stage
-- **afterStageTasks** (optional): Tasks that must complete before proceeding to the next stage
+- **maxConcurrency** (optional): Maximum number of clusters to update concurrently. Can be an absolute number (e.g., `5`) or percentage (e.g., `50%`). Defaults to `1` (sequential). Fractional results are rounded down with a minimum of 1
+- **beforeStageTasks** (optional): Tasks that must complete before starting the stage (max 1 task, Approval type only)
+- **afterStageTasks** (optional): Tasks that must complete before proceeding to the next stage (max 2 tasks)
 
-### After-Stage Tasks
+### Stage Tasks
 
-Two task types to control stage progression:
-- **TimedWait**: Waits for a specified duration before proceeding
-- **Approval**: Requires manual approval via an approval request object
+Stage tasks provide control gates at different points in the rollout lifecycle:
 
-For approval tasks, the system automatically creates an approval request object named `<updateRun-name>-<stage-name>`. The approval request type depends on the scope:
+#### Before-Stage Tasks
+
+Execute before a stage begins. Only one task allowed per stage:
+- **Approval**: Requires manual approval before starting the stage
+- **TimedWait**: Not supported for before-stage tasks
+
+For before-stage approval tasks, the system creates an approval request named `<updateRun-name>-<stage-name>-before`.
+
+#### After-Stage Tasks
+
+Execute after all clusters in a stage complete. Up to two tasks allowed (one of each type):
+- **TimedWait**: Waits for a specified duration before proceeding to the next stage
+- **Approval**: Requires manual approval before proceeding to the next stage
+
+For after-stage approval tasks, the system creates an approval request named `<updateRun-name>-<stage-name>-after`.
+
+#### Approval Request Details
+
+For all approval tasks, the approval request type depends on the scope:
 
 - **Cluster-scoped**: Creates `ClusterApprovalRequest` (short name: `careq`) - a cluster-scoped resource containing a spec with `parentStageRollout` (the UpdateRun name) and `targetStage` (the stage name). The spec is immutable after creation.
 - **Namespace-scoped**: Creates `ApprovalRequest` (short name: `areq`) within the same namespace - a namespace-scoped resource with the same spec structure as `ClusterApprovalRequest`.
@@ -197,20 +222,25 @@ Both approval request types use status conditions to track approval state:
 Approve manually by setting the `Approved` condition to `True` using kubectl patch:
 
 ```bash
-# For cluster-scoped approvals
-kubectl patch clusterapprovalrequests example-run-canary --type='merge' \
+# For cluster-scoped before-stage approvals
+kubectl patch clusterapprovalrequests example-run-canary-before --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved"}]}}' \
+  --subresource=status
+
+# For cluster-scoped after-stage approvals
+kubectl patch clusterapprovalrequests example-run-canary-after --type='merge' \
   -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved"}]}}' \
   --subresource=status
 
 # For namespace-scoped approvals
-kubectl patch approvalrequests app-run-canary -n my-app-namespace --type='merge' \
+kubectl patch approvalrequests app-run-stage-before -n my-app-namespace --type='merge' \
   -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved"}]}}' \
   --subresource=status
 ```
 
 ## Trigger Staged Rollouts
 
-UpdateRun resources execute strategies for specific rollouts. Both scopes follow the same pattern with three required parameters:
+UpdateRun resources execute strategies for specific rollouts. Both scopes follow the same pattern:
 
 **Cluster-scoped example:**
 ```yaml
@@ -219,9 +249,10 @@ kind: ClusterStagedUpdateRun
 metadata:
   name: example-run
 spec:
-  placementName: example-placement              # Target ClusterResourcePlacement
-  resourceSnapshotIndex: "0"                    # Resource version to deploy
-  stagedRolloutStrategyName: example-strategy   # Strategy to execute
+  placementName: example-placement              # Required: Target ClusterResourcePlacement
+  resourceSnapshotIndex: "0"                    # Optional: Resource version (omit for latest)
+  stagedRolloutStrategyName: example-strategy   # Required: Strategy to execute
+  state: Run                                    # Optional: Initialize (default), Run, or Stop
 ```
 
 **Namespace-scoped example:**
@@ -232,25 +263,81 @@ metadata:
   name: app-rollout-v1-2-3
   namespace: my-app-namespace
 spec:
-  placementName: example-namespace-placement    # Target ResourcePlacement
-  resourceSnapshotIndex: "5"                    # Resource version to deploy
-  stagedRolloutStrategyName: app-rollout-strategy # Strategy to execute
+  placementName: example-namespace-placement    # Required: Target ResourcePlacement
+  resourceSnapshotIndex: "5"                    # Optional: Resource version (omit for latest)
+  stagedRolloutStrategyName: app-rollout-strategy # Required: Strategy to execute
+  state: Initialize                             # Optional: Initialize (default), Run, or Stop
+```
+
+**Using Latest Resource Snapshot:**
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateRun
+metadata:
+  name: example-run-latest
+spec:
+  placementName: example-placement
+  # resourceSnapshotIndex omitted - system uses latest snapshot automatically
+  stagedRolloutStrategyName: example-strategy
+  state: Run
+```
+
+### UpdateRun State Management
+
+UpdateRuns support three states to control execution lifecycle:
+
+| State | Behavior | Use Case |
+|-------|----------|----------|
+| **Initialize** | Prepares the updateRun without executing (default) | Review computed stages before starting rollout |
+| **Run** | Executes the rollout or resumes from stopped state | Start or resume the staged rollout |
+| **Stop** | Pauses execution at current cluster/stage | Temporarily halt rollout for investigation |
+
+**Valid State Transitions:**
+- `Initialize` → `Run`: Start the rollout
+- `Run` → `Stop`: Pause the rollout
+- `Stop` → `Run`: Resume the rollout
+
+**Invalid State Transitions:**
+- `Initialize` → `Stop`: Cannot stop before starting
+- `Run` → `Initialize`: Cannot reinitialize after starting
+- `Stop` → `Initialize`: Cannot reinitialize after stopping
+
+The `state` field is the **only mutable field** in the UpdateRunSpec. You can update it to control rollout execution:
+
+```bash
+# Start a rollout
+kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
+
+# Pause a rollout
+kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Stop"}}'
+
+# Resume a paused rollout
+kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
 ```
 
 ### UpdateRun Execution
 
 UpdateRuns execute in two phases:
-1. **Initialization**: Captures strategy snapshot, collects target bindings, generates cluster update sequence
-2. **Execution**: Processes stages sequentially, updates clusters within each stage, enforces after-stage tasks
+1. **Initialization**: Captures strategy snapshot, collects target bindings, generates cluster update sequence. Occurs when state is `Initialize` or `Run`
+2. **Execution**: Processes stages sequentially, updates clusters within each stage (respecting maxConcurrency), enforces before-stage and after-stage tasks. Only occurs when state is `Run`
+
+When state is `Stop`, the updateRun pauses execution at the current cluster/stage and can be resumed by changing state back to `Run`
 
 ### Important Constraints and Validation
 
 **Immutable Fields**: Once created, the following UpdateRun spec fields cannot be modified:
 - `placementName`: Target placement resource name
-- `resourceSnapshotIndex`: Resource version to deploy
+- `resourceSnapshotIndex`: Resource version to deploy (empty string if omitted, becomes latest at initialization)
 - `stagedRolloutStrategyName`: Strategy to execute
 
+**Mutable Field**: The `state` field can be modified after creation to control execution (Initialize, Run, Stop).
+
 **Strategy Limits**: Each strategy can define a maximum of 31 stages to ensure reasonable execution times.
+
+**MaxConcurrency Validation**:
+- Must be ≥ 1 for absolute numbers
+- Must be 1-100% for percentages
+- Fractional results are rounded down with minimum of 1
 
 ## Monitor UpdateRun Status
 
@@ -258,8 +345,10 @@ UpdateRun status provides detailed information about rollout progress across sta
 
 - **Overall conditions**: Initialization, progression, and completion status
 - **Stage status**: Progress and timing for each stage
-- **Cluster status**: Individual cluster update results
-- **After-stage task status**: Approval and wait task progress
+- **Cluster status**: Individual cluster update results with maxConcurrency respected
+- **Before-stage task status**: Pre-stage approval progress
+- **After-stage task status**: Post-stage approval and wait task progress
+- **Resource snapshot used**: The actual resource snapshot index used (from spec or latest)
 
 Use `kubectl describe` to view detailed status:
 ```bash
