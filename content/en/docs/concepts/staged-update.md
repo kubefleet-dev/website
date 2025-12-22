@@ -232,6 +232,7 @@ kubectl patch clusterapprovalrequests example-run-before-canary --type='merge' \
 # For cluster-scoped after-stage approvals
 kubectl patch clusterapprovalrequests example-run-after-canary --type='merge' \
   -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
+  --subresource=status
 
 # For namespace-scoped approvals
 kubectl patch clusterapprovalrequests example-run-before-canary -n test-namespace --type='merge' \

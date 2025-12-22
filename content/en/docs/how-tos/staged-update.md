@@ -196,8 +196,8 @@ kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
 The staged update run is initialized and running:
 ```bash
 kubectl get csur example-run
-NAME          PLACEMENT           RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                   0                 True                      44s
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True          True                      62s
 ```
 
 A more detailed look at the status:
@@ -207,30 +207,38 @@ kind: ClusterStagedUpdateRun
 metadata:
   ...
   name: example-run
+  generation: 2 # state changed from Initialize -> Run
   ...
 spec:
   placementName: example-placement
   resourceSnapshotIndex: "1"
   stagedRolloutStrategyName: example-strategy
+  state: Run
 status:
+  appliedStrategy:
+    comparisonOption: PartialComparison
+    type: ClientSideApply
+    whenToApply: Always
+    whenToTakeOver: Always
   conditions:
   - lastTransitionTime: ...
-    message: ClusterStagedUpdateRun initialized successfully
-    observedGeneration: 1
+    message: ""
+    observedGeneration: 2
     reason: UpdateRunInitializedSuccessfully
     status: "True" # the updateRun is initialized successfully
     type: Initialized
   - lastTransitionTime: ...
     message: ""
-    observedGeneration: 1
-    reason: UpdateRunStarted
-    status: "True"
-    type: Progressing # the updateRun is still running
+    observedGeneration: 2
+    reason: UpdateRunWaiting
+    status: "False" # the updateRun is waiting
+    type: Progressing
   deletionStageStatus:
     clusters: [] # no clusters need to be cleaned up
     stageName: kubernetes-fleet.io/deleteStage
   policyObservedClusterCount: 3 # number of clusters to be updated
   policySnapshotIndexUsed: "0"
+  resourceSnapshotIndexUsed: "1"
   stagedUpdateStrategySnapshot: # snapshot of the strategy
     stages:
     - afterStageTasks:
@@ -256,7 +264,7 @@ status:
     - conditions:
       - lastTransitionTime: ...
         message: ""
-        observedGeneration: 1
+        observedGeneration: 2
         reason: AfterStageTaskWaitTimeElapsed
         status: "True" # the wait after-stage task has completed
         type: WaitTimeElapsed
@@ -266,104 +274,88 @@ status:
       conditions:
       - lastTransitionTime: ...
         message: ""
-        observedGeneration: 1
+        observedGeneration: 2
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
         message: ""
-        observedGeneration: 1
+        observedGeneration: 2
         reason: ClusterUpdatingSucceeded
         status: "True" # member2 is updated successfully
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
       message: ""
-      observedGeneration: 1
-      reason: StageUpdatingWaiting
+      observedGeneration: 2
+      reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
       message: ""
-      observedGeneration: 1
+      observedGeneration: 2
       reason: StageUpdatingSucceeded
       status: "True" # stage staging has completed successfully
       type: Succeeded
     endTime: ...
     stageName: staging
     startTime: ...
-  - beforeStageTaskStatus:
-    - approvalRequestName: example-run-canary-before # Approval needed before starting
+  - afterStageTaskStatus:
+    - approvalRequestName: example-run-after-canary
+      type: Approval
+    beforeStageTaskStatus:
+    - approvalRequestName: example-run-before-canary
       conditions:
       - lastTransitionTime: ...
         message: ""
-        observedGeneration: 1
-        reason: BeforeStageTaskApprovalRequestCreated
-        status: "True"
+        observedGeneration: 2
+        reason: StageTaskApprovalRequestCreated
+        status: "True" # before stage cluster approval task has been created
         type: ApprovalRequestCreated
       type: Approval
-    afterStageTaskStatus:
-    - approvalRequestName: example-run-canary-after # Approval needed after completing
-      type: Approval
     clusters:
-    - clusterName: member3 # according the labelSelector and sortingLabelKey, member3 is selected first in this stage
-      conditions:
-      - lastTransitionTime: ...
-        message: ""
-        observedGeneration: 1
-        reason: ClusterUpdatingStarted
-        status: "True"
-        type: Started
-      - lastTransitionTime: ...
-        message: ""
-        observedGeneration: 1
-        reason: ClusterUpdatingSucceeded
-        status: "True" # member3 update is completed
-        type: Succeeded
-    - clusterName: member1 # member1 is selected after member3 because of order=2 label
-      conditions:
-      - lastTransitionTime: ...
-        message: ""
-        observedGeneration: 1
-        reason: ClusterUpdatingStarted
-        status: "True" # member1 update has not finished yet
-        type: Started
+    - clusterName: member3
+    - clusterName: member1
     conditions:
     - lastTransitionTime: ...
       message: ""
-      observedGeneration: 1
-      reason: StageUpdatingStarted
-      status: "True" # stage canary is still executing
+      observedGeneration: 2
+      reason: StageUpdatingWaiting
+      status: "False"
       type: Progressing
     stageName: canary
-    startTime: ...
 ```
 After stage `staging` completes, the canary stage requires approval **before** it starts (due to beforeStageTasks). Check for the before-stage approval request:
 ```bash
-kubectl get clusterapprovalrequest
-NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary-before   example-run   canary                                 15s
+kubectl get clusterapprovalrequest -A
+NAME                        UPDATE-RUN    STAGE    APPROVED   AGE
+example-run-before-canary   example-run   canary              6m55s
 ```
 
 Approve the before-stage task to allow canary stage to start:
 ```bash
-kubectl patch clusterapprovalrequests example-run-canary-before --type=merge -p {"status":{"conditions":[{"type":"Approved","status":"True","reason":"lgtm","message":"approved to start canary","lastTransitionTime":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","observedGeneration":1}]}} --subresource=status
-clusterapprovalrequest.placement.kubernetes-fleet.io/example-run-canary-before patched
+kubectl patch clusterapprovalrequests example-run-before-canary --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":2}]}}' \
+  --subresource=status
 ```
 
 Once approved, the canary stage begins updating clusters. With `maxConcurrency: 2`, it updates up to 2 clusters concurrently.
 
 Wait for the canary stage to finish cluster updates. It will then wait for the after-stage Approval task:
 ```bash
-kubectl get clusterapprovalrequest
-NAME                       UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary-after   example-run   canary                                 2m2s
+kubectl get clusterapprovalrequest -A
+NAME                        UPDATE-RUN    STAGE    APPROVED   AGE
+example-run-after-canary    example-run   canary              3s
+example-run-before-canary   example-run   canary   True       15m
 ```
+
+> Note: Observed generation in the Approvaed condition should match the generation of the updateRun object.
 
 Approve the after-stage task to complete the rollout:
 ```bash
-kubectl patch clusterapprovalrequests example-run-canary-after --type=merge -p {"status":{"conditions":[{"type":"Approved","status":"True","reason":"lgtm","message":"canary successful","lastTransitionTime":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","observedGeneration":1}]}} --subresource=status
-clusterapprovalrequest.placement.kubernetes-fleet.io/example-run-canary-after patched
+kubectl patch clusterapprovalrequests example-run-after-canary --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":2}]}}' \
+  --subresource=status
 ```
 Alternatively, you can approve using a json patch file:
 ```bash
@@ -373,7 +365,7 @@ cat << EOF > approval.json
         {
             "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
             "message": "approved",
-            "observedGeneration": 1,
+            "observedGeneration": 2,
             "reason": "approved",
             "status": "True",
             "type": "Approved"
@@ -386,22 +378,22 @@ kubectl patch clusterapprovalrequests example-run-canary-after --type='merge' --
 
 Verify both approvals are accepted:
 ```bash
-kubectl get clusterapprovalrequest
-NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary-before   example-run   canary   True       True               3m15s
-example-run-canary-after    example-run   canary   True       True               2m30s
+kubectl get clusterapprovalrequest -A
+NAME                        UPDATE-RUN    STAGE    APPROVED   AGE
+example-run-after-canary    example-run   canary   True       2m12s
+example-run-before-canary   example-run   canary   True       17m
 ```
 The updateRun now is able to proceed and complete:
 ```bash
 kubectl get csur example-run
-NAME          PLACEMENT           RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                   0                 True          True        4m22s
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True          False         True        20m
 ```
 The CRP also shows rollout has completed and resources are available on all member clusters:
 ```bash
 kubectl get crp example-placement
 NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-example-placement   1     True        1               True        1               134m
+example-placement   1     True        1               True        1               36m
 ```
 The configmap `test-cm` should be deployed on all 3 member clusters, with latest data:
 ```yaml
@@ -481,15 +473,22 @@ kind: ClusterStagedUpdateRun
 metadata:
   ...
   name: example-run-2
+  generation: 1
   ...
 spec:
   placementName: example-placement
   resourceSnapshotIndex: "0"
   stagedRolloutStrategyName: example-strategy
+  state: Run
 status:
+  appliedStrategy:
+    comparisonOption: PartialComparison
+    type: ClientSideApply
+    whenToApply: Always
+    whenToTakeOver: Always
   conditions:
   - lastTransitionTime: ...
-    message: ClusterStagedUpdateRun initialized successfully
+    message: ""
     observedGeneration: 1
     reason: UpdateRunInitializedSuccessfully
     status: "True"
@@ -497,8 +496,8 @@ status:
   - lastTransitionTime: ...
     message: ""
     observedGeneration: 1
-    reason: UpdateRunStarted
-    status: "True"
+    reason: UpdateRunSucceeded
+    status: "False"
     type: Progressing
   - lastTransitionTime: ...
     message: ""
@@ -512,8 +511,8 @@ status:
     - lastTransitionTime: ...
       message: ""
       observedGeneration: 1
-      reason: StageUpdatingStarted
-      status: "True"
+      reason: StageUpdatingSucceeded
+      status: "False"
       type: Progressing
     - lastTransitionTime: ...
       message: ""
@@ -526,6 +525,7 @@ status:
     startTime: ...
   policyObservedClusterCount: 3
   policySnapshotIndexUsed: "0"
+  resourceSnapshotIndexUsed: "0"
   stagedUpdateStrategySnapshot:
     stages:
     - afterStageTasks:
@@ -534,12 +534,16 @@ status:
       labelSelector:
         matchLabels:
           environment: staging
+      maxConcurrency: 1
       name: staging
     - afterStageTasks:
+      - type: Approval
+      beforeStageTasks:
       - type: Approval
       labelSelector:
         matchLabels:
           environment: canary
+      maxConcurrency: 2
       name: canary
       sortingLabelKey: order
   stagesStatus:
@@ -571,7 +575,7 @@ status:
     - lastTransitionTime: ...
       message: ""
       observedGeneration: 1
-      reason: StageUpdatingWaiting
+      reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
@@ -583,35 +587,35 @@ status:
     endTime: ...
     stageName: staging
     startTime: ...
-  - beforeStageTaskStatus:
-    - approvalRequestName: example-run-2-canary-before
+  - afterStageTaskStatus:
+    - approvalRequestName: example-run-2-after-canary
       conditions:
       - lastTransitionTime: ...
         message: ""
         observedGeneration: 1
-        reason: BeforeStageTaskApprovalRequestCreated
+        reason: StageTaskApprovalRequestCreated
         status: "True"
         type: ApprovalRequestCreated
       - lastTransitionTime: ...
         message: ""
         observedGeneration: 1
-        reason: BeforeStageTaskApprovalRequestApproved
+        reason: StageTaskApprovalRequestApproved
         status: "True"
         type: ApprovalRequestApproved
       type: Approval
-    afterStageTaskStatus:
-    - approvalRequestName: example-run-2-canary-after
+    beforeStageTaskStatus:
+    - approvalRequestName: example-run-2-before-canary
       conditions:
       - lastTransitionTime: ...
         message: ""
         observedGeneration: 1
-        reason: AfterStageTaskApprovalRequestCreated
+        reason: StageTaskApprovalRequestCreated
         status: "True"
         type: ApprovalRequestCreated
       - lastTransitionTime: ...
         message: ""
         observedGeneration: 1
-        reason: AfterStageTaskApprovalRequestApproved
+        reason: StageTaskApprovalRequestApproved
         status: "True"
         type: ApprovalRequestApproved
       type: Approval
@@ -648,7 +652,7 @@ status:
     - lastTransitionTime: ...
       message: ""
       observedGeneration: 1
-      reason: StageUpdatingWaiting
+      reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
