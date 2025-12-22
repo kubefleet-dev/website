@@ -160,7 +160,7 @@ metadata:
   namespace: my-app-namespace
 spec:
   stages:
-    - name: dev-clusters
+    - name: dev
       labelSelector:
         matchLabels:
           environment: development
@@ -168,7 +168,7 @@ spec:
       afterStageTasks:
         - type: TimedWait
           waitTime: 30m
-    - name: production-clusters
+    - name: prod
       labelSelector:
         matchLabels:
           environment: production
@@ -221,20 +221,21 @@ Both approval request types use status conditions to track approval state:
 
 Approve manually by setting the `Approved` condition to `True` using kubectl patch:
 
+> Note: Observed generation in the Approvaed condition should match the generation of the updateRun object.
+
 ```bash
 # For cluster-scoped before-stage approvals
-kubectl patch clusterapprovalrequests example-run-canary-before --type='merge' \
-  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved"}]}}' \
+kubectl patch clusterapprovalrequests example-run-before-canary --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 
 # For cluster-scoped after-stage approvals
-kubectl patch clusterapprovalrequests example-run-canary-after --type='merge' \
-  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved"}]}}' \
-  --subresource=status
+kubectl patch clusterapprovalrequests example-run-after-canary --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
 
 # For namespace-scoped approvals
-kubectl patch approvalrequests app-run-stage-before -n my-app-namespace --type='merge' \
-  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved"}]}}' \
+kubectl patch clusterapprovalrequests example-run-before-canary -n test-namespace --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 ```
 
