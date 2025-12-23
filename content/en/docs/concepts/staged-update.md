@@ -198,7 +198,7 @@ Execute before a stage begins. Only one task allowed per stage:
 - **Approval**: Requires manual approval before starting the stage
 - **TimedWait**: Not supported for before-stage tasks
 
-For before-stage approval tasks, the system creates an approval request named `<updateRun-name>-<stage-name>-before`.
+For before-stage approval tasks, the system creates an approval request named `<updateRun-name>-before-<stage-name>`.
 
 #### After-Stage Tasks
 
@@ -206,7 +206,7 @@ Execute after all clusters in a stage complete. Up to two tasks allowed (one of 
 - **TimedWait**: Waits for a specified duration before proceeding to the next stage
 - **Approval**: Requires manual approval before proceeding to the next stage
 
-For after-stage approval tasks, the system creates an approval request named `<updateRun-name>-<stage-name>-after`.
+For after-stage approval tasks, the system creates an approval request named `<updateRun-name>-after-<stage-name>`.
 
 #### Approval Request Details
 
@@ -221,7 +221,7 @@ Both approval request types use status conditions to track approval state:
 
 Approve manually by setting the `Approved` condition to `True` using kubectl patch:
 
-> Note: Observed generation in the Approvaed condition should match the generation of the updateRun object.
+> Note: Observed generation in the Approved condition should match the generation of the updateRun object.
 
 ```bash
 # For cluster-scoped before-stage approvals
@@ -235,7 +235,7 @@ kubectl patch clusterapprovalrequests example-run-after-canary --type='merge' \
   --subresource=status
 
 # For namespace-scoped approvals
-kubectl patch clusterapprovalrequests example-run-before-canary -n test-namespace --type='merge' \
+kubectl patch approvalrequests example-run-before-canary -n test-namespace --type='merge' \
   -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 ```
@@ -265,10 +265,10 @@ metadata:
   name: app-rollout-v1-2-3
   namespace: my-app-namespace
 spec:
-  placementName: example-namespace-placement    # Required: Target ResourcePlacement
-  resourceSnapshotIndex: "5"                    # Optional: Resource version (omit for latest)
+  placementName: example-namespace-placement      # Required: Target ResourcePlacement
+  resourceSnapshotIndex: "5"                      # Optional: Resource version (omit for latest)
   stagedRolloutStrategyName: app-rollout-strategy # Required: Strategy to execute
-  state: Initialize                             # Optional: Initialize (default), Run, or Stop
+  state: Initialize                               # Optional: Initialize (default), Run, or Stop
 ```
 
 **Using Latest Resource Snapshot:**
@@ -337,7 +337,7 @@ When state is `Stop`, the updateRun pauses execution at the current cluster/stag
 **Strategy Limits**: Each strategy can define a maximum of 31 stages to ensure reasonable execution times.
 
 **MaxConcurrency Validation**:
-- Must be ≥ 1 for absolute numbers
+- Must be >= 1 for absolute numbers
 - Must be 1-100% for percentages
 - Fractional results are rounded down with minimum of 1
 

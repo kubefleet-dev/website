@@ -679,11 +679,13 @@ Namespace-scoped staged updates allow application teams to manage rollouts indep
 
 Let's demonstrate namespace-scoped staged updates by deploying an application within a specific namespace. 
 
-Create a namespace:
+Create a namespace,
 
 ```bash
 kubectl create ns my-app-namespace
 ```
+
+Create a CRP that only propagates the namespace (i.e. with selectionScope set to NamespaceOnly, the namespace resource is propagated without any resources withing the namespace) to all the clusters,
 
 ```bash
 kubectl apply -f - << EOF
@@ -817,7 +819,7 @@ Check the status of the staged update run:
 kubectl get sur web-app-rollout-v1-21 -n my-app-namespace
 ```
 
-Wait for the first stage to complete. The prod-clusters before stage requires approval before starting:
+Wait for the first stage to complete. The prod before stage requires approval before starting:
 ```bash
 kubectl get approvalrequests -n my-app-namespace
 NAME                                UPDATE-RUN              STAGE   APPROVED   AGE
@@ -873,7 +875,7 @@ Follow the same monitoring and approval process as above to complete the rollbac
 
 ### MaxConcurrency Guidelines
 
-- **Development/Staging**: Use higher values (e.g., `maxConcurrency: 3` or `50%`) to speed up rollouts in non-critical environments
+- **Development/Staging**: Use higher values (e.g., `maxConcurrency: 3` or `50%`) to speed up rollouts
 - **Production**: Use `maxConcurrency: 1` for sequential updates to minimize risk and allow early detection of issues
 - **Large fleets**: Use percentages (e.g., `10%`, `25%`) to scale with cluster growth automatically
 - **Small fleets**: Use absolute numbers for predictable behavior
