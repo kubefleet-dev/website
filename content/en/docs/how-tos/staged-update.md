@@ -677,10 +677,37 @@ Namespace-scoped staged updates allow application teams to manage rollouts indep
 
 ### Setup for Namespace-Scoped Updates
 
-Let's demonstrate namespace-scoped staged updates by deploying an application within a specific namespace. Create a namespace and an application rollout:
+Let's demonstrate namespace-scoped staged updates by deploying an application within a specific namespace. 
+
+Create a namespace:
 
 ```bash
 kubectl create ns my-app-namespace
+```
+
+```bash
+kubectl apply -f - << EOF
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: ns-only-crp
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: my-app-namespace
+      version: v1
+      selectionScope: NamespaceOnly
+  policy:
+    placementType: PickAll
+  strategy:
+    type: RollingUpdate
+EOF
+```
+
+Create application to rollout,
+
+```bash
 kubectl create deployment web-app --image=nginx:1.20 --port=80 -n my-app-namespace
 kubectl expose deployment web-app --port=80 --target-port=80 -n my-app-namespace
 ```
@@ -715,21 +742,21 @@ EOF
 Check the resource snapshots for the namespace-scoped placement:
 ```bash
 kubectl get resourcesnapshots -n my-app-namespace 
-NAME                         GEN    AGE    LABELS  
-web-app-placement-0-snapshot  1     63s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
+NAME                           GEN   AGE
+web-app-placement-0-snapshot   1     30s
 ```
 
 Update the deployment to a new version:
 ```bash
-kubectl set image deployment/web-app web-app=nginx:1.21 -n my-app-namespace
+kubectl set image deployment/web-app nginx=nginx:1.21 -n my-app-namespace
 ```
 
 Verify the new snapshot is created:
 ```bash
 kubectl get resourcesnapshots -n my-app-namespace --show-labels
-NAME                         GEN    AGE    LABELS  
-web-app-placement-0-snapshot  1     263s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
-web-app-placement-1-snapshot  1     23s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=1
+NAME                           GEN   AGE     LABELS
+web-app-placement-0-snapshot   1     5m24s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
+web-app-placement-1-snapshot   1     16s     kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=1
 ```
 
 ### Deploy a StagedUpdateStrategy
@@ -744,7 +771,7 @@ metadata:
   namespace: my-app-namespace
 spec:
   stages:
-    - name: dev-clusters
+    - name: dev
       labelSelector:
         matchLabels:
           environment: staging
@@ -752,7 +779,7 @@ spec:
       afterStageTasks:
         - type: TimedWait
           waitTime: 30s
-    - name: prod-clusters
+    - name: prod
       labelSelector:
         matchLabels:
           environment: canary
@@ -787,31 +814,32 @@ EOF
 
 Check the status of the staged update run:
 ```bash
-kubectl describe sur web-app-rollout-v1-21 -n my-app-namespace
+kubectl get sur web-app-rollout-v1-21 -n my-app-namespace
 ```
 
-Wait for the first stage to complete. The prod-clusters stage requires approval before starting:
+Wait for the first stage to complete. The prod-clusters before stage requires approval before starting:
 ```bash
 kubectl get approvalrequests -n my-app-namespace
-NAME                                      UPDATE-RUN               STAGE          APPROVED   APPROVALACCEPTED   AGE
-web-app-rollout-v1-21-prod-clusters-before web-app-rollout-v1-21   prod-clusters                                15s
+NAME                                UPDATE-RUN              STAGE   APPROVED   AGE
+web-app-rollout-v1-21-before-prod   web-app-rollout-v1-21   prod               2s
 ```
 
 Approve the before-stage task to start production rollout:
 ```bash
-kubectl patch approvalrequests web-app-rollout-v1-21-prod-clusters-before -n my-app-namespace --type='merge' \
-  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved to start prod"}]}}' \
+kubectl patch approvalrequests web-app-rollout-v1-21-before-prod -n my-app-namespace --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 ```
 
 After production clusters complete updates, approve the after-stage task:
 ```bash
 kubectl get approvalrequests -n my-app-namespace
-NAME                                     UPDATE-RUN               STAGE          APPROVED   APPROVALACCEPTED   AGE
-web-app-rollout-v1-21-prod-clusters-after web-app-rollout-v1-21   prod-clusters                                2m
+NAME                                UPDATE-RUN              STAGE   APPROVED   AGE
+web-app-rollout-v1-21-after-prod    web-app-rollout-v1-21   prod               18s
+web-app-rollout-v1-21-before-prod   web-app-rollout-v1-21   prod    True       2m22s
 
-kubectl patch approvalrequests web-app-rollout-v1-21-prod-clusters-after -n my-app-namespace --type='merge' \
-  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"prod rollout successful"}]}}' \
+kubectl patch approvalrequests web-app-rollout-v1-21-after-prod  -n my-app-namespace --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 ```
 
