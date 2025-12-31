@@ -685,7 +685,7 @@ Create a namespace,
 kubectl create ns my-app-namespace
 ```
 
-Create a CRP that only propagates the namespace (i.e. with selectionScope set to NamespaceOnly, the namespace resource is propagated without any resources within the namespace) to all the clusters,
+Create a CRP that only propagates the namespace (i.e. with selectionScope set to NamespaceOnly, the namespace resource is propagated without any resources within the namespace) to all the clusters.
 
 ```bash
 kubectl apply -f - << EOF

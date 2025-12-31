@@ -349,6 +349,7 @@ UpdateRun status provides detailed information about rollout progress across sta
 - **Before-stage task status**: Pre-stage approval progress
 - **After-stage task status**: Post-stage approval and wait task progress
 - **Resource snapshot used**: The actual resource snapshot index used (from spec or latest)
+- **Policy snapshot used**: The policy snapshot index used during initialization
 
 Use `kubectl describe` to view detailed status:
 ```bash
