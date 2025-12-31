@@ -188,6 +188,77 @@ The UpdateRun starts in `Initialize` state, which computes the stages without ex
 kubectl get csur example-run -o yaml  # Review computed stages in status
 ```
 
+Output:
+``` yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateRun
+metadata:
+  ...
+  generation: 1
+  name: example-run
+  ...
+spec:
+  placementName: example-placement
+  resourceSnapshotIndex: "1"
+  stagedRolloutStrategyName: example-strategy
+  state: Initialize
+status:
+  appliedStrategy:
+    comparisonOption: PartialComparison
+    type: ClientSideApply
+    whenToApply: Always
+    whenToTakeOver: Always
+  conditions:
+  - lastTransitionTime: ...
+    message: ...
+    observedGeneration: 1
+    reason: UpdateRunInitializedSuccessfully
+    status: "True"
+    type: Initialized
+  deletionStageStatus:
+    clusters: []
+    stageName: kubernetes-fleet.io/deleteStage
+  policyObservedClusterCount: 3
+  policySnapshotIndexUsed: "0"
+  resourceSnapshotIndexUsed: "1"
+  stagedUpdateStrategySnapshot:
+    stages:
+    - afterStageTasks:
+      - type: TimedWait
+        waitTime: 1m0s
+      labelSelector:
+        matchLabels:
+          environment: staging
+      maxConcurrency: 30%
+      name: staging
+    - afterStageTasks:
+      - type: Approval
+      beforeStageTasks:
+      - type: Approval
+      labelSelector:
+        matchLabels:
+          environment: canary
+      maxConcurrency: 2
+      name: canary
+      sortingLabelKey: order
+  stagesStatus:
+  - afterStageTaskStatus:
+    - type: TimedWait
+    clusters:
+    - clusterName: kind-cluster-2
+    stageName: staging
+  - afterStageTaskStatus:
+    - approvalRequestName: example-run-after-canary
+      type: Approval
+    beforeStageTaskStatus:
+    - approvalRequestName: example-run-before-canary
+      type: Approval
+    clusters:
+    - clusterName: kind-cluster-3
+    - clusterName: kind-cluster-1
+    stageName: canary
+```
+
 Once satisfied with the plan, start the rollout by changing the state to `Run`:
 ```bash
 kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
@@ -222,13 +293,13 @@ status:
     whenToTakeOver: Always
   conditions:
   - lastTransitionTime: ...
-    message: "..."
+    message: ...
     observedGeneration: 2
     reason: UpdateRunInitializedSuccessfully
     status: "True" # the updateRun is initialized successfully
     type: Initialized
   - lastTransitionTime: ...
-    message: "..."
+    message: ...
     observedGeneration: 2
     reason: UpdateRunWaiting
     status: "False" # the updateRun is waiting
@@ -263,7 +334,7 @@ status:
   - afterStageTaskStatus:
     - conditions:
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 2
         reason: AfterStageTaskWaitTimeElapsed
         status: "True" # the wait after-stage task has completed
@@ -273,26 +344,26 @@ status:
     - clusterName: member2 # stage staging contains member2 cluster only
       conditions:
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 2
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 2
         reason: ClusterUpdatingSucceeded
         status: "True" # member2 is updated successfully
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
-      message: "..."
+      message: ...
       observedGeneration: 2
       reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: "..."
+      message: ...
       observedGeneration: 2
       reason: StageUpdatingSucceeded
       status: "True" # stage staging has completed successfully
@@ -307,7 +378,7 @@ status:
     - approvalRequestName: example-run-before-canary
       conditions:
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 2
         reason: StageTaskApprovalRequestCreated
         status: "True" # before stage cluster approval task has been created
@@ -318,7 +389,7 @@ status:
     - clusterName: member1
     conditions:
     - lastTransitionTime: ...
-      message: "..."
+      message: ...
       observedGeneration: 2
       reason: StageUpdatingWaiting
       status: "False"
@@ -424,6 +495,11 @@ The system will determine the latest snapshot at initialization time. Check whic
 kubectl get csur example-run-latest -o jsonpath='{.status.resourceSnapshotIndexUsed}'
 ```
 
+If we are following the instructions so far, the resourceSnapshotIndexUsed would be 1 since we updated the configmap with value2,
+```bash
+1
+```
+
 ### Pausing and Resuming a Rollout
 
 You can pause an in-progress rollout to investigate issues or wait for off-peak hours:
@@ -488,19 +564,19 @@ status:
     whenToTakeOver: Always
   conditions:
   - lastTransitionTime: ...
-    message: "..."
+    message: ...
     observedGeneration: 1
     reason: UpdateRunInitializedSuccessfully
     status: "True"
     type: Initialized
   - lastTransitionTime: ...
-    message: "..."
+    message: ...
     observedGeneration: 1
     reason: UpdateRunSucceeded
     status: "False"
     type: Progressing
   - lastTransitionTime: ...
-    message: "..."
+    message: ...
     observedGeneration: 1
     reason: UpdateRunSucceeded # updateRun succeeded 
     status: "True"
@@ -509,13 +585,13 @@ status:
     clusters: []
     conditions:
     - lastTransitionTime: ...
-      message: "..."
+      message: ...
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: "..."
+      message: ...
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "True" # no clusters in the deletion stage, it completes directly
@@ -550,7 +626,7 @@ status:
   - afterStageTaskStatus:
     - conditions:
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: AfterStageTaskWaitTimeElapsed
         status: "True"
@@ -560,26 +636,26 @@ status:
     - clusterName: member2
       conditions:
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
         status: "True"
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
-      message: "..."
+      message: ...
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: "..."
+      message: ...
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "True"
@@ -591,13 +667,13 @@ status:
     - approvalRequestName: example-run-2-after-canary
       conditions:
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: StageTaskApprovalRequestCreated
         status: "True"
         type: ApprovalRequestCreated
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: StageTaskApprovalRequestApproved
         status: "True"
@@ -607,13 +683,13 @@ status:
     - approvalRequestName: example-run-2-before-canary
       conditions:
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: StageTaskApprovalRequestCreated
         status: "True"
         type: ApprovalRequestCreated
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: StageTaskApprovalRequestApproved
         status: "True"
@@ -623,13 +699,13 @@ status:
     - clusterName: member3
       conditions:
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
         status: "True"
@@ -637,26 +713,26 @@ status:
     - clusterName: member1
       conditions:
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: "..."
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
         status: "True"
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
-      message: "..."
+      message: ...
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: "..."
+      message: ...
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "True"
