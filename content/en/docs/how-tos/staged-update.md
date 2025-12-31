@@ -149,7 +149,7 @@ spec:
       labelSelector:
         matchLabels:
           environment: staging
-      maxConcurrency: 1  # Update clusters sequentially in staging
+      maxConcurrency: 30%  # Update clusters sequentially in staging, 30% of 1 clusters is 0.3, we usually round down but if value is less than 1 we set maxConcurrency to 1
       afterStageTasks:
         - type: TimedWait
           waitTime: 1m
@@ -335,7 +335,7 @@ example-run-before-canary   example-run   canary              6m55s
 Approve the before-stage task to allow canary stage to start:
 ```bash
 kubectl patch clusterapprovalrequests example-run-before-canary --type='merge' \
-  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":2}]}}' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 ```
 
@@ -354,7 +354,7 @@ example-run-before-canary   example-run   canary   True       15m
 Approve the after-stage task to complete the rollout:
 ```bash
 kubectl patch clusterapprovalrequests example-run-after-canary --type='merge' \
-  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":2}]}}' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 ```
 Alternatively, you can approve using a json patch file:
@@ -365,7 +365,7 @@ cat << EOF > approval.json
         {
             "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
             "message": "approved",
-            "observedGeneration": 2,
+            "observedGeneration": 1,
             "reason": "approved",
             "status": "True",
             "type": "Approved"
