@@ -319,7 +319,7 @@ kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
 ### UpdateRun Execution
 
 UpdateRuns execute in two phases:
-1. **Initialization**: Captures strategy snapshot, collects target bindings, generates cluster update sequence. Occurs when state is `Initialize` or `Run`
+1. **Initialization**: Validates placement, captures latest strategy snapshot, collects target bindings, generates cluster update sequence, captures specified resource snapshot or latest resource snapshot if unspecified & records override snapshots. Occurs once on creation when state is `Initialize`, `Run` or `Stop`.
 2. **Execution**: Processes stages sequentially, updates clusters within each stage (respecting maxConcurrency), enforces before-stage and after-stage tasks. Only occurs when state is `Run`
 3. **Stopping/Stopped** When state is `Stop`, the updateRun pauses execution at the current cluster/stage and can be resumed by changing state back to `Run`. If there are updating/deleting clusters we wait after marking updateRun as `Stopping` for the in-progress clusters to reach a deterministic state: succeeded, failed or stuck before marking updateRun as `Stopped`
 
