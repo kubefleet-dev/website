@@ -184,9 +184,9 @@ Each stage includes:
 - **name**: Unique identifier for the stage
 - **labelSelector**: Selects target clusters for this stage
 - **sortingLabelKey** (optional): Label whose integer value determines update sequence within the stage
-- **maxConcurrency** (optional): Maximum number of clusters to update concurrently. Can be an absolute number (e.g., `5`) or percentage (e.g., `50%`). Defaults to `1` (sequential). Fractional results are rounded down with a minimum of 1
+- **maxConcurrency** (optional): Maximum number of clusters to update concurrently within the stage. Can be an absolute number (e.g., `5`) or percentage (e.g., `50%`). Defaults to `1` (sequential). Fractional results are rounded down with a minimum of 1
 - **beforeStageTasks** (optional): Tasks that must complete before starting the stage (max 1 task, Approval type only)
-- **afterStageTasks** (optional): Tasks that must complete before proceeding to the next stage (max 2 tasks)
+- **afterStageTasks** (optional): Tasks that must complete before proceeding to the next stage (max 2 tasks, Approval and/or TimedWait type)
 
 ### Stage Tasks
 
@@ -194,9 +194,8 @@ Stage tasks provide control gates at different points in the rollout lifecycle:
 
 #### Before-Stage Tasks
 
-Execute before a stage begins. Only one task allowed per stage:
+Execute before a stage begins. Only one task allowed per stage. Supported types:
 - **Approval**: Requires manual approval before starting the stage
-- **TimedWait**: Not supported for before-stage tasks
 
 For before-stage approval tasks, the system creates an approval request named `<updateRun-name>-before-<stage-name>`.
 
@@ -251,9 +250,9 @@ kind: ClusterStagedUpdateRun
 metadata:
   name: example-run
 spec:
-  placementName: example-placement              # Required: Target ClusterResourcePlacement
+  placementName: example-placement              # Required: Name of Target ClusterResourcePlacement
   resourceSnapshotIndex: "0"                    # Optional: Resource version (omit for latest)
-  stagedRolloutStrategyName: example-strategy   # Required: Strategy to execute
+  stagedRolloutStrategyName: example-strategy   # Required: Name of the strategy to execute
   state: Run                                    # Optional: Initialize (default), Run, or Stop
 ```
 
@@ -265,9 +264,9 @@ metadata:
   name: app-rollout-v1-2-3
   namespace: my-app-namespace
 spec:
-  placementName: example-namespace-placement      # Required: Target ResourcePlacement
+  placementName: example-namespace-placement      # Required: Name of target ResourcePlacement. The StagedUpdateRun must be created in the same namespace as the ResourcePlacement
   resourceSnapshotIndex: "5"                      # Optional: Resource version (omit for latest)
-  stagedRolloutStrategyName: app-rollout-strategy # Required: Strategy to execute
+  stagedRolloutStrategyName: app-rollout-strategy # Required: Name of the strategy to execute. Must be in the same namespace
   state: Initialize                               # Optional: Initialize (default), Run, or Stop
 ```
 

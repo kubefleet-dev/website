@@ -373,7 +373,7 @@ cat << EOF > approval.json
     ]
 }
 EOF
-kubectl patch clusterapprovalrequests example-run-canary-after --type='merge' --subresource=status --patch-file approval.json
+kubectl patch clusterapprovalrequests example-run-after-canary --type='merge' --subresource=status --patch-file approval.json
 ```
 
 Verify both approvals are accepted:
