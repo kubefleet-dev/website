@@ -220,7 +220,7 @@ Both approval request types use status conditions to track approval state:
 
 Approve manually by setting the `Approved` condition to `True` using kubectl patch:
 
-> Note: Observed generation in the Approved condition should match the generation of the updateRun object.
+> Note: Observed generation in the Approved condition should match the generation of the approvalRequest object.
 
 ```bash
 # For cluster-scoped before-stage approvals
