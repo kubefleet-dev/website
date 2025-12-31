@@ -201,7 +201,7 @@ For before-stage approval tasks, the system creates an approval request named `<
 
 #### After-Stage Tasks
 
-Execute after all clusters in a stage complete. Up to two tasks allowed (one of each type):
+Execute after all clusters in a stage complete. Up to two tasks allowed (one of each type). Supported types:
 - **TimedWait**: Waits for a specified duration before proceeding to the next stage
 - **Approval**: Requires manual approval before proceeding to the next stage
 
@@ -321,8 +321,7 @@ kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
 UpdateRuns execute in two phases:
 1. **Initialization**: Captures strategy snapshot, collects target bindings, generates cluster update sequence. Occurs when state is `Initialize` or `Run`
 2. **Execution**: Processes stages sequentially, updates clusters within each stage (respecting maxConcurrency), enforces before-stage and after-stage tasks. Only occurs when state is `Run`
-
-When state is `Stop`, the updateRun pauses execution at the current cluster/stage and can be resumed by changing state back to `Run`
+3. **Stopping/Stopped** When state is `Stop`, the updateRun pauses execution at the current cluster/stage and can be resumed by changing state back to `Run`. If there are updating/deleting clusters we wait after marking updateRun as `Stopping` for the in-progress clusters to reach a deterministic state: succeeded, failed or stuck before marking updateRun as `Stopped`
 
 ### Important Constraints and Validation
 

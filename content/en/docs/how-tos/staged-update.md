@@ -222,13 +222,13 @@ status:
     whenToTakeOver: Always
   conditions:
   - lastTransitionTime: ...
-    message: ""
+    message: "..."
     observedGeneration: 2
     reason: UpdateRunInitializedSuccessfully
     status: "True" # the updateRun is initialized successfully
     type: Initialized
   - lastTransitionTime: ...
-    message: ""
+    message: "..."
     observedGeneration: 2
     reason: UpdateRunWaiting
     status: "False" # the updateRun is waiting
@@ -263,7 +263,7 @@ status:
   - afterStageTaskStatus:
     - conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 2
         reason: AfterStageTaskWaitTimeElapsed
         status: "True" # the wait after-stage task has completed
@@ -273,26 +273,26 @@ status:
     - clusterName: member2 # stage staging contains member2 cluster only
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 2
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 2
         reason: ClusterUpdatingSucceeded
         status: "True" # member2 is updated successfully
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
-      message: ""
+      message: "..."
       observedGeneration: 2
       reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: ""
+      message: "..."
       observedGeneration: 2
       reason: StageUpdatingSucceeded
       status: "True" # stage staging has completed successfully
@@ -307,7 +307,7 @@ status:
     - approvalRequestName: example-run-before-canary
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 2
         reason: StageTaskApprovalRequestCreated
         status: "True" # before stage cluster approval task has been created
@@ -318,7 +318,7 @@ status:
     - clusterName: member1
     conditions:
     - lastTransitionTime: ...
-      message: ""
+      message: "..."
       observedGeneration: 2
       reason: StageUpdatingWaiting
       status: "False"
@@ -488,19 +488,19 @@ status:
     whenToTakeOver: Always
   conditions:
   - lastTransitionTime: ...
-    message: ""
+    message: "..."
     observedGeneration: 1
     reason: UpdateRunInitializedSuccessfully
     status: "True"
     type: Initialized
   - lastTransitionTime: ...
-    message: ""
+    message: "..."
     observedGeneration: 1
     reason: UpdateRunSucceeded
     status: "False"
     type: Progressing
   - lastTransitionTime: ...
-    message: ""
+    message: "..."
     observedGeneration: 1
     reason: UpdateRunSucceeded # updateRun succeeded 
     status: "True"
@@ -509,13 +509,13 @@ status:
     clusters: []
     conditions:
     - lastTransitionTime: ...
-      message: ""
+      message: "..."
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: ""
+      message: "..."
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "True" # no clusters in the deletion stage, it completes directly
@@ -550,7 +550,7 @@ status:
   - afterStageTaskStatus:
     - conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: AfterStageTaskWaitTimeElapsed
         status: "True"
@@ -560,26 +560,26 @@ status:
     - clusterName: member2
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
         status: "True"
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
-      message: ""
+      message: "..."
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: ""
+      message: "..."
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "True"
@@ -591,13 +591,13 @@ status:
     - approvalRequestName: example-run-2-after-canary
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: StageTaskApprovalRequestCreated
         status: "True"
         type: ApprovalRequestCreated
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: StageTaskApprovalRequestApproved
         status: "True"
@@ -607,13 +607,13 @@ status:
     - approvalRequestName: example-run-2-before-canary
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: StageTaskApprovalRequestCreated
         status: "True"
         type: ApprovalRequestCreated
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: StageTaskApprovalRequestApproved
         status: "True"
@@ -623,13 +623,13 @@ status:
     - clusterName: member3
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
         status: "True"
@@ -637,26 +637,26 @@ status:
     - clusterName: member1
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: ""
+        message: "..."
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
         status: "True"
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
-      message: ""
+      message: "..."
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: ""
+      message: "..."
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "True"
