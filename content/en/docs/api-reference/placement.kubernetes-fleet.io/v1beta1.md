@@ -1983,7 +1983,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `type` _[RolloutStrategyType](#rolloutstrategytype)_ | Type of rollout. The only supported types are "RollingUpdate" and "External".<br />Default is "RollingUpdate". | RollingUpdate | Enum: [RollingUpdate External] <br />Optional: \{\} <br /> |
+| `type` _[RolloutStrategyType](#rolloutstrategytype)_ | Type of rollout. The only supported types are "RollingUpdate" and "External".<br />Default is "RollingUpdate". | RollingUpdate | Enum: [RollingUpdate External] <br /> |
 | `rollingUpdate` _[RollingUpdateConfig](#rollingupdateconfig)_ | Rolling update config params. Present only if RolloutStrategyType = RollingUpdate. |  | Optional: \{\} <br /> |
 | `applyStrategy` _[ApplyStrategy](#applystrategy)_ | ApplyStrategy describes when and how to apply the selected resources to the target cluster. |  | Optional: \{\} <br /> |
 | `deleteStrategy` _[DeleteStrategy](#deletestrategy)_ | DeleteStrategy configures the deletion behavior when the ClusterResourcePlacement is deleted. |  | Optional: \{\} <br /> |
