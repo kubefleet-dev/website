@@ -149,6 +149,7 @@ spec:
       labelSelector:
         matchLabels:
           environment: staging
+      maxConcurrency: 30%  # Update clusters sequentially in staging, 30% of 1 clusters is 0.3, we usually round down but if value is less than 1 we set maxConcurrency to 1
       afterStageTasks:
         - type: TimedWait
           waitTime: 1m
@@ -157,8 +158,11 @@ spec:
         matchLabels:
           environment: canary
       sortingLabelKey: order
+      maxConcurrency: 2  # Update 2 canary clusters concurrently
+      beforeStageTasks:
+        - type: Approval  # Require approval before starting canary
       afterStageTasks:
-        - type: Approval
+        - type: Approval  # Require approval after canary completes
 EOF
 ```
 
@@ -175,14 +179,96 @@ spec:
   placementName: example-placement
   resourceSnapshotIndex: "1"
   stagedRolloutStrategyName: example-strategy
+  state: Initialize  # Initialize but don't start execution yet
 EOF
+```
+
+The UpdateRun starts in `Initialize` state, which computes the stages without executing. This allows you to review the computed stages before starting:
+```bash
+kubectl get csur example-run -o yaml  # Review computed stages in status
+```
+
+Output:
+``` yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateRun
+metadata:
+  ...
+  generation: 1
+  name: example-run
+  ...
+spec:
+  placementName: example-placement
+  resourceSnapshotIndex: "1"
+  stagedRolloutStrategyName: example-strategy
+  state: Initialize
+status:
+  appliedStrategy:
+    comparisonOption: PartialComparison
+    type: ClientSideApply
+    whenToApply: Always
+    whenToTakeOver: Always
+  conditions:
+  - lastTransitionTime: ...
+    message: ...
+    observedGeneration: 1
+    reason: UpdateRunInitializedSuccessfully
+    status: "True"
+    type: Initialized
+  deletionStageStatus:
+    clusters: []
+    stageName: kubernetes-fleet.io/deleteStage
+  policyObservedClusterCount: 3
+  policySnapshotIndexUsed: "0"
+  resourceSnapshotIndexUsed: "1"
+  stagedUpdateStrategySnapshot:
+    stages:
+    - afterStageTasks:
+      - type: TimedWait
+        waitTime: 1m0s
+      labelSelector:
+        matchLabels:
+          environment: staging
+      maxConcurrency: 30%
+      name: staging
+    - afterStageTasks:
+      - type: Approval
+      beforeStageTasks:
+      - type: Approval
+      labelSelector:
+        matchLabels:
+          environment: canary
+      maxConcurrency: 2
+      name: canary
+      sortingLabelKey: order
+  stagesStatus:
+  - afterStageTaskStatus:
+    - type: TimedWait
+    clusters:
+    - clusterName: kind-cluster-2
+    stageName: staging
+  - afterStageTaskStatus:
+    - approvalRequestName: example-run-after-canary
+      type: Approval
+    beforeStageTaskStatus:
+    - approvalRequestName: example-run-before-canary
+      type: Approval
+    clusters:
+    - clusterName: kind-cluster-3
+    - clusterName: kind-cluster-1
+    stageName: canary
+```
+
+Once satisfied with the plan, start the rollout by changing the state to `Run`:
+```bash
+kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
 ```
 
 The staged update run is initialized and running:
 ```bash
 kubectl get csur example-run
-NAME          PLACEMENT           RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                   0                 True                      44s
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True          True                      62s
 ```
 
 A more detailed look at the status:
@@ -192,30 +278,38 @@ kind: ClusterStagedUpdateRun
 metadata:
   ...
   name: example-run
+  generation: 2 # state changed from Initialize -> Run
   ...
 spec:
   placementName: example-placement
   resourceSnapshotIndex: "1"
   stagedRolloutStrategyName: example-strategy
+  state: Run
 status:
+  appliedStrategy:
+    comparisonOption: PartialComparison
+    type: ClientSideApply
+    whenToApply: Always
+    whenToTakeOver: Always
   conditions:
   - lastTransitionTime: ...
-    message: ClusterStagedUpdateRun initialized successfully
-    observedGeneration: 1
+    message: ...
+    observedGeneration: 2
     reason: UpdateRunInitializedSuccessfully
     status: "True" # the updateRun is initialized successfully
     type: Initialized
   - lastTransitionTime: ...
-    message: ""
-    observedGeneration: 1
-    reason: UpdateRunStarted
-    status: "True"
-    type: Progressing # the updateRun is still running
+    message: ...
+    observedGeneration: 2
+    reason: UpdateRunWaiting
+    status: "False" # the updateRun is waiting
+    type: Progressing
   deletionStageStatus:
     clusters: [] # no clusters need to be cleaned up
     stageName: kubernetes-fleet.io/deleteStage
   policyObservedClusterCount: 3 # number of clusters to be updated
   policySnapshotIndexUsed: "0"
+  resourceSnapshotIndexUsed: "1"
   stagedUpdateStrategySnapshot: # snapshot of the strategy
     stages:
     - afterStageTasks:
@@ -224,20 +318,24 @@ status:
       labelSelector:
         matchLabels:
           environment: staging
+      maxConcurrency: 1
       name: staging
     - afterStageTasks:
+      - type: Approval
+      beforeStageTasks:
       - type: Approval
       labelSelector:
         matchLabels:
           environment: canary
+      maxConcurrency: 2
       name: canary
       sortingLabelKey: order
   stagesStatus: # detailed status for each stage
   - afterStageTaskStatus:
     - conditions:
       - lastTransitionTime: ...
-        message: ""
-        observedGeneration: 1
+        message: ...
+        observedGeneration: 2
         reason: AfterStageTaskWaitTimeElapsed
         status: "True" # the wait after-stage task has completed
         type: WaitTimeElapsed
@@ -246,27 +344,27 @@ status:
     - clusterName: member2 # stage staging contains member2 cluster only
       conditions:
       - lastTransitionTime: ...
-        message: ""
-        observedGeneration: 1
+        message: ...
+        observedGeneration: 2
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: ""
-        observedGeneration: 1
+        message: ...
+        observedGeneration: 2
         reason: ClusterUpdatingSucceeded
         status: "True" # member2 is updated successfully
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
-      message: ""
-      observedGeneration: 1
-      reason: StageUpdatingWaiting
+      message: ...
+      observedGeneration: 2
+      reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: ""
-      observedGeneration: 1
+      message: ...
+      observedGeneration: 2
       reason: StageUpdatingSucceeded
       status: "True" # stage staging has completed successfully
       type: Succeeded
@@ -274,95 +372,157 @@ status:
     stageName: staging
     startTime: ...
   - afterStageTaskStatus:
-    - approvalRequestName: example-run-canary # ClusterApprovalRequest name for this stage
+    - approvalRequestName: example-run-after-canary
+      type: Approval
+    beforeStageTaskStatus:
+    - approvalRequestName: example-run-before-canary
+      conditions:
+      - lastTransitionTime: ...
+        message: ...
+        observedGeneration: 2
+        reason: StageTaskApprovalRequestCreated
+        status: "True" # before stage cluster approval task has been created
+        type: ApprovalRequestCreated
       type: Approval
     clusters:
-    - clusterName: member3 # according the labelSelector and sortingLabelKey, member3 is selected first in this stage
-      conditions:
-      - lastTransitionTime: ...
-        message: ""
-        observedGeneration: 1
-        reason: ClusterUpdatingStarted
-        status: "True"
-        type: Started
-      - lastTransitionTime: ...
-        message: ""
-        observedGeneration: 1
-        reason: ClusterUpdatingSucceeded
-        status: "True" # member3 update is completed
-        type: Succeeded
-    - clusterName: member1 # member1 is selected after member3 because of order=2 label
-      conditions:
-      - lastTransitionTime: ...
-        message: ""
-        observedGeneration: 1
-        reason: ClusterUpdatingStarted
-        status: "True" # member1 update has not finished yet
-        type: Started
+    - clusterName: member3
+    - clusterName: member1
     conditions:
     - lastTransitionTime: ...
-      message: ""
-      observedGeneration: 1
-      reason: StageUpdatingStarted
-      status: "True" # stage canary is still executing
+      message: ...
+      observedGeneration: 2
+      reason: StageUpdatingWaiting
+      status: "False"
       type: Progressing
     stageName: canary
-    startTime: ...
 ```
-Wait a little bit more, and we can see stage `canary` finishes cluster update and is waiting for the Approval task.
-We can check the `ClusterApprovalRequest` generated and not approved yet:
+After stage `staging` completes, the canary stage requires approval **before** it starts (due to beforeStageTasks). Check for the before-stage approval request:
 ```bash
-kubectl get clusterapprovalrequest
-NAME                 UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary   example-run   canary                                 2m2s
+kubectl get clusterapprovalrequest -A
+NAME                        UPDATE-RUN    STAGE    APPROVED   AGE
+example-run-before-canary   example-run   canary              6m55s
 ```
-We can approve the `ClusterApprovalRequest` by patching its status:
+
+Approve the before-stage task to allow canary stage to start:
 ```bash
-kubectl patch clusterapprovalrequests example-run-canary --type=merge -p {"status":{"conditions":[{"type":"Approved","status":"True","reason":"lgtm","message":"lgtm","lastTransitionTime":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","observedGeneration":1}]}} --subresource=status
-clusterapprovalrequest.placement.kubernetes-fleet.io/example-run-canary patched
+kubectl patch clusterapprovalrequests example-run-before-canary --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
+  --subresource=status
 ```
-This can be done equivalently by creating a json patch file and applying it:
+
+Once approved, the canary stage begins updating clusters. With `maxConcurrency: 2`, it updates up to 2 clusters concurrently.
+
+Wait for the canary stage to finish cluster updates. It will then wait for the after-stage Approval task:
+```bash
+kubectl get clusterapprovalrequest -A
+NAME                        UPDATE-RUN    STAGE    APPROVED   AGE
+example-run-after-canary    example-run   canary              3s
+example-run-before-canary   example-run   canary   True       15m
+```
+
+> Note: Observed generation in the Approved condition should match the generation of the approvalRequest object.
+
+Approve the after-stage task to complete the rollout:
+```bash
+kubectl patch clusterapprovalrequests example-run-after-canary --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
+  --subresource=status
+```
+Alternatively, you can approve using a json patch file:
 ```bash
 cat << EOF > approval.json
 "status": {
     "conditions": [
         {
             "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "message": "lgtm",
+            "message": "approved",
             "observedGeneration": 1,
-            "reason": "lgtm",
+            "reason": "approved",
             "status": "True",
             "type": "Approved"
         }
     ]
 }
 EOF
-kubectl patch clusterapprovalrequests example-run-canary --type='merge' --subresource=status --patch-file approval.json
+kubectl patch clusterapprovalrequests example-run-after-canary --type='merge' --subresource=status --patch-file approval.json
 ```
 
-Then verify it's approved:
+Verify both approvals are accepted:
 ```bash
-kubectl get clusterapprovalrequest
-NAME                 UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary   example-run   canary   True       True               2m30s
+kubectl get clusterapprovalrequest -A
+NAME                        UPDATE-RUN    STAGE    APPROVED   AGE
+example-run-after-canary    example-run   canary   True       2m12s
+example-run-before-canary   example-run   canary   True       17m
 ```
 The updateRun now is able to proceed and complete:
 ```bash
 kubectl get csur example-run
-NAME          PLACEMENT           RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                   0                 True          True        4m22s
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True          False         True        20m
 ```
 The CRP also shows rollout has completed and resources are available on all member clusters:
 ```bash
 kubectl get crp example-placement
 NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-example-placement   1     True        1               True        1               134m
+example-placement   1     True        1               True        1               36m
 ```
 The configmap `test-cm` should be deployed on all 3 member clusters, with latest data:
 ```yaml
 data:
   key: value2
 ```
+
+### Using Latest Snapshot Automatically
+
+Instead of specifying a resource snapshot index, you can omit `resourceSnapshotIndex` to automatically use the latest snapshot. This is useful for continuous delivery workflows:
+
+```bash
+kubectl apply -f - << EOF
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateRun
+metadata:
+  name: example-run-latest
+spec:
+  placementName: example-placement
+  # resourceSnapshotIndex omitted - uses latest automatically
+  stagedRolloutStrategyName: example-strategy
+  state: Run  # Start immediately
+EOF
+```
+
+The system will determine the latest snapshot at initialization time. Check which snapshot was used:
+```bash
+kubectl get csur example-run-latest -o jsonpath='{.status.resourceSnapshotIndexUsed}'
+```
+
+If we are following the instructions so far, the resourceSnapshotIndexUsed would be 1 since we updated the configmap with value2,
+```bash
+1
+```
+
+### Pausing and Resuming a Rollout
+
+You can pause an in-progress rollout to investigate issues or wait for off-peak hours:
+
+```bash
+# Pause the rollout
+kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Stop"}}'
+```
+
+Verify the rollout is stopped:
+```bash
+kubectl get csur example-run
+NAME          PLACEMENT           RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+example-run   example-placement   1                   0                 True          False                     8m
+```
+
+The rollout pauses at its current position (current cluster/stage). Resume when ready:
+```bash
+# Resume the rollout
+kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
+```
+
+The rollout continues from where it was paused.
 
 ### Deploy a second ClusterStagedUpdateRun to rollback to a previous version
 
@@ -376,8 +536,9 @@ metadata:
   name: example-run-2
 spec:
   placementName: example-placement
-  resourceSnapshotIndex: "0"
+  resourceSnapshotIndex: "0"  # Rollback to previous version
   stagedRolloutStrategyName: example-strategy
+  state: Run  # Start rollback immediately
 EOF
 ```
 
@@ -388,27 +549,34 @@ kind: ClusterStagedUpdateRun
 metadata:
   ...
   name: example-run-2
+  generation: 1
   ...
 spec:
   placementName: example-placement
   resourceSnapshotIndex: "0"
   stagedRolloutStrategyName: example-strategy
+  state: Run
 status:
+  appliedStrategy:
+    comparisonOption: PartialComparison
+    type: ClientSideApply
+    whenToApply: Always
+    whenToTakeOver: Always
   conditions:
   - lastTransitionTime: ...
-    message: ClusterStagedUpdateRun initialized successfully
+    message: ...
     observedGeneration: 1
     reason: UpdateRunInitializedSuccessfully
     status: "True"
     type: Initialized
   - lastTransitionTime: ...
-    message: ""
+    message: ...
     observedGeneration: 1
-    reason: UpdateRunStarted
-    status: "True"
+    reason: UpdateRunSucceeded
+    status: "False"
     type: Progressing
   - lastTransitionTime: ...
-    message: ""
+    message: ...
     observedGeneration: 1
     reason: UpdateRunSucceeded # updateRun succeeded 
     status: "True"
@@ -417,13 +585,13 @@ status:
     clusters: []
     conditions:
     - lastTransitionTime: ...
-      message: ""
+      message: ...
       observedGeneration: 1
-      reason: StageUpdatingStarted
-      status: "True"
+      reason: StageUpdatingSucceeded
+      status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: ""
+      message: ...
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "True" # no clusters in the deletion stage, it completes directly
@@ -433,6 +601,7 @@ status:
     startTime: ...
   policyObservedClusterCount: 3
   policySnapshotIndexUsed: "0"
+  resourceSnapshotIndexUsed: "0"
   stagedUpdateStrategySnapshot:
     stages:
     - afterStageTasks:
@@ -441,19 +610,23 @@ status:
       labelSelector:
         matchLabels:
           environment: staging
+      maxConcurrency: 1
       name: staging
     - afterStageTasks:
+      - type: Approval
+      beforeStageTasks:
       - type: Approval
       labelSelector:
         matchLabels:
           environment: canary
+      maxConcurrency: 2
       name: canary
       sortingLabelKey: order
   stagesStatus:
   - afterStageTaskStatus:
     - conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: ...
         observedGeneration: 1
         reason: AfterStageTaskWaitTimeElapsed
         status: "True"
@@ -463,26 +636,26 @@ status:
     - clusterName: member2
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: ""
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
         status: "True"
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
-      message: ""
+      message: ...
       observedGeneration: 1
-      reason: StageUpdatingWaiting
+      reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: ""
+      message: ...
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "True"
@@ -491,18 +664,34 @@ status:
     stageName: staging
     startTime: ...
   - afterStageTaskStatus:
-    - approvalRequestName: example-run-2-canary
+    - approvalRequestName: example-run-2-after-canary
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: ...
         observedGeneration: 1
-        reason: AfterStageTaskApprovalRequestCreated
+        reason: StageTaskApprovalRequestCreated
         status: "True"
         type: ApprovalRequestCreated
       - lastTransitionTime: ...
-        message: ""
+        message: ...
         observedGeneration: 1
-        reason: AfterStageTaskApprovalRequestApproved
+        reason: StageTaskApprovalRequestApproved
+        status: "True"
+        type: ApprovalRequestApproved
+      type: Approval
+    beforeStageTaskStatus:
+    - approvalRequestName: example-run-2-before-canary
+      conditions:
+      - lastTransitionTime: ...
+        message: ...
+        observedGeneration: 1
+        reason: StageTaskApprovalRequestCreated
+        status: "True"
+        type: ApprovalRequestCreated
+      - lastTransitionTime: ...
+        message: ...
+        observedGeneration: 1
+        reason: StageTaskApprovalRequestApproved
         status: "True"
         type: ApprovalRequestApproved
       type: Approval
@@ -510,13 +699,13 @@ status:
     - clusterName: member3
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: ""
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
         status: "True"
@@ -524,26 +713,26 @@ status:
     - clusterName: member1
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: ""
+        message: ...
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
         status: "True"
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
-      message: ""
+      message: ...
       observedGeneration: 1
-      reason: StageUpdatingWaiting
+      reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: ""
+      message: ...
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "True"
@@ -564,10 +753,39 @@ Namespace-scoped staged updates allow application teams to manage rollouts indep
 
 ### Setup for Namespace-Scoped Updates
 
-Let's demonstrate namespace-scoped staged updates by deploying an application within a specific namespace. Create a namespace and an application rollout:
+Let's demonstrate namespace-scoped staged updates by deploying an application within a specific namespace. 
+
+Create a namespace,
 
 ```bash
 kubectl create ns my-app-namespace
+```
+
+Create a CRP that only propagates the namespace (i.e. with selectionScope set to NamespaceOnly, the namespace resource is propagated without any resources within the namespace) to all the clusters.
+
+```bash
+kubectl apply -f - << EOF
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: ns-only-crp
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: my-app-namespace
+      version: v1
+      selectionScope: NamespaceOnly
+  policy:
+    placementType: PickAll
+  strategy:
+    type: RollingUpdate
+EOF
+```
+
+Create application to rollout,
+
+```bash
 kubectl create deployment web-app --image=nginx:1.20 --port=80 -n my-app-namespace
 kubectl expose deployment web-app --port=80 --target-port=80 -n my-app-namespace
 ```
@@ -602,21 +820,21 @@ EOF
 Check the resource snapshots for the namespace-scoped placement:
 ```bash
 kubectl get resourcesnapshots -n my-app-namespace 
-NAME                         GEN    AGE    LABELS  
-web-app-placement-0-snapshot  1     63s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
+NAME                           GEN   AGE
+web-app-placement-0-snapshot   1     30s
 ```
 
 Update the deployment to a new version:
 ```bash
-kubectl set image deployment/web-app web-app=nginx:1.21 -n my-app-namespace
+kubectl set image deployment/web-app nginx=nginx:1.21 -n my-app-namespace
 ```
 
 Verify the new snapshot is created:
 ```bash
 kubectl get resourcesnapshots -n my-app-namespace --show-labels
-NAME                         GEN    AGE    LABELS  
-web-app-placement-0-snapshot  1     263s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
-web-app-placement-1-snapshot  1     23s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=1
+NAME                           GEN   AGE     LABELS
+web-app-placement-0-snapshot   1     5m24s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
+web-app-placement-1-snapshot   1     16s     kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=1
 ```
 
 ### Deploy a StagedUpdateStrategy
@@ -631,20 +849,24 @@ metadata:
   namespace: my-app-namespace
 spec:
   stages:
-    - name: dev-clusters
+    - name: dev
       labelSelector:
         matchLabels:
           environment: staging
+      maxConcurrency: 2  # Update 2 dev clusters concurrently
       afterStageTasks:
         - type: TimedWait
           waitTime: 30s
-    - name: prod-clusters
+    - name: prod
       labelSelector:
         matchLabels:
           environment: canary
       sortingLabelKey: order
+      maxConcurrency: 1  # Sequential production updates
+      beforeStageTasks:
+        - type: Approval  # Require approval before production
       afterStageTasks:
-        - type: Approval
+        - type: Approval  # Require approval after production
 EOF
 ```
 
@@ -662,6 +884,7 @@ spec:
   placementName: web-app-placement
   resourceSnapshotIndex: "1"  # Latest snapshot with nginx:1.21
   stagedRolloutStrategyName: app-rollout-strategy
+  state: Run  # Start rollout immediately
 EOF
 ```
 
@@ -669,18 +892,32 @@ EOF
 
 Check the status of the staged update run:
 ```bash
-kubectl describe sur web-app-rollout-v1-21 -n my-app-namespace
+kubectl get sur web-app-rollout-v1-21 -n my-app-namespace
 ```
 
-Wait for the first stage to complete, then check for approval requests:
+Wait for the first stage to complete. The prod before stage requires approval before starting:
 ```bash
 kubectl get approvalrequests -n my-app-namespace
+NAME                                UPDATE-RUN              STAGE   APPROVED   AGE
+web-app-rollout-v1-21-before-prod   web-app-rollout-v1-21   prod               2s
 ```
 
-Approve the staging gate to proceed to production clusters:
+Approve the before-stage task to start production rollout:
 ```bash
-kubectl patch approvalrequests web-app-rollout-v1-21-prod-clusters -n my-app-namespace --type='merge' \
-  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved"}]}}' \
+kubectl patch approvalrequests web-app-rollout-v1-21-before-prod -n my-app-namespace --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
+  --subresource=status
+```
+
+After production clusters complete updates, approve the after-stage task:
+```bash
+kubectl get approvalrequests -n my-app-namespace
+NAME                                UPDATE-RUN              STAGE   APPROVED   AGE
+web-app-rollout-v1-21-after-prod    web-app-rollout-v1-21   prod               18s
+web-app-rollout-v1-21-before-prod   web-app-rollout-v1-21   prod    True       2m22s
+
+kubectl patch approvalrequests web-app-rollout-v1-21-after-prod  -n my-app-namespace --type='merge' \
+  -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 ```
 
@@ -704,10 +941,32 @@ spec:
   placementName: web-app-placement
   resourceSnapshotIndex: "0"  # Previous snapshot with nginx:1.20
   stagedRolloutStrategyName: app-rollout-strategy
+  state: Run  # Start rollback immediately
 EOF
 ```
 
 Follow the same monitoring and approval process as above to complete the rollback.
+
+## Best Practices and Tips
+
+### MaxConcurrency Guidelines
+
+- **Development/Staging**: Use higher values (e.g., `maxConcurrency: 3` or `50%`) to speed up rollouts
+- **Production**: Use `maxConcurrency: 1` for sequential updates to minimize risk and allow early detection of issues
+- **Large fleets**: Use percentages (e.g., `10%`, `25%`) to scale with cluster growth automatically
+- **Small fleets**: Use absolute numbers for predictable behavior
+
+### State Management
+
+- **Initialize state**: Use to review computed stages before execution. Useful for validating strategy configuration
+- **Run state**: Start execution or resume from stopped state
+- **Stop state**: Pause rollout to investigate issues, wait for maintenance windows, or coordinate with other activities
+
+### Approval Strategies
+
+- **Before-stage approvals**: Use when stage selection requires validation (e.g., ensure all production prerequisites are met)
+- **After-stage approvals**: Use to validate rollout success before proceeding (e.g., check metrics, run tests)
+- **Both**: Combine for critical stages requiring validation at both entry and exit points
 
 ## Key Differences Summary
 
