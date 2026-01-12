@@ -13,3 +13,4 @@ repos:
       - id: markdownlint
         args:
           - --fix
+        exclude: content/.+/docs/api-reference
