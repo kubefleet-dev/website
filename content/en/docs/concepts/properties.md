@@ -20,16 +20,17 @@ A property provider implements Fleet's property provider interface:
 ```go
 // PropertyProvider is the interface that every property provider must implement.
 type PropertyProvider interface {
- // Collect is called periodically by the Fleet member agent to collect properties.
- //
- // Note that this call should complete promptly. Fleet member agent will cancel the
- // context if the call does not complete in time.
- Collect(ctx context.Context) PropertyCollectionResponse
- // Start is called when the Fleet member agent starts up to initialize the property provider.
- // This call should not block.
- //
- // Note that Fleet member agent will cancel the context when it exits.
- Start(ctx context.Context, config *rest.Config) error
+    // Collect is called periodically by the Fleet member agent to collect properties.
+    //
+    // Note that this call should complete promptly. Fleet member agent will cancel the
+    // context if the call does not complete in time.
+    Collect(ctx context.Context) PropertyCollectionResponse
+
+    // Start is called when the Fleet member agent starts up to initialize the property provider.
+    // This call should not block.
+    //
+    // Note that Fleet member agent will cancel the context when it exits.
+    Start(ctx context.Context, config *rest.Config) error
 }
 ```
 

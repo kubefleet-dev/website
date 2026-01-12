@@ -194,10 +194,7 @@ Each stage includes:
 
 ### Stage Tasks
 
-Two task types to control stage progression:
-
-- **TimedWait**: Waits for a specified duration before proceeding
-- **Approval**: Requires manual approval via an approval request object
+Stage tasks provide control gates at different points in the rollout lifecycle:
 
 #### Before-Stage Tasks
 
@@ -281,6 +278,7 @@ spec:
 ```
 
 **Using Latest Resource Snapshot:**
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterStagedUpdateRun
@@ -304,11 +302,13 @@ UpdateRuns support three states to control execution lifecycle:
 | **Stop** | Pauses execution at current cluster/stage | Temporarily halt rollout for investigation |
 
 **Valid State Transitions:**
+
 - `Initialize` → `Run`: Start the rollout
 - `Run` → `Stop`: Pause the rollout
 - `Stop` → `Run`: Resume the rollout
 
 **Invalid State Transitions:**
+
 - `Initialize` → `Stop`: Cannot stop before starting
 - `Run` → `Initialize`: Cannot reinitialize after starting
 - `Stop` → `Initialize`: Cannot reinitialize after stopping
@@ -328,10 +328,11 @@ kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
 
 ### UpdateRun Execution
 
-UpdateRuns execute in two phases:
+UpdateRuns execute in three phases:
 
-1. **Initialization**: Captures strategy snapshot, collects target bindings, generates cluster update sequence
-2. **Execution**: Processes stages sequentially, updates clusters within each stage, enforces after-stage tasks
+1. **Initialization**: Validates placement, captures latest strategy snapshot, collects target bindings, generates cluster update sequence, captures specified resource snapshot or latest resource snapshot if unspecified & records override snapshots. Occurs once on creation when state is `Initialize`, `Run` or `Stop`.
+2. **Execution**: Processes stages sequentially, updates clusters within each stage (respecting maxConcurrency), enforces before-stage and after-stage tasks. Only occurs when state is `Run`
+3. **Stopping/Stopped** When state is `Stop`, the updateRun pauses execution at the current cluster/stage and can be resumed by changing state back to `Run`. If there are updating/deleting clusters we wait after marking updateRun as `Stopping` for the in-progress clusters to reach a deterministic state: succeeded, failed or stuck before marking updateRun as `Stopped`
 
 ### Important Constraints and Validation
 
@@ -346,6 +347,7 @@ UpdateRuns execute in two phases:
 **Strategy Limits**: Each strategy can define a maximum of 31 stages to ensure reasonable execution times.
 
 **MaxConcurrency Validation**:
+
 - Must be >= 1 for absolute numbers
 - Must be 1-100% for percentages
 - Fractional results are rounded down with minimum of 1
