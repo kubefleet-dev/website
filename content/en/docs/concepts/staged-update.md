@@ -199,6 +199,7 @@ Stage tasks provide control gates at different points in the rollout lifecycle:
 #### Before-Stage Tasks
 
 Execute before a stage begins. Only one task allowed per stage. Supported types:
+
 - **Approval**: Requires manual approval before starting the stage
 
 For before-stage approval tasks, the system creates an approval request named `<updateRun-name>-before-<stage-name>`.
@@ -206,6 +207,7 @@ For before-stage approval tasks, the system creates an approval request named `<
 #### After-Stage Tasks
 
 Execute after all clusters in a stage complete. Up to two tasks allowed (one of each type). Supported types:
+
 - **TimedWait**: Waits for a specified duration before proceeding to the next stage
 - **Approval**: Requires manual approval before proceeding to the next stage
 
