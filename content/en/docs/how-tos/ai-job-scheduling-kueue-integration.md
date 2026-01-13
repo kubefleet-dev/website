@@ -8,7 +8,6 @@ weight: 16
 
 This guide demonstrates how to schedule AI/ML workloads across your fleet using KubeFleet's ClusterResourcePlacement/ResourcePlacement in conjunction with Kueue for efficient job queuing and resource management.
 
-
 ## Overview
 
 When scheduling AI/ML jobs across multiple clusters, you need three key components working together:
@@ -41,13 +40,13 @@ kubectl apply --server-side -f \
 
 > **Note**: Replace `VERSION` with the latest version of Kueue. For more information about Kueue versions, see [Kueue releases](https://github.com/kubernetes-sigs/kueue/releases).
 
-
 To ensure Kueue is properly installed:
 
 ```bash
 # On member clusters - check Kueue controller is running
 kubectl get pods -n kueue-system
 ```
+
 ```
 NAME                                        READY   STATUS    RESTARTS   AGE
 kueue-controller-manager-59f5c6b49c-22g7r   2/2     Running   0          57s
@@ -80,6 +79,7 @@ kubectl get crds | grep kueue
 ```
 
 You should see output similar to:
+
 ```
 clusterqueues.kueue.x-k8s.io                       2025-10-17T17:50:30Z
 localqueues.kueue.x-k8s.io                         2025-10-17T17:50:33Z
@@ -93,16 +93,15 @@ resourceflavors.kueue.x-k8s.io                     2025-10-17T17:50:35Z
 First, create a ResourceFlavor that defines the available resource types:
 
 ```yaml
-apiVersion: kueue.x-k8s.io/v1beta1 
-kind: ResourceFlavor  
-metadata:  
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: ResourceFlavor
+metadata:
   name: default-flavor
 spec:
   # This ResourceFlavor will be used for all the resources
 ```
 
-A ResourceFlavor is an object that represents the variations in the nodes available in your cluster by associating them with node labels and taints. 
-
+A ResourceFlavor is an object that represents the variations in the nodes available in your cluster by associating them with node labels and taints.
 
 ### 2. Configure ClusterQueue on Hub
 
@@ -115,8 +114,8 @@ metadata:
   name: cluster-queue
 spec:
   cohort: compute-workload
-  namespaceSelector: {} # Available to all namespaces  
-  queueingStrategy: BestEffortFIFO # Default queueing strategy 
+  namespaceSelector: {} # Available to all namespaces
+  queueingStrategy: BestEffortFIFO # Default queueing strategy
   resourceGroups:
   - coveredResources: ["cpu", "memory"]
     flavors:
@@ -127,10 +126,10 @@ spec:
       - name: memory
         nominalQuota: "128Gi"
 ```
+
 > NOTE: The resources need to be listed in the same order as the coveredResources list.
 
 A ClusterQueue is a cluster-scoped object that oversees a pool of resources, including CPU, memory, and GPU. It manages ResourceFlavors, sets usage limits, and controls the order in which workloads are admitted. This will handle the ResourceFlavor that was previously created.
-
 
 ### 3. Create AI job Namespace on Hub
 
@@ -144,39 +143,39 @@ metadata:
   labels:
     app: compute-workload
 ```
-The LocalQueue and Job require a namespace to be specified. 
 
+The LocalQueue and Job require a namespace to be specified.
 
 ### 4. Use ClusterResourcePlacement to Propagate Cluster-Scoped Resources
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1  
-kind: ClusterResourcePlacement  
-metadata:  
-  name: sample-kueue 
-spec:  
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: sample-kueue
+spec:
   resourceSelectors:
-    - group: kueue.x-k8s.io  
-      version: v1beta1  
-      kind: ResourceFlavor  
-      name: default-flavor  
-    - group: kueue.x-k8s.io  
-      version: v1beta1  
-      kind: ClusterQueue  
-      name: cluster-queue  
-    - group: ""  
-      kind: Namespace  
-      version: v1  
-      name: compute-jobs  
+    - group: kueue.x-k8s.io
+      version: v1beta1
+      kind: ResourceFlavor
+      name: default-flavor
+    - group: kueue.x-k8s.io
+      version: v1beta1
+      kind: ClusterQueue
+      name: cluster-queue
+    - group: ""
+      kind: Namespace
+      version: v1
+      name: compute-jobs
       selectionScope: NamespaceOnly
-  policy:  
+  policy:
     placementType: PickAll
-  strategy:  
-    type: RollingUpdate  
-    rollingUpdate:  
-      maxUnavailable: 25%  
-      maxSurge: 25%  
-      unavailablePeriodSeconds: 60  
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+      unavailablePeriodSeconds: 60
   revisionHistoryLimit: 15
 ```
 
@@ -187,13 +186,15 @@ The ClusterResourcePlacement (CRP) will select the cluster-scoped resources you 
 After creating the ClusterResourcePlacement, you need to verify that it has successfully propagated the resources to the target clusters. A successful completion is indicated by several conditions in the status:
 
 1. Check the placement status:
+
 ```bash
 # Get detailed status of the ClusterResourcePlacement
 kubectl describe crp sample-kueue
 ```
+
 ```yaml
 Name:         sample-kueue
-Namespace:    
+Namespace:
 Labels:       <none>
 Annotations:  <none>
 API Version:  placement.kubernetes-fleet.io/v1
@@ -314,6 +315,7 @@ Events:
 ```
 
 2. Verify resources on target clusters:
+
 ```bash
 # Switch to member cluster context
 kubectl config use-context <member-cluster-context>
@@ -329,17 +331,16 @@ kubectl get ns compute-jobs
 Create a LocalQueue that will be propagated to member clusters:
 
 ```yaml
-apiVersion: kueue.x-k8s.io/v1beta1 
-kind: LocalQueue  
-metadata:   
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: LocalQueue
+metadata:
   namespace: compute-jobs
-  name: local-queue   
-spec:  
+  name: local-queue
+spec:
   clusterQueue: cluster-queue # Point to the ClusterQueue
 ```
 
 A LocalQueue is a namespaced resource that receives workloads from users within the specified namespace. This resource will point to the ClusterQueue previously created.
-
 
 ### 6. Define Your AI Job(s) on Hub
 
@@ -354,7 +355,7 @@ metadata:
   annotations:
     kueue.x-k8s.io/queue-name: local-queue
 spec:
-  ttlSecondsAfterFinished: 60 # Job will be deleted after 60 seconds  
+  ttlSecondsAfterFinished: 60 # Job will be deleted after 60 seconds
   parallelism: 3
   completions: 3
   suspend: true # Set to true to allow Kueue to control the Job
@@ -435,7 +436,7 @@ When submitting jobs, each one can be placed independently to allow for dynamic 
 
 ```yaml
 # First, create a ResourcePlacement for the LocalQueue
-apiVersion: placement.kubernetes-fleet.io/v1beta1  
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
 metadata:
   name: queue-placement
@@ -445,22 +446,22 @@ spec:
   - group: kueue.x-k8s.io
     version: v1beta1
     kind: LocalQueue
-    name: local-queue 
-  policy:  
+    name: local-queue
+  policy:
     placementType: PickAll  # Place queue in all available clusters
-  strategy:  
-    type: RollingUpdate  
-    rollingUpdate:  
-      maxUnavailable: 25%  
-      maxSurge: 25%  
-      unavailablePeriodSeconds: 60  
-    applyStrategy:  
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+      unavailablePeriodSeconds: 60
+    applyStrategy:
       whenToApply: IfNotDrifted
   revisionHistoryLimit: 15
 
 ---
 # Then, create an independent ResourcePlacement for each job
-apiVersion: placement.kubernetes-fleet.io/v1beta1  
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
 metadata:
   name: job1-placement
@@ -471,35 +472,35 @@ spec:
     version: v1
     kind: Job
     name: mock-workload
-  policy:  
-    placementType: PickN  
+  policy:
+    placementType: PickN
     numberOfClusters: 1  # Schedule each job to a single cluster
-    affinity:  
-      clusterAffinity:  
-        preferredDuringSchedulingIgnoredDuringExecution:  
+    affinity:
+      clusterAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 40
-            preference:  
-              propertySorter:  
-                name: resources.kubernetes-fleet.io/available-cpu  
-                sortOrder: Descending  
+            preference:
+              propertySorter:
+                name: resources.kubernetes-fleet.io/available-cpu
+                sortOrder: Descending
           - weight: 30
             preference:
               propertySorter:
                 name: resources.kubernetes-fleet.io/available-memory
                 sortOrder: Descending
-  strategy:  
-    type: RollingUpdate  
-    rollingUpdate:  
-      maxUnavailable: 25%  
-      maxSurge: 25%  
-      unavailablePeriodSeconds: 60  
-    applyStrategy:  
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+      unavailablePeriodSeconds: 60
+    applyStrategy:
       whenToApply: IfNotDrifted
   revisionHistoryLimit: 15
 
 ---
 # Example of placing another job independently
-apiVersion: placement.kubernetes-fleet.io/v1beta1  
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
 metadata:
   name: job2-placement
@@ -510,29 +511,29 @@ spec:
     version: v1
     kind: Job
     name: model-evaluation
-  policy:  
-    placementType: PickN  
-    numberOfClusters: 1  
-    affinity:  
-      clusterAffinity:  
-        preferredDuringSchedulingIgnoredDuringExecution:  
+  policy:
+    placementType: PickN
+    numberOfClusters: 1
+    affinity:
+      clusterAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 40
-            preference:  
-              propertySorter:  
-                name: resources.kubernetes-fleet.io/available-cpu  
-                sortOrder: Descending  
+            preference:
+              propertySorter:
+                name: resources.kubernetes-fleet.io/available-cpu
+                sortOrder: Descending
           - weight: 30
             preference:
               propertySorter:
                 name: resources.kubernetes-fleet.io/available-memory
                 sortOrder: Descending
-  strategy:  
-    type: RollingUpdate  
-    rollingUpdate:  
-      maxUnavailable: 25%  
-      maxSurge: 25%  
-      unavailablePeriodSeconds: 60  
-    applyStrategy:  
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+      unavailablePeriodSeconds: 60
+    applyStrategy:
       whenToApply: IfNotDrifted
   revisionHistoryLimit: 15
 ```
@@ -544,7 +545,7 @@ This approach enables dynamic job scheduling for continuous job submissions. Her
    - This ensures any cluster can potentially receive jobs based on their current capacity
 
 2. **Continuous Job Submission Pattern**:
-   
+
    When submitting jobs continuously, each job needs its own unique identity and ResourcePlacement:
 
    a. **Job Creation**:
@@ -558,11 +559,11 @@ This approach enables dynamic job scheduling for continuous job submissions. Her
       - Name it to match or reference the job (e.g., `<jobname>-placement`)
       - Set `placementType: PickN` with `numberOfClusters: 1`
       - Configure affinity rules based on current requirements:
-        * CPU availability
-        * Memory availability
-        * Specific node capabilities
-        * Geographic location
-        * Cost considerations
+        - CPU availability
+        - Memory availability
+        - Specific node capabilities
+        - Geographic location
+        - Cost considerations
 
    c. **Independent Scheduling**:
       - Each job's ResourcePlacement operates independently
@@ -577,6 +578,7 @@ This approach enables dynamic job scheduling for continuous job submissions. Her
       - Allow time for placement and resource allocation
 
 3. **Monitoring Job Distribution**:
+
    ```bash
    # Watch job distribution across clusters
    watch 'for ctx in $(kubectl config get-contexts -o name); do
@@ -584,7 +586,9 @@ This approach enables dynamic job scheduling for continuous job submissions. Her
      kubectl --context $ctx get jobs -n compute-jobs
    done'
    ```
+
 This pattern ensures:
+
 - Jobs are distributed based on real-time resource availability
 - No single cluster gets overloaded
 - System remains responsive as new jobs are continuously submitted
@@ -596,18 +600,22 @@ This pattern ensures:
 After creating the ResourcePlacements, verify that your jobs and LocalQueue are properly propagated:
 
 1. Check ResourcePlacement status for the LocalQueue:
+
 ```bash
 # Get detailed status of the queue ResourcePlacement
 kubectl describe resourceplacement queue-placement -n compute-jobs
 ```
 
 2. Check ResourcePlacement status for individual jobs:
+
 ```bash
 # Get detailed status of job placements
 kubectl describe resourceplacement job1-placement -n compute-jobs
 kubectl describe resourceplacement job2-placement -n compute-jobs
 ```
-##### Example: 
+
+##### Example
+
 ```yaml
 Name:         job1-placement
 Namespace:    compute-jobs
@@ -742,10 +750,11 @@ Events:
   Normal  PlacementAvailable            22s   placement-controller  Resources are available on the selected cluster(s)
   Normal  PlacementRolloutCompleted     22s   placement-controller  Placement has finished the rollout process and reached the desired status
 ```
+
 > NOTE: The ResourcePlacement will complete rollout but with detect drifts after initial application as kueue takes over the resources. Completition indication can be found in the events.
 
-
 2. Verify resources on target cluster:
+
 ```bash
 # Switch to member cluster context
 kubectl config use-context <member-cluster-context>
@@ -765,7 +774,7 @@ The job scheduling process combines ClusterResourcePlacement, ResourcePlacement,
    - Ensures the namespace is created on target clusters
    - Sets up the foundational Kueue infrastructure across the fleet
 
-2. **ResourcePlacement Phase**: 
+2. **ResourcePlacement Phase**:
    - Selects appropriate clusters based on resource constraints
    - Propagates the AI/ML job and LocalQueue to the selected cluster(s)
 
@@ -780,7 +789,7 @@ The job scheduling process combines ClusterResourcePlacement, ResourcePlacement,
 ```
 Hub Cluster                    Member Cluster(s)
 ├── ResourceFlavor       ──────► ResourceFlavor
-├── ClusterQueue         ──────► ClusterQueue  
+├── ClusterQueue         ──────► ClusterQueue
 ├── Namespace           ──────► Namespace
 ├── LocalQueue          ──────► LocalQueue
 └── AI Job              ──────► AI Job → Kueue → Pod
@@ -808,6 +817,7 @@ Hub Cluster                    Member Cluster(s)
 ### 📊 Monitoring Job Status
 
 #### Check Placement Status
+
 ```bash
 # View ResourcePlacement status
 kubectl get resourceplacement <rp-name> -n <namespace> -o yaml
@@ -817,6 +827,7 @@ kubectl get clusterresourceplacement <crp-name> -o yaml
 ```
 
 #### Monitor Queue Status on Member Cluster
+
 ```bash
 # Check LocalQueue status
 kubectl get localqueue <lq-name> -n <namespace>
@@ -831,12 +842,14 @@ kubectl get job <job-name> -n <namespace>
 ## Related Resources
 
 ### 📚 Documentation
+
 - [Kueue Documentation](https://kueue.sigs.k8s.io/docs/) - Complete Kueue setup and configuration guide
 - [ClusterResourcePlacement Concepts](../concepts/crp.md) - Understanding cluster-scoped resource propagation
 - [ResourcePlacement Concepts](../concepts/rp.md) - Namespace-scoped resource scheduling
 - [Properties-based Scheduling](./property-based-scheduling.md) - Advanced cluster selection strategies
 
 ### 🔗 Related How-To Guides
+
 - [Managing Cluster Resources](./clusters.md) - Setting up and configuring member clusters
 - [Resource Override](./resource-override.md) - Customizing resources per cluster
 - [Affinities](./affinities.md) - Advanced placement constraints

@@ -4,10 +4,11 @@ description: Migrating Applications to Another Cluster For Higher Availability W
 weight: 2
 ---
 
-This tutorial shows how to migrate applications from clusters with lower availability to those with higher availability, 
+This tutorial shows how to migrate applications from clusters with lower availability to those with higher availability,
 while also scaling up the number of replicas, using Fleet.
 
 ## Scenario
+
 Your fleet consists of the following clusters:
 
 1. Member Cluster 1 & Member Cluster 2 (WestUS, 1 node each)
@@ -17,11 +18,12 @@ Your fleet consists of the following clusters:
 Due to a sudden increase in traffic and resource demands in your WestUS clusters, you need to migrate your applications to clusters in EastUS2 or WestEurope that have higher availability and can better handle the increased load.
 
 ## Current Application Resources
+
 The following resources are currently deployed in the WestUS clusters:
 
-#### Service
+### Service
 
-> Note: Service test file located [here](./testfiles/nginx-service.yaml).
+> Note: [Service test file located here](./testfiles/nginx-service.yaml).
 
 ```yaml
 apiVersion: v1
@@ -38,14 +40,16 @@ spec:
     targetPort: 80
   type: LoadBalancer
 ```
+
 Summary:
+
 - This defines a Kubernetes Service named `nginx-svc` in the `test-app` namespace.
 - The service is of type LoadBalancer, meaning it exposes the application to the internet.
 - It targets pods with the label app: nginx and forwards traffic to port 80 on the pods.
 
-#### Deployment
+### Deployment
 
-> Note: Deployment test file located [here](./testfiles/nginx-deployment.yaml).
+> Note: [Deployment test file located here](./testfiles/nginx-deployment.yaml).
 
 ```yaml
 apiVersion: apps/v1
@@ -65,21 +69,23 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.16.1 
+        image: nginx:1.16.1
         ports:
         - containerPort: 80
 ```
+
 > Note: The current deployment has 2 replicas.
 
 Summary:
+
 - This defines a Kubernetes Deployment named `nginx-deployment` in the `test-app` namespace.
 - It creates 2 replicas of the nginx pod, each running the `nginx:1.16.1` image.
 - The deployment ensures that the specified number of pods (replicas) are running and available.
 - The pods are labeled with `app: nginx` and expose port 80.
 
-#### ClusterResourcePlacement
+### ClusterResourcePlacement
 
-> Note: CRP Availability test file located [here](./testfiles/crp-availability.yaml)
+> Note: [CRP Availability test file located here](./testfiles/crp-availability.yaml)
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -249,17 +255,23 @@ status:
       namespace: test-app
       version: v1
 ```
+
 Summary:
+
 - This defines a ClusterResourcePlacement named `crp-availability`.
 - The placement policy PickN selects 2 clusters. The clusters are selected based on the label `fleet.azure.com/location: westus`.
 - It targets resources in the `test-app` namespace.
 
-### Identify Clusters with More Availability
+## Identify Clusters with More Availability
+
 To identify clusters with more availability, you can check the member cluster properties.
+
 ```bash
 kubectl get memberclusters -A -o wide
 ```
+
 The output will show the availability in each cluster, including the number of nodes, available CPU, and memory.
+
 ```bash
 NAME                                JOINED   AGE   NODE-COUNT   AVAILABLE-CPU   AVAILABLE-MEMORY   ALLOCATABLE-CPU   ALLOCATABLE-MEMORY
 aks-member-1                        True     22d   1            30m             40Ki               1900m             4652296Ki
@@ -268,17 +280,20 @@ aks-member-3                        True     22d   2            2820m           
 aks-member-4                        True     22d   3            4408m           12896012Ki         5700m             13956876Ki
 aks-member-5                        True     22d   3            4408m           12896024Ki         5700m             13956888Ki
 ```
+
 Based on the available resources, you can see that Member Cluster 3 in EastUS2 and Member Cluster 4 & 5 in WestEurope have more nodes and available resources compared to the WestUS clusters.
 
 ## Migrating Applications to a Different Cluster with More Availability While Scaling Up
-When the clusters in WestUS are nearing capacity limits and risk becoming overloaded, update the ClusterResourcePlacement (CRP) to migrate the applications to clusters in EastUS2 or WestEurope, which have more available resources and can handle increased demand more effectively. 
+
+When the clusters in WestUS are nearing capacity limits and risk becoming overloaded, update the ClusterResourcePlacement (CRP) to migrate the applications to clusters in EastUS2 or WestEurope, which have more available resources and can handle increased demand more effectively.
 For this tutorial, we will move them to WestEurope.
 
 ## Create Resource Override
 
-> Note: Cluster resource override test file located [here](./testfiles/ro-1.yaml)
+> Note: [Cluster resource override test file located here](./testfiles/ro-1.yaml)
 
 To scale up during migration, apply this override before updating crp:
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
 kind: ResourceOverride
@@ -304,9 +319,11 @@ spec:
             value:
               4
 ```
+
 This override updates the `nginx-deployment` Deployment in the `test-app` namespace by setting the number of replicas to "4" for clusters located in the westeurope region.
 
-#### Update the CRP for Migration
+### Update the CRP for Migration
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
@@ -335,19 +352,26 @@ spec:
   strategy:
     type: RollingUpdate
 ```
+
 Update the [`crp-availability.yaml`](./testfiles/crp-availability.yaml) to reflect selecting clusters with higher node-count and apply it:
+
 ```bash
 kubectl apply -f crp-availability.yaml
 ```
 
 ### Results
+
 After applying the updated [`crp-availability.yaml`](./testfiles/crp-availability.yaml), the Fleet will schedule the application on the available clusters in WestEurope as they each have 3 nodes.
 You can check the status of the CRP to ensure that the application has been successfully migrated and is running in the new region:
+
 ```bash
 kubectl get crp crp-availability -o yaml
 ```
+
 You should see a status indicating that the application is now running in the WestEurope clusters, similar to the following:
-#### CRP Status
+
+### CRP Status
+
 ```yaml
 ...
 status:
@@ -490,18 +514,24 @@ status:
       namespace: test-app
       version: v1
 ```
+
 The status indicates that the application has been successfully migrated to the WestEurope clusters and is now running with 4 replicas, as the resource override has been applied.
 
 To double-check, you can also verify the number of replicas in the `nginx-deployment`:
+
 1. Change context to member cluster 4 or 5:
+
     ```bash
     kubectl config use-context aks-member-4
     ```
+
 2. Get the deployment:
+
     ```bash
     kubectl get deployment nginx-deployment -n test-app -o wide
     ```
 
 ## Conclusion
-This tutorial demonstrated how to migrate applications using Fleet from clusters with lower availability to those with higher availability. 
+
+This tutorial demonstrated how to migrate applications using Fleet from clusters with lower availability to those with higher availability.
 By updating the ClusterResourcePlacement and applying a ResourceOverride, you can ensure that your applications are moved to clusters with better availability while also scaling up the number of replicas to enhance performance and resilience.

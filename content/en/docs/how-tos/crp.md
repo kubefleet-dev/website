@@ -8,10 +8,10 @@ This guide provides an overview of how to use the Fleet `ClusterResourcePlacemen
 
 ## Overview
 
-The CRP API is a core Fleet API that facilitates the distribution of specific resources from the hub cluster to 
-member clusters within a fleet. This API offers scheduling capabilities that allow you to target the most suitable 
+The CRP API is a core Fleet API that facilitates the distribution of specific resources from the hub cluster to
+member clusters within a fleet. This API offers scheduling capabilities that allow you to target the most suitable
 group of clusters for a set of resources using a complex rule set. For example, you can distribute resources to
-clusters in specific regions (North America, East Asia, Europe, etc.) and/or release stages (production, canary, etc.). 
+clusters in specific regions (North America, East Asia, Europe, etc.) and/or release stages (production, canary, etc.).
 You can even distribute resources according to certain topology spread constraints.
 
 ## API Components
@@ -20,7 +20,7 @@ The CRP API generally consists of the following components:
 
 - **Resource Selectors**: These specify the set of resources selected for placement.
 - **Scheduling Policy**: This determines the set of clusters where the resources will be placed.
-- **Rollout Strategy**: This controls the behavior of resource placement when the resources themselves and/or the 
+- **Rollout Strategy**: This controls the behavior of resource placement when the resources themselves and/or the
               scheduling policy are updated, minimizing interruptions caused by refreshes.
 - **StatusReportingScope**: This controls where ClusterResourcePlacement status information is made available.
 
@@ -41,7 +41,7 @@ spec:
   resourceSelectors:
     - group: "rbac.authorization.k8s.io"
       kind: ClusterRole
-      version: v1          
+      version: v1
       name: secretReader
 ```
 
@@ -55,7 +55,7 @@ namespace will also be placed.
 
 You can specify a resource selector in many different ways:
 
-* To select **one specific resource**, such as a namespace, specify its API GVK (group, version, and
+- To select **one specific resource**, such as a namespace, specify its API GVK (group, version, and
 kind), and its name, in the resource selector:
 
     ```yaml
@@ -63,11 +63,11 @@ kind), and its name, in the resource selector:
     resourceSelectors:
       - group: ""
         kind: Namespace
-        version: v1          
+        version: v1
         name: work
     ```
 
-* Alternately, you may also select a set of resources of the same API GVK using a label selector;
+- Alternately, you may also select a set of resources of the same API GVK using a label selector;
 it also requires that you specify the API GVK and the filtering label(s):
 
     ```yaml
@@ -75,26 +75,26 @@ it also requires that you specify the API GVK and the filtering label(s):
     resourceSelectors:
       - group: ""
         kind: Namespace
-        version: v1          
+        version: v1
         labelSelector:
           matchLabels:
             system: critical
     ```
 
     In the example above, all the namespaces in the hub cluster with the label `system=critical`
-    will be selected (along with the resources under them). 
+    will be selected (along with the resources under them).
 
     Fleet uses standard Kubernetes label selectors; for its specification and usage, see the
     [Kubernetes API reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#labelselector-v1-meta).
 
-* Very occasionally, you may need to select all the resources under a specific GVK; to achieve
+- Very occasionally, you may need to select all the resources under a specific GVK; to achieve
 this, use a resource selector with only the API GVK added:
 
     ```yaml
     resourceSelectors:
       - group: "rbac.authorization.k8s.io"
         kind: ClusterRole
-        version: v1          
+        version: v1
     ```
 
     In the example above, all the cluster roles in the hub cluster will be picked.
@@ -109,12 +109,12 @@ any of the resource selectors specified (i.e., all selectors are OR'd).
 resourceSelectors:
   - group: ""
     kind: Namespace
-    version: v1          
+    version: v1
     name: work
   - group: "rbac.authorization.k8s.io"
     kind: ClusterRole
     version: v1
-    name: secretReader      
+    name: secretReader
 ```
 
 In the example above, Fleet will pick the namespace `work` (along with all the resources
@@ -130,11 +130,11 @@ under it) and the cluster role `secretReader`.
 Each scheduling policy is associated with a placement type, which determines how Fleet will
 pick clusters. The `ClusterResourcePlacement` API supports the following placement types:
 
-| Placement type | Description |
-|----------------|-------------|
-| `PickFixed`      | Pick a specific set of clusters by their names. |
-| `PickAll`        | Pick all the clusters in the fleet, per some standard. |
-| `PickN`          | Pick a count of N clusters in the fleet, per some standard. |
+| Placement type | Description                                                 |
+| -------------- | ----------------------------------------------------------- |
+| `PickFixed`    | Pick a specific set of clusters by their names.             |
+| `PickAll`      | Pick all the clusters in the fleet, per some standard.      |
+| `PickN`        | Pick a count of N clusters in the fleet, per some standard. |
 
 > Note
 >
@@ -162,9 +162,9 @@ spec:
     - ...
   policy:
     placementType: PickFixed
-    clusterNames: 
+    clusterNames:
       - bravelion
-      - smartfish 
+      - smartfish
 ```
 
 The example above will place resources to two clusters, `bravelion` and `smartfish`.
@@ -175,14 +175,14 @@ The example above will place resources to two clusters, `bravelion` and `smartfi
 this placement type, you may use affinity terms to fine-tune which clusters you would like
 for Fleet to pick:
 
-* An affinity term specifies a requirement that a cluster needs to meet, usually the presence
+- An affinity term specifies a requirement that a cluster needs to meet, usually the presence
 of a label.
 
     There are two types of affinity terms:
 
-    * `requiredDuringSchedulingIgnoredDuringExecution` terms are requirements that a cluster
+  - `requiredDuringSchedulingIgnoredDuringExecution` terms are requirements that a cluster
     must meet before it can be picked; and
-    * `preferredDuringSchedulingIgnoredDuringExecution` terms are requirements that, if a 
+  - `preferredDuringSchedulingIgnoredDuringExecution` terms are requirements that, if a
     cluster meets, will set Fleet to prioritize it in scheduling.
 
     In the scheduling policy of the `PickAll` placement type, you may only use the
@@ -230,19 +230,19 @@ affinity terms of a `ClusterResourcePlacement` object, even if it joins after th
 placement; with this placement type, you may use affinity terms and topology spread constraints
 to fine-tune which clusters you would like Fleet to pick.
 
-* An affinity term specifies a requirement that a cluster needs to meet, usually the presence
+- An affinity term specifies a requirement that a cluster needs to meet, usually the presence
 of a label.
 
     There are two types of affinity terms:
 
-    * `requiredDuringSchedulingIgnoredDuringExecution` terms are requirements that a cluster
+  - `requiredDuringSchedulingIgnoredDuringExecution` terms are requirements that a cluster
     must meet before it can be picked; and
-    * `preferredDuringSchedulingIgnoredDuringExecution` terms are requirements that, if a 
+  - `preferredDuringSchedulingIgnoredDuringExecution` terms are requirements that, if a
     cluster meets, will set Fleet to prioritize it in scheduling.
 
-* A topology spread constraint can help you spread resources evenly across different groups
+- A topology spread constraint can help you spread resources evenly across different groups
 of clusters. For example, you may want to have a database replica deployed in each region
-to enable high-availability. 
+to enable high-availability.
 
 > Note
 >
@@ -274,26 +274,26 @@ spec:
 The `ClusterResourcePlacement` object above will pick first clusters with the `critical-level=1`
 on it; if only there are not enough (less than 3) such clusters, will Fleet pick clusters with no
 such label.
-  
+
 To be more precise, with this placement type, Fleet scores clusters on how well it satisfies the
 affinity terms and the topology spread constraints; Fleet will assign:
 
-* an affinity score, for how well the cluster satisfies the affinity terms; and
-* a topology spread score, for how well the cluster satisfies the topology spread constraints.
+- an affinity score, for how well the cluster satisfies the affinity terms; and
+- a topology spread score, for how well the cluster satisfies the topology spread constraints.
 
 > Note
 >
-> For more information on the scoring specifics, see 
+> For more information on the scoring specifics, see
 > [Using Affinities to Pick Clusters](affinities) How-To Guide (for affinity score) and
 > [Using Topology Spread Constraints to Pick Clusters](topology-spread-constraints) How-To
 > Guide (for topology spread score).
 
 After scoring, Fleet ranks the clusters using the rule below and picks the top N clusters:
 
-* the cluster with the highest topology spread score ranks the highest;
-* if there are multiple clusters with the same topology spread score, the one with the highest
+- the cluster with the highest topology spread score ranks the highest;
+- if there are multiple clusters with the same topology spread score, the one with the highest
 affinity score ranks the highest;
-* if there are multiple clusters with same topology spread score and affinity score, sort their
+- if there are multiple clusters with same topology spread score and affinity score, sort their
 names by alphanumeric order; the one with the most significant name ranks the highest.
 
     This helps establish deterministic scheduling behavior.
@@ -306,7 +306,7 @@ most significant names in alphanumeric order.
 
 #### When there are not enough clusters to pick
 
-It may happen that Fleet cannot find enough clusters to pick. In this situation, Fleet will 
+It may happen that Fleet cannot find enough clusters to pick. In this situation, Fleet will
 keep looking until all N clusters are found.
 
 Note that Fleet will stop looking once all N clusters are found, even if there appears a
@@ -349,88 +349,88 @@ For more information, see the
 The table below summarizes the available scheduling policy fields for each placement type:
 
 |                             | `PickFixed` | `PickAll` | `PickN` |
-|-----------------------------|-------------|-----------|---------|
-| `placementType`             | ✅ | ✅ | ✅ |
-| `numberOfClusters`          | ❌ | ❌ | ✅ |
-| `clusterNames`              | ✅ | ❌ | ❌ |
-| `affinity`                  | ❌ | ✅ | ✅ |
-| `topologySpreadConstraints` | ❌ | ❌ | ✅ |
+| --------------------------- | ----------- | --------- | ------- |
+| `placementType`             | ✅          | ✅        | ✅      |
+| `numberOfClusters`          | ❌          | ❌        | ✅      |
+| `clusterNames`              | ✅          | ❌        | ❌      |
+| `affinity`                  | ❌          | ✅        | ✅      |
+| `topologySpreadConstraints` | ❌          | ❌        | ✅      |
 
 ## Rollout strategy
 
 After a `ClusterResourcePlacement` is created, you may want to
 
-* Add, update, or remove the resources that have been selected by the
+- Add, update, or remove the resources that have been selected by the
 `ClusterResourcePlacement` in the hub cluster
-* Update the resource selectors in the `ClusterResourcePlacement`
-* Update the scheduling policy in the `ClusterResourcePlacement`
+- Update the resource selectors in the `ClusterResourcePlacement`
+- Update the scheduling policy in the `ClusterResourcePlacement`
 
 These changes may trigger the following outcomes:
 
-* New resources may need to be placed on all picked clusters
-* Resources already placed on a picked cluster may get updated or deleted
-* Some clusters picked previously are now unpicked, and resources must be removed from such clusters
-* Some clusters are newly picked, and resources must be added to them
+- New resources may need to be placed on all picked clusters
+- Resources already placed on a picked cluster may get updated or deleted
+- Some clusters picked previously are now unpicked, and resources must be removed from such clusters
+- Some clusters are newly picked, and resources must be added to them
 
-Most outcomes can lead to service interruptions. Apps running on member clusters may temporarily become 
+Most outcomes can lead to service interruptions. Apps running on member clusters may temporarily become
 unavailable as Fleet dispatches updated resources. Clusters that are no longer selected will lose all placed resources,
-resulting in lost traffic. If too many new clusters are selected and Fleet places resources on them simultaneously, 
+resulting in lost traffic. If too many new clusters are selected and Fleet places resources on them simultaneously,
 your backend may become overloaded. The exact interruption pattern may vary depending on the resources you place using Fleet.
 
 To minimize interruption, Fleet allows users to configure the rollout strategy, similar to native Kubernetes deployment,
 to transition between changes as smoothly as possible. Currently, Fleet supports only one rollout strategy: rolling update.
-This strategy ensures changes, including the addition or removal of selected clusters and resource refreshes, 
+This strategy ensures changes, including the addition or removal of selected clusters and resource refreshes,
 are applied incrementally in a phased manner at a pace suitable for you. This is the default option and applies to all changes you initiate.
 
 This rollout strategy can be configured with the following parameters:
 
-* `maxUnavailable` determines how many clusters may become unavailable during a change for the selected set of resources. 
+- `maxUnavailable` determines how many clusters may become unavailable during a change for the selected set of resources.
 It can be set as an absolute number or a percentage. The default is 25%, and zero should not be used for this value.
-    
-    - Setting this parameter to a lower value will result in less interruption during a change but will lead to slower rollouts.
 
-    - Fleet considers a cluster as unavailable if resources have not been successfully applied to the cluster.
+  - Setting this parameter to a lower value will result in less interruption during a change but will lead to slower rollouts.
 
-    - <details><summary>How Fleet interprets this value</summary>
+  - Fleet considers a cluster as unavailable if resources have not been successfully applied to the cluster.
+
+  - <details><summary>How Fleet interprets this value</summary>
       Fleet, in actuality, makes sure that at any time, there are **at least** N - `maxUnavailable`
       number of clusters available, where N is:
-  
-      * for scheduling policies of the `PickN` placement type, the `numberOfClusters` value given;
-      * for scheduling policies of the `PickFixed` placement type, the number of cluster names given;
-      * for scheduling policies of the `PickAll` placement type, the number of clusters Fleet picks.
-  
+
+    - for scheduling policies of the `PickN` placement type, the `numberOfClusters` value given;
+    - for scheduling policies of the `PickFixed` placement type, the number of cluster names given;
+    - for scheduling policies of the `PickAll` placement type, the number of clusters Fleet picks.
+
       If you use a percentage for the `maxUnavailable` parameter, it is calculated against N as
       well.
-  
+
       </details>
 
-* `maxSurge` determines the number of additional clusters, beyond the required number, that will receive resource placements.
+- `maxSurge` determines the number of additional clusters, beyond the required number, that will receive resource placements.
 It can also be set as an absolute number or a percentage. The default is 25%, and zero should not be used for this value.
 
-    - Setting this parameter to a lower value will result in fewer resource placements on additional 
+  - Setting this parameter to a lower value will result in fewer resource placements on additional
         clusters by Fleet, which may slow down the rollout process.
 
-    -  <details><summary>How Fleet interprets this value</summary>
+  - <details><summary>How Fleet interprets this value</summary>
         Fleet, in actuality, makes sure that at any time, there are **at most** N + `maxSurge`
              number of clusters available, where N is:
 
-        * for scheduling policies of the `PickN` placement type, the `numberOfClusters` value given;
-        * for scheduling policies of the `PickFixed` placement type, the number of cluster names given;
-        * for scheduling policies of the `PickAll` placement type, the number of clusters Fleet picks.
-  
+    - for scheduling policies of the `PickN` placement type, the `numberOfClusters` value given;
+    - for scheduling policies of the `PickFixed` placement type, the number of cluster names given;
+    - for scheduling policies of the `PickAll` placement type, the number of clusters Fleet picks.
+
         If you use a percentage for the `maxUnavailable` parameter, it is calculated against N as well.
-  
+
         </details>
 
-* `unavailablePeriodSeconds` allows users to inform the fleet when the resources are deemed "ready".
+- `unavailablePeriodSeconds` allows users to inform the fleet when the resources are deemed "ready".
      The default value is 60 seconds.
-    
-    - Fleet only considers newly applied resources on a cluster as "ready" once `unavailablePeriodSeconds` seconds 
+
+  - Fleet only considers newly applied resources on a cluster as "ready" once `unavailablePeriodSeconds` seconds
        have passed **after** the resources have been **successfully** applied to that cluster.
-    - Setting a lower value for this parameter will result in faster rollouts. However, we **strongly** 
+  - Setting a lower value for this parameter will result in faster rollouts. However, we **strongly**
        recommend that users set it to a value that all the initialization/preparation tasks can be completed within
        that time frame. This ensures that the resources are typically ready after the `unavailablePeriodSeconds` have passed.
-    - We are currently designing a generic "ready gate" for resources being applied to clusters. Please feel free to raise 
+  - We are currently designing a generic "ready gate" for resources being applied to clusters. Please feel free to raise
        issues or provide feedback if you have any thoughts on this.
 
 > Note
@@ -461,9 +461,9 @@ spec:
 
 Every time you initiate a change on selected resources, Fleet will:
 
-* Find `10 * 25% = 2.5, rounded up to 3` clusters, which will receive the resource refresh;
-* Wait for 60 seconds (`unavailablePeriodSeconds`), and repeat the process;
-* Stop when all the clusters have received the latest version of resources.
+- Find `10 * 25% = 2.5, rounded up to 3` clusters, which will receive the resource refresh;
+- Wait for 60 seconds (`unavailablePeriodSeconds`), and repeat the process;
+- Stop when all the clusters have received the latest version of resources.
 
 The exact period of time it takes for Fleet to complete a rollout depends not only on the
 `unavailablePeriodSeconds`, but also the actual condition of a resource placement; that is,
@@ -479,6 +479,7 @@ longer to complete the rollout, in accordance with the rolling update strategy y
 ## StatusReportingScope
 
 The two supported values for `StatusReportingScope` are:
+
 - **ClusterScopeOnly**: Default behavior, placement status is part of the `ClusterResourcePlacement` object.
 - **NamespaceAccessible**: A `ClusterResourcePlacementStatus` object is created in the namespace selected by the `ClusterResourcePlacement`.
 

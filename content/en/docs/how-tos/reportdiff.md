@@ -43,7 +43,7 @@ of two member clusters, `member-1` and `member-2`:
         - group: ""
           kind: Namespace
           version: v1
-          # Select all namespaces with the label app=work-3. 
+          # Select all namespaces with the label app=work-3.
           labelSelector:
             matchLabels:
               app: work-3
@@ -52,7 +52,7 @@ of two member clusters, `member-1` and `member-2`:
       strategy:
         # For simplicity reasons, the CRP is configured to roll out changes to
         # all member clusters at once. This is not a setup recommended for production
-        # use.      
+        # use.
         type: RollingUpdate
         rollingUpdate:
           maxUnavailable: 100%
@@ -76,7 +76,7 @@ of two member clusters, `member-1` and `member-2`:
         - group: ""
           kind: Namespace
           version: v1
-          # Select all namespaces with the label app=work-3. 
+          # Select all namespaces with the label app=work-3.
           labelSelector:
             matchLabels:
               app: work-3
@@ -85,13 +85,13 @@ of two member clusters, `member-1` and `member-2`:
       strategy:
         # For simplicity reasons, the CRP is configured to roll out changes to
         # all member clusters at once. This is not a setup recommended for production
-        # use.      
+        # use.
         type: RollingUpdate
         rollingUpdate:
           maxUnavailable: 100%
           unavailablePeriodSeconds: 1
         applyStrategy:
-          type: ReportDiff   
+          type: ReportDiff
     EOF
     ```
 
@@ -166,7 +166,7 @@ will list all the clusters with the `diffedPlacements` status information popula
                     }
                 ],
                 "targetClusterObservedGeneration": 0,
-                "version": "v1" 
+                "version": "v1"
             }
         ]
     }
@@ -174,16 +174,16 @@ will list all the clusters with the `diffedPlacements` status information popula
 
     Fleet will report the following information about a configuration difference:
 
-    * `group`, `kind`, `version`, `namespace`, and `name`: the resource that has configuration differences.
-    * `observationTime`: the timestamp where the current diff detail is collected.
-    * `firstDiffedObservedTime`: the timestamp where the current diff is first observed.
-    * `observedDiffs`: the diff details, specifically:
-        * `path`: A JSON path (RFC 6901) that points to the diff'd field;
-        * `valueInHub`: the value at the JSON path as seen from the hub cluster resource template
+  * `group`, `kind`, `version`, `namespace`, and `name`: the resource that has configuration differences.
+  * `observationTime`: the timestamp where the current diff detail is collected.
+  * `firstDiffedObservedTime`: the timestamp where the current diff is first observed.
+  * `observedDiffs`: the diff details, specifically:
+    * `path`: A JSON path (RFC 6901) that points to the diff'd field;
+    * `valueInHub`: the value at the JSON path as seen from the hub cluster resource template
         (the desired state). If this value is absent, the field does not exist in the resource template.
-        * `valueInMember`: the value at the JSON path as seen from the member cluster resource
+    * `valueInMember`: the value at the JSON path as seen from the member cluster resource
         (the current state). If this value is absent, the field does not exist in the current state.
-    * `targetClusterObservedGeneration`: the generation of the member cluster resource.
+  * `targetClusterObservedGeneration`: the generation of the member cluster resource.
 
 ## More information on the ReportDiff mode
 
@@ -191,9 +191,9 @@ will list all the clusters with the `diffedPlacements` status information popula
 decide the best way to handle found configuration differences (if any).
 * Diff reporting becomes successful and complete as soon as Fleet finishes checking all the resources;
 whether configuration differences are found or not has no effect on the diff reporting success status.
-  *  When a resource change has been applied on the hub cluster side, for CRPs of the ReportDiff mode, 
-  the change will be immediately rolled out to all member clusters (when the rollout strategy is set to 
+  * When a resource change has been applied on the hub cluster side, for CRPs of the ReportDiff mode,
+  the change will be immediately rolled out to all member clusters (when the rollout strategy is set to
   RollingUpdate, the default type), as soon as they have completed diff reporting earlier.
-* It is worth noting that Fleet will only report differences on resources that have corresponding manifests 
-on the hub cluster. If, for example, a namespace-scoped object has been created on the member cluster but 
+* It is worth noting that Fleet will only report differences on resources that have corresponding manifests
+on the hub cluster. If, for example, a namespace-scoped object has been created on the member cluster but
 not on the hub cluster, Fleet will ignore the object, even if its owner namespace has been selected for placement.

@@ -25,6 +25,7 @@ into a fleet. To use the script, run the commands below:
 >
 > To run this script, make sure that you have already installed the following tools in your
 > system:
+>
 > * `kubectl`, the Kubernetes CLI
 > * `helm`, a Kubernetes package manager
 > * `curl`
@@ -261,10 +262,10 @@ The status consists of:
 
 * an array of conditions, including:
 
-    * the `ReadyToJoin` condition, which signals whether the hub cluster is ready to accept
+  * the `ReadyToJoin` condition, which signals whether the hub cluster is ready to accept
     the member cluster; and
-    * the `Joined` condition, which signals whether the cluster has joined the fleet; and
-    * the `Healthy` condition, which signals whether the cluster is in a healthy state.
+  * the `Joined` condition, which signals whether the cluster has joined the fleet; and
+  * the `Healthy` condition, which signals whether the cluster is in a healthy state.
 
     Typically, a member cluster should have all three conditions set to true. Refer to the
     [Troubleshooting Guide](/docs/troubleshooting) for help if a cluster fails to join
@@ -276,10 +277,10 @@ the allocatable amount of each resource in the cluster, summed up from all nodes
 * an array of agent status, which reports the status of specific Fleet agents installed in
 the cluster; each entry features:
 
-    * an array of conditions, in which `Joined` signals whether the specific agent has been
+  * an array of conditions, in which `Joined` signals whether the specific agent has been
     successfully installed in the cluster, and `Healthy` signals whether the agent is in a
     healthy state; and
-    * the timestamp of the last received heartbeat from the agent.
+  * the timestamp of the last received heartbeat from the agent.
 
 ## Adding labels to a member cluster
 

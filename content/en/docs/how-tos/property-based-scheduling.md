@@ -46,13 +46,13 @@ In each matcher you will specify:
 
     For example, if you would like to select clusters based on the available CPU capacity of
     a cluster, the name used in the property selector should be
-    
+
     ```
     resources.kubernetes-fleet.io/available-cpu
     ```
 
-    and for the allocatable memory capacity, use 
-    
+    and for the allocatable memory capacity, use
+
     ```
     resources.kubernetes-fleet.io/allocatable-memory
     ```
@@ -63,17 +63,17 @@ property and the list of values in the matcher.
 
     Currently, available operators are
 
-    * `Gt` (Greater than): a cluster's observed value of the given property must be greater than
+  * `Gt` (Greater than): a cluster's observed value of the given property must be greater than
     the value in the matcher before it can be picked for resource placement.
-    * `Ge` (Greater than or equal to): a cluster's observed value of the given property must be
+  * `Ge` (Greater than or equal to): a cluster's observed value of the given property must be
     greater than or equal to the value in the matcher before it can be picked for resource placement.
-    * `Lt` (Less than): a cluster's observed value of the given property must be less than
+  * `Lt` (Less than): a cluster's observed value of the given property must be less than
     the value in the matcher before it can be picked for resource placement.
-    * `Le` (Less than or equal to): a cluster's observed value of the given property must be
+  * `Le` (Less than or equal to): a cluster's observed value of the given property must be
     less than or equal to the value in the matcher before it can be picked for resource placement.
-    * `Eq` (Equal to): a cluster's observed value of the given property must be equal to
+  * `Eq` (Equal to): a cluster's observed value of the given property must be equal to
     the value in the matcher before it can be picked for resource placement.
-    * `Ne` (Not equal to): a cluster's observed value of the given property must be
+  * `Ne` (Not equal to): a cluster's observed value of the given property must be
     not equal to the value in the matcher before it can be picked for resource placement.
 
     Note that if you use the operator `Gt`, `Ge`, `Lt`, `Le`, `Eq`, or `Ne`, the list of values
@@ -180,11 +180,10 @@ capacities as follows:
 The sorter would yield the weights below:
 
 | Cluster | Available CPU capacity | Weight |
-| -------- | ------- | ------- | 
+| -------- | ------- | ------- |
 | bravelion | 100 | (100 - 10) / (100 - 10) = 100% of the weight |
 | smartfish | 20 | (20 - 10) / (100 - 10) = 11.11% of the weight |
 | jumpingcat | 10 | (10 - 10) / (100 - 10) = 0% of the weight |
-
 
 And when using the sort order `Ascending`, the proportional weight is calculated using the formula:
 
@@ -205,7 +204,7 @@ per CPU core costs as follows:
 The sorter would yield the weights below:
 
 | Cluster | Per CPU core cost | Weight |
-| -------- | ------- | ------- | 
+| -------- | ------- | ------- |
 | bravelion | 1 | 1 - ((1 - 0.1) / (1 - 0.1)) = 0% of the weight |
 | smartfish | 0.2 | 1 - ((0.2 - 0.1) / (1 - 0.1)) = 88.89% of the weight |
 | jumpingcat | 0.1 | 1 - (0.1 - 0.1) / (1 - 0.1) = 100% of the weight |

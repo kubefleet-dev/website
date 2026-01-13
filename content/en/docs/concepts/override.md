@@ -5,7 +5,8 @@ weight: 10
 ---
 
 ## Overview
-The `ClusterResourceOverride` and `ResourceOverride` provides a way to customize resource configurations before they are propagated 
+
+The `ClusterResourceOverride` and `ResourceOverride` provides a way to customize resource configurations before they are propagated
 to the target cluster by the `ClusterResourcePlacement`.
 
 ## Difference Between `ClusterResourceOverride` And `ResourceOverride`
@@ -20,8 +21,10 @@ If the resource is selected by both `ClusterResourceOverride` and `ResourceOverr
 when resolving the conflicts.
 
 ## When To Use Override
+
 Overrides is useful when you want to customize the resources before they are propagated from the hub cluster to the target clusters.
 Some example use cases are:
+
 - As a platform operator, I want to propagate a clusterRoleBinding to cluster-us-east and cluster-us-west and would like to
 grant the same role to different groups in each cluster.
 - As a platform operator, I want to propagate a clusterRole to cluster-staging and cluster-production and would like to
@@ -34,8 +37,9 @@ like to always use the latest image in the staging cluster and a specific image 
 commands for my container in different regions.
 
 ## Limits
+
 - Each resource can be only selected by one override simultaneously. In the case of namespace scoped resources, up to two
-overrides will be allowed, considering the potential selection through both `ClusterResourceOverride` (select its namespace) 
+overrides will be allowed, considering the potential selection through both `ClusterResourceOverride` (select its namespace)
 and `ResourceOverride`.
 - At most 100 `ClusterResourceOverride` can be created.
 - At most 100 `ResourceOverride` can be created.
@@ -45,11 +49,13 @@ and `ResourceOverride`.
 This specifies which placement the override should be applied to.
 
 ## Resource Selector
+
 `ClusterResourceSelector` of `ClusterResourceOverride` selects which cluster-scoped resources need to be overridden before
 applying to the selected clusters.
 
 It supports the following forms of resource selection:
-- Select resources by specifying the <group, version, kind> and name. This selection propagates only one resource that 
+
+- Select resources by specifying the <group, version, kind> and name. This selection propagates only one resource that
 matches the <group, version, kind> and name.
 
 > **Note:** Label selector of `ClusterResourceSelector` is not supported.
@@ -58,16 +64,19 @@ matches the <group, version, kind> and name.
 the selected clusters.
 
 It supports the following forms of resource selection:
+
 - Select resources by specifying the <group, version, kind> and name. This selection propagates only one resource that
 matches the <group, version, kind> and name under the `ResourceOverride` namespace.
 
 ## Override Policy
+
 Override policy defines how to override the selected resources on the target clusters.
 
 It contains an array of override rules and its order determines the override order. For example, when there are two rules
 selecting the same fields on the target cluster, the last one will win.
 
 Each override rule contains the following fields:
+
 - `ClusterSelector`: which cluster(s) the override rule applies to. It supports the following forms of cluster selection:
   - Select clusters by specifying the cluster labels.
   - An empty selector selects ALL the clusters.
@@ -88,10 +97,12 @@ Each override rule contains the following fields:
 ### Reserved Variables in the JSON Patch Override Value
 
 There is a list of reserved variables that will be replaced by the actual values used in the `value` of the JSON patch override rule:
-* `${MEMBER-CLUSTER-NAME}`:  this will be replaced by the name of the `memberCluster` that represents this cluster.
+
+- `${MEMBER-CLUSTER-NAME}`:  this will be replaced by the name of the `memberCluster` that represents this cluster.
 
 For example, to add a label to the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`,
 you can use the following configuration:
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
 kind: ClusterResourceOverride
@@ -118,6 +129,7 @@ spec:
             value:
               {"cluster-name":"${MEMBER-CLUSTER-NAME}"}
 ```
+
 The `ClusterResourceOverride` object above will add a label `cluster-name` with the value of the `memberCluster` name to the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`.
 
 ## When To Trigger Rollout
@@ -130,7 +142,8 @@ respecting the rollout strategy defined in the `ClusterResourcePlacement`.
 ## Examples
 
 ### add annotations to the configmap by using clusterResourceOverride
-Suppose we create a configmap named `app-config-1` under the namespace `application-1` in the hub cluster, and we want to 
+
+Suppose we create a configmap named `app-config-1` under the namespace `application-1` in the hub cluster, and we want to
 add an annotation to it, which is applied to all the member clusters.
 
 ```yaml
@@ -240,10 +253,11 @@ spec:
 
 ## How To Validate If Overrides Are Applied
 
-You can validate if the overrides are applied by checking the `ClusterResourcePlacement` status. The status output will 
+You can validate if the overrides are applied by checking the `ClusterResourcePlacement` status. The status output will
 indicate both placement conditions and individual placement statuses on each member cluster that was overridden.
 
 Sample output:
+
 ```yaml
 status:
   conditions:

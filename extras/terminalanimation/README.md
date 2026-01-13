@@ -48,4 +48,3 @@ any word when the recording is in session.
 After the recording completes, a file named `demo.cast` will appear in the local directory.
 Move the file under the `assets/asciinema` folder to add the cast. For the new cast to take effect,
 re-generate the site and upload the resources.
-

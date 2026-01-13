@@ -1,0 +1,16 @@
+# EditorConfig to support per-solution formatting.
+# http://editorconfig.org/
+root = true
+
+# Default
+[*]
+indent_size = 2
+indent_style = space
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.py]
+indent_size = 4
+
+[*.sh]
+end_of_line = LF

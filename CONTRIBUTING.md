@@ -14,7 +14,7 @@ By contributing to this project, you agree to the Developer Certificate of Origi
 
 You must sign off your commit to state that you certify the [DCO](DCO). To certify your commit for DCO, add a line like the following at the end of your commit message:
 
-```
+```text
 Signed-off-by: John Smith <john@example.com>
 ```
 
@@ -28,7 +28,7 @@ The KubeFleet project has adopted the CNCF Code of Conduct. Refer to our [Commun
 
 The KubeFleet documentation is checked into the `/content` directory. Each language has its own version of documentation: for example, the English version of the documentation is available at `/content/en`. The system uses the [ISO 639](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) and optionally the [ISO 3166](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes) country codes to uniquely identify a language version.
 
-The English version of the documentation shall be the source of truth for all other language versions. If you plan to document a new KubeFleet feature or a behavior change, update the English version first. When editing documentation in langauges other than English, make sure that the edited documents are consistent with their English counterparts.
+The English version of the documentation shall be the source of truth for all other language versions. If you plan to document a new KubeFleet feature or a behavior change, update the English version first. When editing documentation in languages other than English, make sure that the edited documents are consistent with their English counterparts.
 
 > **Adding a new language version**
 >
@@ -50,7 +50,7 @@ All the documents includes are written in [the Markdown language](https://en.wik
 
 If you would like to add a new document to one of the collections (concepts, getting started tutorials, or how-to guides), create a Markdown file in the corresponding subdirectory, and submit it in a PR. The Markdown file should start with a header as follows:
 
-```
+```text
 ---
 title: YOUR-TITLE
 description: YOUR-DOCUMENT-DESCRIPTION
@@ -70,35 +70,30 @@ The same pipeline would also run on each PR; the workflow would attempt to build
 
 Often contributors would need to build and deploy the website locally to check their progress. To do so,
 
-* Install [Hugo](https://gohugo.io).
-    * Hugo is the static site generator KubeFleet uses to generate the website. It is recommended that you install the extended version.
-    * ```sh
-      sudo apt install hugo
-      hugo version
-      ```
-      to verify your Hugo installation; the output should indicate that you have installed the extended version.
-* Install a [Node.js runtime](https://nodejs.org/).
-    * It is recommended that you install a Node.js LTS version no earlier than Node.js v18.
+* Install [Hugo](https://gohugo.io). Hugo is the static site generator KubeFleet uses to generate the website. It is recommended that you install the extended version. To verify your Hugo installation; the output should indicate that you have installed the extended version.
+
+  ```sh
+  sudo apt install hugo
+  hugo version
+  ```
+
+* Install a [Node.js runtime](https://nodejs.org/). It is recommended that you install a Node.js LTS version no earlier than Node.js v18.
 * Clone the `kubefleet-dev/website` repository.
-* Clone all the submodules in the `kubefleet-dev/website` repository:
+* Clone all the submodules in the `kubefleet-dev/website` repository.
 
     ```sh
     git submodule update --init
     git pull --recurse-submodules
     ```
 
-    KubeFleet features the following submodules:
-    * the `docsy` Hugo theme;
-    * the FontAwesome lib;
-    * Bootstrap CSS
-    
-    These submodules are some of the fundamental building blocks used for generating the KubeFleet website.
+    KubeFleet features the following submodules with the fundamental building blocks used for generating the KubeFleet website:
+  * the `docsy` Hugo theme;
+  * the FontAwesome lib;
+  * Bootstrap CSS
 
 * Install the dependencies Hugo uses to build the website with the command `npm install`.
-* Run the Hugo built-in web server:
+* Run the Hugo built-in web server. By default Hugo will serve the website at `localhost:1313/website`. Hugo supports hot reload; in most cases you should be able to edit Markdown files and see the website gets rebuilt live.
 
     ```sh
     hugo server
     ```
-
-    By default Hugo will serve the website at `localhost:1313/website`. Hugo supports hot reload; in most cases you should be able to edit Markdown files and see the website gets rebuilt live.

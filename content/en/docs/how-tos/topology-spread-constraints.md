@@ -29,18 +29,18 @@ groups.
     Specifically, clusters are grouped by the label values they have. For example, if you have
     three clusters in a fleet:
 
-    * cluster `bravelion` with the label `system=critical` and `region=east`; and
-    * cluster `smartfish` with the label `system=critical` and `region=west`; and
-    * cluster `jumpingcat` with the label `system=normal` and `region=east`,
-    
+  * cluster `bravelion` with the label `system=critical` and `region=east`; and
+  * cluster `smartfish` with the label `system=critical` and `region=west`; and
+  * cluster `jumpingcat` with the label `system=normal` and `region=east`,
+
     and you use `system` as the topology key, the clusters will be split into 2 groups:
 
-    * group 1 with cluster `bravelion` and `smartfish`, as they both have the value `critical`
+  * group 1 with cluster `bravelion` and `smartfish`, as they both have the value `critical`
     for label `system`; and
-    * group 2 with cluster `jumpingcat`, as it has the value `normal` for label `system`.
+  * group 2 with cluster `jumpingcat`, as it has the value `normal` for label `system`.
 
     Note that the splitting concerns only one label `system`; other labels,
-    such as `region`, do not count. 
+    such as `region`, do not count.
 
     If a cluster does not have the given topology key, it **does not** belong to any group.
     Fleet may still pick this cluster, as placing resources on it does not violate the
@@ -56,9 +56,9 @@ groups.
 
     For example, in the fleet described above (3 clusters, 2 groups):
 
-    * if Fleet picks two clusters from group A, but none from group B, the skew would be
+  * if Fleet picks two clusters from group A, but none from group B, the skew would be
     `2 - 0 = 2`; however,
-    * if Fleet picks one cluster from group A and one from group B, the skew would be
+  * if Fleet picks one cluster from group A and one from group B, the skew would be
     `1 - 1 = 0`.
 
     The minimum value of `maxSkew` is 1. The less you set this value with, the more evenly
@@ -78,11 +78,11 @@ topology spread constraint; that is, picking any cluster in the fleet would lead
 
     Two options are available:
 
-    * `DoNotSchedule`: with this option, Fleet would guarantee that the topology spread constraint
+  * `DoNotSchedule`: with this option, Fleet would guarantee that the topology spread constraint
     will be enforced all time; scheduling may fail if there is simply no possible way to satisfy
     the topology spread constraint.
 
-    * `ScheduleAnyway`: with this option, Fleet would enforce the topology spread constraint
+  * `ScheduleAnyway`: with this option, Fleet would enforce the topology spread constraint
     in a best-effort manner; Fleet may, however, pick clusters that would violate the topology
     spread constraint if there is no better option.
 
@@ -119,22 +119,22 @@ More specifically, Fleet will:
 
     Depending on the current spread of resource placements, there are three possible outcomes:
 
-    * placing resources on the cluster reduces the skew by 1; or
-    * placing resources on the cluster has no effect on the skew; or
-    * placing resources on the cluster increases the skew by 1.
+  * placing resources on the cluster reduces the skew by 1; or
+  * placing resources on the cluster has no effect on the skew; or
+  * placing resources on the cluster increases the skew by 1.
 
     Fleet would then assign a topology spread score to the cluster:
 
-    * if the provisional placement reduces the skew by 1, the cluster receives a topology spread
+  * if the provisional placement reduces the skew by 1, the cluster receives a topology spread
     score of 1; or
-    * if the provisional placement has no effect on the skew, the cluster receives a topology
+  * if the provisional placement has no effect on the skew, the cluster receives a topology
     spread score of 0; or
-    * if the provisional placement increases the skew by 1, but does not yet exceed the max skew
+  * if the provisional placement increases the skew by 1, but does not yet exceed the max skew
     specified in the constraint, the cluster receives a topology spread score of -1; or
-    * if the provisional placement increases the skew by 1, and has exceeded the max skew specified in the constraint, 
-    
-        * for topology spread constraints with the `ScheduleAnyway` effect, the cluster receives a topology spread score of -1000; and
-        * for those with the `DoNotSchedule` effect, the cluster will be removed from
+  * if the provisional placement increases the skew by 1, and has exceeded the max skew specified in the constraint,
+
+    * for topology spread constraints with the `ScheduleAnyway` effect, the cluster receives a topology spread score of -1000; and
+    * for those with the `DoNotSchedule` effect, the cluster will be removed from
         resource placement consideration.
 
 * rank the clusters based on the topology spread score and other factors (e.g., affinity),

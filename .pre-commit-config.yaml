@@ -1,0 +1,20 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: "3e8a8703264a2f4a69428a0aa4dcb512790b2c8c" # v6.0.0
+    hooks:
+      - id: check-json
+        exclude: content/.+/docs/api-reference
+      - id: check-merge-conflict
+      - id: check-yaml
+        exclude: content/.+/docs/api-reference
+      - id: end-of-file-fixer
+        exclude: content/.+/docs/api-reference
+      - id: trailing-whitespace
+        exclude: content/.+/docs/api-reference
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: "76b3d32d3f4b965e1d6425253c59407420ae2c43" # v0.47.0
+    hooks:
+      - id: markdownlint
+        args:
+          - --fix
+        exclude: content/.+/docs/api-reference

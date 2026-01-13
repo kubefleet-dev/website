@@ -13,18 +13,18 @@ detection results when using the KubeFleet CRP API.
 > the `ClusterResourcePlacementDiffReported` or `ResourcePlacementDiffReported` condition on your placement object is set to
 > `False`, see the [Diff Reporting Failure TSG](PlacementDiffReported)
 > instead.
-
+>
 > Note
 >
 > This document focuses on unexpected drift and configuration difference detection
 > results. If you have encountered drift and configuration difference detection
 > failures (e.g., no detection results at all with the `ClusterResourcePlacementApplied`
-> condition being set to `False` with a detection related error), see the 
+> condition being set to `False` with a detection related error), see the
 > [Work-Application Failure TSG](PlacementApplied) instead.
 
 ## Common scenarios
 
-A drift occurs when a non-KubeFleet agent modifies a KubeFleet-managed resource (i.e., 
+A drift occurs when a non-KubeFleet agent modifies a KubeFleet-managed resource (i.e.,
 a resource that has been applied by KubeFleet). Drift details are reported in the CRP status
 on a per-cluster basis (`.status.placementStatuses[*].driftedPlacements` field).
 Drift detection is always on when your CRP uses a `ClientSideApply` (default) or
@@ -53,7 +53,7 @@ has been blocked from taking over a pre-existing resource due to your takeover s
 by a non-KubeFleet agent, KubeFleet will attempt to re-create it as soon as it finds out about the
 deletion.
 * Drift detection will not block resource rollouts. If you have just updated the resources on
-the hub cluster side and triggered a rollout, drifts on the member cluster side might have been 
+the hub cluster side and triggered a rollout, drifts on the member cluster side might have been
 overwritten.
 * When a rollout is in progress, drifts will not be reported on the CRP status for a member cluster if
 the cluster has not received the latest round of updates.
@@ -101,10 +101,10 @@ and/or configuration difference check reportings.
 * Verify that rollout has completed on all member clusters; see the [CRP Rollout Failure TSG](ClusterResourcePlacementRolloutStarted)
 for more information.
 * Log onto your member cluster and retrieve the resources with unexpected reportings.
-    * Check if its generation (`.metadata.generation` field) matches with the `observedInMemberClusterGeneration` value
+  * Check if its generation (`.metadata.generation` field) matches with the `observedInMemberClusterGeneration` value
     in the drift detection and/or configuration difference check reportings. A mismatch might signal that the
     reportings are not yet up-to-date; they should get refreshed soon.
-    * The `kubectl.kubernetes.io/last-applied-configuration` annotation and/or the `.metadata.managedFields` field might
+  * The `kubectl.kubernetes.io/last-applied-configuration` annotation and/or the `.metadata.managedFields` field might
     have some relevant information on which agents have attempted to update/patch the resource. KubeFleet changes
     are executed under the name `work-api-agent`; if you see other manager names, check if it comes from a known source
     (e.g., Kubernetes controller) in your cluster.

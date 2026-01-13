@@ -18,8 +18,9 @@ a deployment in Kubernetes. There are two notable distinctions:
 belonging to the same deployment in Kubernetes can run on the same node.
 2. The `ClusterResourcePlacement` supports different placement types within a single object.
 
-These requirements necessitate treating the scheduling policy as a whole and feeding it to the scheduler, as opposed to 
+These requirements necessitate treating the scheduling policy as a whole and feeding it to the scheduler, as opposed to
 handling individual pods like Kubernetes today. Specially:
+
 1. Scheduling the entire `ClusterResourcePlacement` at once enables us to increase the parallelism of the scheduler if
 needed.
 2. Supporting the `PickAll` mode would require generating the replica for each cluster in the fleet to scheduler. This
@@ -33,6 +34,7 @@ in batch mode, these calculations are performed once. Scheduler sorts all the el
 The output of the scheduler is an array of `ClusterResourceBinding`s on the hub cluster.
 
 `ClusterResourceBinding` sample:
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourceBinding
@@ -77,8 +79,9 @@ status:
 ```
 
 `ClusterResourceBinding` can have three states:
+
 * _Scheduled_: It indicates that the scheduler has selected this cluster for placing the resources. The resource is waiting
-to be picked up by the rollout controller.  
+to be picked up by the rollout controller.
 * _Bound_: It indicates that the rollout controller has initiated the placement of resources on the target cluster. The
 resources are actively being deployed.
 * _Unscheduled_: This states signifies that the target cluster is no longer selected by the scheduler for the placement.
@@ -92,13 +95,14 @@ responsible for executing these decisions based on the defined rollout strategy.
 
 The `ClusterResourcePlacement` enforces the semantics of "IgnoreDuringExecutionTime" to prioritize the stability of resources
 running in production. Therefore, the resources should not be moved or rescheduled without explicit changes to the scheduling
-policy. 
+policy.
 
 Here are some high-level guidelines outlining the actions that trigger scheduling and corresponding behavior:
+
 1. `Policy` changes trigger scheduling:
     * The scheduler makes the placement decisions based on the latest `ClusterSchedulingPolicySnapshot`.
     * When it's just a scale out operation (`NumberOfClusters` of pickN mode is increased), the `ClusterResourcePlacement`
-controller updates the label of the existing `ClusterSchedulingPolicySnapshot` instead of creating a new one, so that 
+controller updates the label of the existing `ClusterSchedulingPolicySnapshot` instead of creating a new one, so that
 the scheduler won't move any existing resources that are already scheduled and just fulfill the new requirement.
 
 2. The following cluster changes trigger scheduling:
@@ -114,4 +118,5 @@ the scheduler won't move any existing resources that are already scheduled and j
     * The selected resources is updated without directly affecting the `ClusterResourcePlacement`.
 
 ## What's next
- * Read about [Scheduling Framework](scheduler-framework)
+
+* Read about [Scheduling Framework](scheduler-framework)

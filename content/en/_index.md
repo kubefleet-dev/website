@@ -60,7 +60,6 @@ Use KubeFleet to perform administrative tasks with ease. KubeFleet can help you 
 
 {{% /blocks/section %}}
 
-
 {{% blocks/section color="secondary" type="row" %}}
 
 {{% blocks/feature icon="fa-solid fa-comments" title="Questions and Discussions"%}}

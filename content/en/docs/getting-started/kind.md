@@ -21,14 +21,14 @@ to get started with Fleet, which can help you understand how Fleet simiplify the
 To complete this tutorial, you will need:
 
 * The following tools on your local machine:
-    * `docker`, to build kubefleet agent images.
-    * `kind`, for running Kubernetes clusters on your local machine
-    * Docker
-    * `git`
-    * `curl`
-    * `helm`, the Kubernetes package manager
-    * `jq`
-    * `base64`
+  * `docker`, to build kubefleet agent images.
+  * `kind`, for running Kubernetes clusters on your local machine
+  * Docker
+  * `git`
+  * `curl`
+  * `helm`, the Kubernetes package manager
+  * `jq`
+  * `base64`
 
 ## Spin up a few kind clusters
 
@@ -91,7 +91,7 @@ export HUB_AGENT_IMAGE="hub-agent"
 git clone https://github.com/kubefleet-dev/kubefleet.git
 cd kubefleet
 
-# Build and push the hub agent image to your container registry. 
+# Build and push the hub agent image to your container registry.
 export OUTPUT_TYPE="type=registry"
 make docker-build-hub-agent
 
@@ -137,7 +137,7 @@ export MEMBER_CLUSTER=YOUR-MEMBER-CLUSTER
 export MEMBER_CLUSTER_CONTEXT=YOUR-MEMBER-CLUSTER-CONTEXT
 
 
-# Build and push the member agent image to your container registry. 
+# Build and push the member agent image to your container registry.
 make docker-build-member-agent
 make docker-build-refresh-token
 
@@ -166,7 +166,7 @@ more information.
 > a cluster into a fleet manually, refer to the [Managing Clusters](/docs/how-tos/clusters) How-To
 > Guide.
 
-## Use the `ClusterResourcePlacement` API to orchestrate resources among member clusters.
+## Use the `ClusterResourcePlacement` API to orchestrate resources among member clusters
 
 Fleet offers an API, `ClusterResourcePlacement`, which helps orchestrate workloads, i.e., any group
 Kubernetes resources, among all member clusters. In this last part of the tutorial, you will use

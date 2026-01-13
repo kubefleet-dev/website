@@ -7,6 +7,7 @@ weight: 1
 This tutorial demonstrates how to move applications from clusters have gone down to other operational clusters using Fleet.
 
 ## Scenario
+
 Your fleet consists of the following clusters:
 
 1. Member Cluster 1 & Member Cluster 2 (WestUS, 1 node each)
@@ -16,9 +17,11 @@ Your fleet consists of the following clusters:
 Due to certain circumstances, Member Cluster 1 and Member Cluster 2 are down, requiring you to migrate your applications from these clusters to other operational ones.
 
 ## Current Application Resources
+
 The following resources are currently deployed in Member Cluster 1 and Member Cluster 2 by the ClusterResourcePlacement:
 
 #### Service
+
 ```yaml
 apiVersion: v1
 kind: Service
@@ -34,12 +37,15 @@ spec:
     targetPort: 80
   type: LoadBalancer
 ```
+
 Summary:
+
 - This defines a Kubernetes Service named `nginx-svc` in the `test-app` namespace.
 - The service is of type LoadBalancer, meaning it exposes the application to the internet.
 - It targets pods with the label app: nginx and forwards traffic to port 80 on the pods.
 
 #### Deployment
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -58,17 +64,20 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.16.1 
+        image: nginx:1.16.1
         ports:
         - containerPort: 80
 ```
+
 Summary:
+
 - This defines a Kubernetes Deployment named `nginx-deployment` in the `test-app` namespace.
 - It creates 2 replicas of the nginx pod, each running the `nginx:1.16.1` image.
 - The deployment ensures that the specified number of pods (replicas) are running and available.
 - The pods are labeled with `app: nginx` and expose port 80.
 
 #### ClusterResourcePlacement
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
@@ -237,16 +246,20 @@ status:
       namespace: test-app
       version: v1
 ```
+
 Summary:
+
 - This defines a ClusterResourcePlacement named `crp-migration`.
 - The PickN placement policy selects 2 clusters based on the label `fleet.azure.com/location: westus`. Consequently, it chooses Member Cluster 1 and Member Cluster 2, as they are located in WestUS.
 - It targets resources in the `test-app` namespace.
 
 ## Migrating Applications to a Cluster to Other Operational Clusters
-When the clusters in WestUS go down, update the ClusterResourcePlacement (CRP) to migrate the applications to other clusters. 
+
+When the clusters in WestUS go down, update the ClusterResourcePlacement (CRP) to migrate the applications to other clusters.
 In this tutorial, we will move them to Member Cluster 4 and Member Cluster 5, which are located in WestEurope.
 
 #### Update the CRP for Migration to Clusters in WestEurope
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
@@ -272,19 +285,26 @@ spec:
   strategy:
     type: RollingUpdate
 ```
-Update the `crp.yaml` to reflect the new region and apply it: 
+
+Update the `crp.yaml` to reflect the new region and apply it:
+
 ```bash
 kubectl apply -f crp.yaml
 ```
 
 ### Results
-After applying the updated `crp.yaml`, the Fleet will schedule the application on the available clusters in WestEurope. 
+
+After applying the updated `crp.yaml`, the Fleet will schedule the application on the available clusters in WestEurope.
 You can check the status of the CRP to ensure that the application has been successfully migrated and is running on the newly selected clusters:
+
 ```bash
 kubectl get crp crp-migration -o yaml
 ```
+
 You should see a status indicating that the application is now running in the clusters located in WestEurope, similar to the following:
+
 #### CRP Status
+
 ```yaml
 ...
 status:
@@ -423,5 +443,6 @@ status:
 ```
 
 ## Conclusion
-This tutorial demonstrated how to migrate applications using Fleet when clusters in one region go down. 
+
+This tutorial demonstrated how to migrate applications using Fleet when clusters in one region go down.
 By updating the ClusterResourcePlacement, you can ensure that your applications are moved to available clusters in another region, maintaining availability and resilience.

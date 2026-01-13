@@ -91,7 +91,7 @@ s = "When you create this object, the namespace " + \
     Back.YELLOW + "all resources under the namespace" + Style.RESET_ALL + " " + \
     "will be placed to all clusters in the fleet. " + \
     "Use this API to run apps/services, execute jobs, bootstrap environments or enforce policies; " + \
-    "even clusters joined afterwards can be automatically set up." 
+    "even clusters joined afterwards can be automatically set up."
 print_char_by_char(s)
 print_char_by_char("\n\n")
 
@@ -108,7 +108,7 @@ s = "And " + \
     Fore.MAGENTA + "advanced rollout based on resource readiness" + Style.RESET_ALL + \
     " or " + \
     Fore.MAGENTA + "override fields" + Style.RESET_ALL + \
-    " automatically based on cluster specific configuration." 
+    " automatically based on cluster specific configuration."
 print_char_by_char(s)
 print_char_by_char("\n\n")
 

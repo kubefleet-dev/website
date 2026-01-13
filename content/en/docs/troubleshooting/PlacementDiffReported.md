@@ -13,7 +13,7 @@ set to `False` in the placement status.
 > If you are looking for troubleshooting steps on unexpected drift detection and/or configuration
 > difference detection results, see the [Drift Detection and Configuration Difference Detection Failure TSG](DriftAndDiffDetection)
 > instead.
-
+>
 > Note
 >
 > The `ClusterResourcePlacementDiffReported` or `ResourcePlacementDiffReported` status condition will only be set if the placement has
@@ -45,15 +45,15 @@ Failures might arise if:
 
 * The dry-run apply op does not complete successfully; or
 * An unexpected error occurs during the comparison process, such as a JSON path parsing/evaluation error.
-    * In this case, please consider [filing a bug to the KubeFleet team](https://github.com/kubefleet-dev/kubefleet/issues).
+  * In this case, please consider [filing a bug to the KubeFleet team](https://github.com/kubefleet-dev/kubefleet/issues).
 
 ## Investigation steps
 
-If you encounter such a failure, follow the steps below for investigation: 
+If you encounter such a failure, follow the steps below for investigation:
 
 * Identify the specific resources that have failed in the diff reporting process first. In the placement status,
 find out the individual member clusters that have diff reporting failures: inspect the
-`.status.placementStatuses` field of the placement object; each entry corresponds to a member cluster, and 
+`.status.placementStatuses` field of the placement object; each entry corresponds to a member cluster, and
 for each entry, check if it has a status condition, `ClusterResourcePlacementDiffReported` (for ClusterResourcePlacement) or `ResourcePlacementDiffReported` (for ResourcePlacement), in
 the `.status.placementStatuses[*].conditions` field, which has been set to `False`. Write down the name
 of the member cluster.
@@ -65,7 +65,7 @@ for the cluster in correspondence with the placement object:
     # For ClusterResourcePlacement:
     # Replace [YOUR-CLUSTER-NAME] and [YOUR-CRP-NAME] with values of your own.
     kubectl get work -n fleet-member-[YOUR-CLUSTER-NAME] -l kubernetes-fleet.io/parent-CRP=[YOUR-CRP-NAME]
-    
+
     # For ResourcePlacement:
     # Replace [YOUR-CLUSTER-NAME] and [YOUR-RP-NAME] with values of your own.
     kubectl get work -n fleet-member-[YOUR-CLUSTER-NAME] -l kubernetes-fleet.io/parent-CRP=[YOUR-RP-NAME]

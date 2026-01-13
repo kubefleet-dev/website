@@ -21,11 +21,12 @@ Please read the [Fleet API reference](docs/api-reference) for more details about
 
 ### Namespace Prerequisites
 
-**Important**: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace. 
+**Important**: ResourcePlacement can only place namespace-scoped resources to clusters that already have the target namespace.
 Before creating a ResourcePlacement:
+
 - Ensure the target namespace exists on the member clusters, either:
-   - Created by a `ClusterResourcePlacement` (CRP) using namespace-only mode
-   - Pre-existing on the member clusters
+  - Created by a `ClusterResourcePlacement` (CRP) using namespace-only mode
+  - Pre-existing on the member clusters
 
 - If the namespace doesn't exist on a member cluster, the `ResourcePlacement` will fail to apply resources to that cluster.
 
@@ -75,16 +76,17 @@ apply strategy in use is of the type `ClientSideApply` (default) or `ServerSideA
 will only be populated if the apply strategy in use is of the type `ReportDiff`.
    - If this condition is false, refer to the [Diff Reporting Failure TSG](PlacementDiffReported.md) for more information.
 
-> **Note**: ResourcePlacement and ClusterResourcePlacement share the same underlying architecture with a 1-to-1 mapping of condition types. 
-> The condition types follow a naming convention where RP conditions use the `ResourcePlacement` prefix while CRP conditions use the 
+> **Note**: ResourcePlacement and ClusterResourcePlacement share the same underlying architecture with a 1-to-1 mapping of condition types.
+> The condition types follow a naming convention where RP conditions use the `ResourcePlacement` prefix while CRP conditions use the
 > `ClusterResourcePlacement` prefix. For example:
+>
 > - `ResourcePlacementScheduled` ↔ `ClusterResourcePlacementScheduled`
 > - `ResourcePlacementApplied` ↔ `ClusterResourcePlacementApplied`
 > - `ResourcePlacementAvailable` ↔ `ClusterResourcePlacementAvailable`
 >
-> The troubleshooting approaches documented in the CRP TSG files are applicable to ResourcePlacement as well. The main difference is that 
-> ResourcePlacement is namespace-scoped and works with namespace-scoped resources, while ClusterResourcePlacement is cluster-scoped. 
-> When following CRP TSG guidance, substitute the appropriate RP condition names and commands (e.g., use 
+> The troubleshooting approaches documented in the CRP TSG files are applicable to ResourcePlacement as well. The main difference is that
+> ResourcePlacement is namespace-scoped and works with namespace-scoped resources, while ClusterResourcePlacement is cluster-scoped.
+> When following CRP TSG guidance, substitute the appropriate RP condition names and commands (e.g., use
 > `kubectl get resourceplacement -n <namespace>` instead of `kubectl get clusterresourceplacement`).
 
 ## How can I debug if some clusters are not selected as expected?
@@ -114,6 +116,7 @@ Please check the following cases,
   - If `true`, verify that the resource exists on the hub cluster in the same namespace as the ResourcePlacement.
 
 To pinpoint issues on specific clusters, examine the `Placement Statuses` section in `ResourcePlacement` status. For each cluster, you can find:
+
 - The cluster name
 - Conditions specific to that cluster (e.g., `Applied`, `Available`)
 - `Failed Placements` section which lists the resources that failed to apply along with the reasons
@@ -152,7 +155,7 @@ kubectl describe resourceplacement test-rp -n test-ns
 
 **Here's an example output:**
 
-```yaml
+```text
 Status:
   Conditions:
     Last Transition Time:   2025-11-13T22:25:45Z
@@ -283,6 +286,7 @@ Status:
 ```
 
 From the status output, you can see:
+
 - **Overall Conditions**: Show the aggregated state across all clusters (e.g., `ResourcePlacementApplied`, `ResourcePlacementAvailable`)
 - **Placement Statuses**: Contains per-cluster details for `kind-cluster-1` and `kind-cluster-2`, each with their own conditions (`Scheduled`, `Applied`, `Available`, etc.)
 - **Selected Resources**: Lists the ConfigMaps (`app-config` and `feature-flags`) that were selected for placement
@@ -290,13 +294,13 @@ From the status output, you can see:
 2. To get the `ResourceBindings`, run the following command:
 
 ```bash
-    kubectl get resourcebinding -n test-ns -l kubernetes-fleet.io/parent-CRP=test-rp 
+    kubectl get resourcebinding -n test-ns -l kubernetes-fleet.io/parent-CRP=test-rp
 ```
 
 This lists all `ResourceBindings` instances that are associated with `test-rp`.
 
 ```bash
-kubectl get resourcebinding -n test-ns -l kubernetes-fleet.io/parent-CRP=test-rp 
+kubectl get resourcebinding -n test-ns -l kubernetes-fleet.io/parent-CRP=test-rp
 NAME                              WORKSYNCHRONIZED   RESOURCESAPPLIED   AGE
 test-rp-kind-cluster-1-be990c3e   True               True               33s
 test-rp-kind-cluster-2-ec4d953c   True               True               33s

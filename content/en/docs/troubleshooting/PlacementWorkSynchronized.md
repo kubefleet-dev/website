@@ -8,15 +8,19 @@ The `ClusterResourcePlacementWorkSynchronized` (CRP) or `ResourcePlacementWorkSy
 > Note: In addition, it may be helpful to look into the logs for the [work generator controller](https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/workgenerator/controller.go) to get more information on why the work synchronization failed.
 
 ## Common Scenarios
+
 Instances where this condition may arise:
+
 - The controller encounters an error while trying to generate the corresponding `work` object.
 - The enveloped object is not well formatted.
 
 ### Case Study
+
 The CRP is attempting to propagate a resource to a selected cluster, but the work object has not been updated to reflect the latest changes due to the selected cluster has been terminated.
 
 ### ClusterResourcePlacement Spec
-```
+
+```yaml
 spec:
   resourceSelectors:
     - group: rbac.authorization.k8s.io
@@ -31,7 +35,8 @@ spec:
  ```
 
 ### ClusterResourcePlacement Status
-```
+
+```yaml
 spec:
   policy:
     numberOfClusters: 1
@@ -108,16 +113,20 @@ status:
     name: test-ns
     version: v1
 ```
-In the `ClusterResourcePlacement` status, the `ClusterResourcePlacementWorkSynchronized` condition status shows as `False`. 
+
+In the `ClusterResourcePlacement` status, the `ClusterResourcePlacementWorkSynchronized` condition status shows as `False`.
 The message for it indicates that the work object `crp1-work` is prohibited from generating new content within the namespace `fleet-member-kind-cluster-1` because it's currently terminating.
 
 ### Resolution
+
 To address the issue at hand, there are several potential solutions:
-- Modify the `ClusterResourcePlacement` with a newly selected cluster. 
+
+- Modify the `ClusterResourcePlacement` with a newly selected cluster.
 - Delete the `ClusterResourcePlacement` to remove work through garbage collection.
 - Rejoin the member cluster. The namespace can only be regenerated after rejoining the cluster.
 
 In other situations, you might opt to wait for the work to finish propagating.
 
 ## General Notes
+
 For ResourcePlacement the investigation is identical — inspect `.status.placementStatuses[*].conditions` for `WorkSynchronized` and check the associated Work in the `fleet-member-{clusterName}` namespace.

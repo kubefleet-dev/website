@@ -22,8 +22,9 @@ Instances where this condition may arise:
 In the following example, a `ClusterResourcePlacement` with a `PickN` placement policy is trying to propagate resources to two clusters labeled `env:prod`. (The same scheduling logic applies to `ResourcePlacement`.)
 The two clusters, named `kind-cluster-1` and `kind-cluster-2`, have joined the fleet. However, only one member cluster, `kind-cluster-1`, has the label `env:prod`.
 
-### CRP spec:
-```
+### CRP spec
+
+```yaml
 spec:
   policy:
     affinity:
@@ -43,7 +44,8 @@ spec:
 ```
 
 ### ClusterResourcePlacement status
-```
+
+```yaml
 status:
   conditions:
   - lastTransitionTime: "2024-05-07T22:36:33Z"
@@ -141,12 +143,14 @@ The `ClusterResourcePlacementScheduled` condition is set to `false`, the goal is
 
 We can also take a look at the `ClusterSchedulingPolicySnapshot` status to figure out why the scheduler could not schedule the resource for the placement policy specified.
 To learn how to get the latest `ClusterSchedulingPolicySnapshot`, see [How can I find and verify the latest ClusterSchedulingPolicySnapshot for a ClusterResourcePlacement deployment?](ClusterResourcePlacement#how-can-i-find-and-verify-the-latest-clusterschedulingpolicysnapshot-for-a-clusterresourceplacement) to learn how to get the latest `ClusterSchedulingPolicySnapshot`.
+
 - For ResourcePlacement: use `SchedulingPolicySnapshot`.
 
 The corresponding `ClusterSchedulingPolicySnapshot` spec and status gives us even more information on why scheduling failed.
 
 ### Latest ClusterSchedulingPolicySnapshot
-```
+
+```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterSchedulingPolicySnapshot
 metadata:
@@ -203,8 +207,10 @@ status:
     selected: false
 ```
 
-### Resolution:
+### Resolution
+
 The solution here is to add the `env:prod` label to the member cluster resource for `kind-cluster-2` as well, so that the scheduler can select the cluster to propagate resources.
 
 ## General Notes
+
 The scheduling failure investigation flow is identical for ClusterResourcePlacement and ResourcePlacement; only the snapshot object kind differs. Replace CRP-specific object kinds with their RP equivalents when working with namespace-scoped placements.

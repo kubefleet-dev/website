@@ -29,7 +29,7 @@ It can greatly enhance your multi-cluster management experience; specifically, w
     You can set up KubeFleet with an on-premises cluster, a cluster hosted on public clouds such as
     Azure, or even a local kind cluster.
 
-* ✅ KubeFleet can manage Kubernetes cluster groups of various sizes. 
+* ✅ KubeFleet can manage Kubernetes cluster groups of various sizes.
 
     KubeFleet is designed with performance and scalablity in mind. It functions well with both
     smaller Kubernetes cluster groups and those with up to hundreds of Kubernetes clusters and
@@ -42,5 +42,3 @@ It can greatly enhance your multi-cluster management experience; specifically, w
 ## Get started
 
 Find out how to deploy KubeFleet with one of our [Getting Started](/docs/getting-started) tutorials. You can use a local setup to experiment with KubeFleet's features, and explore its UX.
-
-

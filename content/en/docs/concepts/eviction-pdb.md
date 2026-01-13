@@ -8,7 +8,7 @@ This document explains the concept of `Eviction` and `Placement Disruption Budge
 
 ## Overview
 
-`Eviction` provides a way to force remove resources from a target cluster once the resources have already been propagated from the hub cluster by a `Placement` object. 
+`Eviction` provides a way to force remove resources from a target cluster once the resources have already been propagated from the hub cluster by a `Placement` object.
 `Eviction` is considered as an voluntary disruption triggered by the user. `Eviction` alone doesn't guarantee that resources won't be propagated to target cluster again by the scheduler.
 The users need to use [taints](../howtos/taint-toleration.md) in conjunction with `Eviction` to prevent the scheduler from picking the target cluster again.
 
@@ -17,6 +17,7 @@ The `Placement Disruption Budget` object protects against voluntary disruptions.
 The only voluntary disruption that can occur in the fleet is the eviction of resources from a target cluster which can be achieved by creating the `ClusterResourcePlacementEviction` object.
 
 Some cases of involuntary disruptions in the context of fleet,
+
 - The removal of resources from a member cluster by the scheduler due to scheduling policy changes.
 - Users manually deleting workload resources running on a member cluster.
 - Users manually deleting the `ClusterResourceBinding` object which is an internal resource the represents the placement of resources on a member cluster.
@@ -29,6 +30,7 @@ For all the cases of involuntary disruptions described above, the `Placement Dis
 An eviction object is used to remove resources from a member cluster once the resources have already been propagated from the hub cluster.
 
 The eviction object is only reconciled once after which it reaches a terminal state. Below is the list of terminal states for `ClusterResourcePlacementEviction`,
+
 - `ClusterResourcePlacementEviction` is valid and it's executed successfully.
 - `ClusterResourcePlacementEviction` is invalid.
 - `ClusterResourcePlacementEviction` is valid but it's not executed.
@@ -44,7 +46,7 @@ When specifying the `ClusterResourcePlacement` object in the eviction's spec, th
 - For `PickAll` & `PickN` CRPs, eviction is allowed because the users cannot deterministically pick or unpick a cluster based on the placement strategy; it's up to the scheduler.
 
 > **Note:** After an eviction is executed, there is no guarantee that the cluster won't be picked again by the scheduler to propagate resources for a `ClusterResourcePlacement` resource.
-> The user needs to specify a [taint](../howtos/taint-toleration.md) on the cluster to prevent the scheduler from picking the cluster again. This is especially true for `PickAll ClusterResourcePlacement` because 
+> The user needs to specify a [taint](../howtos/taint-toleration.md) on the cluster to prevent the scheduler from picking the cluster again. This is especially true for `PickAll ClusterResourcePlacement` because
 > the scheduler will try to propagate resources to all the clusters in the fleet.
 
 ## ClusterResourcePlacementDisruptionBudget
@@ -70,6 +72,6 @@ When specifying a disruption budget for a particular `ClusterResourcePlacement`,
 | `PickAll`    | ✅                                 | ❌                                   | ❌                                   | ❌                                |
 | `PickN`      | ✅                                 | ✅                                   | ✅                                   | ✅                                |
 
-> **Note:** We don't allow eviction for `PickFixed` CRP and hence specifying a `ClusterResourcePlacementDisruptionBudget` for `PickFixed` CRP does nothing. 
+> **Note:** We don't allow eviction for `PickFixed` CRP and hence specifying a `ClusterResourcePlacementDisruptionBudget` for `PickFixed` CRP does nothing.
 > And for `PickAll` CRP, the user can only specify `MinAvailable` because total number of clusters selected by a `PickAll` CRP is non-deterministic.
 > If the user creates an invalid `ClusterResourcePlacementDisruptionBudget` object, when an eviction is created, the eviction won't be successfully executed.

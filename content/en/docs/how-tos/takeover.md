@@ -37,9 +37,9 @@ resources without taking any action.
 
 > Before you begin
 >
-> The new takeover experience is currently in preview. 
+> The new takeover experience is currently in preview.
 >
-> Note that the APIs for the new experience are only available in the Fleet v1beta1 API, not the v1 API. If you do not see the new APIs in command outputs, verify that you are explicitly requesting the v1beta1 API objects, as opposed to the v1 API objects (the default). 
+> Note that the APIs for the new experience are only available in the Fleet v1beta1 API, not the v1 API. If you do not see the new APIs in command outputs, verify that you are explicitly requesting the v1beta1 API objects, as opposed to the v1 API objects (the default).
 
 ## How Fleet can be used to safely take over pre-existing resources
 
@@ -78,7 +78,7 @@ a fleet of two clusters, `member-1` and `member-2`:
         - group: ""
           kind: Namespace
           version: v1
-          # Select all namespaces with the label app=work. 
+          # Select all namespaces with the label app=work.
           labelSelector:
             matchLabels:
               app: work-2
@@ -87,7 +87,7 @@ a fleet of two clusters, `member-1` and `member-2`:
       strategy:
         # For simplicity reasons, the CRP is configured to roll out changes to
         # all member clusters at once. This is not a setup recommended for production
-        # use.      
+        # use.
         type: RollingUpdate
         rollingUpdate:
           maxUnavailable: 100%
@@ -216,7 +216,7 @@ a fleet of two clusters, `member-1` and `member-2`:
         - group: ""
           kind: Namespace
           version: v1
-          # Select all namespaces with the label app=work. 
+          # Select all namespaces with the label app=work.
           labelSelector:
             matchLabels:
               app: work-2
@@ -225,7 +225,7 @@ a fleet of two clusters, `member-1` and `member-2`:
       strategy:
         # For simplicity reasons, the CRP is configured to roll out changes to
         # all member clusters at once. This is not a setup recommended for production
-        # use.      
+        # use.
         type: RollingUpdate
         rollingUpdate:
           maxUnavailable: 100%
@@ -304,7 +304,7 @@ of the status.
                 "firstDiffedObservedTime": "...",
                 "group": "",
                 "version": "v1",
-                "kind": "Namespace",    
+                "kind": "Namespace",
                 "name": "work-2",
                 "observationTime": "...",
                 "observedDiffs": [
@@ -314,7 +314,7 @@ of the status.
                         "valueInMember": "wesker"
                     }
                 ],
-                "targetClusterObservedGeneration": 0    
+                "targetClusterObservedGeneration": 0
             }
         ]
     }
@@ -322,22 +322,22 @@ of the status.
 
     Fleet will report the following information about a configuration difference:
 
-    * `group`, `kind`, `version`, `namespace`, and `name`: the resource that has configuration differences.
-    * `observationTime`: the timestamp where the current diff detail is collected.
-    * `firstDiffedObservedTime`: the timestamp where the current diff is first observed.
-    * `observedDiffs`: the diff details, specifically:
-        * `path`: A JSON path (RFC 6901) that points to the diff'd field;
-        * `valueInHub`: the value at the JSON path as seen from the hub cluster resource template
+  * `group`, `kind`, `version`, `namespace`, and `name`: the resource that has configuration differences.
+  * `observationTime`: the timestamp where the current diff detail is collected.
+  * `firstDiffedObservedTime`: the timestamp where the current diff is first observed.
+  * `observedDiffs`: the diff details, specifically:
+    * `path`: A JSON path (RFC 6901) that points to the diff'd field;
+    * `valueInHub`: the value at the JSON path as seen from the hub cluster resource template
         (the desired state). If this value is absent, the field does not exist in the resource template.
-        * `valueInMember`: the value at the JSON path as seen from the member cluster resource
+    * `valueInMember`: the value at the JSON path as seen from the member cluster resource
         (the current state). If this value is absent, the field does not exist in the current state.
-    * `targetClusterObservedGeneration`: the generation of the member cluster resource.
+  * `targetClusterObservedGeneration`: the generation of the member cluster resource.
 
 * To fix the configuration difference, consider one of the following options:
 
-    * Switch the `whenToTakeOver` setting back to `Always`, which will instruct Fleet to take over the resource right away and overwrite all configuration differences; or
-    * Edit the diff'd field directly on the member cluster side, so that the value is consistent with that on the hub cluster; Fleet will periodically re-evaluate diffs and should take over the resource soon after.
-    * Delete the resource from the member cluster. Fleet will then re-apply the resource template and re-create the resource.
+  * Switch the `whenToTakeOver` setting back to `Always`, which will instruct Fleet to take over the resource right away and overwrite all configuration differences; or
+  * Edit the diff'd field directly on the member cluster side, so that the value is consistent with that on the hub cluster; Fleet will periodically re-evaluate diffs and should take over the resource soon after.
+  * Delete the resource from the member cluster. Fleet will then re-apply the resource template and re-create the resource.
 
     Here the guide will take the first option available, setting the `whenToTakeOver` field to
     `Always`:
@@ -354,7 +354,7 @@ of the status.
         - group: ""
           kind: Namespace
           version: v1
-          # Select all namespaces with the label app=work. 
+          # Select all namespaces with the label app=work.
           labelSelector:
             matchLabels:
               app: work-2
@@ -363,7 +363,7 @@ of the status.
       strategy:
         # For simplicity reasons, the CRP is configured to roll out changes to
         # all member clusters at once. This is not a setup recommended for production
-        # use.      
+        # use.
         type: RollingUpdate
         rollingUpdate:
           maxUnavailable: 100%
