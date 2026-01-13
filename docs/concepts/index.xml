@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Concepts on KubeFleet</title><link>https://kubefleet.dev/docs/concepts/</link><description>Recent content in Concepts on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet.dev/docs/concepts/index.xml" rel="self" type="application/rss+xml"/><item><title>Fleet components</title><link>https://kubefleet.dev/docs/concepts/components/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/components/</guid><description>&lt;h1 id="components">Components&lt;/h1>
 &lt;p>This document provides an overview of the components required for a fully functional and operational Fleet setup.&lt;/p>
-&lt;p>&lt;img src="https://kubefleet.dev/images/en/docs/concepts/components/architecture.jpg" alt="">&lt;/p>
+&lt;p>&lt;img src="https://kubefleet.dev/images/en/docs/concepts/components/architecture.jpg" alt="Component architecture diagram">&lt;/p>
 &lt;p>The fleet consists of the following components:&lt;/p>
 &lt;ul>
 &lt;li>fleet-hub-agent is a Kubernetes controller that creates and reconciles all the fleet related CRs in the hub cluster.&lt;/li>
@@ -70,7 +70,7 @@ core.&lt;/p>
 &lt;li>&lt;strong>Same Placement Affinity Plugin&lt;/strong>: Uniquely designed for the fleet, preventing multiple replicas (selected resources) from
 being placed within the same cluster. This distinguishes it from Kubernetes, which allows multiple pods on a node.&lt;/li>
 &lt;li>&lt;strong>Cluster Eligibility Plugin&lt;/strong>: Enables cluster selection based on specific status criteria.&lt;/li>
-&lt;li>** Taint &amp;amp; Toleration Plugin**: Enables cluster selection based on taints on the cluster &amp;amp; tolerations on the ClusterResourcePlacement.&lt;/li>
+&lt;li>&lt;strong>Taint &amp;amp; Toleration Plugin&lt;/strong>: Enables cluster selection based on taints on the cluster &amp;amp; tolerations on the ClusterResourcePlacement.&lt;/li>
 &lt;/ul>
 &lt;p>Compared to the Kubernetes scheduling framework, the fleet framework introduces additional stages for the pickN placement type:&lt;/p></description></item><item><title>Properties and Property Providers</title><link>https://kubefleet.dev/docs/concepts/properties/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/properties/</guid><description>&lt;p>This document explains the concepts of property provider and cluster properties in Fleet.&lt;/p>
 &lt;p>Fleet allows developers to implement a property provider to expose arbitrary properties about

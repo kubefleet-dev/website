@@ -99,8 +99,7 @@ detection results when using the KubeFleet CRP API.&lt;/p>
 &lt;p>If you are looking for troubleshooting steps on diff reporting failures, i.e., when
 the &lt;code>ClusterResourcePlacementDiffReported&lt;/code> or &lt;code>ResourcePlacementDiffReported&lt;/code> condition on your placement object is set to
 &lt;code>False&lt;/code>, see the &lt;a href="https://kubefleet.dev/docs/troubleshooting/placementdiffreported/">Diff Reporting Failure TSG&lt;/a>
-instead.&lt;/p>&lt;/blockquote>
-&lt;blockquote>
+instead.&lt;/p>
 &lt;p>Note&lt;/p>
 &lt;p>This document focuses on unexpected drift and configuration difference detection
 results. If you have encountered drift and configuration difference detection
@@ -113,8 +112,7 @@ set to &lt;code>False&lt;/code> in the placement status.&lt;/p>
 &lt;p>Note&lt;/p>
 &lt;p>If you are looking for troubleshooting steps on unexpected drift detection and/or configuration
 difference detection results, see the &lt;a href="https://kubefleet.dev/docs/troubleshooting/driftanddiffdetection/">Drift Detection and Configuration Difference Detection Failure TSG&lt;/a>
-instead.&lt;/p>&lt;/blockquote>
-&lt;blockquote>
+instead.&lt;/p>
 &lt;p>Note&lt;/p>
 &lt;p>The &lt;code>ClusterResourcePlacementDiffReported&lt;/code> or &lt;code>ResourcePlacementDiffReported&lt;/code> status condition will only be set if the placement has
 an apply strategy of the &lt;code>ReportDiff&lt;/code> type. If your placement uses &lt;code>ClientSideApply&lt;/code> (default) or
@@ -126,49 +124,49 @@ status condition is absent in the placement status.&lt;/p></description></item><
 &lt;h3 id="crp-status-without-staged-update-run">CRP status without Staged Update Run&lt;/h3>
 &lt;p>When a &lt;code>ClusterResourcePlacement&lt;/code> is created with &lt;code>spec.strategy.type&lt;/code> set to &lt;code>External&lt;/code>, the rollout does not start immediately.&lt;/p>
 &lt;p>A sample status of such &lt;code>ClusterResourcePlacement&lt;/code> is as follows:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ kubectl describe crp example-placement
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>$ kubectl describe crp example-placement
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Status:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Conditions:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: found all cluster needed as specified by the scheduling policy, found &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> cluster&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: found all cluster needed as specified by the scheduling policy, found 2 cluster(s)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: SchedulingPolicyFulfilled
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: True
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: ClusterResourcePlacementScheduled
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: There are still &lt;span style="color:#0000cf;font-weight:bold">2&lt;/span> cluster&lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>s&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span> in the process of deciding whether to roll out the latest resources or not
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: There are still 2 cluster(s) in the process of deciding whether to roll out the latest resources or not
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: RolloutStartedUnknown
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: Unknown
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: ClusterResourcePlacementRolloutStarted
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Resource Index: &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Resource Index: 0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Placement Statuses:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Cluster Name: member1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Conditions:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: Successfully scheduled resources &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> placement in &lt;span style="color:#4e9a06">&amp;#34;member1&amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>affinity score: 0, topology spread score: 0&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: picked by scheduling policy
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: Successfully scheduled resources for placement in &amp;#34;member1&amp;#34; (affinity score: 0, topology spread score: 0): picked by scheduling policy
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: Scheduled
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: True
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: Scheduled
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: In the process of deciding whether to roll out the latest resources or not
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: RolloutStartedUnknown
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: Unknown
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: RolloutStarted
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Cluster Name: member2
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Conditions:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: Successfully scheduled resources &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> placement in &lt;span style="color:#4e9a06">&amp;#34;member2&amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">(&lt;/span>affinity score: 0, topology spread score: 0&lt;span style="color:#ce5c00;font-weight:bold">)&lt;/span>: picked by scheduling policy
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: Successfully scheduled resources for placement in &amp;#34;member2&amp;#34; (affinity score: 0, topology spread score: 0): picked by scheduling policy
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: Scheduled
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: True
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: Scheduled
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: In the process of deciding whether to roll out the latest resources or not
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: RolloutStartedUnknown
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: Unknown
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: RolloutStarted
