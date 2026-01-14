@@ -120,60 +120,28 @@ an apply strategy of the &lt;code>ReportDiff&lt;/code> type. If your placement u
 status condition is absent in the placement status.&lt;/p></description></item><item><title>Staged Update Run TSG</title><link>https://kubefleet.dev/docs/troubleshooting/stagedupdaterun/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/stagedupdaterun/</guid><description>&lt;p>This guide provides troubleshooting steps for common issues related to both cluster-scoped and namespace-scoped Staged Update Runs.&lt;/p>
 &lt;blockquote>
 &lt;p>Note: To get more information about failures, you can check the &lt;a href="https://github.com/kubefleet-dev/kubefleet/blob/main/pkg/controllers/updaterun/controller.go">updateRun controller&lt;/a> logs.&lt;/p>&lt;/blockquote>
-&lt;h2 id="cluster-scoped-troubleshooting">Cluster-Scoped Troubleshooting&lt;/h2>
-&lt;h3 id="crp-status-without-staged-update-run">CRP status without Staged Update Run&lt;/h3>
-&lt;p>When a &lt;code>ClusterResourcePlacement&lt;/code> is created with &lt;code>spec.strategy.type&lt;/code> set to &lt;code>External&lt;/code>, the rollout does not start immediately.&lt;/p>
-&lt;p>A sample status of such &lt;code>ClusterResourcePlacement&lt;/code> is as follows:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>$ kubectl describe crp example-placement
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Status:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Conditions:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: found all cluster needed as specified by the scheduling policy, found 2 cluster(s)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: SchedulingPolicyFulfilled
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: True
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: ClusterResourcePlacementScheduled
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: There are still 2 cluster(s) in the process of deciding whether to roll out the latest resources or not
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: RolloutStartedUnknown
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: Unknown
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: ClusterResourcePlacementRolloutStarted
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Resource Index: 0
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Placement Statuses:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Cluster Name: member1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Conditions:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: Successfully scheduled resources for placement in &amp;#34;member1&amp;#34; (affinity score: 0, topology spread score: 0): picked by scheduling policy
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: Scheduled
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: True
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: Scheduled
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: In the process of deciding whether to roll out the latest resources or not
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: RolloutStartedUnknown
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: Unknown
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: RolloutStarted
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Cluster Name: member2
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Conditions:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: Successfully scheduled resources for placement in &amp;#34;member2&amp;#34; (affinity score: 0, topology spread score: 0): picked by scheduling policy
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: Scheduled
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: True
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: Scheduled
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last Transition Time: 2025-03-12T23:01:32Z
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Message: In the process of deciding whether to roll out the latest resources or not
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Observed Generation: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Reason: RolloutStartedUnknown
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Status: Unknown
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Type: RolloutStarted
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Selected Resources:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Events: &amp;lt;none&amp;gt;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>SchedulingPolicyFulfilled&lt;/code> condition indicates the CRP has been fully scheduled, while &lt;code>RolloutStartedUnknown&lt;/code> condition shows that the rollout has not started.&lt;/p></description></item><item><title>ClusterResourcePlacementEviction TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</guid><description>&lt;p>This guide provides troubleshooting steps for issues related to placement eviction.&lt;/p>
+&lt;h3 id="things-to-keep-in-mind-when-using-updaterun">Things to keep in mind when using updateRun&lt;/h3>
+&lt;p>If updateRun is created with Initialized/Stop state updateRun won&amp;rsquo;t start execution. In both cases updateRun will be initialized.&lt;/p>
+&lt;p>State set to &lt;code>Initialize&lt;/code>,&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">spec&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">placementName&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">example-placement&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">resourceSnapshotIndex&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;0&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">stagedRolloutStrategyName&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">example-strategy&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">state&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">Initialize&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">status&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">appliedStrategy&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">comparisonOption&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">PartialComparison&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">type&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">ClientSideApply&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">whenToApply&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">Always&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">whenToTakeOver&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">Always&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">conditions&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">lastTransitionTime&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;2026-01-09T01:21:18Z&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">message&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">The UpdateRun initialized successfully&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">observedGeneration&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">reason&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">UpdateRunInitializedSuccessfully&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">status&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#34;True&amp;#34;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">type&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">Initialized&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>State set to &lt;code>Stop&lt;/code>,&lt;/p></description></item><item><title>ClusterResourcePlacementEviction TSG</title><link>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/troubleshooting/clusterresourceplacementeviction/</guid><description>&lt;p>This guide provides troubleshooting steps for issues related to placement eviction.&lt;/p>
 &lt;p>An eviction object when created is ideally only reconciled once and reaches a terminal state. List of terminal states
 for eviction are:&lt;/p>
 &lt;ul>
