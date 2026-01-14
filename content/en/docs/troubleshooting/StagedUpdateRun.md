@@ -308,7 +308,7 @@ status:
     status: "True"
     type: Initialized
   - lastTransitionTime: "2026-01-12T22:49:51Z"
-    message: The updateRun is stuck waiting for 1 cluster(s) in stage staging to finish
+    message: The updateRun is stuck waiting for member2 cluster(s) in stage staging to finish
       updating, please check placement status for potential errors
     observedGeneration: 2
     reason: UpdateRunStuck
@@ -339,8 +339,8 @@ status:
     stageName: canary
 ...
 ```
-The message shows that the updateRun is stuck waiting for 1 cluster in stage `staging` to finish releasing. 
-From the stagesStatus we can see `member2` is the cluster in stage `staging`. The updateRun controller rolls 
+The message shows that the updateRun is stuck waiting for member2 cluster in stage `staging` to finish releasing. 
+From the stagesStatus we also can see `member2` is the cluster in stage `staging`. The updateRun controller rolls 
 resources to a member cluster by updating its corresponding binding. It then checks periodically whether the 
 update has completed or not. If the binding is still not available after current default 5 minutes, updateRun 
 controller decides the rollout has stuck and reports the condition.
@@ -697,7 +697,7 @@ status:
     status: "True"
     type: Initialized
   - lastTransitionTime: "2026-01-08T22:45:34Z"
-    message: The updateRun is stuck waiting for 1 cluster(s) in stage dev to finish
+    message: The updateRun is stuck waiting for member2 cluster(s) in stage dev to finish
       updating, please check placement status for potential errors
     observedGeneration: 1
     reason: UpdateRunStuck
