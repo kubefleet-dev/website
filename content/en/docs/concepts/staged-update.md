@@ -341,7 +341,7 @@ UpdateRuns execute in three phases:
 **Immutable Fields**: Once created, the following UpdateRun spec fields cannot be modified:
 
 - `placementName`: Target placement resource name
-- `resourceSnapshotIndex`: Resource version to deploy (empty string if omitted, becomes latest at initialization)
+- `resourceSnapshotIndex`: Resource version to deploy (empty string if omitted)
 - `stagedRolloutStrategyName`: Strategy to execute
 
 **Mutable Field**: The `state` field can be modified after creation to control execution (Initialize, Run, Stop).
