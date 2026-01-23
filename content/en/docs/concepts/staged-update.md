@@ -38,7 +38,7 @@ Kubefleet provides staged update capabilities at two different scopes to address
 
 This dual approach enables fleet administrators to maintain oversight of infrastructure-level changes while empowering application teams with autonomous control over their specific workloads.
 
-![](/images/en/docs/concepts/staged-update/updaterun.jpg)
+![](/images/en/docs/concepts/staged-update/UpdateRunDiagram.jpg)
 
 ## Overview
 
