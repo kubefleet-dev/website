@@ -40,6 +40,49 @@ This dual approach enables fleet administrators to maintain oversight of infrast
 
 ![](/images/en/docs/concepts/staged-update/UpdateRunDiagram.jpg)
 
+<details>
+<summary><strong>Diagram Example Configuration</strong></summary>
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateStrategy
+metadata:
+  name: production-rollout
+spec:
+  stages:
+    - name: staging
+      labelSelector:
+        matchLabels:
+          environment: staging
+      maxConcurrency: 75%
+      beforeStageTasks:
+        - type: Approval
+      afterStageTasks:
+        - type: TimedWait
+          waitTime: 1h
+    - name: canary
+      labelSelector:
+        matchLabels:
+          environment: canary
+      # Default MaxConcurrency (1)
+      beforeStageTasks:
+        - type: Approval
+      afterStageTasks:
+        - type: Approval
+    - name: production
+      labelSelector:
+        matchLabels:
+          environment: production
+      maxConcurrency: 2
+      beforeStageTasks:
+        - type: Approval
+      afterStageTasks:
+        - type: TimedWait
+          waitTime: 1h
+        - type: Approval
+```
+</details>
+
 ## Overview
 
 Kubefleet provides staged update capabilities at two scopes to serve different organizational needs:
