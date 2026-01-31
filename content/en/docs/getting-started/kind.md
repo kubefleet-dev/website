@@ -70,7 +70,7 @@ kind export kubeconfig -n $HUB_CLUSTER
 kind export kubeconfig -n $MEMBER_CLUSTER
 ```
 
-# Set up the Fleet hub cluster
+## Set up the Fleet hub cluster
 
 To set up the hub cluster, run the commands below:
 
@@ -82,7 +82,7 @@ kubectl config use-context $HUB_CLUSTER_CONTEXT
 # Please replace the following env variables with the values of your own; see the repository README for
 # more information.
 
-export REGISTRY="YOUR CONTAINER REGISTRY" # Replace with your own container registry
+export REGISTRY="ghcr.io/kubefleet-dev/kubefleet" # Replace with your own container registry if you want to use a custom registry
 export TARGET_ARCH="amd64" # Replace with your architecture, we support amd64 and arm64
 export TAG=$(curl "https://api.github.com/repos/kubefleet-dev/kubefleet/tags" | jq -r '.[0].name') # Replace with your desired tag
 export HUB_AGENT_IMAGE="hub-agent"
@@ -103,6 +103,7 @@ helm upgrade --install hub-agent ./charts/hub-agent/ \
         --set namespace=fleet-system \
         --set logVerbosity=5 \
         --set enableGuardRail=false \
+        --set enableWebhook=true \
         --set forceDeleteWaitTime="3m0s" \
         --set clusterUnhealthyThreshold="5m0s" \
         --set logFileMaxSize=100000 \
@@ -127,31 +128,21 @@ For your convenience, Fleet provides a script that can automate the process of j
 into a fleet. To use the script, follow the steps below:
 
 ```sh
-# Replace the value of MEMBER_CLUSTER with the name you would like to assign to the new member
-# cluster.
-#
-# Note that Fleet will recognize your cluster with this name once it joins.
-export MEMBER_CLUSTER=YOUR-MEMBER-CLUSTER
-# Replace the value of MEMBER_CLUSTER_CONTEXT with the name of the kubeconfig context you use
-# for accessing your member cluster.
-export MEMBER_CLUSTER_CONTEXT=YOUR-MEMBER-CLUSTER-CONTEXT
-
-
-# Build and push the member agent image to your container registry.
+# Optional: build and push the member agent image to your container registry if you want to use a custom image.
 make docker-build-member-agent
 make docker-build-refresh-token
 
 # Run the script.
 chmod +x ./hack/membership/joinMC.sh
-./hack/membership/joinMC.sh  $TAG <HUB-CLUSTER-NAME> <MEMBER-CLUSTER-NAME>
+./hack/membership/joinMC.sh  $TAG <HUB-CLUSTER-CONTEXT> <MEMBER-CLUSTER-CONTEXT-1> <MEMBER-CLUSTER-CONTEXT-2> <MEMBER-CLUSTER-CONTEXT-3> ...
 ```
 
-It may take a few minutes for the script to finish running. Once it is completed, verify
-that the cluster has joined successfully with the command below:
+It may take a few minutes for the script to finish running. Once it is completed, the script will print out something
+like this:
 
 ```sh
-kubectl config use-context $HUB_CLUSTER_CONTEXT
-kubectl get membercluster $MEMBER_CLUSTER
+NAME              JOINED   AGE   MEMBER-AGENT-LAST-SEEN   NODE-COUNT   AVAILABLE-CPU   AVAILABLE-MEMORY
+hub-cluster       True     30s   28s                      1             748m           2870328Ki
 ```
 
 The newly joined cluster should have the `JOINED` status field set to `True`. If you see that
