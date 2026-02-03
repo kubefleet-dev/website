@@ -81,7 +81,7 @@ _Appears in:_
 | `resource` _string_ | Resource is the resource type of the resource. |  |  |
 | `namespace` _string_ | Namespace is the namespace of the resource, the resource is cluster scoped if the value<br />is empty. |  |  |
 | `name` _string_ | Name is the name of the resource. |  |  |
-| `uid` _[UID](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#uid-types-pkg)_ | UID is set on successful deletion of the Kubernetes resource by controller. The<br />resource might be still visible on the managed cluster after this field is set.<br />It is not directly settable by a client. |  |  |
+| `uid` _[UID](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#uid-types-pkg)_ | UID is set on successful deletion of the Kubernetes resource by controller. The<br />resource might be still visible on the managed cluster after this field is set.<br />It is not directly settable by a client. |  | Optional: \{\} <br /> |
 
 
 #### AppliedWork
@@ -107,8 +107,8 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `AppliedWork` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[AppliedWorkSpec](#appliedworkspec)_ | Spec represents the desired configuration of AppliedWork. |  | Required: \{\} <br /> |
-| `status` _[AppliedWorkStatus](#appliedworkstatus)_ | Status represents the current status of AppliedWork. |  |  |
+| `spec` _[AppliedWorkSpec](#appliedworkspec)_ | Spec represents the desired configuration of AppliedWork. |  | Required: \{\} <br />Required: \{\} <br /> |
+| `status` _[AppliedWorkStatus](#appliedworkstatus)_ | Status represents the current status of AppliedWork. |  | Optional: \{\} <br /> |
 
 
 #### AppliedWorkList
@@ -125,7 +125,7 @@ AppliedWorkList contains a list of AppliedWork.
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `AppliedWorkList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `items` _[AppliedWork](#appliedwork) array_ | List of works. |  |  |
 
 
@@ -142,8 +142,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `workName` _string_ | WorkName represents the name of the related work on the hub. |  | Required: \{\} <br /> |
-| `workNamespace` _string_ | WorkNamespace represents the namespace of the related work on the hub. |  | Required: \{\} <br /> |
+| `workName` _string_ | WorkName represents the name of the related work on the hub. |  | Required: \{\} <br />Required: \{\} <br /> |
+| `workNamespace` _string_ | WorkNamespace represents the namespace of the related work on the hub. |  | Required: \{\} <br />Required: \{\} <br /> |
 
 
 #### AppliedWorkStatus
@@ -159,7 +159,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `appliedResources` _[AppliedResourceMeta](#appliedresourcemeta) array_ | AppliedResources represents a list of resources defined within the Work that are applied.<br />Only resources with valid GroupVersionResource, namespace, and name are suitable.<br />An item in this slice is deleted when there is no mapped manifest in Work.Spec or by finalizer.<br />The resource relating to the item will also be removed from managed cluster.<br />The deleted resource may still be present until the finalizers for that resource are finished.<br />However, the resource will not be undeleted, so it can be removed from this list and eventual consistency is preserved. |  |  |
+| `appliedResources` _[AppliedResourceMeta](#appliedresourcemeta) array_ | AppliedResources represents a list of resources defined within the Work that are applied.<br />Only resources with valid GroupVersionResource, namespace, and name are suitable.<br />An item in this slice is deleted when there is no mapped manifest in Work.Spec or by finalizer.<br />The resource relating to the item will also be removed from managed cluster.<br />The deleted resource may still be present until the finalizers for that resource are finished.<br />However, the resource will not be undeleted, so it can be removed from this list and eventual consistency is preserved. |  | Optional: \{\} <br /> |
 
 
 #### ApplyStrategy
@@ -385,10 +385,10 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `clusterName` _string_ | ClusterName is the name of the ManagedCluster. If it is not empty, its value should be unique cross all<br />placement decisions for the Placement. |  | Required: \{\} <br /> |
-| `selected` _boolean_ | Selected indicates if this cluster is selected by the scheduler. |  |  |
-| `clusterScore` _[ClusterScore](#clusterscore)_ | ClusterScore represents the score of the cluster calculated by the scheduler. |  |  |
-| `reason` _string_ | Reason represents the reason why the cluster is selected or not. |  |  |
+| `clusterName` _string_ | ClusterName is the name of the ManagedCluster. If it is not empty, its value should be unique cross all<br />placement decisions for the Placement. |  | Required: \{\} <br />Required: \{\} <br /> |
+| `selected` _boolean_ | Selected indicates if this cluster is selected by the scheduler. |  | Required: \{\} <br /> |
+| `clusterScore` _[ClusterScore](#clusterscore)_ | ClusterScore represents the score of the cluster calculated by the scheduler. |  | Optional: \{\} <br /> |
+| `reason` _string_ | Reason represents the reason why the cluster is selected or not. |  | Required: \{\} <br /> |
 
 
 #### ClusterResourceBinding
@@ -408,8 +408,8 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourceBinding` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[ResourceBindingSpec](#resourcebindingspec)_ | The desired state of ClusterResourceBinding. |  |  |
-| `status` _[ResourceBindingStatus](#resourcebindingstatus)_ | The observed status of ClusterResourceBinding. |  |  |
+| `spec` _[ResourceBindingSpec](#resourcebindingspec)_ | The desired state of ClusterResourceBinding. |  | Required: \{\} <br /> |
+| `status` _[ResourceBindingStatus](#resourcebindingstatus)_ | The observed status of ClusterResourceBinding. |  | Optional: \{\} <br /> |
 
 
 
@@ -452,7 +452,7 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourceOverride` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[ClusterResourceOverrideSpec](#clusterresourceoverridespec)_ | The desired state of ClusterResourceOverrideSpec. |  |  |
+| `spec` _[ClusterResourceOverrideSpec](#clusterresourceoverridespec)_ | The desired state of ClusterResourceOverrideSpec. |  | Required: \{\} <br /> |
 
 
 
@@ -480,7 +480,7 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourceOverrideSnapshot` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[ClusterResourceOverrideSnapshotSpec](#clusterresourceoverridesnapshotspec)_ | The desired state of ClusterResourceOverrideSnapshotSpec. |  |  |
+| `spec` _[ClusterResourceOverrideSnapshotSpec](#clusterresourceoverridesnapshotspec)_ | The desired state of ClusterResourceOverrideSnapshotSpec. |  | Required: \{\} <br /> |
 
 
 
@@ -499,7 +499,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `overrideSpec` _[ClusterResourceOverrideSpec](#clusterresourceoverridespec)_ | OverrideSpec stores the spec of ClusterResourceOverride. |  |  |
-| `overrideHash` _integer array_ | OverrideHash is the sha-256 hash value of the OverrideSpec field. |  |  |
+| `overrideHash` _integer array_ | OverrideHash is the sha-256 hash value of the OverrideSpec field. |  | Required: \{\} <br /> |
 
 
 #### ClusterResourceOverrideSpec
@@ -519,9 +519,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `placement` _[PlacementRef](#placementref)_ | Placement defines whether the override is applied to a specific placement or not.<br />If set, the override will trigger the placement rollout immediately when the rollout strategy type is RollingUpdate.<br />Otherwise, it will be applied to the next rollout.<br />The recommended way is to set the placement so that the override can be rolled out immediately. |  |  |
-| `clusterResourceSelectors` _[ResourceSelectorTerm](#resourceselectorterm) array_ | ClusterResourceSelectors is an array of selectors used to select cluster scoped resources. The selectors are `ORed`.<br />If a namespace is selected, ALL the resources under the namespace are selected automatically.<br />LabelSelector is not supported.<br />You can have 1-20 selectors.<br />We only support Name selector for now. |  | MaxItems: 20 <br />MinItems: 1 <br />Required: \{\} <br /> |
-| `policy` _[OverridePolicy](#overridepolicy)_ | Policy defines how to override the selected resources on the target clusters. |  |  |
+| `placement` _[PlacementRef](#placementref)_ | Placement defines whether the override is applied to a specific placement or not.<br />If set, the override will trigger the placement rollout immediately when the rollout strategy type is RollingUpdate.<br />Otherwise, it will be applied to the next rollout.<br />The recommended way is to set the placement so that the override can be rolled out immediately. |  | Optional: \{\} <br /> |
+| `clusterResourceSelectors` _[ResourceSelectorTerm](#resourceselectorterm) array_ | ClusterResourceSelectors is an array of selectors used to select cluster scoped resources. The selectors are `ORed`.<br />If a namespace is selected, ALL the resources under the namespace are selected automatically.<br />LabelSelector is not supported.<br />You can have 1-20 selectors.<br />We only support Name selector for now. |  | MaxItems: 20 <br />MinItems: 1 <br />Required: \{\} <br />Required: \{\} <br /> |
+| `policy` _[OverridePolicy](#overridepolicy)_ | Policy defines how to override the selected resources on the target clusters. |  | Required: \{\} <br /> |
 
 
 #### ClusterResourcePlacement
@@ -580,7 +580,7 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourcePlacementDisruptionBudget` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[PlacementDisruptionBudgetSpec](#placementdisruptionbudgetspec)_ | Spec is the desired state of the ClusterResourcePlacementDisruptionBudget. |  |  |
+| `spec` _[PlacementDisruptionBudgetSpec](#placementdisruptionbudgetspec)_ | Spec is the desired state of the ClusterResourcePlacementDisruptionBudget. |  | Required: \{\} <br /> |
 
 
 
@@ -629,8 +629,8 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourcePlacementEviction` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[PlacementEvictionSpec](#placementevictionspec)_ | Spec is the desired state of the ClusterResourcePlacementEviction.<br />Note that all fields in the spec are immutable. |  |  |
-| `status` _[PlacementEvictionStatus](#placementevictionstatus)_ | Status is the observed state of the ClusterResourcePlacementEviction. |  |  |
+| `spec` _[PlacementEvictionSpec](#placementevictionspec)_ | Spec is the desired state of the ClusterResourcePlacementEviction.<br />Note that all fields in the spec are immutable. |  | Required: \{\} <br /> |
+| `status` _[PlacementEvictionStatus](#placementevictionstatus)_ | Status is the observed state of the ClusterResourcePlacementEviction. |  | Optional: \{\} <br /> |
 
 
 
@@ -706,8 +706,8 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourceSnapshot` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[ResourceSnapshotSpec](#resourcesnapshotspec)_ | The desired state of ResourceSnapshot. |  |  |
-| `status` _[ResourceSnapshotStatus](#resourcesnapshotstatus)_ | The observed status of ResourceSnapshot. |  |  |
+| `spec` _[ResourceSnapshotSpec](#resourcesnapshotspec)_ | The desired state of ResourceSnapshot. |  | Required: \{\} <br /> |
+| `status` _[ResourceSnapshotStatus](#resourcesnapshotstatus)_ | The observed status of ResourceSnapshot. |  | Optional: \{\} <br /> |
 
 
 
@@ -735,8 +735,8 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterSchedulingPolicySnapshot` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[SchedulingPolicySnapshotSpec](#schedulingpolicysnapshotspec)_ | The desired state of SchedulingPolicySnapshot. |  |  |
-| `status` _[SchedulingPolicySnapshotStatus](#schedulingpolicysnapshotstatus)_ | The observed status of SchedulingPolicySnapshot. |  |  |
+| `spec` _[SchedulingPolicySnapshotSpec](#schedulingpolicysnapshotspec)_ | The desired state of SchedulingPolicySnapshot. |  | Required: \{\} <br /> |
+| `status` _[SchedulingPolicySnapshotStatus](#schedulingpolicysnapshotstatus)_ | The observed status of SchedulingPolicySnapshot. |  | Optional: \{\} <br /> |
 
 
 
@@ -754,8 +754,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `affinityScore` _integer_ | AffinityScore represents the affinity score of the cluster calculated by the last<br />scheduling decision based on the preferred affinity selector.<br />An affinity score may not present if the cluster does not meet the required affinity. |  |  |
-| `priorityScore` _integer_ | TopologySpreadScore represents the priority score of the cluster calculated by the last<br />scheduling decision based on the topology spread applied to the cluster.<br />A priority score may not present if the cluster does not meet the topology spread. |  |  |
+| `affinityScore` _integer_ | AffinityScore represents the affinity score of the cluster calculated by the last<br />scheduling decision based on the preferred affinity selector.<br />An affinity score may not present if the cluster does not meet the required affinity. |  | Optional: \{\} <br /> |
+| `priorityScore` _integer_ | TopologySpreadScore represents the priority score of the cluster calculated by the last<br />scheduling decision based on the topology spread applied to the cluster.<br />A priority score may not present if the cluster does not meet the topology spread. |  | Optional: \{\} <br /> |
 
 
 #### ClusterSelector
@@ -1076,9 +1076,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `op` _[JSONPatchOverrideOperator](#jsonpatchoverrideoperator)_ | Operator defines the operation on the target field. |  | Enum: [add remove replace] <br /> |
-| `path` _string_ | Path defines the target location.<br />Note: override will fail if the resource path does not exist. |  |  |
-| `value` _[JSON](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#json-v1-apiextensions-k8s-io)_ | Value defines the content to be applied on the target location.<br />Value should be empty when operator is `remove`.<br />We have reserved a few variables in this field that will be replaced by the actual values.<br />Those variables all start with `$` and are case sensitive.<br />Here is the list of currently supported variables:<br />`$\{MEMBER-CLUSTER-NAME\}`:  this will be replaced by the name of the memberCluster CR that represents this cluster. |  |  |
+| `op` _[JSONPatchOverrideOperator](#jsonpatchoverrideoperator)_ | Operator defines the operation on the target field. |  | Enum: [add remove replace] <br />Required: \{\} <br /> |
+| `path` _string_ | Path defines the target location.<br />Note: override will fail if the resource path does not exist. |  | Required: \{\} <br /> |
+| `value` _[JSON](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#json-v1-apiextensions-k8s-io)_ | Value defines the content to be applied on the target location.<br />Value should be empty when operator is `remove`.<br />We have reserved a few variables in this field that will be replaced by the actual values.<br />Those variables all start with `$` and are case sensitive.<br />Here is the list of currently supported variables:<br />`$\{MEMBER-CLUSTER-NAME\}`:  this will be replaced by the name of the memberCluster CR that represents this cluster. |  | Optional: \{\} <br /> |
 
 
 #### JSONPatchOverrideOperator
@@ -1126,8 +1126,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `identifier` _[WorkResourceIdentifier](#workresourceidentifier)_ | resourceId represents a identity of a resource linking to manifests in spec. |  |  |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions represents the conditions of this resource on spoke cluster |  |  |
+| `identifier` _[WorkResourceIdentifier](#workresourceidentifier)_ | resourceId represents a identity of a resource linking to manifests in spec. |  | Required: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions represents the conditions of this resource on spoke cluster |  | Required: \{\} <br /> |
 | `driftDetails` _[DriftDetails](#driftdetails)_ | DriftDetails explains about the observed configuration drifts.<br />Fleet might truncate the details as appropriate to control object size.<br />Note that configuration drifts can only occur on a resource if it is currently owned by<br />Fleet and its corresponding placement is set to use the ClientSideApply or ServerSideApply<br />apply strategy. In other words, DriftDetails and DiffDetails will not be populated<br />at the same time. |  | Optional: \{\} <br /> |
 | `diffDetails` _[DiffDetails](#diffdetails)_ | DiffDetails explains the details about the observed configuration differences.<br />Fleet might truncate the details as appropriate to control object size.<br />Note that configuration differences can only occur on a resource if it is not currently owned<br />by Fleet (i.e., it is a pre-existing resource that needs to be taken over), or if its<br />corresponding placement is set to use the ReportDiff apply strategy. In other words,<br />DiffDetails and DriftDetails will not be populated at the same time. |  | Optional: \{\} <br /> |
 | `backReportedStatus` _[BackReportedStatus](#backreportedstatus)_ | BackReportedStatus is the status reported back from the member cluster (if applicable). |  | Optional: \{\} <br /> |
@@ -1167,7 +1167,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `overrideRules` _[OverrideRule](#overriderule) array_ | OverrideRules defines an array of override rules to be applied on the selected resources.<br />The order of the rules determines the override order.<br />When there are two rules selecting the same fields on the target cluster, the last one will win.<br />You can have 1-20 rules. |  | MaxItems: 20 <br />MinItems: 1 <br />Required: \{\} <br /> |
+| `overrideRules` _[OverrideRule](#overriderule) array_ | OverrideRules defines an array of override rules to be applied on the selected resources.<br />The order of the rules determines the override order.<br />When there are two rules selecting the same fields on the target cluster, the last one will win.<br />You can have 1-20 rules. |  | MaxItems: 20 <br />MinItems: 1 <br />Required: \{\} <br />Required: \{\} <br /> |
 
 
 #### OverrideRule
@@ -1183,9 +1183,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `clusterSelector` _[ClusterSelector](#clusterselector)_ | ClusterSelectors selects the target clusters.<br />The resources will be overridden before applying to the matching clusters.<br />An empty clusterSelector selects ALL the member clusters.<br />A nil clusterSelector selects NO member clusters.<br />For now, only labelSelector is supported. |  |  |
-| `overrideType` _[OverrideType](#overridetype)_ | OverrideType defines the type of the override rules. | JSONPatch | Enum: [JSONPatch Delete] <br /> |
-| `jsonPatchOverrides` _[JSONPatchOverride](#jsonpatchoverride) array_ | JSONPatchOverrides defines a list of JSON patch override rules.<br />This field is only allowed when OverrideType is JSONPatch. |  | MaxItems: 20 <br />MinItems: 1 <br /> |
+| `clusterSelector` _[ClusterSelector](#clusterselector)_ | ClusterSelectors selects the target clusters.<br />The resources will be overridden before applying to the matching clusters.<br />An empty clusterSelector selects ALL the member clusters.<br />A nil clusterSelector selects NO member clusters.<br />For now, only labelSelector is supported. |  | Optional: \{\} <br /> |
+| `overrideType` _[OverrideType](#overridetype)_ | OverrideType defines the type of the override rules. | JSONPatch | Enum: [JSONPatch Delete] <br />Optional: \{\} <br /> |
+| `jsonPatchOverrides` _[JSONPatchOverride](#jsonpatchoverride) array_ | JSONPatchOverrides defines a list of JSON patch override rules.<br />This field is only allowed when OverrideType is JSONPatch. |  | MaxItems: 20 <br />MinItems: 1 <br />Optional: \{\} <br /> |
 
 
 #### OverrideType
@@ -1267,8 +1267,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `maxUnavailable` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#intorstring-intstr-util)_ | MaxUnavailable is the maximum number of placements (clusters) that can be down at the<br />same time due to voluntary disruptions. For example, a setting of 1 would imply that<br />a voluntary disruption (e.g., an eviction) can only happen if all placements (clusters)<br />from the linked Placement object are applied and available.<br />This can be either an absolute value (e.g., 1) or a percentage (e.g., 10%).<br />If a percentage is specified, Fleet will calculate the corresponding absolute values<br />as follows:<br />* if the linked Placement object is of the PickFixed placement type,<br />  we don't perform any calculation because eviction is not allowed for PickFixed CRP.<br />* if the linked Placement object is of the PickAll placement type, MaxUnavailable cannot<br />  be specified since we cannot derive the total number of clusters selected.<br />* if the linked Placement object is of the PickN placement type,<br />  the percentage is against the number of clusters specified in the placement (i.e., the<br />  value of the NumberOfClusters fields in the placement policy).<br />The end result will be rounded up to the nearest integer if applicable.<br />One may use a value of 0 for this field; in this case, no voluntary disruption would be<br />allowed.<br />This field is mutually exclusive with the MinAvailable field in the spec; exactly one<br />of them can be set at a time. |  | XIntOrString: \{\} <br /> |
-| `minAvailable` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#intorstring-intstr-util)_ | MinAvailable is the minimum number of placements (clusters) that must be available at any<br />time despite voluntary disruptions. For example, a setting of 10 would imply that<br />a voluntary disruption (e.g., an eviction) can only happen if there are at least 11<br />placements (clusters) from the linked Placement object are applied and available.<br />This can be either an absolute value (e.g., 1) or a percentage (e.g., 10%).<br />If a percentage is specified, Fleet will calculate the corresponding absolute values<br />as follows:<br />* if the linked Placement object is of the PickFixed placement type,<br />  we don't perform any calculation because eviction is not allowed for PickFixed CRP.<br />* if the linked Placement object is of the PickAll placement type, MinAvailable can be<br />  specified but only as an integer since we cannot derive the total number of clusters selected.<br />* if the linked Placement object is of the PickN placement type,<br />  the percentage is against the number of clusters specified in the placement (i.e., the<br />  value of the NumberOfClusters fields in the placement policy).<br />The end result will be rounded up to the nearest integer if applicable.<br />One may use a value of 0 for this field; in this case, voluntary disruption would be<br />allowed at any time.<br />This field is mutually exclusive with the MaxUnavailable field in the spec; exactly one<br />of them can be set at a time. |  | XIntOrString: \{\} <br /> |
+| `maxUnavailable` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#intorstring-intstr-util)_ | MaxUnavailable is the maximum number of placements (clusters) that can be down at the<br />same time due to voluntary disruptions. For example, a setting of 1 would imply that<br />a voluntary disruption (e.g., an eviction) can only happen if all placements (clusters)<br />from the linked Placement object are applied and available.<br />This can be either an absolute value (e.g., 1) or a percentage (e.g., 10%).<br />If a percentage is specified, Fleet will calculate the corresponding absolute values<br />as follows:<br />* if the linked Placement object is of the PickFixed placement type,<br />  we don't perform any calculation because eviction is not allowed for PickFixed CRP.<br />* if the linked Placement object is of the PickAll placement type, MaxUnavailable cannot<br />  be specified since we cannot derive the total number of clusters selected.<br />* if the linked Placement object is of the PickN placement type,<br />  the percentage is against the number of clusters specified in the placement (i.e., the<br />  value of the NumberOfClusters fields in the placement policy).<br />The end result will be rounded up to the nearest integer if applicable.<br />One may use a value of 0 for this field; in this case, no voluntary disruption would be<br />allowed.<br />This field is mutually exclusive with the MinAvailable field in the spec; exactly one<br />of them can be set at a time. |  | XIntOrString: \{\} <br />Optional: \{\} <br /> |
+| `minAvailable` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#intorstring-intstr-util)_ | MinAvailable is the minimum number of placements (clusters) that must be available at any<br />time despite voluntary disruptions. For example, a setting of 10 would imply that<br />a voluntary disruption (e.g., an eviction) can only happen if there are at least 11<br />placements (clusters) from the linked Placement object are applied and available.<br />This can be either an absolute value (e.g., 1) or a percentage (e.g., 10%).<br />If a percentage is specified, Fleet will calculate the corresponding absolute values<br />as follows:<br />* if the linked Placement object is of the PickFixed placement type,<br />  we don't perform any calculation because eviction is not allowed for PickFixed CRP.<br />* if the linked Placement object is of the PickAll placement type, MinAvailable can be<br />  specified but only as an integer since we cannot derive the total number of clusters selected.<br />* if the linked Placement object is of the PickN placement type,<br />  the percentage is against the number of clusters specified in the placement (i.e., the<br />  value of the NumberOfClusters fields in the placement policy).<br />The end result will be rounded up to the nearest integer if applicable.<br />One may use a value of 0 for this field; in this case, voluntary disruption would be<br />allowed at any time.<br />This field is mutually exclusive with the MaxUnavailable field in the spec; exactly one<br />of them can be set at a time. |  | XIntOrString: \{\} <br />Optional: \{\} <br /> |
 
 
 
@@ -1303,7 +1303,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is the list of currently observed conditions for the<br />PlacementEviction object.<br />Available condition types include:<br />* Valid: whether the Eviction object is valid, i.e., it targets at a valid placement.<br />* Executed: whether the Eviction object has been executed. |  |  |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is the list of currently observed conditions for the<br />PlacementEviction object.<br />Available condition types include:<br />* Valid: whether the Eviction object is valid, i.e., it targets at a valid placement.<br />* Executed: whether the Eviction object has been executed. |  | Optional: \{\} <br /> |
 
 
 
@@ -1353,8 +1353,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `name` _string_ | Name is the reference to the name of placement. |  |  |
-| `scope` _[ResourceScope](#resourcescope)_ | Scope defines the scope of the placement.<br />A clusterResourceOverride can only reference a clusterResourcePlacement (cluster-scoped),<br />and a resourceOverride can reference either a clusterResourcePlacement or resourcePlacement (namespaced).<br />The referenced resourcePlacement must be in the same namespace as the resourceOverride. | Cluster | Enum: [Cluster Namespaced] <br /> |
+| `name` _string_ | Name is the reference to the name of placement. |  | Required: \{\} <br /> |
+| `scope` _[ResourceScope](#resourcescope)_ | Scope defines the scope of the placement.<br />A clusterResourceOverride can only reference a clusterResourcePlacement (cluster-scoped),<br />and a resourceOverride can reference either a clusterResourcePlacement or resourcePlacement (namespaced).<br />The referenced resourcePlacement must be in the same namespace as the resourceOverride. | Cluster | Enum: [Cluster Namespaced] <br />Optional: \{\} <br /> |
 
 
 #### PlacementSpec
@@ -1578,8 +1578,8 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ResourceBinding` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[ResourceBindingSpec](#resourcebindingspec)_ | The desired state of ResourceBinding. |  |  |
-| `status` _[ResourceBindingStatus](#resourcebindingstatus)_ | The observed status of ResourceBinding. |  |  |
+| `spec` _[ResourceBindingSpec](#resourcebindingspec)_ | The desired state of ResourceBinding. |  | Required: \{\} <br /> |
+| `status` _[ResourceBindingStatus](#resourcebindingstatus)_ | The observed status of ResourceBinding. |  | Optional: \{\} <br /> |
 
 
 
@@ -1600,14 +1600,14 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `state` _[BindingState](#bindingstate)_ | The desired state of the binding. Possible values: Scheduled, Bound, Unscheduled. |  |  |
+| `state` _[BindingState](#bindingstate)_ | The desired state of the binding. Possible values: Scheduled, Bound, Unscheduled. |  | Required: \{\} <br /> |
 | `resourceSnapshotName` _string_ | ResourceSnapshotName is the name of the resource snapshot that this resource binding points to.<br />If the resources are divided into multiple snapshots because of the resource size limit,<br />it points to the name of the leading snapshot of the index group. |  |  |
 | `resourceOverrideSnapshots` _[NamespacedName](#namespacedname) array_ | ResourceOverrideSnapshots is a list of ResourceOverride snapshots associated with the selected resources. |  |  |
 | `clusterResourceOverrideSnapshots` _string array_ | ClusterResourceOverrides contains a list of applicable ClusterResourceOverride snapshot names associated with the<br />selected resources. |  |  |
 | `schedulingPolicySnapshotName` _string_ | SchedulingPolicySnapshotName is the name of the scheduling policy snapshot that this resource binding<br />points to; more specifically, the scheduler creates this bindings in accordance with this<br />scheduling policy snapshot. |  |  |
 | `targetCluster` _string_ | TargetCluster is the name of the cluster that the scheduler assigns the resources to. |  |  |
 | `clusterDecision` _[ClusterDecision](#clusterdecision)_ | ClusterDecision explains why the scheduler selected this cluster. |  |  |
-| `applyStrategy` _[ApplyStrategy](#applystrategy)_ | ApplyStrategy describes how to resolve the conflict if the resource to be placed already exists in the target cluster<br />and is owned by other appliers. |  |  |
+| `applyStrategy` _[ApplyStrategy](#applystrategy)_ | ApplyStrategy describes how to resolve the conflict if the resource to be placed already exists in the target cluster<br />and is owned by other appliers. |  | Optional: \{\} <br /> |
 
 
 #### ResourceBindingStatus
@@ -1624,10 +1624,10 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `failedPlacements` _[FailedResourcePlacement](#failedresourceplacement) array_ | FailedPlacements is a list of all the resources failed to be placed to the given cluster or the resource is unavailable.<br />Note that we only include 100 failed resource placements even if there are more than 100. |  | MaxItems: 100 <br /> |
+| `failedPlacements` _[FailedResourcePlacement](#failedresourceplacement) array_ | FailedPlacements is a list of all the resources failed to be placed to the given cluster or the resource is unavailable.<br />Note that we only include 100 failed resource placements even if there are more than 100. |  | MaxItems: 100 <br />Optional: \{\} <br /> |
 | `driftedPlacements` _[DriftedResourcePlacement](#driftedresourceplacement) array_ | DriftedPlacements is a list of resources that have drifted from their desired states<br />kept in the hub cluster, as found by Fleet using the drift detection mechanism.<br />To control the object size, only the first 100 drifted resources will be included.<br />This field is only meaningful if the `ClusterName` is not empty. |  | MaxItems: 100 <br />Optional: \{\} <br /> |
 | `diffedPlacements` _[DiffedResourcePlacement](#diffedresourceplacement) array_ | DiffedPlacements is a list of resources that have configuration differences from their<br />corresponding hub cluster manifests. Fleet will report such differences when:<br />* The CRP uses the ReportDiff apply strategy, which instructs Fleet to compare the hub<br />  cluster manifests against the live resources without actually performing any apply op; or<br />* Fleet finds a pre-existing resource on the member cluster side that does not match its<br />  hub cluster counterpart, and the CRP has been configured to only take over a resource if<br />  no configuration differences are found.<br />To control the object size, only the first 100 diffed resources will be included.<br />This field is only meaningful if the `ClusterName` is not empty. |  | MaxItems: 100 <br />Optional: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for ClusterResourceBinding. |  |  |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for ClusterResourceBinding. |  | Optional: \{\} <br /> |
 
 
 #### ResourceContent
@@ -1705,7 +1705,7 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ResourceOverride` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[ResourceOverrideSpec](#resourceoverridespec)_ | The desired state of ResourceOverrideSpec. |  |  |
+| `spec` _[ResourceOverrideSpec](#resourceoverridespec)_ | The desired state of ResourceOverrideSpec. |  | Required: \{\} <br /> |
 
 
 
@@ -1733,7 +1733,7 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ResourceOverrideSnapshot` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[ResourceOverrideSnapshotSpec](#resourceoverridesnapshotspec)_ | The desired state of ResourceOverrideSnapshot. |  |  |
+| `spec` _[ResourceOverrideSnapshotSpec](#resourceoverridesnapshotspec)_ | The desired state of ResourceOverrideSnapshot. |  | Required: \{\} <br /> |
 
 
 
@@ -1752,7 +1752,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `overrideSpec` _[ResourceOverrideSpec](#resourceoverridespec)_ | OverrideSpec stores the spec of ResourceOverride. |  |  |
-| `overrideHash` _integer array_ | OverrideHash is the sha-256 hash value of the OverrideSpec field. |  |  |
+| `overrideHash` _integer array_ | OverrideHash is the sha-256 hash value of the OverrideSpec field. |  | Required: \{\} <br /> |
 
 
 #### ResourceOverrideSpec
@@ -1772,9 +1772,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `placement` _[PlacementRef](#placementref)_ | Placement defines whether the override is applied to a specific placement or not.<br />If set, the override will trigger the placement rollout immediately when the rollout strategy type is RollingUpdate.<br />Otherwise, it will be applied to the next rollout.<br />The recommended way is to set the placement so that the override can be rolled out immediately. |  |  |
-| `resourceSelectors` _[ResourceSelector](#resourceselector) array_ | ResourceSelectors is an array of selectors used to select namespace scoped resources. The selectors are `ORed`.<br />You can have 1-20 selectors. |  | MaxItems: 20 <br />MinItems: 1 <br />Required: \{\} <br /> |
-| `policy` _[OverridePolicy](#overridepolicy)_ | Policy defines how to override the selected resources on the target clusters. |  |  |
+| `placement` _[PlacementRef](#placementref)_ | Placement defines whether the override is applied to a specific placement or not.<br />If set, the override will trigger the placement rollout immediately when the rollout strategy type is RollingUpdate.<br />Otherwise, it will be applied to the next rollout.<br />The recommended way is to set the placement so that the override can be rolled out immediately. |  | Optional: \{\} <br /> |
+| `resourceSelectors` _[ResourceSelector](#resourceselector) array_ | ResourceSelectors is an array of selectors used to select namespace scoped resources. The selectors are `ORed`.<br />You can have 1-20 selectors. |  | MaxItems: 20 <br />MinItems: 1 <br />Required: \{\} <br />Required: \{\} <br /> |
+| `policy` _[OverridePolicy](#overridepolicy)_ | Policy defines how to override the selected resources on the target clusters. |  | Required: \{\} <br /> |
 
 
 #### ResourcePlacement
@@ -1836,10 +1836,10 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `group` _string_ | Group name of the namespace-scoped resource.<br />Use an empty string to select resources under the core API group (e.g., services). |  |  |
-| `version` _string_ | Version of the namespace-scoped resource. |  |  |
-| `kind` _string_ | Kind of the namespace-scoped resource. |  |  |
-| `name` _string_ | Name of the namespace-scoped resource. |  |  |
+| `group` _string_ | Group name of the namespace-scoped resource.<br />Use an empty string to select resources under the core API group (e.g., services). |  | Required: \{\} <br /> |
+| `version` _string_ | Version of the namespace-scoped resource. |  | Required: \{\} <br /> |
+| `kind` _string_ | Kind of the namespace-scoped resource. |  | Required: \{\} <br /> |
+| `name` _string_ | Name of the namespace-scoped resource. |  | Required: \{\} <br /> |
 
 
 #### ResourceSelectorTerm
@@ -1902,8 +1902,8 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ResourceSnapshot` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[ResourceSnapshotSpec](#resourcesnapshotspec)_ | The desired state of ResourceSnapshot. |  |  |
-| `status` _[ResourceSnapshotStatus](#resourcesnapshotstatus)_ | The observed status of ResourceSnapshot. |  |  |
+| `spec` _[ResourceSnapshotSpec](#resourcesnapshotspec)_ | The desired state of ResourceSnapshot. |  | Required: \{\} <br /> |
+| `status` _[ResourceSnapshotStatus](#resourcesnapshotstatus)_ | The observed status of ResourceSnapshot. |  | Optional: \{\} <br /> |
 
 
 
@@ -1928,7 +1928,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `selectedResources` _[ResourceContent](#resourcecontent) array_ | SelectedResources contains a list of resources selected by ResourceSelectors. |  |  |
+| `selectedResources` _[ResourceContent](#resourcecontent) array_ | SelectedResources contains a list of resources selected by ResourceSelectors. |  | Required: \{\} <br /> |
 
 
 
@@ -1947,7 +1947,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for ResourceSnapshot. |  |  |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for ResourceSnapshot. |  | Optional: \{\} <br /> |
 
 
 
@@ -2030,8 +2030,8 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `SchedulingPolicySnapshot` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[SchedulingPolicySnapshotSpec](#schedulingpolicysnapshotspec)_ | The desired state of SchedulingPolicySnapshot. |  |  |
-| `status` _[SchedulingPolicySnapshotStatus](#schedulingpolicysnapshotstatus)_ | The observed status of SchedulingPolicySnapshot. |  |  |
+| `spec` _[SchedulingPolicySnapshotSpec](#schedulingpolicysnapshotspec)_ | The desired state of SchedulingPolicySnapshot. |  | Required: \{\} <br /> |
+| `status` _[SchedulingPolicySnapshotStatus](#schedulingpolicysnapshotstatus)_ | The observed status of SchedulingPolicySnapshot. |  | Optional: \{\} <br /> |
 
 
 
@@ -2052,8 +2052,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `policy` _[PlacementPolicy](#placementpolicy)_ | Policy defines how to select member clusters to place the selected resources.<br />If unspecified, all the joined member clusters are selected. |  |  |
-| `policyHash` _integer array_ | PolicyHash is the sha-256 hash value of the Policy field. |  |  |
+| `policy` _[PlacementPolicy](#placementpolicy)_ | Policy defines how to select member clusters to place the selected resources.<br />If unspecified, all the joined member clusters are selected. |  | Optional: \{\} <br /> |
+| `policyHash` _integer array_ | PolicyHash is the sha-256 hash value of the Policy field. |  | Required: \{\} <br /> |
 
 
 #### SchedulingPolicySnapshotStatus
@@ -2070,9 +2070,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `observedCRPGeneration` _integer_ | ObservedCRPGeneration is the generation of the resource placement which the scheduler uses to perform<br />the scheduling cycle and prepare the scheduling status. |  |  |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for SchedulingPolicySnapshot. |  |  |
-| `targetClusters` _[ClusterDecision](#clusterdecision) array_ | ClusterDecisions contains a list of names of member clusters considered by the scheduler.<br />Note that all the selected clusters must present in the list while not all the<br />member clusters are guaranteed to be listed due to the size limit. We will try to<br />add the clusters that can provide the most insight to the list first. |  | MaxItems: 1000 <br /> |
+| `observedCRPGeneration` _integer_ | ObservedCRPGeneration is the generation of the resource placement which the scheduler uses to perform<br />the scheduling cycle and prepare the scheduling status. |  | Required: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for SchedulingPolicySnapshot. |  | Optional: \{\} <br /> |
+| `targetClusters` _[ClusterDecision](#clusterdecision) array_ | ClusterDecisions contains a list of names of member clusters considered by the scheduler.<br />Note that all the selected clusters must present in the list while not all the<br />member clusters are guaranteed to be listed due to the size limit. We will try to<br />add the clusters that can provide the most insight to the list first. |  | MaxItems: 1000 <br />Optional: \{\} <br /> |
 
 
 #### SelectionScope
@@ -2488,7 +2488,7 @@ _Appears in:_
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `Work` | | |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `spec` _[WorkSpec](#workspec)_ | spec defines the workload of a work. |  |  |
+| `spec` _[WorkSpec](#workspec)_ | spec defines the workload of a work. |  | Optional: \{\} <br /> |
 | `status` _[WorkStatus](#workstatus)_ | status defines the status of each applied manifest on the spoke cluster. |  |  |
 
 
@@ -2506,7 +2506,7 @@ WorkList contains a list of Work.
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `WorkList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `items` _[Work](#work) array_ | List of works. |  |  |
 
 
@@ -2548,8 +2548,8 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `workload` _[WorkloadTemplate](#workloadtemplate)_ | Workload represents the manifest workload to be deployed on spoke cluster |  |  |
-| `applyStrategy` _[ApplyStrategy](#applystrategy)_ | ApplyStrategy describes how to resolve the conflict if the resource to be placed already exists in the target cluster<br />and is owned by other appliers. |  |  |
-| `reportBackStrategy` _[ReportBackStrategy](#reportbackstrategy)_ | ReportBackStrategy describes how to report back the status of applied resources on the member cluster. |  |  |
+| `applyStrategy` _[ApplyStrategy](#applystrategy)_ | ApplyStrategy describes how to resolve the conflict if the resource to be placed already exists in the target cluster<br />and is owned by other appliers. |  | Optional: \{\} <br /> |
+| `reportBackStrategy` _[ReportBackStrategy](#reportbackstrategy)_ | ReportBackStrategy describes how to report back the status of applied resources on the member cluster. |  | Optional: \{\} <br /> |
 
 
 #### WorkStatus
@@ -2566,7 +2566,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions contains the different condition statuses for this work.<br />Valid condition types are:<br />1. Applied represents workload in Work is applied successfully on the spoke cluster.<br />2. Progressing represents workload in Work in the transitioning from one state to another the on the spoke cluster.<br />3. Available represents workload in Work exists on the spoke cluster.<br />4. Degraded represents the current state of workload does not match the desired<br />state for a certain period. |  |  |
-| `manifestConditions` _[ManifestCondition](#manifestcondition) array_ | ManifestConditions represents the conditions of each resource in work deployed on<br />spoke cluster. |  |  |
+| `manifestConditions` _[ManifestCondition](#manifestcondition) array_ | ManifestConditions represents the conditions of each resource in work deployed on<br />spoke cluster. |  | Optional: \{\} <br /> |
 
 
 #### WorkloadTemplate
@@ -2582,6 +2582,6 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `manifests` _[Manifest](#manifest) array_ | Manifests represents a list of kubernetes resources to be deployed on the spoke cluster. |  |  |
+| `manifests` _[Manifest](#manifest) array_ | Manifests represents a list of kubernetes resources to be deployed on the spoke cluster. |  | Optional: \{\} <br /> |
 
 
