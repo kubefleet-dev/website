@@ -134,7 +134,7 @@ make docker-build-refresh-token
 
 # Run the script.
 chmod +x ./hack/membership/joinMC.sh
-./hack/membership/joinMC.sh  $TAG <HUB-CLUSTER-CONTEXT> <MEMBER-CLUSTER-CONTEXT-1> <MEMBER-CLUSTER-CONTEXT-2> <MEMBER-CLUSTER-CONTEXT-3> ...
+./hack/membership/joinMC.sh  $TAG <HUB-CLUSTER-NAME> <MEMBER-CLUSTER-NAME-1> <MEMBER-CLUSTER-NAME-2> <MEMBER-CLUSTER-NAME-3> ...
 ```
 
 It may take a few minutes for the script to finish running. Once it is completed, the script will print out something
