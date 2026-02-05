@@ -32,19 +32,19 @@
  &lt;td>&lt;code>type&lt;/code> &lt;em>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#agenttype">AgentType&lt;/a>&lt;/em>&lt;/td>
  &lt;td>Type of the member agent.&lt;/td>
  &lt;td>&lt;/td>
- &lt;td>&lt;/td>
+ &lt;td>Required: {} &lt;br />&lt;/td>
  &lt;/tr>
  &lt;tr>
  &lt;td>&lt;code>conditions&lt;/code> &lt;em>&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta">Condition&lt;/a> array&lt;/em>&lt;/td>
  &lt;td>Conditions is an array of current observed conditions for the member agent.&lt;/td>
  &lt;td>&lt;/td>
- &lt;td>&lt;/td>
+ &lt;td>Optional: {} &lt;br />&lt;/td>
  &lt;/tr>
  &lt;tr>
  &lt;td>&lt;code>lastReceivedHeartbeat&lt;/code> &lt;em>&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta">Time&lt;/a>&lt;/em>&lt;/td>
  &lt;td>Last time we received a heartbeat from the member agent.&lt;/td>
  &lt;td>&lt;/td>
- &lt;td>&lt;/td>
+ &lt;td>Optional: {} &lt;br />&lt;/td>
  &lt;/tr>
  &lt;/tbody>
 &lt;/table>
@@ -83,19 +83,19 @@
  &lt;td>&lt;code>type&lt;/code> &lt;em>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#agenttype">AgentType&lt;/a>&lt;/em>&lt;/td>
  &lt;td>Type of the member agent.&lt;/td>
  &lt;td>&lt;/td>
- &lt;td>&lt;/td>
+ &lt;td>Required: {} &lt;br />&lt;/td>
  &lt;/tr>
  &lt;tr>
  &lt;td>&lt;code>conditions&lt;/code> &lt;em>&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta">Condition&lt;/a> array&lt;/em>&lt;/td>
  &lt;td>Conditions is an array of current observed conditions for the member agent.&lt;/td>
  &lt;td>&lt;/td>
- &lt;td>&lt;/td>
+ &lt;td>Optional: {} &lt;br />&lt;/td>
  &lt;/tr>
  &lt;tr>
  &lt;td>&lt;code>lastReceivedHeartbeat&lt;/code> &lt;em>&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta">Time&lt;/a>&lt;/em>&lt;/td>
  &lt;td>Last time we received a heartbeat from the member agent.&lt;/td>
  &lt;td>&lt;/td>
- &lt;td>&lt;/td>
+ &lt;td>Optional: {} &lt;br />&lt;/td>
  &lt;/tr>
  &lt;/tbody>
 &lt;/table>
@@ -141,7 +141,7 @@
  &lt;td>&lt;code>clusterAffinity&lt;/code> &lt;em>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusteraffinity">ClusterAffinity&lt;/a>&lt;/em>&lt;/td>
  &lt;td>ClusterAffinity contains cluster affinity scheduling rules for the selected resources.&lt;/td>
  &lt;td>&lt;/td>
- &lt;td>&lt;/td>
+ &lt;td>Optional: {} &lt;br />&lt;/td>
  &lt;/tr>
  &lt;/tbody>
 &lt;/table>
