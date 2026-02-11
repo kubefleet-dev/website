@@ -133,7 +133,8 @@ The jsonPatchOverrides field supports the following fields:
 - `value`: The value to be set.
   - If the `op` is `remove`, the value cannot be set.
   - There is a list of reserved variables that will be replaced by the actual values:
-    - `${MEMBER-CLUSTER-NAME}`:  this will be replaced by the name of the `memberCluster` that represents this cluster.
+    - `${MEMBER-CLUSTER-NAME}`: this will be replaced by the name of the `memberCluster` that represents this cluster.
+    - `${MEMBER-CLUSTER-LABEL-KEY-<label-key>}`: this will be replaced by the value of the label with the key `<label-key>` on the `memberCluster`. For example, `${MEMBER-CLUSTER-LABEL-KEY-region}` will be replaced by the value of the `region` label on the target member cluster. If the label does not exist on the cluster, the override will fail with an error.
 
 ##### Example: Override Labels
 
@@ -176,6 +177,49 @@ spec:
 > ```
 
 The `ClusterResourceOverride` object above will add a label `cluster-name` with the value of the `memberCluster` name to the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`.
+
+##### Example: Override Using Cluster Label Variables
+
+To dynamically set a label based on a member cluster's `region` label, you can use the `${MEMBER-CLUSTER-LABEL-KEY-<label-key>}` variable.
+For instance, if your member clusters have a label `region` with values like `us-west` or `eu-central`:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ClusterResourceOverride
+metadata:
+  name: cro-region
+spec:
+  placement:
+    name: crp-example
+  clusterResourceSelectors:
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+      version: v1
+      name: secret-reader
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms: []
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/labels/cluster-region
+            value: "${MEMBER-CLUSTER-LABEL-KEY-region}"
+```
+
+When applied to a cluster with the label `region: us-west`, the `ClusterRole` will receive the label `cluster-region: us-west`.
+
+You can also use multiple label variables together. For example, to add annotations sourced from cluster labels:
+
+```yaml
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/annotations
+            value:
+              {"target-region":"${MEMBER-CLUSTER-LABEL-KEY-region}", "target-env":"${MEMBER-CLUSTER-LABEL-KEY-env}"}
+```
+
+On a cluster with labels `region: us-west` and `env: production`, the annotations will be set to
+`target-region: us-west` and `target-env: production`.
 
 ##### Example: Remove Verbs
 
