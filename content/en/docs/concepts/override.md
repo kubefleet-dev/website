@@ -98,9 +98,14 @@ Each override rule contains the following fields:
 
 There is a list of reserved variables that will be replaced by the actual values used in the `value` of the JSON patch override rule:
 
-- `${MEMBER-CLUSTER-NAME}`:  this will be replaced by the name of the `memberCluster` that represents this cluster.
+- `${MEMBER-CLUSTER-NAME}`: this will be replaced by the name of the `memberCluster` that represents this cluster.
+- `${MEMBER-CLUSTER-LABEL-KEY-<label-key>}`: this will be replaced by the value of the label with the key `<label-key>` on the `memberCluster`. For example, `${MEMBER-CLUSTER-LABEL-KEY-region}` will be replaced by the value of the `region` label on the target member cluster. If the label does not exist on the cluster, the override will fail with an error.
 
-For example, to add a label to the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`,
+These variables are supported in both `ClusterResourceOverride` and `ResourceOverride`.
+
+#### Example: Using `${MEMBER-CLUSTER-NAME}` in a `ClusterResourceOverride`
+
+To add a label to the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`,
 you can use the following configuration:
 
 ```yaml
@@ -131,6 +136,84 @@ spec:
 ```
 
 The `ClusterResourceOverride` object above will add a label `cluster-name` with the value of the `memberCluster` name to the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`.
+
+#### Example: Using `${MEMBER-CLUSTER-LABEL-KEY-...}` in a `ClusterResourceOverride`
+
+Suppose you have member clusters with a `region` label (e.g., `region: us-west`, `region: eu-central`) and you want
+to add a label reflecting the cluster's region to a `ClusterRole`:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ClusterResourceOverride
+metadata:
+  name: cro-region-label
+spec:
+  placement:
+    name: crp-example
+  clusterResourceSelectors:
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+      version: v1
+      name: secret-reader
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms: []
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/labels/cluster-region
+            value: "${MEMBER-CLUSTER-LABEL-KEY-region}"
+```
+
+When applied to a cluster with the label `region: us-west`, the `ClusterRole` will receive the label
+`cluster-region: us-west`. When applied to a cluster with `region: eu-central`, the label will be
+`cluster-region: eu-central`.
+
+#### Example: Using `${MEMBER-CLUSTER-LABEL-KEY-...}` in a `ResourceOverride`
+
+You can also use cluster label variables in a `ResourceOverride` to customize namespace-scoped resources.
+For example, suppose you have a `Deployment` named `my-app` in the namespace `app-ns`, and your member clusters
+have `region` and `env` labels. You can inject those values as annotations:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ResourceOverride
+metadata:
+  name: ro-label-vars
+  namespace: app-ns
+spec:
+  placement:
+    name: crp-example
+  resourceSelectors:
+    - group: apps
+      kind: Deployment
+      version: v1
+      name: my-app
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms: []
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/annotations
+            value:
+              {"target-region":"${MEMBER-CLUSTER-LABEL-KEY-region}", "target-env":"${MEMBER-CLUSTER-LABEL-KEY-env}"}
+```
+
+When applied to a cluster with labels `region: us-west` and `env: production`, the deployment will receive the
+annotations `target-region: us-west` and `target-env: production`.
+
+You can also combine multiple variables in a single value. For example:
+
+```yaml
+        jsonPatchOverrides:
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: "myregistry-${MEMBER-CLUSTER-LABEL-KEY-region}.example.com/my-app:${MEMBER-CLUSTER-LABEL-KEY-env}"
+```
+
+On a cluster with `region: us-west` and `env: staging`, this would resolve to
+`myregistry-us-west.example.com/my-app:staging`.
 
 ## When To Trigger Rollout
 

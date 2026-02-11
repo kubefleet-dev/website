@@ -171,7 +171,8 @@ The `jsonPatchOverrides` field supports the following fields:
 - `value`: The value to be set.
   - If the `op` is `remove`, the value cannot be set.
   - There is a list of reserved variables that will be replaced by the actual values:
-    - `${MEMBER-CLUSTER-NAME}`:  this will be replaced by the name of the `memberCluster` that represents this cluster.
+    - `${MEMBER-CLUSTER-NAME}`: this will be replaced by the name of the `memberCluster` that represents this cluster.
+    - `${MEMBER-CLUSTER-LABEL-KEY-<label-key>}`: this will be replaced by the value of the label with the key `<label-key>` on the `memberCluster`. For example, `${MEMBER-CLUSTER-LABEL-KEY-region}` will be replaced by the value of the `region` label on the target member cluster. If the label does not exist on the cluster, the override will fail with an error.
 
 ##### Example: Override Labels
 
@@ -215,6 +216,53 @@ spec:
 > ```
 
 The `ResourceOverride` object above will add a label `cluster-name` with the value of the `memberCluster` name to the `Deployment` named `example-ro` on clusters with the label `env: prod`.
+
+##### Example: Override Using Cluster Label Variables
+
+To dynamically customize resources based on member cluster labels, you can use the `${MEMBER-CLUSTER-LABEL-KEY-<label-key>}` variable.
+For instance, if your member clusters have labels such as `region: us-west` and `env: production`, you can inject
+those values into a deployment's annotations:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ResourceOverride
+metadata:
+  name: ro-label-vars
+  namespace: test-namespace
+spec:
+  placement:
+    name: crp-example
+  resourceSelectors:
+    -  group: apps
+       kind: Deployment
+       version: v1
+       name: my-deployment
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms: []
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/annotations
+            value:
+              {"target-region":"${MEMBER-CLUSTER-LABEL-KEY-region}", "target-env":"${MEMBER-CLUSTER-LABEL-KEY-env}"}
+```
+
+When applied to a cluster with labels `region: us-west` and `env: production`, the deployment will receive the
+annotations `target-region: us-west` and `target-env: production`.
+
+You can also combine multiple variables in a single value. For example, to construct a container image path
+from cluster labels:
+
+```yaml
+        jsonPatchOverrides:
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: "myregistry-${MEMBER-CLUSTER-LABEL-KEY-region}.example.com/my-app:${MEMBER-CLUSTER-LABEL-KEY-env}"
+```
+
+On a cluster with `region: us-west` and `env: staging`, this would resolve to
+`myregistry-us-west.example.com/my-app:staging`.
 
 ##### Example: Override Image
 
