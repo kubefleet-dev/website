@@ -168,7 +168,7 @@ spec:
               {"cluster-name":"${MEMBER-CLUSTER-NAME}"}
 ```
 
-> Note: To add a new label to the existing labels, please use the below configuration:
+> Note: Using `op: add` with the path `/metadata/labels` (pointing to the entire labels map) will **replace all existing labels** with the value provided. To add a new label to the existing labels, please use the below configuration:
 >
 > ```yaml
 >  - op: add
@@ -207,6 +207,8 @@ spec:
 ```
 
 When applied to a cluster with the label `region: us-west`, the `ClusterRole` will receive the label `cluster-region: us-west`.
+
+> Note: To replace an existing label value, use `op: replace` instead (e.g., `op: replace` with path `/metadata/labels/cluster-region`). However, `op: replace` will fail with an error if the label does not already exist on the resource.
 
 You can also use multiple label variables together. For example, to add annotations sourced from cluster labels:
 
