@@ -135,6 +135,8 @@ spec:
               {"cluster-name":"${MEMBER-CLUSTER-NAME}"}
 ```
 
+> Note: Using `op: add` with the path `/metadata/labels` (pointing to the entire labels map) will **replace all existing labels** with the value provided. To add a single label without affecting existing ones, use a more specific path such as `/metadata/labels/cluster-name`.
+
 The `ClusterResourceOverride` object above will add a label `cluster-name` with the value of the `memberCluster` name to the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`.
 
 #### Example: Using `${MEMBER-CLUSTER-LABEL-KEY-...}` in a `ClusterResourceOverride`
@@ -164,6 +166,8 @@ spec:
             path: /metadata/labels/cluster-region
             value: "${MEMBER-CLUSTER-LABEL-KEY-region}"
 ```
+
+> Note: To replace an existing label value, use `op: replace` instead (e.g., `op: replace` with path `/metadata/labels/cluster-region`). However, `op: replace` will fail with an error if the label does not already exist on the resource.
 
 When applied to a cluster with the label `region: us-west`, the `ClusterRole` will receive the label
 `cluster-region: us-west`. When applied to a cluster with `region: eu-central`, the label will be

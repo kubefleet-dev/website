@@ -207,7 +207,7 @@ spec:
               {"cluster-name":"${MEMBER-CLUSTER-NAME}"}
 ```
 
-> Note: To add a new label to the existing labels, please use the below configuration:
+> Note: Using `op: add` with the path `/metadata/labels` (pointing to the entire labels map) will **replace all existing labels** with the value provided. To add a new label to the existing labels, please use the below configuration:
 >
 > ```yaml
 >  - op: add
