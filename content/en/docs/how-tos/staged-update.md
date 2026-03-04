@@ -71,7 +71,7 @@ example-placement   1     True        1                                         
 
 Fleet uses resource snapshots for version control and audit (for more details, please refer to [api-reference](docs/api-reference)).
 
-> **Important:** Resource snapshots are **not** automatically created for placements with `spec.strategy.type: External`. Snapshots are only created automatically when you create an UpdateRun without specifying `resourceSnapshotIndex` - the system then creates a new snapshot during UpdateRun initialization.
+> **Important:** Resource snapshots are **not** automatically created for placements with `spec.strategy.type: External`. When you create an UpdateRun without specifying `resourceSnapshotIndex`, the system uses the latest snapshot (creating one if it does not already exist) during UpdateRun initialization.
 
 Since our placement uses `External` strategy, no resource snapshots exist yet:
 
@@ -80,9 +80,9 @@ kubectl get clusterresourcesnapshots -l kubernetes-fleet.io/parent-CRP=example-p
 No resources found
 ```
 
-Snapshots will be created when we trigger staged update runs. Each UpdateRun that omits `resourceSnapshotIndex` creates a new snapshot capturing the current state of the resources. This allows you to:
+Snapshots will be created when we trigger staged update runs. Each UpdateRun that omits `resourceSnapshotIndex` uses the latest snapshot or creates one if it does not already exist, capturing the current state of the resources. This allows you to:
 
-- **Rollout current state**: Omit `resourceSnapshotIndex` to create a snapshot of the current resources
+- **Rollout current state**: Omit `resourceSnapshotIndex` to use the latest snapshot (creating one if needed)
 - **Rollback to previous versions**: Reference a previous snapshot index to rollback changes
 
 #### Listing Available Snapshots
@@ -199,7 +199,7 @@ metadata:
   name: example-run
 spec:
   placementName: example-placement
-  # resourceSnapshotIndex omitted - system creates snapshot during initialization
+  # resourceSnapshotIndex omitted - system uses the latest snapshot (creating one if it does not already exist)
   stagedRolloutStrategyName: example-strategy
   state: Initialize  # Initialize but don't start execution yet
 EOF
@@ -888,7 +888,7 @@ EOF
 
 ### Resource Snapshot Versions (Namespace-Scoped)
 
-Similar to cluster-scoped placements, resource snapshots are **not** automatically created for namespace-scoped placements with `spec.strategy.type: External`. Snapshots are only created when you create an UpdateRun without specifying `resourceSnapshotIndex`.
+Similar to cluster-scoped placements, resource snapshots are **not** automatically created for namespace-scoped placements with `spec.strategy.type: External`. The latest snapshot is used (and created if it does not already exist) when you create an UpdateRun without specifying `resourceSnapshotIndex`.
 
 Since our ResourcePlacement uses `External` strategy, no resource snapshots exist yet:
 

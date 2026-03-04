@@ -302,7 +302,7 @@ metadata:
   name: example-run
 spec:
   placementName: example-placement              # Required: Name of Target ClusterResourcePlacement
-  resourceSnapshotIndex: "0"                    # Optional: Resource version (omit to create new latest snapshot)
+  resourceSnapshotIndex: "0"                    # Optional: Resource version (omit to use the latest snapshot, creating one if it does not already exist)
   stagedRolloutStrategyName: example-strategy   # Required: Name of the strategy to execute
   state: Run                                    # Optional: Initialize (default), Run, or Stop
 ```
@@ -317,7 +317,7 @@ metadata:
   namespace: my-app-namespace
 spec:
   placementName: example-namespace-placement      # Required: Name of target ResourcePlacement. The StagedUpdateRun must be created in the same namespace as the ResourcePlacement
-  resourceSnapshotIndex: "5"                      # Optional: Resource version (omit to create new latest snapshot)
+  resourceSnapshotIndex: "5"                      # Optional: Resource version (omit to use the latest snapshot, creating one if it does not already exist)
   stagedRolloutStrategyName: app-rollout-strategy # Required: Name of the strategy to execute. Must be in the same namespace
   state: Initialize                               # Optional: Initialize (default), Run, or Stop
 ```
@@ -331,7 +331,7 @@ metadata:
   name: example-run-latest
 spec:
   placementName: example-placement
-  # resourceSnapshotIndex omitted - system uses creates a new latest snapshot automatically
+  # resourceSnapshotIndex omitted - system uses the latest snapshot (creates one if it does not already exist)
   stagedRolloutStrategyName: example-strategy
   state: Run
 ```
@@ -375,7 +375,7 @@ kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
 
 UpdateRuns execute in three phases:
 
-1. **Initialization**: Validates placement, captures latest strategy snapshot, collects target bindings, generates cluster update sequence, captures specified resource snapshot or creates latest resource snapshot if unspecified & records override snapshots. Occurs once on creation when state is `Initialize`, `Run` or `Stop`.
+1. **Initialization**: Validates placement, captures latest strategy snapshot, collects target bindings, generates cluster update sequence, uses the specified resource snapshot or the latest snapshot (creating one if it does not already exist) if unspecified & records override snapshots. Occurs once on creation when state is `Initialize`, `Run` or `Stop`.
 2. **Execution**: Processes stages sequentially, updates clusters within each stage (respecting maxConcurrency), enforces before-stage and after-stage tasks. Only occurs when state is `Run`
 3. **Stopping/Stopped** When state is `Stop`, the updateRun pauses execution at the current cluster/stage and can be resumed by changing state back to `Run`. If there are updating/deleting clusters we wait after marking updateRun as `Stopping` for the in-progress clusters to reach a deterministic state: succeeded, failed or stuck before marking updateRun as `Stopped`
 
@@ -436,7 +436,7 @@ UpdateRuns serve as the trigger that initiates rollouts for their respective pla
 
 When you create a Placement with `spec.strategy.type: External`, the system schedules which clusters should receive the resources, but **does not deploy anything yet**. The Placement remains in a scheduled but not available state, waiting for an UpdateRun to trigger the actual rollout.
 
-> **Note:** Resource snapshots are not automatically created for placements with `spec.strategy.type: External` unless the placement was previously set to `spec.strategy.type: RollingUpdate`. If you create a new placement directly with `External` strategy, you must omit the `resourceSnapshotIndex` field in your UpdateRun spec to have the system create a new snapshot during initialization.
+> **Note:** Resource snapshots are not automatically created for placements with `spec.strategy.type: External`. If you create a new placement directly with `External` strategy, you must omit the `resourceSnapshotIndex` field in your UpdateRun spec to have the system create a new snapshot during initialization.
 
 ### After an UpdateRun is Created
 
