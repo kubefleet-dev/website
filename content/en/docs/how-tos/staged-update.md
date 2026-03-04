@@ -67,60 +67,55 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1                                           8s
 ```
 
-### Check cluster resource snapshot versions
+### Resource Snapshot Versions
 
-Fleet keeps a list of resource snapshots for version control and audit, (for more details, please refer to [api-reference](docs/api-reference)).
+Fleet uses resource snapshots for version control and audit (for more details, please refer to [api-reference](docs/api-reference)).
 
-To check current resource snapshots:
+> **Important:** Resource snapshots are **not** automatically created for placements with `spec.strategy.type: External`. When you create an UpdateRun without specifying `resourceSnapshotIndex`, the system uses the latest snapshot (creating one if it does not already exist) during UpdateRun initialization.
+
+Since our placement uses `External` strategy, no resource snapshots exist yet:
 
 ```text
-kubectl get clusterresourcesnapshots --show-labels
-NAME                           GEN   AGE     LABELS
-example-placement-0-snapshot   1     7m31s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
+kubectl get clusterresourcesnapshots -l kubernetes-fleet.io/parent-CRP=example-placement
+No resources found
 ```
 
-We only have one version of the snapshot. It is the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
+Snapshots will be created when we trigger staged update runs. Each UpdateRun that omits `resourceSnapshotIndex` uses the latest snapshot or creates one if it does not already exist, capturing the current state of the resources. This allows you to:
 
-Now we modify the our configmap with a new value `value2`:
+- **Rollout current state**: Omit `resourceSnapshotIndex` to use the latest snapshot (creating one if needed)
+- **Rollback to previous versions**: Reference a previous snapshot index to rollback changes
 
-```text
-kubectl edit cm test-cm -n test-namespace
+#### Listing Available Snapshots
 
-kubectl get configmap test-cm -n test-namespace -o yaml
-apiVersion: v1
-data:
-  key: value2     # value updated here, old value: value1
-kind: ConfigMap
-metadata:
-  creationTimestamp: ...
-  name: test-cm
-  namespace: test-namespace
-  resourceVersion: ...
-  uid: ...
-```
-
-It now shows 2 versions of resource snapshots with index 0 and 1 respectively:
+After running multiple UpdateRuns with the same Placement, you can list all available snapshots:
 
 ```text
-kubectl get clusterresourcesnapshots --show-labels
+kubectl get clusterresourcesnapshots -l kubernetes-fleet.io/parent-CRP=example-placement --show-labels
 NAME                           GEN   AGE    LABELS
-example-placement-0-snapshot   1     17m    kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
-example-placement-1-snapshot   1     2m2s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
+example-placement-0-snapshot   1     30m    kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
+example-placement-1-snapshot   1     10m    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
 ```
 
-The `latest` label set to `example-placement-1-snapshot` which contains the latest configmap data:
+Key labels to note:
+
+- `kubernetes-fleet.io/resource-index`: The snapshot index used when referencing in UpdateRuns
+- `kubernetes-fleet.io/is-latest-snapshot`: Indicates the most recent snapshot
+- `kubernetes-fleet.io/parent-CRP`: The name of the parent ClusterResourcePlacement
+
+#### Viewing Snapshot Contents
+
+To see what resources are captured in a specific snapshot:
 
 ```text
-kubectl get clusterresourcesnapshots example-placement-1-snapshot -o yaml
+kubectl get clusterresourcesnapshots example-placement-0-snapshot -o yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourceSnapshot
 metadata:
-  ...
   labels:
-    kubernetes-fleet.io/is-latest-snapshot: "true"
+    kubernetes-fleet.io/is-latest-snapshot: "false"
     kubernetes-fleet.io/parent-CRP: example-placement
-    kubernetes-fleet.io/resource-index: "1"
-  name: example-placement-1-snapshot
+    kubernetes-fleet.io/resource-index: "0"
+  name: example-placement-0-snapshot
   ...
 spec:
   selectedResources:
@@ -135,11 +130,27 @@ spec:
       - kubernetes
   - apiVersion: v1
     data:
-      key: value2 # latest value: value2, old value: value1
+      key: value1  # The value at this snapshot version
     kind: ConfigMap
     metadata:
       name: test-cm
       namespace: test-namespace
+```
+
+#### Referencing a Snapshot for Rollback
+
+To rollback to a previous version, specify the `resourceSnapshotIndex` in your UpdateRun:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateRun
+metadata:
+  name: rollback-run
+spec:
+  placementName: example-placement
+  resourceSnapshotIndex: "0"  # Reference example-placement-0-snapshot to rollback
+  stagedRolloutStrategyName: example-strategy
+  state: Run
 ```
 
 ### Deploy a ClusterStagedUpdateStrategy
@@ -176,9 +187,9 @@ spec:
 EOF
 ```
 
-### Deploy a ClusterStagedUpdateRun to rollout latest change
+### Deploy a ClusterStagedUpdateRun to rollout resources
 
-A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our CRP, we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, and the latest resource snapshot index ("1"):
+A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our CRP, we create a `ClusterStagedUpdateRun` specifying the CRP name and strategy name. Since no snapshots exist yet, we omit `resourceSnapshotIndex` so the system creates a new snapshot during initialization:
 
 ```bash
 kubectl apply -f - << EOF
@@ -188,7 +199,7 @@ metadata:
   name: example-run
 spec:
   placementName: example-placement
-  resourceSnapshotIndex: "1"
+  # resourceSnapshotIndex omitted - system uses the latest snapshot (creating one if it does not already exist)
   stagedRolloutStrategyName: example-strategy
   state: Initialize  # Initialize but don't start execution yet
 EOF
@@ -212,7 +223,7 @@ metadata:
   ...
 spec:
   placementName: example-placement
-  resourceSnapshotIndex: "1"
+  # resourceSnapshotIndex is empty since we omitted it
   stagedRolloutStrategyName: example-strategy
   state: Initialize
 status:
@@ -233,7 +244,7 @@ status:
     stageName: kubernetes-fleet.io/deleteStage
   policyObservedClusterCount: 3
   policySnapshotIndexUsed: "0"
-  resourceSnapshotIndexUsed: "1"
+  resourceSnapshotIndexUsed: "0"  # System created snapshot-0 during initialization
   stagedUpdateStrategySnapshot:
     stages:
     - afterStageTasks:
@@ -283,7 +294,7 @@ The staged update run is initialized and running:
 ```text
 kubectl get csur example-run
 NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True          True                      62s
+example-run   example-placement   0                         0                       True          True                      62s
 ```
 
 A more detailed look at the status:
@@ -298,7 +309,7 @@ metadata:
   ...
 spec:
   placementName: example-placement
-  resourceSnapshotIndex: "1"
+  # resourceSnapshotIndex is empty since we omitted it
   stagedRolloutStrategyName: example-strategy
   state: Run
 status:
@@ -325,7 +336,7 @@ status:
     stageName: kubernetes-fleet.io/deleteStage
   policyObservedClusterCount: 3 # number of clusters to be updated
   policySnapshotIndexUsed: "0"
-  resourceSnapshotIndexUsed: "1"
+  resourceSnapshotIndexUsed: "0"  # System created snapshot-0 during initialization
   stagedUpdateStrategySnapshot: # snapshot of the strategy
     stages:
     - afterStageTasks:
@@ -484,7 +495,7 @@ The updateRun now is able to proceed and complete:
 ```text
 kubectl get csur example-run
 NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True          False         True        20m
+example-run   example-placement   0                         0                       True          False         True        20m
 ```
 
 The CRP also shows rollout has completed and resources are available on all member clusters:
@@ -495,16 +506,30 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1               True        1               36m
 ```
 
-The configmap `test-cm` should be deployed on all 3 member clusters, with latest data:
+The configmap `test-cm` should be deployed on all 3 member clusters:
 
 ```yaml
 data:
-  key: value2
+  key: value1
 ```
 
-### Using Latest Snapshot Automatically
+You can verify the snapshot was created:
 
-Instead of specifying a resource snapshot index, you can omit `resourceSnapshotIndex` to automatically use the latest snapshot. This is useful for continuous delivery workflows:
+```text
+kubectl get clusterresourcesnapshots -l kubernetes-fleet.io/parent-CRP=example-placement
+NAME                           GEN   AGE
+example-placement-0-snapshot   1     5m
+```
+
+### Rolling Out a New Version
+
+Now let's update the configmap and roll out the change. First, modify the configmap:
+
+```bash
+kubectl patch configmap test-cm -n test-namespace -p '{"data":{"key":"value2"}}'
+```
+
+Create another UpdateRun to deploy the updated resources. Again, omit `resourceSnapshotIndex` so the system creates a new snapshot capturing the current state:
 
 ```bash
 kubectl apply -f - << EOF
@@ -514,22 +539,29 @@ metadata:
   name: example-run-latest
 spec:
   placementName: example-placement
-  # resourceSnapshotIndex omitted - uses latest automatically
+  # resourceSnapshotIndex omitted - creates new snapshot with updated resources
   stagedRolloutStrategyName: example-strategy
   state: Run  # Start immediately
 EOF
 ```
 
-The system will determine the latest snapshot at initialization time. Check which snapshot was used:
+The system will create the latest snapshot at initialization time. Check which snapshot was used:
 
 ```bash
 kubectl get csur example-run-latest -o jsonpath='{.status.resourceSnapshotIndexUsed}'
 ```
 
-If we are following the instructions so far, the resourceSnapshotIndexUsed would be 1 since we updated the configmap with value2,
-
 ```text
 1
+```
+
+Now we have two snapshots available for version control:
+
+```text
+kubectl get clusterresourcesnapshots -l kubernetes-fleet.io/parent-CRP=example-placement --show-labels
+NAME                           GEN   AGE    LABELS
+example-placement-0-snapshot   1     25m    kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
+example-placement-1-snapshot   1     5m     kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
 ```
 
 ### Pausing and Resuming a Rollout
@@ -538,46 +570,46 @@ You can pause an in-progress rollout to investigate issues or wait for off-peak 
 
 ```bash
 # Pause the rollout
-kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Stop"}}'
+kubectl patch csur example-run-latest --type='merge' -p '{"spec":{"state":"Stop"}}'
 ```
 
 Verify the rollout is stopped:
 
 ```text
-kubectl get csur example-run
-NAME          PLACEMENT           RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
-example-run   example-placement   1                   0                 True          False                     8m
+kubectl get csur example-run-latest
+NAME                 PLACEMENT          RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+example-run-latest   example-placement   1                   0                 True          False                     8m
 ```
 
 The rollout pauses at its current position (current cluster/stage). Resume when ready:
 
 ```bash
 # Resume the rollout
-kubectl patch csur example-run --type='merge' -p '{"spec":{"state":"Run"}}'
+kubectl patch csur example-run-latest --type='merge' -p '{"spec":{"state":"Run"}}'
 ```
 
 The rollout continues from where it was paused.
 
-### Deploy a second ClusterStagedUpdateRun to rollback to a previous version
+### Rollback to a Previous Version
 
 Now suppose the workload admin wants to rollback the configmap change, reverting the value `value2` back to `value1`.
-Instead of manually updating the configmap from hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
+Instead of manually updating the configmap on the hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index. Since we now have "example-placement-0-snapshot" (value1) and "example-placement-1-snapshot" (value2), we specify `resourceSnapshotIndex: "0"` to rollback:
 
 ```bash
 kubectl apply -f - << EOF
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterStagedUpdateRun
 metadata:
-  name: example-run-2
+  name: example-run-rollback
 spec:
   placementName: example-placement
-  resourceSnapshotIndex: "0"  # Rollback to previous version
+  resourceSnapshotIndex: "0"  # Rollback to example-placement-0-snapshot (value1)
   stagedRolloutStrategyName: example-strategy
   state: Run  # Start rollback immediately
 EOF
 ```
 
-Following the same step as [deploying the first updateRun](#deploy-a-clusterstagedupdaterun-to-rollout-latest-change), the second updateRun should succeed also. Complete status shown as below:
+Following the same approval steps as [deploying the first updateRun](#deploy-a-clusterstagedupdaterun-to-rollout-resources), the rollback updateRun should succeed. Complete status shown below:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -854,29 +886,87 @@ spec:
 EOF
 ```
 
-### Check namespace-scoped resource snapshots
+### Resource Snapshot Versions (Namespace-Scoped)
 
-Check the resource snapshots for the namespace-scoped placement:
+Similar to cluster-scoped placements, resource snapshots are **not** automatically created for namespace-scoped placements with `spec.strategy.type: External`. The latest snapshot is used (and created if it does not already exist) when you create an UpdateRun without specifying `resourceSnapshotIndex`.
 
-```text
-kubectl get resourcesnapshots -n my-app-namespace
-NAME                           GEN   AGE
-web-app-placement-0-snapshot   1     30s
-```
-
-Update the deployment to a new version:
-
-```bash
-kubectl set image deployment/web-app nginx=nginx:1.21 -n my-app-namespace
-```
-
-Verify the new snapshot is created:
+Since our ResourcePlacement uses `External` strategy, no resource snapshots exist yet:
 
 ```text
-kubectl get resourcesnapshots -n my-app-namespace --show-labels
-NAME                           GEN   AGE     LABELS
-web-app-placement-0-snapshot   1     5m24s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
-web-app-placement-1-snapshot   1     16s     kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=1
+kubectl get resourcesnapshots -n my-app-namespace -l kubernetes-fleet.io/parent-CRP=web-app-placement
+No resources found
+```
+
+#### Listing Available Snapshots (Namespace-Scoped)
+
+After running multiple UpdateRuns with the same ResourcePlacement, you can list all available snapshots:
+
+```text
+kubectl get resourcesnapshots -n my-app-namespace -l kubernetes-fleet.io/parent-CRP=web-app-placement --show-labels
+NAME                           GEN   AGE    LABELS
+web-app-placement-0-snapshot   1     30m    kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
+web-app-placement-1-snapshot   1     10m    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=1
+```
+
+Key labels to note:
+
+- `kubernetes-fleet.io/resource-index`: The snapshot index used when referencing in UpdateRuns
+- `kubernetes-fleet.io/is-latest-snapshot`: Indicates the most recent snapshot
+- `kubernetes-fleet.io/parent-CRP`: The name of the parent ResourcePlacement
+
+#### Viewing Snapshot Contents (Namespace-Scoped)
+
+To see what resources are captured in a specific snapshot:
+
+```text
+kubectl get resourcesnapshots web-app-placement-0-snapshot -n my-app-namespace -o yaml
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: ResourceSnapshot
+metadata:
+  labels:
+    kubernetes-fleet.io/is-latest-snapshot: "false"
+    kubernetes-fleet.io/parent-CRP: web-app-placement
+    kubernetes-fleet.io/resource-index: "0"
+  name: web-app-placement-0-snapshot
+  namespace: my-app-namespace
+  ...
+spec:
+  selectedResources:
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: web-app
+      namespace: my-app-namespace
+    spec:
+      template:
+        spec:
+          containers:
+          - image: nginx:1.20  # The image at this snapshot version
+            name: nginx
+            ...
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: web-app
+      namespace: my-app-namespace
+    ...
+```
+
+#### Referencing a Snapshot for Rollback (Namespace-Scoped)
+
+To rollback to a previous version, specify the `resourceSnapshotIndex` in your StagedUpdateRun:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateRun
+metadata:
+  name: rollback-run
+  namespace: my-app-namespace
+spec:
+  placementName: web-app-placement
+  resourceSnapshotIndex: "0"  # Reference web-app-placement-0-snapshot to rollback
+  stagedRolloutStrategyName: app-rollout-strategy
+  state: Run
 ```
 
 ### Deploy a StagedUpdateStrategy
@@ -913,20 +1003,20 @@ spec:
 EOF
 ```
 
-### Deploy a StagedUpdateRun
+### Deploy a StagedUpdateRun to Rollout Resources
 
-Create a namespace-scoped staged update run to rollout the new image version:
+Create a namespace-scoped staged update run to deploy the application. Since no snapshots exist yet, we omit `resourceSnapshotIndex` so the system creates a new snapshot during initialization:
 
 ```bash
 kubectl apply -f - << EOF
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: StagedUpdateRun
 metadata:
-  name: web-app-rollout-v1-21
+  name: web-app-rollout-v1-20
   namespace: my-app-namespace
 spec:
   placementName: web-app-placement
-  resourceSnapshotIndex: "1"  # Latest snapshot with nginx:1.21
+  # resourceSnapshotIndex omitted - system creates snapshot during initialization
   stagedRolloutStrategyName: app-rollout-strategy
   state: Run  # Start rollout immediately
 EOF
@@ -937,7 +1027,7 @@ EOF
 Check the status of the staged update run:
 
 ```bash
-kubectl get sur web-app-rollout-v1-21 -n my-app-namespace
+kubectl get sur web-app-rollout-v1-20 -n my-app-namespace
 ```
 
 Wait for the first stage to complete. The prod before stage requires approval before starting:
@@ -945,13 +1035,13 @@ Wait for the first stage to complete. The prod before stage requires approval be
 ```text
 kubectl get approvalrequests -n my-app-namespace
 NAME                                UPDATE-RUN              STAGE   APPROVED   AGE
-web-app-rollout-v1-21-before-prod   web-app-rollout-v1-21   prod               2s
+web-app-rollout-v1-20-before-prod   web-app-rollout-v1-20   prod               2s
 ```
 
 Approve the before-stage task to start production rollout:
 
 ```bash
-kubectl patch approvalrequests web-app-rollout-v1-21-before-prod -n my-app-namespace --type='merge' \
+kubectl patch approvalrequests web-app-rollout-v1-20-before-prod -n my-app-namespace --type='merge' \
   -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 ```
@@ -961,10 +1051,10 @@ After production clusters complete updates, approve the after-stage task:
 ```text
 kubectl get approvalrequests -n my-app-namespace
 NAME                                UPDATE-RUN              STAGE   APPROVED   AGE
-web-app-rollout-v1-21-after-prod    web-app-rollout-v1-21   prod               18s
-web-app-rollout-v1-21-before-prod   web-app-rollout-v1-21   prod    True       2m22s
+web-app-rollout-v1-20-after-prod    web-app-rollout-v1-20   prod               18s
+web-app-rollout-v1-20-before-prod   web-app-rollout-v1-20   prod    True       2m22s
 
-kubectl patch approvalrequests web-app-rollout-v1-21-after-prod  -n my-app-namespace --type='merge' \
+kubectl patch approvalrequests web-app-rollout-v1-20-after-prod  -n my-app-namespace --type='merge' \
   -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 ```
@@ -972,13 +1062,57 @@ kubectl patch approvalrequests web-app-rollout-v1-21-after-prod  -n my-app-names
 Verify the rollout completion:
 
 ```bash
-kubectl get sur web-app-rollout-v1-21 -n my-app-namespace
+kubectl get sur web-app-rollout-v1-20 -n my-app-namespace
 kubectl get resourceplacement web-app-placement -n my-app-namespace
 ```
 
-### Rollback with namespace-scoped staged updates
+### Rolling Out a New Version (Namespace-Scoped)
 
-To rollback to the previous version (nginx:1.20), create another staged update run referencing the earlier snapshot:
+Now let's update the deployment to a new version and roll out the change:
+
+```bash
+kubectl set image deployment/web-app nginx=nginx:1.21 -n my-app-namespace
+```
+
+Create another UpdateRun to deploy the updated resources. Omit `resourceSnapshotIndex` so the system creates a new snapshot (web-app-placement-1-snapshot) capturing the nginx:1.21 image:
+
+```bash
+kubectl apply -f - << EOF
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateRun
+metadata:
+  name: web-app-rollout-v1-21
+  namespace: my-app-namespace
+spec:
+  placementName: web-app-placement
+  # resourceSnapshotIndex omitted - creates new snapshot with updated deployment
+  stagedRolloutStrategyName: app-rollout-strategy
+  state: Run
+EOF
+```
+
+After completing the approval steps, verify the new snapshot was used:
+
+```bash
+kubectl get sur web-app-rollout-v1-21 -n my-app-namespace -o jsonpath='{.status.resourceSnapshotIndexUsed}'
+```
+
+```text
+1
+```
+
+Now we have two snapshots available for version control:
+
+```text
+kubectl get resourcesnapshots -n my-app-namespace -l kubernetes-fleet.io/parent-CRP=web-app-placement --show-labels
+NAME                           GEN   AGE    LABELS
+web-app-placement-0-snapshot   1     30m    kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
+web-app-placement-1-snapshot   1     10m    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=1
+```
+
+### Rollback with Namespace-Scoped Staged Updates
+
+To rollback to the previous version (nginx:1.20), create another staged update run referencing web-app-placement-0-snapshot:
 
 ```bash
 kubectl apply -f - << EOF
@@ -989,7 +1123,7 @@ metadata:
   namespace: my-app-namespace
 spec:
   placementName: web-app-placement
-  resourceSnapshotIndex: "0"  # Previous snapshot with nginx:1.20
+  resourceSnapshotIndex: "0"  # Rollback to web-app-placement-0-snapshot (nginx:1.20)
   stagedRolloutStrategyName: app-rollout-strategy
   state: Run  # Start rollback immediately
 EOF
