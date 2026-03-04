@@ -181,6 +181,7 @@ _Appears in:_
 | `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the member cluster. |  | Optional: \{\} <br /> |
 | `properties` _object (keys:[PropertyName](#propertyname), values:[PropertyValue](#propertyvalue))_ | Properties is an array of properties observed for the member cluster.<br />This field is beta-level; it is for the property-based scheduling feature and is only<br />populated when a property provider is enabled in the deployment. |  | Optional: \{\} <br /> |
 | `resourceUsage` _[ResourceUsage](#resourceusage)_ | The current observed resource usage of the member cluster. It is populated by the member agent. |  | Optional: \{\} <br /> |
+| `namespaces` _object (keys:string, values:string)_ | Namespaces is a map of namespace names to their associated work names for namespaces<br />that are managed by Fleet (i.e., have AppliedWork owner references when created).<br />The key is the namespace name and the value is the work name from the AppliedWork owner reference.<br />If the namespace does not have an AppliedWork owner reference, the value will be an empty string.<br />This field is populated by the property provider when namespace collection is enabled. |  | Optional: \{\} <br /> |
 | `agentStatus` _[AgentStatus](#agentstatus) array_ | AgentStatus is an array of current observed status, each corresponding to one member agent running in the member cluster. |  | Optional: \{\} <br /> |
 
 
@@ -259,6 +260,7 @@ _Appears in:_
 | `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the member cluster. |  | Optional: \{\} <br /> |
 | `properties` _object (keys:[PropertyName](#propertyname), values:[PropertyValue](#propertyvalue))_ | Properties is an array of properties observed for the member cluster.<br />This field is beta-level; it is for the property-based scheduling feature and is only<br />populated when a property provider is enabled in the deployment. |  | Optional: \{\} <br /> |
 | `resourceUsage` _[ResourceUsage](#resourceusage)_ | The current observed resource usage of the member cluster. It is copied from the corresponding InternalMemberCluster object. |  | Optional: \{\} <br /> |
+| `namespaces` _object (keys:string, values:string)_ | Namespaces is a map of namespace names to their associated work names for namespaces<br />that are managed by Fleet (i.e., have AppliedWork owner references when created).<br />The key is the namespace name and the value is the work name from the AppliedWork owner reference.<br />If the namespace does not have an AppliedWork owner reference, the value will be an empty string.<br />This field is copied from the corresponding InternalMemberCluster object. |  | Optional: \{\} <br /> |
 | `agentStatus` _[AgentStatus](#agentstatus) array_ | AgentStatus is an array of current observed status, each corresponding to one member agent running in the member cluster. |  | Optional: \{\} <br /> |
 
 
