@@ -3,12 +3,19 @@ title: KubeFleet
 ---
 
 {{< blocks/custom-cover covertitle="Treat clusters as an ephemeral container platform" image_anchor="top" height="full" >}}
-<p class="h1">Intelligently place and run cloud-native workloads at scale on multiple clusters.</p>
-<br>
+<p class="h1">Intelligently schedule Kubernetes resources onto multiple clusters using properties.</p>
+<br/>
 <p class="h3">KubeFleet is a CNCF sandbox project.</p>
 <br>
-<a class="btn btn-lg btn-dark me-3 mb-4" href="/docs/">Documentation <i class="fas fa-arrow-alt-circle-right ms-2"></i></a>
-<a class="btn btn-lg btn-secondary me-3 mb-4" href="https://github.com/kubefleet-dev/kubefleet">Source Code <i class="fab fa-github ms-2 "></i></a>
+<a class="btn btn-lg btn-primary px-4 me-2 mb-3" href="/docs/">
+  Documentation <i class="fas fa-arrow-alt-circle-right ms-2"></i>
+</a><br/>
+<a class="btn btn-lg btn-outline-dark px-4 me-2 mb-3" href="https://github.com/kubefleet-dev/kubefleet">
+  Source Code <i class="fab fa-github ms-2"></i>
+</a><br/>
+<a class="btn btn-lg btn-dark px-4 me-2 mb-3" href="https://github.com/kubefleet-dev/community">
+  Join our community <i class="fas fa-arrow-alt-circle-right ms-2"></i>
+</a><br/>
 <p class="lead mt-5"></p>
 
 {{< blocks/link-down color="info" >}}
