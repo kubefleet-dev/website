@@ -6,7 +6,7 @@ title: KubeFleet
 <p class="h1">KubeFleet placement policies deliver intelligent, scalable scheduling of Kubernetes resources across any cluster.</p>
 <br/>
 <p class="h3">KubeFleet is a CNCF sandbox project.</p>
-<br>
+<br/>
 <a class="btn btn-lg btn-primary px-4 me-2 mb-3" href="/docs/">
   Documentation <i class="fas fa-arrow-alt-circle-right ms-2"></i>
 </a><br/>
