@@ -13,7 +13,7 @@ enableRobotsTXT = true
 
 # Will give values to .Lastmod etc.
 # Disable temporarily until all setup has been done.
-enableGitInfo = false
+enableGitInfo = true
 
 # Comment out to enable taxonomies in Docsy
 # disableKinds = ["taxonomy", "taxonomyTerm"]
@@ -64,14 +64,14 @@ weight = 1
 title = "KubeFleet"
 description = "Learn more about KubeFleet, a CNCF sandbox project for simplified Kubernetes multi-cluster management at scale."
 
-[languages.zh-cn]
-languageName ="中文（简体）"
-contentDir = "content/zh-cn"
-[languages.zh-cn.params]
-title = "KubeFleet"
-description = "了解KubeFleet，一个旨在简化大规模Kubernetes多集群管理的CNCF沙箱项目。"
-time_format_default = "2006.01.02"
-time_format_blog = "2006.01.02"
+#[languages.zh-cn]
+#languageName ="中文（简体）"
+#contentDir = "content/zh-cn"
+#[languages.zh-cn.params]
+#title = "KubeFleet"
+#description = "了解KubeFleet，一个旨在简化大规模Kubernetes多集群管理的CNCF沙箱项目。"
+#time_format_default = "2006.01.02"
+#time_format_blog = "2006.01.02"
 
 [markup]
   [markup.goldmark]

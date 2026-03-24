@@ -8,145 +8,228 @@ In this tutorial, you deploy KubeFleet on [kind](https://kind.sigs.k8s.io/) clus
 
 We'll help you understand KubeFleet's key architectural components, and introduce the custom resources and processes you can use for day-to-day multi-cluster management experience with very little setup needed.
 
-> Note
->
+> Note:
 > kind is a tool for setting up a Kubernetes environment for experimental purposes; Some instructions for running KubeFleet on kind clusters may not apply to other environments, and there might also be some minor differences in the KubeFleet experience.
 
 ## Before you begin
 
-To complete this tutorial, you will need:
+To complete this tutorial, you will need the following tools on your local machine:
 
-* The following tools on your local machine:
-  * `docker`, to run agent images (and optionally build locally if you want)
-  * `kind`, for running Kubernetes clusters on your local machine
-  * `helm`, the Kubernetes package manager
-  * `git`
-  * `curl`
-  * `jq`
-  * `base64`
+* **docker** (or alternatives): run agent images (and optionally build locally if you want). [Docker Desktop installation guide](https://docs.docker.com/desktop/)
+* **kind**, for running Kubernetes clusters on your local machine. [Installation guide](https://kind.sigs.k8s.io/docs/user/quick-start/#installation)
+* **helm**, the Kubernetes package manager. [Installation guide](https://helm.sh/docs/intro/install/)
+
+Other tools that may be useful, or are bundled with your operation system:
+
+* **git**
+* **curl**
+* **jq**
+* **base64**
+
+## Getting help
+
+If you run into issues when using this quickstart please consider opening a [GitHub Issue](https://github.com/kubefleet-dev/kubefleet/issues/new?template=bug_report.md) so the team is aware and can help you out.
 
 ## Create kind clusters
 
-The KubeFleet project provides a scalable multi-cluster solution that uses a hub and spoke pattern, consisting of one hub cluster and one or more member clusters:
+KubeFleet provides a scalable multi-cluster solution that uses a hub and spoke pattern, consisting of one hub cluster and one or more member clusters:
 
 * The hub cluster is the control plane to which every member cluster connects; it also serves as an interface for centralized management. You can perform a number of tasks focused on orchestrating Kubernetes resources across member clusters.
-* A member cluster connects to the hub cluster and runs your workloads as orchestrated by the hub cluster.
+* Each member cluster connects to the hub cluster and runs workloads you place on it via the hub cluster.
 
-In this tutorial you will create two kind clusters - one of which serves as the KubeFleet hub cluster, and the other the KubeFleet member cluster. Run the commands below to create them:
+In this tutorial you will create two kind clusters - one of which serves as the KubeFleet hub cluster, and the other the KubeFleet member cluster.
+
+### Selecting Kubernetes version
+
+If you want to control the Kubernetes version of your kind clusters, see [kind releases](https://github.com/kubernetes-sigs/kind/releases) and set the Kuberentes version by passing the correct value to `--image` parameter. For example `--image kindest/node:v1.32.8` will create a Kubernetes cluster running 1.32.8.
+
+The following commands create a cluster using defaults, including the most recent Kubernetes version kind supports.
 
 ```sh
-# Replace YOUR-KIND-IMAGE with a kind node image name of your
-# choice. It should match with the version of kind installed
-# on your system; for more information, see
-# [kind releases](https://github.com/kubernetes-sigs/kind/releases).
-export KIND_IMAGE=YOUR-KIND-IMAGE
-# Replace YOUR-KUBECONFIG-PATH with the path to a Kubernetes
-# configuration file of your own, typically $HOME/.kube/config.
-export KUBECONFIG_PATH=YOUR-KUBECONFIG-PATH
-
-# The names of the kind clusters; you may use values of your own if you'd like to.
-export HUB_CLUSTER_NAME=hub
-export MEMBER_CLUSTER_NAME=cluster-1
-
-kind create cluster --name $HUB_CLUSTER_NAME \
-    --image=$KIND_IMAGE \
-    --kubeconfig=$KUBECONFIG_PATH
-kind create cluster --name $MEMBER_CLUSTER_NAME \
-    --image=$KIND_IMAGE \
-    --kubeconfig=$KUBECONFIG_PATH
-
-# Export the configurations for the kind clusters.
-kind export kubeconfig -n $HUB_CLUSTER_NAME
-kind export kubeconfig -n $MEMBER_CLUSTER_NAME
+kind create cluster --name kf-hub-01
 ```
 
-## Set up KubeFleet hub cluster
+The output will look similar to the following.
 
-To set up the hub cluster, run the commands below.
+```output
+Creating cluster "kf-hub-01" ...
+ ✓ Ensuring node image (kindest/node:v1.35.0) 🖼
+ ✓ Preparing nodes 📦
+ ✓ Writing configuration 📜
+ ✓ Starting control-plane 🕹️
+ ✓ Installing CNI 🔌
+ ✓ Installing StorageClass 💾
+Set kubectl context to "kind-kf-hub-01"
+You can now use your cluster with:
 
-Select the KubeFleet version you want to run by looking at the [KubeFleet GitHub Releases page](https://github.com/kubefleet-dev/kubefleet/releases) and pick a version.
+kubectl cluster-info --context kind-kf-hub-01
+```
+
+Next, create a member cluster, again with defaults.
 
 ```sh
-# Set KubeFleet version
-export KUBEFLEET_VERSION=0.2.2 
-# Set the KubeFleet version you want to run (see )
-# Replace YOUR-HUB-CLUSTER-CONTEXT with the name of the kubeconfig context for your hub cluster.
-export HUB_CLUSTER_CONTEXT=YOUR-HUB-CLUSTER-CONTEXT
-kubectl config use-context $HUB_CLUSTER_CONTEXT
+kind create cluster --name kf-member-01
+```
 
-# Install the helm chart for running KubeFleet agents on the hub cluster.
-helm install hub-agent oci://ghcr.io/kubefleet-dev/kubefleet/charts/hub-agent \
-    --version $KUBEFLEET_VERSION \
+The output will look similar that from the hub cluster creation above.
+
+> Note: the cluster name you provided is prefixed with `kind`, so in later steps make sure to use the full name.
+> For example `kind-kf-hub-01`.
+
+## Configure KubeFleet hub cluster
+
+To set up the hub cluster use the following process.
+
+### Obtain hub cluster's Kubernetes API URL
+
+First, we need to get the URL for the hub cluster's Kubernetes API. When using running multiple kind clusters his will be different to the URL that's present in your kubeconfig. This is because your user sessions runs outside of the Docker network and the kind clusters all run inside the same Docker network (typically in the IP address space 172.x.x.x).
+
+Retrieve the IP address of the hub cluster using the following command. Replace `kf-hub-01` with the name you provided when creating your hub cluster (without the `kind` prefix).
+
+```sh
+docker inspect kf-hub-01-control-plane --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+```
+
+Record the IP address that's returned.
+
+```output
+172.18.0.2
+```
+
+### Select KubeFleet version
+
+Next, select the KubeFleet version to run by looking at the [KubeFleet GitHub Releases page](https://github.com/kubefleet-dev/kubefleet/releases) and picking a version - for example 0.2.2.
+
+### Deploy KubeFleet hub agent
+
+Make sure your session is connected to the hub kind cluster.
+
+```sh
+kubectl config use-context kind-kf-hub-01
+```
+
+Use helm to install the hub agent on the cluster. The following command provides the minimum required parameters to start the agent successfully.
+
+```sh
+helm install hub-agent oci://ghcr.io/kubefleet-dev/kubefleet/charts/hub-agent \ 
+    --version 0.2.2 \
     --namespace fleet-system \
     --create-namespace \
     --set logFileMaxSize=100000
 ```
 
-It will take a few seconds for the installation to complete. Once it finishes, verify that the KubeFleet hub agent is up and running with the commands below:
+It will take a few seconds for the installation to complete. Output looks similar to the following.
+
+```output
+Pulled: ghcr.io/kubefleet-dev/kubefleet/charts/hub-agent:0.2.2
+Digest: sha256:xxxxxx
+NAME: hub-agent
+LAST DEPLOYED: Tue Mar 24 11:14:03 2026
+NAMESPACE: fleet-system
+STATUS: deployed
+REVISION: 1
+DESCRIPTION: Install complete
+TEST SUITE: None
+```
+
+Once the deployment finishes, verify that the KubeFleet hub agent is up and running with the commands below:
 
 ```sh
 kubectl get pods -n fleet-system
 ```
 
-You should see that all the hub-agent pods are in the ready state.
+Which will produce output similar to the following.
 
 ```output
 NAME                         READY   STATUS    RESTARTS      AGE
 hub-agent-7758b6559b-6w2t8   1/1     Running   0             117m
 ```
 
-> Note: the hub cluster's Kubernetes API must be accessible to your member clusters. If it isn't possible to join member clusters to the fleet.
+## Configure KubeFleet member custers
 
-## Set up the KubeFleet member custer(s)
+Next, let's create a member cluster. You can repeat this step multiple times to add more members.
 
-Next, let's set another kind cluster as a member cluster, which requires installing the KubeFleet member agent on the cluster and connecting it to the KubeFleet hub cluster.
+This step requires installing the KubeFleet member agent on the cluster and connecting it to the KubeFleet hub cluster.
 
-For your convenience, KubeFleet provides a [quickstart script (`join-member-clusters.sh`)](https://github.com/kubefleet-dev/kubefleet/tree/main/hack/quickstart/join-member-clusters.sh) that can automate the process of joining a cluster into a KubeFleet. To use the script, follow the steps below:
+### Use script to join clusters
+
+For your convenience, KubeFleet provides quickstart scripts [(`join-member-clusters.sh`)](https://github.com/kubefleet-dev/kubefleet/tree/main/hack/quickstart/join-member-clusters.sh) and [(`join-member-clusters.ps1`)](https://github.com/kubefleet-dev/kubefleet/tree/main/hack/quickstart/join-member-clusters.ps1) that can automate the process of joining one or more cluster to a fleet.
+
+To use this script successfully make sure:
+
+* You know the hub and member cluster names.
+* Your kubeconfig includes all clusters. This includes the hub and all members you want to join.
+* You have the KubeFleet version to deploy (i.e. 0.2.2)
+* You have the IP address of the hub cluster (i.e. 172.18.0.2)
+
+Unless you made any modifications, the hub cluster's API server will listen on port 6443.
+
+On MacOSX or Linux you can use this shell script:
 
 ```sh
-# Clone KubeFleet repository, or download file to your computer.
-# Run the script.
-chmod +x ./hack/quickstart/join-member-clusters.sh
-./hack/quickstart/join-member-clusters.sh <HUB-CLUSTER-NAME> <KUBEFLEET-VERSION> <MEMBER-CLUSTER-NAME-1> <MEMBER-CLUSTER-NAME-2> <MEMBER-CLUSTER-NAME-3> ...
+./join-member-clusters.sh 0.2.2 kind-kf-hub-01 https://172.18.0.2:6443/ kind-kf-member-01
 ```
+
+On Windows you can use PowerShell:
+
+```powershell
+.\join-member-clusters.ps1 0.2.2 kind-kf-hub-01 https://172.18.0.2:6443/ kind-kf-member-01
+```
+
+> Note: you can add multiple member clusters to join by adding them on the end of the argument list.
 
 It may take a few minutes for the script to finish running. Once it is completed, the script will print out something
 like this:
 
 ```output
-NAME              JOINED   AGE   MEMBER-AGENT-LAST-SEEN   NODE-COUNT   AVAILABLE-CPU   AVAILABLE-MEMORY
-hub-cluster       True     30s   28s                      1             748m           2870328Ki
+NAME                  JOINED   AGE   MEMBER-AGENT-LAST-SEEN   NODE-COUNT   AVAILABLE-CPU   AVAILABLE-MEMORY
+kind-kf-member-01     True     30s   28s                      1             748m           2870328Ki
 ```
 
-The newly joined cluster should have the `JOINED` status field set to `True`. If you see that the cluster is still in an unknown state, it might be that the member cluster is still connecting to the hub cluster. Should this state persist for a prolonged period, refer to the [Troubleshooting Guide](/docs/troubleshooting) for more information.
+The newly joined cluster should have the `JOINED` status field set to `True`.
+
+If you see that the cluster is still in an unknown state, it might be that the member cluster is still connecting to the hub cluster. Should this state persist for a prolonged period, refer to the [Troubleshooting Guide](/docs/troubleshooting) for more information.
 
 > Note
 >
 > If you would like to know more about the steps the script runs, or would like to join > a cluster into a KubeFleet manually, refer to the [Managing Clusters](/docs/how-tos/clusters) How-To Guide.
 
-## Use `ClusterResourcePlacement` to place resources on member clusters
+## Use KubeFleet to distributee resources to member clusters
 
-KubeFleet offers an API, `ClusterResourcePlacement`, which helps orchestrate workloads, i.e., any group Kubernetes resources, among all member clusters. In this last part of the tutorial, you will use this API to place some Kubernetes resources automatically into the member clusters via the hub cluster, saving the trouble of having to create them one by one in each member cluster.
+KubeFleet offers two core APIs are used to schedule Kubernetes resources from the hub cluster to one or more member cluster:
 
-### Create the resources for placement
+* **ClusterResourcePlacement** - select cluster-scoped resources or entire namespaces and distribute to member clusters ([read more](../concepts/crp.md)).
+* **ResourcePlacement** - select namespace-scoped resources and distribute to member clusters ([read more](../concepts/rp.md)).
 
-Run the commands below to create a namespace and a config map, which will be placed onto the
-member clusters.
+For the purpose of this quickstart we will keep the example simple and use a ClusterResourcePlacement.
+
+There are a comprehensive set of policies that can be used to determine how clusters are selected , how placements are rolled out using [staged update runs](../concepts/staged-update.md), and performing useful activities such as [drift detection](../how-tos/drift-detection.md) and [configuration overrides](../concepts/override.md).
+
+### Create sample resources
+
+First, let's make sure we're on our KubeFleet hub cluster.
+
+```sh
+kubectl config use-context kind-kf-hub-01
+```
+
+Next, create a namespace and a config map, which will be placed onto the member clusters.
 
 ```sh
 kubectl create namespace kubefleet-sample
-kubectl create configmap app -n kubefleet-sample --from-literal=data=test
+kubectl create configmap kf-cm -n kubefleet-sample --from-literal=data=test
 ```
 
 It may take a few seconds for the commands to complete.
 
-### Create the `ClusterResourcePlacement` API object
+### Create placement policy
 
-Next, create a `ClusterResourcePlacement` API object in the hub cluster:
+Now, let's create a simple `ClusterResourcePlacement` that will place the namespace and the config map it contains onto all member clusters.
+
+Apply the following to your KubeFleet hub cluster.
 
 ```yaml
-kubectl apply -f - <<EOF
-apiVersion: placement.kubernetes-KubeFleet.io/v1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: sample-crp
@@ -158,10 +241,9 @@ spec:
       name: kubefleet-sample
   policy:
     placementType: PickAll
-EOF
 ```
 
-Note that the CRP object features a resource selector, which targets the `work` namespace you just created. This will instruct the CRP to place the namespace itself, and all resources registered under the namespace, such as the config map, to the target clusters. Also, in the `policy` field, a `PickAll` placement type has been specified. This allows the CRP to automatically perform the placement on all member clusters in the KubeFleet, including those that join after the CRP object is created.
+The default rollout strategy is [RollingUpdate](../concepts/safe-rollout.md) for `ClusterResourcePlacement` and `ResourcePlacement`. When you submit the request, the rollout begins immediately. If you want more control you can used [staged update runs](../concepts/staged-update.md).
 
 It may take a few seconds for KubeFleet to successfully place the resources. To check up on the progress, run the commands below:
 
@@ -169,19 +251,30 @@ It may take a few seconds for KubeFleet to successfully place the resources. To 
 kubectl get clusterresourceplacement sample-crp
 ```
 
-Verify that the placement has been completed successfully; you should see that the `APPLIED` status field has been set to `True`. You may need to repeat the commands a few times to wait for the completion.
+Verify that the placement has been completed successfully; you should see that the `SCHEDULED` status field has been set to `True`. You may need to repeat the commands a few times to wait for the completion.
+
+```output
+NAME         GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+sample-crp   1     True        1               True        1               7s
+```
 
 ### Confirm the placement
 
-Now, log into the member clusters to confirm that the placement has been completed.
+Now, connect to a member cluster to confirm that the placement has been completed and expected resources are present.
 
 ```sh
-kubectl config use-context $MEMBER_CLUSTER_CONTEXT
+kubectl config use-context kind-kf-member-01
 kubectl get ns
 kubectl get configmap -n kubefleet-sample
 ```
 
-You should see the namespace `work` and the config map `app` listed in the output.
+You should see the namespace `kubefleet-sample` and the config map `kf-cm` listed in the output.
+
+```output
+NAME               DATA   AGE
+kf-cm              1      15s
+kube-root-ca.crt   1      15s
+```
 
 ## Clean things up
 
@@ -195,20 +288,21 @@ kubectl delete ns kubefleet-sample
 kubectl delete configmap app -n kubefleet-sample
 ```
 
-To uninstall KubeFleet, run the commands below:
+To uninstall KubeFleet components on the clusters, run the commands below:
 
 ```sh
-kubectl config use-context $HUB_CLUSTER_CONTEXT
-helm uninstall hub-agent -n fleet-system
-kubectl config use-context $MEMBER_CLUSTER_CONTEXT
+kubectl config use-context kind-kf-member-01
 helm uninstall member-agent -n fleet-system
+
+kubectl config use-context kind-kf-hub-01
+helm uninstall hub-agent -n fleet-system
 ```
 
 ## What's next
 
-Congratulations! You have completed the getting started tutorial for KubeFleet. To learn more about
-KubeFleet:
+Congratulations! You have completed the getting started tutorial for KubeFleet. To learn more about KubeFleet:
 
 * [Read about KubeFleet concepts](/docs/concepts)
 * [Read about the ClusterResourcePlacement API](/docs/how-tos/crp)
+* [Read about the ResourcePlacement API](/docs/how-tos/rp)
 * [Read the KubeFleet API reference](/docs/api-reference)

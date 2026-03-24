@@ -1,20 +1,18 @@
 ---
-title: Welcome to KubeFleet Documentation
+title: KubeFleet Documentation
 linkTitle: Docs
 menu: {main: {weight: 20}}
 weight: 20
 ---
 
-Welcome ✨ This documentation can help you learn more about the KubeFleet project,
-get started with a KubeFleet deployment of your own, and complete common KubeFleet related tasks.
+Welcome! ✨
 
-{{% alert title="WIP" color="warning" %}}
-We are actively working on the documentation site.
-{{% /alert %}}
+This documentation can help you learn more about the KubeFleet project, get started with a KubeFleet deployment of your own, and complete common KubeFleet related tasks.
 
 ## About KubeFleet
 
 KubeFleet is a CNCF sandbox project that aims to simplify Kubernetes multi-cluster management.
+
 It can greatly enhance your multi-cluster management experience; specifically, with the help of KubeFleet, you can easily:
 
 * manage clusters through one unified API; and
@@ -26,13 +24,11 @@ It can greatly enhance your multi-cluster management experience; specifically, w
 
 * ✅ KubeFleet can work with any Kubernetes clusters running supported Kubernetes versions, regardless of where they are set up.
 
-    You can set up KubeFleet with an on-premises cluster, a cluster hosted on public clouds such as
-    Azure, or even a local kind cluster.
+    You can set up KubeFleet with an on-premises cluster, a cluster hosted on public clouds, or even a local kind cluster.
 
 * ✅ KubeFleet can manage Kubernetes cluster groups of various sizes.
 
-    KubeFleet is designed with performance and scalablity in mind. It functions well with both
-    smaller Kubernetes cluster groups and those with up to hundreds of Kubernetes clusters and
+    KubeFleet is designed with performance and scalability in mind. It functions well with both smaller Kubernetes cluster groups and those with up to hundreds of Kubernetes clusters and
     thousands of nodes.
 
 * 🚀 KubeFleet is evolving fast.
