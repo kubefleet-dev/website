@@ -41,7 +41,9 @@ In this tutorial you will create two kind clusters - one of which serves as the 
 
 ### Selecting Kubernetes version
 
-If you want to control the Kubernetes version of your kind clusters, see [kind releases](https://github.com/kubernetes-sigs/kind/releases) and set the Kuberentes version by passing the correct value to `--image` parameter. For example `--image kindest/node:v1.32.8` will create a Kubernetes cluster running 1.32.8.
+If you want to control the Kubernetes version of your kind clusters, see [kind releases](https://github.com/kubernetes-sigs/kind/releases) and set the Kubernetes version by passing the correct value to `--image` parameter. For example `--image kindest/node:v1.32.8` will create a Kubernetes cluster running 1.32.8.
+
+> Note: there may be compatibility issues with older Kubernetes versions, so we recommend using at most an N-2 Kubernetes release (where N is the most recent release).
 
 The following commands create a cluster using defaults, including the most recent Kubernetes version kind supports.
 
@@ -99,6 +101,8 @@ Record the IP address that's returned.
 ### Select KubeFleet version
 
 Next, select the KubeFleet version to run by looking at the [KubeFleet GitHub Releases page](https://github.com/kubefleet-dev/kubefleet/releases) and picking a version - for example 0.2.2.
+
+> Note: we recommend using the most recent KubeFleet release for the best experience.
 
 ### Deploy KubeFleet hub agent
 
