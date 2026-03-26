@@ -194,9 +194,7 @@ The newly joined cluster should have the `JOINED` status field set to `True`.
 
 If you see that the cluster is still in an unknown state, it might be that the member cluster is still connecting to the hub cluster. Should this state persist for a prolonged period, refer to the [Troubleshooting Guide](/docs/troubleshooting) for more information.
 
-> Note
->
-> If you would like to know more about the steps the script runs, or would like to join > a cluster into a KubeFleet manually, refer to the [Managing Clusters](/docs/how-tos/clusters) How-To Guide.
+> Note: if you would like to know more about the steps the script runs, or would like to join > a cluster into a KubeFleet manually, refer to the [Managing Clusters](/docs/how-tos/clusters) How-To Guide.
 
 ## Use KubeFleet to distributee resources to member clusters
 
