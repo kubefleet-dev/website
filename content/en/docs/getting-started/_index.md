@@ -1,7 +1,7 @@
 ---
 title: Getting Started
 description: Getting started with Fleet
-weight: 2
+weight: 1
 ---
 
 {{% pageinfo %}}
