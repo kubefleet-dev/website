@@ -8,8 +8,7 @@ In this tutorial, you deploy KubeFleet on [kind](https://kind.sigs.k8s.io/) clus
 
 We'll help you understand KubeFleet's key architectural components, and introduce the custom resources and processes you can use for day-to-day multi-cluster management experience with very little setup needed.
 
-> Note:
-> kind is a tool for setting up a Kubernetes environment for experimental purposes; Some instructions for running KubeFleet on kind clusters may not apply to other environments, and there might also be some minor differences in the KubeFleet experience.
+> Note: kind is a tool for setting up a Kubernetes environment for experimental purposes; Some instructions for running KubeFleet on kind clusters may not apply to other environments, and there might also be some minor differences in the KubeFleet experience.
 
 ## Before you begin
 
@@ -25,6 +24,7 @@ Other tools that may be useful, or are bundled with your operation system:
 * **curl**
 * **jq**
 * **base64**
+* **PowerShell**
 
 ## Getting help
 
@@ -75,8 +75,7 @@ kind create cluster --name kf-member-01
 
 The output will look similar that from the hub cluster creation above.
 
-> Note: the cluster name you provided is prefixed with `kind`, so in later steps make sure to use the full name.
-> For example `kind-kf-hub-01`.
+> Note: the cluster name you provided is prefixed with `kind`, so in later steps make sure to use the full name. For example `kind-kf-hub-01`.
 
 ## Configure KubeFleet hub cluster
 
@@ -149,7 +148,7 @@ NAME                         READY   STATUS    RESTARTS      AGE
 hub-agent-7758b6559b-6w2t8   1/1     Running   0             117m
 ```
 
-## Configure KubeFleet member custers
+## Configure KubeFleet member clusters
 
 Next, let's create a member cluster. You can repeat this step multiple times to add more members.
 
@@ -194,11 +193,9 @@ The newly joined cluster should have the `JOINED` status field set to `True`.
 
 If you see that the cluster is still in an unknown state, it might be that the member cluster is still connecting to the hub cluster. Should this state persist for a prolonged period, refer to the [Troubleshooting Guide](/docs/troubleshooting) for more information.
 
-> Note
->
-> If you would like to know more about the steps the script runs, or would like to join > a cluster into a KubeFleet manually, refer to the [Managing Clusters](/docs/how-tos/clusters) How-To Guide.
+> Note: if you would like to know more about the steps the script runs, or would like to join a cluster into a KubeFleet manually, refer to the [Managing Clusters](/docs/how-tos/clusters) How-To Guide.
 
-## Use KubeFleet to distributee resources to member clusters
+## Use KubeFleet to distribute resources to member clusters
 
 KubeFleet offers two core APIs are used to schedule Kubernetes resources from the hub cluster to one or more member cluster:
 
@@ -254,6 +251,8 @@ It may take a few seconds for KubeFleet to successfully place the resources. To 
 ```sh
 kubectl get clusterresourceplacement sample-crp
 ```
+
+> Note: you can shorten `clusterresourceplacement` to `crp` when using kubectl.
 
 Verify that the placement has been completed successfully; you should see that the `SCHEDULED` status field has been set to `True`. You may need to repeat the commands a few times to wait for the completion.
 
