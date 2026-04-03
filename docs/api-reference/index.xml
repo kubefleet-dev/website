@@ -116,12 +116,16 @@
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceoverride">ClusterResourceOverride&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceoverridesnapshot">ClusterResourceOverrideSnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceplacement">ClusterResourcePlacement&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceplacementstatus">ClusterResourcePlacementStatus&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceplacementstatuslist">ClusterResourcePlacementStatusList&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourcesnapshot">ClusterResourceSnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterschedulingpolicysnapshot">ClusterSchedulingPolicySnapshot&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterstagedupdaterun">ClusterStagedUpdateRun&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterstagedupdatestrategy">ClusterStagedUpdateStrategy&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceoverride">ResourceOverride&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceoverridesnapshot">ResourceOverrideSnapshot&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceplacement">ResourcePlacement&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceplacementlist">ResourcePlacementList&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#stagedupdaterun">StagedUpdateRun&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#stagedupdatestrategy">StagedUpdateStrategy&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#work">Work&lt;/a>&lt;/li>
