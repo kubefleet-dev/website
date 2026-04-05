@@ -547,4 +547,9 @@ Certain resources, when created or applied on the hub cluster, may lead to unint
 - Ingresses
 - Network Policies
 
-To address this, we support the use of `ConfigMap` with a fleet-reserved annotation. This allows users to encapsulate resources that might have side effects on the hub cluster within the `ConfigMap`. For detailed instructions, please refer to this [document](/docs/how-tos/envelope-object).
+To address this, Fleet provides dedicated envelope custom resources that wrap these manifests without applying them on the hub cluster:
+
+- `ClusterResourceEnvelope` for cluster-scoped resources
+- `ResourceEnvelope` for namespace-scoped resources
+
+These envelope resources replace the older ConfigMap-based envelope pattern for new placements and let you propagate side-effecting resources safely to member clusters. For detailed instructions, please refer to this [document](/docs/how-tos/envelope-object).
