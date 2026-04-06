@@ -547,4 +547,9 @@ Certain resources, when created or applied on the hub cluster, may lead to unint
 - Ingresses
 - Network Policies
 
-To address this, we support the use of `ConfigMap` with a fleet-reserved annotation. This allows users to encapsulate resources that might have side effects on the hub cluster within the `ConfigMap`. For detailed instructions, please refer to this [document](/docs/how-tos/envelope-object).
+To address this, KubeFleet supports two envelope Custom Resource Definitions (CRDs):
+
+- **`ClusterResourceEnvelope`**: Wraps cluster-scoped resources for placement.
+- **`ResourceEnvelope`**: Wraps namespace-scoped resources for placement.
+
+These CRDs allow users to encapsulate resources that might have side effects on the hub cluster within an envelope object. The envelope object itself is applied to the hub, but the resources it contains are only extracted and applied when they reach the member clusters. For detailed instructions, please refer to this [document](/docs/how-tos/envelope-object).
