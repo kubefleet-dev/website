@@ -507,7 +507,7 @@ For detailed instructions, please refer to this [document](/docs/how-tos/crp#sta
 
 ### Tolerations
 
-Tolerations are a mechanism to allow the Fleet Scheduler to schedule resources to a `MemberCluster` that has taints specified on it.
+Tolerations are a mechanism to allow the KubeFleet Scheduler to schedule resources to a `MemberCluster` that has taints specified on it.
 We adopt the concept of [taints & tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 introduced in Kubernetes to the multi-cluster use case.
 
