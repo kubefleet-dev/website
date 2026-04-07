@@ -547,7 +547,7 @@ Certain resources, when created or applied on the hub cluster, may lead to unint
 - Ingresses
 - Network Policies
 
-To address this, Fleet provides dedicated envelope custom resources that wrap these manifests without applying them on the hub cluster:
+To address this, KubeFleet provides dedicated envelope custom resources that wrap these manifests without applying them on the hub cluster:
 
 - `ClusterResourceEnvelope` for cluster-scoped resources
 - `ResourceEnvelope` for namespace-scoped resources
