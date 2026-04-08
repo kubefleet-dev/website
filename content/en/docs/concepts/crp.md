@@ -507,7 +507,7 @@ For detailed instructions, please refer to this [document](/docs/how-tos/crp#sta
 
 ### Tolerations
 
-Tolerations are a mechanism to allow the Fleet Scheduler to schedule resources to a `MemberCluster` that has taints specified on it.
+Tolerations are a mechanism to allow the KubeFleet Scheduler to schedule resources to a `MemberCluster` that has taints specified on it.
 We adopt the concept of [taints & tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 introduced in Kubernetes to the multi-cluster use case.
 
@@ -547,4 +547,9 @@ Certain resources, when created or applied on the hub cluster, may lead to unint
 - Ingresses
 - Network Policies
 
-To address this, we support the use of `ConfigMap` with a fleet-reserved annotation. This allows users to encapsulate resources that might have side effects on the hub cluster within the `ConfigMap`. For detailed instructions, please refer to this [document](/docs/how-tos/envelope-object).
+To address this, KubeFleet provides dedicated envelope custom resources that wrap these manifests without applying them on the hub cluster:
+
+- `ClusterResourceEnvelope` for cluster-scoped resources
+- `ResourceEnvelope` for namespace-scoped resources
+
+These envelope resources replace the older ConfigMap-based envelope pattern for new placements and let you propagate side-effecting resources safely to member clusters. For detailed instructions, please refer to this [document](/docs/how-tos/envelope-object).
