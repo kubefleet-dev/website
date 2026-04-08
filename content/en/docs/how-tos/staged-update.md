@@ -432,7 +432,17 @@ NAME                        UPDATE-RUN    STAGE    APPROVED   AGE
 example-run-before-canary   example-run   canary              6m55s
 ```
 
-Approve the before-stage task to allow canary stage to start:
+Approve the before-stage task to allow canary stage to start. You can approve using either the `kubectl fleet` plugin or a direct `kubectl patch` command:
+
+**Option 1: Using the kubectl fleet plugin (Recommended)**
+
+The [`kubectl fleet` plugin](https://github.com/kubefleet-dev/kubefleet/blob/main/tools/fleet/README.md) provides a simplified way to approve requests:
+
+```bash
+kubectl fleet approve clusterapprovalrequest --hubClusterContext <hub-cluster-context> --name example-run-before-canary
+```
+
+**Option 2: Using kubectl patch**
 
 ```bash
 kubectl patch clusterapprovalrequests example-run-before-canary --type='merge' \
@@ -454,6 +464,14 @@ example-run-before-canary   example-run   canary   True       15m
 > Note: Observed generation in the Approved condition should match the generation of the approvalRequest object.
 
 Approve the after-stage task to complete the rollout:
+
+**Option 1: Using the kubectl fleet plugin (Recommended)**
+
+```bash
+kubectl fleet approve clusterapprovalrequest --hubClusterContext <hub-cluster-context> --name example-run-after-canary
+```
+
+**Option 2: Using kubectl patch**
 
 ```bash
 kubectl patch clusterapprovalrequests example-run-after-canary --type='merge' \
@@ -1038,7 +1056,17 @@ NAME                                UPDATE-RUN              STAGE   APPROVED   A
 web-app-rollout-v1-20-before-prod   web-app-rollout-v1-20   prod               2s
 ```
 
-Approve the before-stage task to start production rollout:
+Approve the before-stage task to start production rollout. You can approve using either the `kubectl fleet` plugin or a direct `kubectl patch` command:
+
+**Option 1: Using the kubectl fleet plugin (Recommended)**
+
+The [`kubectl fleet` plugin](https://github.com/kubefleet-dev/kubefleet/blob/main/tools/fleet/README.md) provides a simplified way to approve requests:
+
+```bash
+kubectl fleet approve approvalrequest --hubClusterContext <hub-cluster-context> --name web-app-rollout-v1-20-before-prod --namespace my-app-namespace
+```
+
+**Option 2: Using kubectl patch**
 
 ```bash
 kubectl patch approvalrequests web-app-rollout-v1-20-before-prod -n my-app-namespace --type='merge' \
@@ -1053,8 +1081,18 @@ kubectl get approvalrequests -n my-app-namespace
 NAME                                UPDATE-RUN              STAGE   APPROVED   AGE
 web-app-rollout-v1-20-after-prod    web-app-rollout-v1-20   prod               18s
 web-app-rollout-v1-20-before-prod   web-app-rollout-v1-20   prod    True       2m22s
+```
 
-kubectl patch approvalrequests web-app-rollout-v1-20-after-prod  -n my-app-namespace --type='merge' \
+**Option 1: Using the kubectl fleet plugin (Recommended)**
+
+```bash
+kubectl fleet approve approvalrequest --hubClusterContext <hub-cluster-context> --name web-app-rollout-v1-20-after-prod --namespace my-app-namespace
+```
+
+**Option 2: Using kubectl patch**
+
+```bash
+kubectl patch approvalrequests web-app-rollout-v1-20-after-prod -n my-app-namespace --type='merge' \
   -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"approved","message":"approved","lastTransitionTime":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'","observedGeneration":1}]}}' \
   --subresource=status
 ```
