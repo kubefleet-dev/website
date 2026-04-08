@@ -114,7 +114,7 @@ kubectl config use-context kind-kf-hub-01
 Use helm to install the hub agent on the cluster. The following command provides the minimum required parameters to start the agent successfully.
 
 ```sh
-helm install hub-agent oci://ghcr.io/kubefleet-dev/kubefleet/charts/hub-agent \ 
+helm upgrade --install hub-agent oci://ghcr.io/kubefleet-dev/kubefleet/charts/hub-agent \
     --version 0.2.2 \
     --namespace fleet-system \
     --create-namespace \
