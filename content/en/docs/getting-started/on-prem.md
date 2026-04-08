@@ -70,6 +70,8 @@ make docker-build-hub-agent
 
 # Install the helm chart for running Fleet agents on the hub cluster.
 helm upgrade --install hub-agent ./charts/hub-agent/ \
+        --namespace fleet-system \
+        --create-namespace \
         --set image.pullPolicy=Always \
         --set image.repository=$REGISTRY/$HUB_AGENT_IMAGE \
         --set image.tag=$TAG \
@@ -210,9 +212,9 @@ To uninstall Fleet, run the commands below:
 
 ```sh
 kubectl config use-context $HUB_CLUSTER_CONTEXT
-helm uninstall hub-agent
+helm uninstall hub-agent -n fleet-system
 kubectl config use-context $MEMBER_CLUSTER_CONTEXT
-helm uninstall member-agent
+helm uninstall member-agent -n fleet-system
 ```
 
 ## What's next
