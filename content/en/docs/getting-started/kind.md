@@ -99,7 +99,7 @@ Record the IP address that's returned.
 
 ### Select KubeFleet version
 
-Next, select the KubeFleet version to run by looking at the [KubeFleet GitHub Releases page](https://github.com/kubefleet-dev/kubefleet/releases) and picking a version - for example 0.2.2.
+Next, select the KubeFleet version to run by looking at the [KubeFleet GitHub Releases page](https://github.com/kubefleet-dev/kubefleet/releases) and picking a version - for example 0.3.0.
 
 > Note: we recommend using the most recent KubeFleet release for the best experience.
 
@@ -115,7 +115,7 @@ Use helm to install the hub agent on the cluster. The following command provides
 
 ```sh
 helm upgrade --install hub-agent oci://ghcr.io/kubefleet-dev/kubefleet/charts/hub-agent \
-    --version 0.2.2 \
+    --version 0.3.0 \
     --namespace fleet-system \
     --create-namespace \
     --set logFileMaxSize=100000
@@ -124,7 +124,7 @@ helm upgrade --install hub-agent oci://ghcr.io/kubefleet-dev/kubefleet/charts/hu
 It will take a few seconds for the installation to complete. Output looks similar to the following.
 
 ```output
-Pulled: ghcr.io/kubefleet-dev/kubefleet/charts/hub-agent:0.2.2
+Pulled: ghcr.io/kubefleet-dev/kubefleet/charts/hub-agent:0.3.0
 Digest: sha256:xxxxxx
 NAME: hub-agent
 LAST DEPLOYED: Tue Mar 24 11:14:03 2026
@@ -162,7 +162,7 @@ To use this script successfully make sure:
 
 * You know the hub and member cluster names.
 * Your kubeconfig includes all clusters. This includes the hub and all members you want to join.
-* You have the KubeFleet version to deploy (i.e. 0.2.2)
+* You have the KubeFleet version to deploy (i.e. 0.3.0)
 * You have the IP address of the hub cluster (i.e. 172.18.0.2)
 
 Unless you made any modifications, the hub cluster's API server will listen on port 6443.
@@ -170,13 +170,13 @@ Unless you made any modifications, the hub cluster's API server will listen on p
 On MacOSX or Linux you can use this shell script:
 
 ```sh
-./join-member-clusters.sh 0.2.2 kind-kf-hub-01 https://172.18.0.2:6443/ kind-kf-member-01
+./join-member-clusters.sh 0.3.0 kind-kf-hub-01 https://172.18.0.2:6443/ kind-kf-member-01
 ```
 
 On Windows you can use PowerShell:
 
 ```powershell
-.\join-member-clusters.ps1 0.2.2 kind-kf-hub-01 https://172.18.0.2:6443/ kind-kf-member-01
+.\join-member-clusters.ps1 0.3.0 kind-kf-hub-01 https://172.18.0.2:6443/ kind-kf-member-01
 ```
 
 > Note: you can add multiple member clusters to join by adding them on the end of the argument list.
