@@ -1,5 +1,7 @@
 ---
 title: KubeFleet
+params:
+  body_class: td-navbar-links-all-active
 ---
 
 {{< blocks/custom-cover covertitle="Use your clusters to create a flexible container runtime environment" image_anchor="top" height="full" >}}
