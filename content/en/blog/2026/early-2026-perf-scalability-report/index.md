@@ -16,19 +16,19 @@ environment with up to **1000 member clusters, 1000 placements, and 100 concurre
     allocation (e.g., 1 core and 2 GB of memory).
     * it is also recommended that you set up your KubeFleet hub cluster control plane, specifically its
     API server and the etcd storage backend, to be able to handle higher volume of requests and objects.
-    The evaluation suggests that you might see the API server takes 10+ cores of CPU and 30+ GB of memory
-    when there are high number of placements or progressive rollouts being processed by KubeFleet concurrently;
+    The evaluation suggests that you might see the API server taking 10+ cores of CPU and 30+ GB of memory
+    when there is a high number of placements or progressive rollouts being processed by KubeFleet concurrently;
     the KubeFleet API objects in total consume approximately 2 GB of space on the etcd side in the
     evaluation.
 * KubeFleet can still process placements and progressive rollouts reasonably fast in a larger-scale
 environment:
     * Typically a placement that picks 100 member clusters in a fleet of 1000 clusters using a label
-    selector can be processed within 30-60 seconds.
+    selector can be processed within 30 seconds.
     * A 3-staged, non-gated progressive rollout with 50% in-stage concurrency can be completed within
     2 minutes. Running 100 of such rollouts concurrently usually takes less than 4 minutes to complete.
-* As with any Kubernetes controllers, the KubeFleet agents, especially the hub agent, needs to re-sync
+* As with any Kubernetes controllers, the KubeFleet agents, especially the hub agent, need to re-sync
 resources periodically or when they restart. In a larger-scale environment with many (1000) placements,
-the re-processing might take around 15 minutes to complete. During this period, you might experience
+the re-processing should take less than 15 minutes to complete. During this period, you might experience
 some level of degraded responsiveness in the system.
 * We are committed to continuously optimizing KubeFleet's performance and scalability; this report
 is the result of one of the many rounds of evaluations we plan to conduct as KubeFleet continues to evolve.
@@ -48,7 +48,7 @@ the features enabled, etc.);
 and its storage backend, the space available in the storage backend, etc.).
 
 If you encounter a situation where KubeFleet is not performing up to your expectations, please feel free to reach
-out to us via our community channels; we are more than happy to learn better about the scenario and work
+out to us via our community channels; we are more than happy to gain a better understanding of the scenario and work
 towards a solution if possible.
 {{% /alert %}}
 
@@ -65,7 +65,7 @@ allows simplified management of containers in a distributed environment, we bega
 development of the KubeFleet project in late 2022. The project aims to explore
 architectures, designs, and implementations that allow organizations to manage their 
 Kubernetes clusters through one single plane, simplify the experience of running workloads
-distributedly with an easy-to-use abstraction layer and a flexible API.
+in a distributed manner with an easy-to-use abstraction layer and a flexible API.
 
 KubeFleet became a CNCF sandbox project in 2025. Since then we have been seeing that many teams
 have started to experiment with KubeFleet, and evaluated it for production use on a larger scale.
@@ -122,7 +122,7 @@ hub cluster side via the cluster management APIs, to report the status of the ho
 cluster, and to report refreshed cluster properties (if applicable). And each heartbeat
 signal is a write to the hub cluster API server; as the number of member clusters climbs,
 the hub cluster API server (and its `etcd` storage backend) will need to handle the
-subsequent higher write throughput, which may lead to additional resource usage overhead
+resulting higher write throughput, which may lead to additional resource usage overhead
 and increased latencies.
 
 * **The number of placements and the number of picked target member clusters for each placement**:
@@ -130,7 +130,7 @@ when KubeFleet processes a resource placement, for each picked target member clu
 hub agent will need to create a `Binding` object and one or more `Work` objects (depending on the
 size of the resource manifests). In a large fleet with many placements that each pick a high number
 of target member clusters, there might be a very significant number of `Binding` and `Work` objects
-in presence; they may take a considerable amount of the storage space in the hub cluster's `etcd`
+present; they may take a considerable amount of the storage space in the hub cluster's `etcd`
 storage backend, and the hub cluster API server must be prepared to handle the read/write throughput
 for such objects as the KubeFleet hub agent continuously processes the placements.
 
@@ -167,25 +167,16 @@ without having to worry about excessive costs.
 and implementation, and add more features, you might see different performance profiles across different
 KubeFleet builds. We will periodically re-run the performance and scalability evaluation and publish
 the latest results on our documentation site, to help adopters keep track of our progress in the domain
-of performance and scalability; we might also tune our goals as we understand better about
+of performance and scalability; we might also tune our goals as we understand better
 the needs and expectations of the community.
 
-It is also worth noting that **your actual experience may vary** depending on your specific use cases
+It is also worth noting again that **your actual experience may vary** depending on your specific use cases
 and environment setup. There are many factors that can have an impact on KubeFleet's
-performance and scalability, including but not limited to, 
-
-* the placement patterns in use (such as the size of resources to place, the complexity of scheduling policies, etc.);
-* the distribution of resources across member clusters;
-* the network connectivity between member clusters and the hub cluster;
-* the configuration of your KubeFleet agents (such as the heartbeat interval, the cluster property provider in use,
-the features enabled, etc.);
-* the configuration of your KubeFleet hub cluster (such as the CPU/memory resources allocated to the API server
-and its storage backend, the space available in the storage backend, etc.).
-
-We will try our best to cover scenarios that are representative of common KubeFleet use cases in our evaluation,
+performance and scalability, as mentioned at the beginning of the document. We will try our best to
+cover scenarios that are representative of common KubeFleet use cases in our evaluation,
 however, it is not our intention to present this document as a guarantee that the target scale can be met
 under all circumstances. If you encounter a situation where KubeFleet is not performing up to your expectations,
-please feel free to reach out to us via our community channels; we are more than happy to learn better about the
+please feel free to reach out to us via our community channels; we are more than happy to learn about the
 scenario and work towards a solution if possible.
 
 ## Target SLIs and SLOs
@@ -300,7 +291,7 @@ For more details about the placement and rollout configuration, see the [Methodo
     <td class="tg-0lax"><span class="badge bg-success fs-6">Less than 2 minutes</span></td>
   </tr>
   <tr>
-    <td class="tg-0lax">The <span class="badge bg-warning fs-6">p90</span> latency of completing 100 new staged progressive rollout in parallel</td>
+    <td class="tg-0lax">The <span class="badge bg-warning fs-6">p90</span> latency of completing 100 new staged progressive rollouts in parallel</td>
     <td class="tg-0lax"><span class="badge bg-success fs-6">Less than 4 minutes</span></td>
   </tr>
 </tbody>
@@ -415,7 +406,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 <tbody>
   <tr>
     <td class="tg-0lax">CPU and memory resource usage (<span class="badge bg-warning fs-6">p90</span>)</td>
-    <td class="tg-0lax"><span class="badge bg-success fs-6">Nominal (<1 cores, <512 MB)</span></td>
+    <td class="tg-0lax"><span class="badge bg-success fs-6">Nominal (<1 core, <512 MB)</span></td>
   </tr>
 </tbody>
 </table>
@@ -485,7 +476,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 <tbody>
   <tr>
     <td class="tg-0lax">CPU and memory resource usage (<span class="badge bg-warning fs-6">p90</span>) when the agent restarts/re-syncs</td>
-    <td class="tg-0lax"><span class="badge bg-success fs-6">Nominal (<1 cores, <512 MB)</span></td>
+    <td class="tg-0lax"><span class="badge bg-success fs-6">Nominal (<1 core, <512 MB)</span></td>
   </tr>
 </tbody>
 </table>
@@ -502,7 +493,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 <tbody>
   <tr>
     <td class="tg-0lax">CPU and memory resource usage (<span class="badge bg-warning fs-6">p90</span>)</td>
-    <td class="tg-0lax"><span class="badge bg-success fs-6">Nominal (<1 cores, <512 MB)</span></td>
+    <td class="tg-0lax"><span class="badge bg-success fs-6">Nominal (<1 core, <512 MB)</span></td>
   </tr>
 </tbody>
 </table>
@@ -545,7 +536,7 @@ For the KubeFleet hub agent, it was deployed with the following configuration:
 
 As for the KubeFleet member agents, they were deployed with the following configuration:
 
-* their CPU/memory resource requests are set to 0.1 core and 128 MBs respectively
+* their CPU/memory resource requests are set to 0.1 core and 128 MB respectively
 * their CPU/memory resource limits are set to 1 core and 2 GB respectively
 * they have the Azure cluster property provider enabled
 * they have priority-based queueing enabled
@@ -617,7 +608,7 @@ in the same way as previously described. Repeat this step for 10 times.
 
 ### Tools and utilities
 
-The scripts and utilities programs used in the evaluation process are checked into the
+The scripts and utility programs used in the evaluation process are checked into the
 [KubeFleet source repository](https://github.com/kubefleet-dev/kubefleet/tree/main/hack/perftest).
 For more information, see the `README` file in the linked directory.
 
@@ -636,39 +627,39 @@ etcd storage backend, are collected via Azure Monitoring tools.
 ### Joining 1000 member clusters into the fleet
 
 As a baseline for comparison, when the hub cluster is first provisioned and idling, the API
-server shows nominal CPU usage (~0.2 cores) and limited memory usage (~900 MBs);
-on the storage side, around 20 MBs of space is used.
+server shows nominal CPU usage (~0.2 cores) and limited memory usage (~900 MB);
+on the storage side, around 20 MB of space is used.
 
 As we join the 1000 member clusters into the fleet (with a heartbeat interval of 60 seconds),
 we begin to see limited increases in the hub cluster API server's resource usage level;
 the CPU usage jumps to around 0.65 cores, and the memory usage a bit less than 1.4 GB.
 The added KubeFleet cluster management API objects (`MemberClusters`,
-`InternalMemberClusters`, etc.) take around 100 MBs more space in the etcd storage backend.
+`InternalMemberClusters`, etc.) take around 100 MB more space in the etcd storage backend.
 
 | | Idling | After joining 1000 member clusters |
 | --- | --- | --- |
 | Hub cluster API server CPU usage | 252 millicores | 655 millicores |
-| Hub cluster API server memory usage | 871 MBs | 1392 MBs |
-| etcd storage backend usage | 23.4 MBs | 119 MBs |
+| Hub cluster API server memory usage | 871 MB | 1392 MB |
+| etcd storage backend usage | 23.4 MB | 119 MB |
 
 As one would expect, processing the heartbeat signals is an easy job for the KubeFleet
 hub agent; we see almost no queueing delays on the controller end. The hub agent's CPU usage
-is less than 100 millicores, and its memory usage a bit more than 200 MBs.
+is less than 100 millicores, and its memory usage a bit more than 200 MB.
 
 | | After joining 1000 member clusters | Expectation (SLO) |
 | --- | --- | --- |
 | p90 queueing delay of heartbeat signal processing on the hub agent side | 0.06s | Less than 1s <span class="badge bg-info">✔</span> |
 | Hub agent CPU usage | 93 millicores | Less than 1 core <span class="badge bg-info">✔</span> |
-| Hub agent memory usage | 234 MBs | Less than 512 MBs <span class="badge bg-info">✔</span> |
+| Hub agent memory usage | 234 MB | Less than 512 MB <span class="badge bg-info">✔</span> |
 
 At this point of the evaluation a member agent instance needs to do very little work (just
 sending the heartbeat signal every 60 seconds), and consequently it consumes barely any
-CPU and memory resources: the CPU usage is less than 5 millicores, and the memory below 50 MBs.
+CPU and memory resources: the CPU usage is less than 5 millicores, and the memory below 50 MB.
 
 | | After joining 1000 member clusters | Expectation (SLO) |
 | --- | --- | --- |
 | Member agent CPU usage | 2.4 millicores | Less than 0.5 core <span class="badge bg-info">✔</span> |
-| Member agent memory usage | 32.8 MBs | Less than 128 MBs <span class="badge bg-info">✔</span> |
+| Member agent memory usage | 32.8 MB | Less than 128 MB <span class="badge bg-info">✔</span> |
 
 ### Placing resources
 
@@ -693,7 +684,7 @@ the 1000 placements when the agent restarts/re-syncs. Consistent with the standa
 Kubernetes controller development practices, to ensure system correctness, the KubeFleet
 hub agent will re-process all placements in a fleet hub cluster when it restarts, in case
 a change has been applied during the agent downtime. The agent is also configured to
-repeat this re-processing step periodically (every 6 hours by default), as to make sure
+repeat this re-processing step periodically (every 6 hours by default), to ensure
 that all changes will be captured and processed. This is a cost we have to cover nonetheless,
 despite the fact that often there will not be any change to process at all. 
 
@@ -713,7 +704,7 @@ placements to complete:
 
 | min | p25 | p50 | p75 | p90 | max | Expectation (SLO) |
 | --- | --- | --- | --- | --- | --- | --- |
-| 568s | 583s | 625s | 652s | 675s | 821s | p90 less than 900s <span class="badge bg-info">✔</span> |
+| 9m28s | 9m43s | 10m25s | 10m52s | 11m15s | 13m41s | p90 less than 15m <span class="badge bg-info">✔</span> |
 
 During the re-processing period, one might observe spikes in KubeFleet hub agent
 CPU and memory usage; in the evaluation, the CPU usage can go up to around 3.5 cores,
@@ -747,7 +738,7 @@ can help reduce the space usage level.
 In this scenario the re-syncing happens after all the placements have been completed.
 Consequently the process has very little impact on the KubeFleet member agents' end.
 We continue to see nominal level of CPU and memory usage (a few millicores and around
-40MBs respectively) there during the re-processing period.
+40MB respectively) there during the re-processing period.
 
 #### The 1000 + 1 placement
 
@@ -772,7 +763,7 @@ Variance is limited across the 10 attempts.
 
 | min | p25 | p50 | p75 | p90 | max | Expectation (SLO) |
 | --- | --- | --- | --- | --- | --- | --- |
-| 91s | 92s | 95s | 96s | 96s | 96s | p90 less than 2 minutes <span class="badge bg-info">✔</span> | 
+| 1min31s | 1min32s | 1min35s | 1min36s | 1min36s | 1min36s | p90 less than 2 minutes <span class="badge bg-info">✔</span> | 
 
 #### The 100 concurrent staged rollouts
 
@@ -784,15 +775,15 @@ that processing latency grows by roughly 1.4x, with the p90 latency reaching aro
 
 | min | p25 | p50 | p75 | p90 | max | Expectation (SLO) |
 | --- | --- | --- | --- | --- | --- | --- |
-| 116s | 122s | 132s | 134s | 135s | 136s | p90 less than 4 minutes <span class="badge bg-info">✔</span> |
+| 1min56s | 2min2s | 2min12s | 2min14s | 2min15s | 2min16s | p90 less than 4 minutes <span class="badge bg-info">✔</span> |
 
 The hub agent uses a bit more than 5 CPU cores during the period; it has not yet exhausted
-its CPU resource limit, suggesting that the increase in latency might attribute more to the
+its CPU resource limit, suggesting that the increase in latency might be attributed more to the
 I/O side and the API server side. The memory usage is 11.2 GB.
 
 Staged rollouts at this scale do not require too much work on the member agent side. We still
 see very limited resource usage level there, with the CPU usage at a few millicores, and the
-memory usage around 40 MBs.
+memory usage around 40 MB.
 
 For the hub cluster API server, it uses more than 8 CPU cores during the rollout, and
 more than 31 GB of memory. As explained earlier, we remain committed to further
@@ -805,7 +796,7 @@ hub cluster etcd storage backend.
 We have also conducted a test where we attempt to create a placement while the 100
 staged rollouts are in session. The processing latency in this setting grew to around
 30 seconds (p90), which is around 50% higher than usual, due to the fact that both
-the hub cluster API server and the KubeFleet hub agent are busying handling the rollouts and
+the hub cluster API server and the KubeFleet hub agent are busy handling the rollouts and
 have less bandwidth to deal with the new placement. 
 
 | min | p25 | p50 | p75 | p90 | max | Expectation (SLO) |
@@ -818,15 +809,28 @@ The KubeFleet development team strives to continuously evolve KubeFleet's archit
 design, and implementation to meet the needs of multi-cluster management at a larger scale.
 The performance and scalability evaluation we have performed so far has revealed that 
 **KubeFleet can support larger-scale deployments, with 1000 member clusters + 1000 placements +
-100 concurrent progressive rollouts reasonably well with the right configuration**. Of course,
-the actual experience may vary depending on the specific use cases and environment setup; if
-you encounter a situation where KubeFleet is not performing satisfactorily, please reach
-out to us via our community channels for further discussions.
+100 concurrent progressive rollouts, reasonably well with the right configuration**. To run KubeFleet
+at the target scale, it is recommended that users:
 
-As of now, aside from the optimization work wishlisted in this document, we have started an
+* allocate sufficient CPU and memory resources for the KubeFleet hub agent;
+* scale up the hub cluster API server as needed, so that it can handle a higher volume of requests;
+* make sure that the hub cluster's storage backend has enough space for the KubeFleet API objects.
+
+The evaluation also revealed some areas for further performance/scalability improvements.
+Right now, when the KubeFleet hub agent restarts or re-syncs, it will send a spike of requests to the hub cluster
+API server as it needs to re-process all the KubeFleet API objects; in a larger fleet with many placements,
+this can lead to a prolonged period of unresponsiveness; in adverse scenarios, it might even overwhelm
+the hub cluster API server and lead to timeouts or even system failures. We are actively exploring
+options to mitigate this risk, so as to further reduce the re-processing latency and the resource usage
+level on the hub cluster API server side. There might also be similar opportunities to further enhance the
+staged progressive rollout experience, as the current results hint that a considerable amount
+of latencies we observed when running multiple rollouts in parallel can be attributed to latencies
+on the hub cluster API server side.
+
+Aside from the optimization work outlined above, we have also started an
 effort to revamp the way KubeFleet agents handle heartbeats and cluster property refreshes;
 it is our hope that with a new design, we could remove some unnecessary pressure from the hub
-cluster API side without compromising the freshness of cluster status and properties, and
-consequently achieve a more responsive and efficient experience in larger deployments. We would be happy
-to discuss more about this and quantify its impact with a new round of performance/scalability
-evaluation in the future.
+cluster API side caused by unnecessarily frequent heartbeats without compromising the freshness of cluster
+status and properties, and consequently achieve a more responsive and efficient experience in larger
+deployments. We would be happy to discuss more about this and quantify its impact with a new round of
+performance/scalability evaluation in the future.
