@@ -173,8 +173,7 @@ Fleet connection:
 
     # Extract the hub cluster CA for secure TLS verification.
     # Run this while connected to the hub cluster context:
-    #   kubectl config view --raw -o jsonpath='{.clusters[?(@.name=="YOUR-HUB-CLUSTER")].cluster.certificate-authority-data}'
-    export HUB_CA="YOUR-HUB-CLUSTER-CA-BASE64"
+    export HUB_CA=$(kubectl config view --raw -o jsonpath="{.clusters[?(@.name==\"$HUB_CLUSTER_CONTEXT\")].cluster.certificate-authority-data}")
 
     # The variables below uses the Fleet images kept in the Microsoft Container
     # Registry (MCR) and will retrieve the latest version from the Fleet GitHub
