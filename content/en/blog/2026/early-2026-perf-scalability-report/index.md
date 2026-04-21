@@ -300,59 +300,6 @@ For more details about the placement and rollout configuration, see the [Methodo
 
 ### Resource usage
 
-#### Hub cluster API server
-
-{{< card
-  header="**with 1000 member clusters**"
->}}
-<table class="tg"><thead>
-  <tr>
-    <th class="tg-0lax"><span style="font-weight:bold">SLI</span><br></th>
-    <th class="tg-0lax"><span style="font-weight:bold">SLO</span></th>
-  </tr></thead>
-<tbody>
-  <tr>
-    <td class="tg-0lax">CPU and memory resource usage (<span class="badge bg-warning fs-6">p90</span>)</td>
-    <td class="tg-0lax"><span class="badge bg-dark fs-6">N/A (for reference only)</span></td>
-  </tr>
-</tbody>
-</table>
-{{< /card >}}
-
-{{< card
-  header="**with 1000 member clusters and 1000 placements**"
->}}
-<table class="tg"><thead>
-  <tr>
-    <th class="tg-0lax"><span style="font-weight:bold">SLI</span><br></th>
-    <th class="tg-0lax"><span style="font-weight:bold">SLO</span></th>
-  </tr></thead>
-<tbody>
-  <tr>
-    <td class="tg-0lax">CPU and memory resource usage (<span class="badge bg-warning fs-6">p90</span>)</td>
-    <td class="tg-0lax"><span class="badge bg-dark fs-6">N/A (for reference only)</span></td>
-  </tr>
-</tbody>
-</table>
-{{< /card >}}
-
-{{< card
-  header="**with 1000 member clusters, 1000 placements, and 100 concurrent progressive rollouts**"
->}}
-<table class="tg"><thead>
-  <tr>
-    <th class="tg-0lax"><span style="font-weight:bold">SLI</span><br></th>
-    <th class="tg-0lax"><span style="font-weight:bold">SLO</span></th>
-  </tr></thead>
-<tbody>
-  <tr>
-    <td class="tg-0lax">CPU and memory resource usage (<span class="badge bg-warning fs-6">p90</span>)</td>
-    <td class="tg-0lax"><span class="badge bg-dark fs-6">N/A (for reference only)</span></td>
-  </tr>
-</tbody>
-</table>
-{{< /card >}}
-
 #### Hub cluster etcd storage backend
 
 {{< card
