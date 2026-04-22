@@ -171,6 +171,10 @@ Fleet connection:
     # Replace the value of HUB_CLUSTER_ADDRESS with the address of the hub cluster API server.
     export HUB_CLUSTER_ADDRESS="YOUR-HUB-CLUSTER-ADDRESS"
 
+    # Extract the hub cluster CA for secure TLS verification.
+    # Run this while connected to the hub cluster context:
+    export HUB_CA=$(kubectl config view --raw -o jsonpath="{.clusters[?(@.name==\"$HUB_CLUSTER_CONTEXT\")].cluster.certificate-authority-data}")
+
     # The variables below uses the Fleet images kept in the Microsoft Container
     # Registry (MCR) and will retrieve the latest version from the Fleet GitHub
     # repository. This pulls from the Azure Fleet repository while the kubefleet
@@ -188,6 +192,7 @@ Fleet connection:
     kubectl create secret generic hub-kubeconfig-secret --from-literal=token=$TOKEN
     helm install member-agent kubefleet/charts/member-agent/ \
         --set config.hubURL=$HUB_CLUSTER_ADDRESS \
+        --set config.hubCA=$HUB_CA \
         --set image.repository=$REGISTRY/$MEMBER_AGENT_IMAGE \
         --set image.tag=$FLEET_VERSION \
         --set refreshtoken.repository=$REGISTRY/$REFRESH_TOKEN_IMAGE \
