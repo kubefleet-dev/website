@@ -1,33 +1,32 @@
 ---
-title: "KubeFleet Early-2026 Performance and Scalability Report" 
+title: "KubeFleet Performance and Scalability Report - Q1 2026" 
 date: 2026-04-07
 description: >
-  <p class="lh-sm fs-6 text-muted">This document provides a report on the performance and scalability of the KubeFleet project as of early 2026, specifically highlighting how well KubeFleet can support a fleet at scale. It is a part of the efforts to continuously evolve KubeFleet's architecture, design, and implementation to meet the needs of multi-cluster management at a larger scale, with the goal of ensuring a smooth and efficient experience in a fleet of 1000 member clusters + 1000 placements + 100 concurrent progressive rollouts.</p>
+  <p class="lh-sm fs-6 text-muted">This document provides a report on the performance and scalability of the KubeFleet project as of early 2026, specifically highlighting how well KubeFleet can support a fleet at scale. It is a part of the efforts to continuously evolve KubeFleet's architecture, design, and implementation to meet the needs of multi-cluster management at a larger scale, with the goal of ensuring a smooth and efficient experience in a fleet of 1,000 member clusters + 1,000 placements + 100 concurrent progressive rollouts.</p>
 ---
 
 ## TL;DR
 
-* With a proper configuration, you should be able to run KubeFleet on a large-scale multi-cluster
-environment with up to **1000 member clusters, 1000 placements, and 100 concurrent progressive rollouts**.
-* To support deployments at such a scale:
-    * it is recommended that you allocate ample CPU and memory resources for the KubeFleet hub agent. In
-    our evaluation, an allocation of 8-12 cores and 16-24 GB of memory should be sufficient. On the
-    other hand, in many cases, the KubeFleet member agents can run reasonably well with a much smaller resource
+* With proper confirmation, you can use KubeFleet to manage a large-scale multi-cluster enviornment
+environment with up to **1,000 member clusters, 1,000 placements, and 100 concurrent progressive rollouts**.
+* To support deployments at such a scale,
+    * on your KubeFleet hub cluster:
+        * make sure that the API server and its etcd storage backend are configured to handle higher volume
+      of requests. In this evaluation, we see that:
+          * the API server may take 10+ cores of CPU and 30+ GB of memory when KubeFleet is busy processing
+            a large number of placements and progressive rollouts concurrently;
+          * the KubeFleet API objects in total consume approximately 2 GB of space on the etcd storage backend.
+      * make sure that the KubeFleet hub agent is allocated with ample CPU and memory resources:
+        * the agent needs 8-12 cores and 16-24 GB of memory to run smoothly in a large-scale multi-cluster environment.
+    * the KubeFleet member agent can run reasonably well with a much smaller resource 
     allocation (e.g., 1 core and 2 GB of memory).
-    * it is also recommended that you set up your KubeFleet hub cluster control plane, specifically its
-    API server and the etcd storage backend, to be able to handle higher volume of requests and objects.
-    The evaluation suggests that you might see the API server taking 10+ cores of CPU and 30+ GB of memory
-    when there is a high number of placements or progressive rollouts being processed by KubeFleet concurrently;
-    the KubeFleet API objects in total consume approximately 2 GB of space on the etcd side in the
-    evaluation.
-* KubeFleet can still process placements and progressive rollouts reasonably fast in a larger-scale
-environment:
-    * Typically a placement that picks 100 member clusters in a fleet of 1000 clusters using a label
+* KubeFleet can reliably process placements and progressive rollouts fast in a larger-scale environment:
+    * Typically a placement that picks 100 member clusters in a fleet of 1,000 clusters using a label
     selector can be processed within 30 seconds.
     * A 3-staged, non-gated progressive rollout with 50% in-stage concurrency can be completed within
     2 minutes. Running 100 of such rollouts concurrently usually takes less than 4 minutes to complete.
 * As with any Kubernetes controllers, the KubeFleet agents, especially the hub agent, need to re-sync
-resources periodically or when they restart. In a larger-scale environment with many (1000) placements,
+resources periodically or when they restart. In a larger-scale environment with many (1,000) placements,
 the re-processing should take less than 15 minutes to complete. During this period, you might experience
 some level of degraded responsiveness in the system.
 * We are committed to continuously optimizing KubeFleet's performance and scalability; this report
@@ -148,8 +147,8 @@ KubeFleet functionalities (such as the processing of new placements) under adver
 At this moment, the KubeFleet team targets a performance/scalability goal of enabling a smooth
 and responsive experience in a fleet with
 
-* up to **1000 member clusters**; and
-* up to **1000 placements**, each of which picks **100 member clusters** (10% of the fleet); and
+* up to **1,000 member clusters**; and
+* up to **1,000 placements**, each of which picks **100 member clusters** (10% of the fleet); and
 * up to **100 concurrently running progressive rollouts**.
 
 We focus not only on the possibility that KubeFleet can support usage at such a scale, but also on
@@ -179,9 +178,12 @@ under all circumstances. If you encounter a situation where KubeFleet is not per
 please feel free to reach out to us via our community channels; we are more than happy to learn about the
 scenario and work towards a solution if possible.
 
-## Target SLIs and SLOs
+## Target Service Levels
 
-With the target scale in mind, we define the following SLIs and SLOs for larger-scale KubeFleet deployments:
+With the target scale in mind, we define the following Service Level Indicators =
+([SLIs](https://en.wikipedia.org/wiki/Service_level_indicator)) and
+Service Level Objectives ([SLOs](https://en.wikipedia.org/wiki/Service-level_objective))
+for larger-scale KubeFleet deployments:
 
 {{% alert title="A side note" color="success" %}}
 Unless otherwise specified, the evaluation assumes that a placement will:
@@ -201,7 +203,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 ### Cluster management
 
 {{< card
-  header="**with 1000 member clusters**"
+  header="**with 1,000 member clusters**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -221,7 +223,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 ### Placement
 
 {{< card
-  header="**with 1000 member clusters**"
+  header="**with 1,000 member clusters**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -238,7 +240,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 {{< /card >}}
 
 {{< card
-  header="**with 1000 member clusters and 1000 placements**"
+  header="**with 1,000 member clusters and 1,000 placements**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -259,7 +261,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 {{< /card >}}
 
 {{< card
-  header="**with 1000 member clusters, 1000 placements, and 100 concurrent progressive rollouts**"
+  header="**with 1,000 member clusters, 1,000 placements, and 100 concurrent progressive rollouts**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -278,7 +280,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 ### Progressive rollout
 
 {{< card
-  header="**with 1000 member clusters and 1000 placements**"
+  header="**with 1,000 member clusters and 1,000 placements**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -303,7 +305,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 #### Hub cluster etcd storage backend
 
 {{< card
-  header="**with 1000 member clusters**"
+  header="**with 1,000 member clusters**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -322,7 +324,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 {{< /card >}}
 
 {{< card
-  header="**with 1000 member clusters, 1000 placements, and 100 concurrent progressive rollouts**"
+  header="**with 1,000 member clusters, 1,000 placements, and 100 concurrent progressive rollouts**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -343,7 +345,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 #### Hub agent
 
 {{< card
-  header="**with 1000 member clusters**"
+  header="**with 1,000 member clusters**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -360,7 +362,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 {{< /card >}}
 
 {{< card
-  header="**with 1000 member clusters and 1000 placements**"
+  header="**with 1,000 member clusters and 1,000 placements**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -377,7 +379,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 {{< /card >}}
 
 {{< card
-  header="**with 1000 member clusters, 1000 placements, and 100 concurrent progressive rollouts**"
+  header="**with 1,000 member clusters, 1,000 placements, and 100 concurrent progressive rollouts**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -396,7 +398,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 #### Member agent
 
 {{< card
-  header="**with 1000 member clusters**"
+  header="**with 1,000 member clusters**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -413,7 +415,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 {{< /card >}}
 
 {{< card
-  header="**with 1000 member clusters and 1000 placements**"
+  header="**with 1,000 member clusters and 1,000 placements**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -430,7 +432,7 @@ For more details about the placement and rollout configuration, see the [Methodo
 {{< /card >}}
 
 {{< card
-  header="**with 1000 member clusters, 1000 placements, and 100 concurrent progressive rollouts**"
+  header="**with 1,000 member clusters, 1,000 placements, and 100 concurrent progressive rollouts**"
 >}}
 <table class="tg"><thead>
   <tr>
@@ -460,9 +462,9 @@ It runs Kubernetes v1.34.4, and has the following AKS features enabled:
 * Microsoft Entra integration for Kubernetes authentication and authorization
 * Azure CNI node subnet networking
 
-The hub cluster manages 1000 member clusters. Each member cluster is a virtual Kubernetes cluster
+The hub cluster manages 1,000 member clusters. Each member cluster is a virtual Kubernetes cluster
 created using [the `vCluster` project](https://www.vcluster.com/), version 0.32.1. The member clusters
-are configured to also run Kubernetes v1.34.4. The 1000 member clusters are evenly spread across
+are configured to also run Kubernetes v1.34.4. The 1,000 member clusters are evenly spread across
 20 host clusters (50 virtual member clusters per host cluster); the host clusters are created
 in the same Azure region as the hub cluster (`westus2`), and each of them has one node pool of 4
 `Standard_D16s_v3` nodes (16 vCPUs and 64 GB memory each). The host clusters are also
@@ -500,13 +502,13 @@ The performance/scalability evaluation process consists of the following steps:
 * Set up the hub cluster and the member clusters as specified above.
     * Collect the hub cluster API server's resource usage data (CPU and memory), and the etcd
     storage backend's space usage; this helps establish a baseline for the resource usage levels.
-* Join the 1000 member clusters into the fleet.
-    * Each member cluster is assigned with a unique index, from 1 to 1000.
+* Join the 1,000 member clusters into the fleet.
+    * Each member cluster is assigned with a unique index, from 1 to 1,000.
     * For a member cluster of index `i`, it is labeled with a resource group `resource-group=i%10`.
     * A member cluster is also assigned with an environment label:
         * Member clusters with index between `[1, 200]` are labeled with `env=staging`;
         * Member clusters with index between `[201, 500]` are labeled with `env=canary`;
-        * Member clusters with index between `[501, 1000]` are labeled with `env=prod`.
+        * Member clusters with index between `[501, 1,000]` are labeled with `env=prod`.
 * After the joining completes successfully, collect the following data:
     * The hub cluster API server's resource usage data (CPU and memory), and etcd storage
     backend's space usage;
@@ -518,8 +520,8 @@ selector of `resource-group=N`. The placement is set to select a namespace, and 
 of 1 KB data + a deployment that runs the Kubernetes `pause` image with a replica count of 0.
 Repeat this step for 10 times with `N` set to `0-9` respectively.
     * Collect the p90 latency of placement processing across the 10 attempts.
-* Create 1000 placements that each picks 100 member clusters. Each placement is assigned with an
-index `i` from 1 to 1000, and it features a scheduling policy with a label selector of
+* Create 1,000 placements that each picks 100 member clusters. Each placement is assigned with an
+index `i` from 1 to 1,000, and it features a scheduling policy with a label selector of
 `resource-group=N`, where `N=i%10`. Similar to the setup above, each placement is set
 to select a namespace, and a config map of 1 KB data + a deployment that runs the
 Kubernetes `pause` image with a replica count of 0. Wait until all the placements
@@ -528,7 +530,7 @@ are complete.
 terminated, and then upscale it back to 1; this simulates a restart/re-sync process
 of the hub agent. Repeat this step for 10 times.
     * Collect the p90 re-syncing completion time after the hub agent restarts.
-* Create one additional (1000 + 1) placement that picks 100 member clusters, with a
+* Create one additional (1,000 + 1) placement that picks 100 member clusters, with a
 scheduling policy with a label selector of `resource-group=N`. Once again, the placement
 is set to select a namespace, and a config map of 1 KB data + a deployment that runs the
 Kubernetes `pause` image with a replica count of 0. Repeat this step for 10 times with
@@ -543,11 +545,11 @@ between stages. Repeat this step for 10 times with `N` set to `0-9` respectively
 The rollouts use the same policy as previously described. Wait until all the rollouts
 are complete.
     * Collect the p90 latency of rollout processing for the 100 concurrent rollouts.
-* While the 100 concurrent rollouts are in progress, create one additional (1000 + 1) placement
+* While the 100 concurrent rollouts are in progress, create one additional (1,000 + 1) placement
 in the same way as previously described. Repeat this step for 10 times.
     * Collect the p90 latency of placement processing across the 10 attempts.
-* At last, collect the following resource usage data when there are 1000 member clusters +
-1000 placements + 100 concurrent progressive rollouts in the fleet:
+* At last, collect the following resource usage data when there are 1,000 member clusters +
+1,000 placements + 100 concurrent progressive rollouts in the fleet:
     * The hub cluster API server's resource usage data (CPU and memory);
     * The hub cluster etcd storage backend's space usage;
     * The KubeFleet hub agent's resource usage data (CPU and memory);
@@ -571,19 +573,19 @@ etcd storage backend, are collected via Azure Monitoring tools.
 
 ## Results and Analysis
 
-### Joining 1000 member clusters into the fleet
+### Joining 1,000 member clusters into the fleet
 
 As a baseline for comparison, when the hub cluster is first provisioned and idling, the API
 server shows nominal CPU usage (~0.2 cores) and limited memory usage (~900 MB);
 on the storage side, around 20 MB of space is used.
 
-As we join the 1000 member clusters into the fleet (with a heartbeat interval of 60 seconds),
+As we join the 1,000 member clusters into the fleet (with a heartbeat interval of 60 seconds),
 we begin to see limited increases in the hub cluster API server's resource usage level;
 the CPU usage jumps to around 0.65 cores, and the memory usage a bit less than 1.4 GB.
 The added KubeFleet cluster management API objects (`MemberClusters`,
 `InternalMemberClusters`, etc.) take around 100 MB more space in the etcd storage backend.
 
-| | Idling | After joining 1000 member clusters |
+| | Idling | After joining 1,000 member clusters |
 | --- | --- | --- |
 | Hub cluster API server CPU usage | 252 millicores | 655 millicores |
 | Hub cluster API server memory usage | 871 MB | 1392 MB |
@@ -593,7 +595,7 @@ As one would expect, processing the heartbeat signals is an easy job for the Kub
 hub agent; we see almost no queueing delays on the controller end. The hub agent's CPU usage
 is less than 100 millicores, and its memory usage a bit more than 200 MB.
 
-| | After joining 1000 member clusters | Expectation (SLO) |
+| | After joining 1,000 member clusters | Expectation (SLO) |
 | --- | --- | --- |
 | p90 queueing delay of heartbeat signal processing on the hub agent side | 0.06s | Less than 1s <span class="badge bg-info">✔</span> |
 | Hub agent CPU usage | 93 millicores | Less than 1 core <span class="badge bg-info">✔</span> |
@@ -603,7 +605,7 @@ At this point of the evaluation a member agent instance needs to do very little 
 sending the heartbeat signal every 60 seconds), and consequently it consumes barely any
 CPU and memory resources: the CPU usage is less than 5 millicores, and the memory below 50 MB.
 
-| | After joining 1000 member clusters | Expectation (SLO) |
+| | After joining 1,000 member clusters | Expectation (SLO) |
 | --- | --- | --- |
 | Member agent CPU usage | 2.4 millicores | Less than 0.5 core <span class="badge bg-info">✔</span> |
 | Member agent memory usage | 32.8 MB | Less than 128 MB <span class="badge bg-info">✔</span> |
@@ -613,7 +615,7 @@ CPU and memory resources: the CPU usage is less than 5 millicores, and the memor
 #### The first placement
 
 It takes KubeFleet around 20 seconds (p90) to process a new placement that picks 100 member
-clusters in a fleet of 1000 member clusters, when there are no other placements or rollouts running.
+clusters in a fleet of 1,000 member clusters, when there are no other placements or rollouts running.
 We do see some level of variation across different attempts, with the latencies ranging
 between <10 seconds and 22 seconds. The result is reasonable and within our expectations,
 as the KubeFleet hub agent needs to filter out clusters and create 100 `Binding` objects and
@@ -623,11 +625,11 @@ as the KubeFleet hub agent needs to filter out clusters and create 100 `Binding`
 | --- | --- | --- | --- | --- | --- | --- |
 | 9s | 12s | 18s | 19s | 20s | 22s | p90 less than 30s <span class="badge bg-info">✔</span> | 
 
-#### The 1000 placements
+#### The 1,000 placements
 
-We then create 1000 placements of similar configurations in parallel and wait for their
+We then create 1,000 placements of similar configurations in parallel and wait for their
 completion. Once they are all done, we profile how well the KubeFleet hub agent can handle
-the 1000 placements when the agent restarts/re-syncs. Consistent with the standard
+the 1,000 placements when the agent restarts/re-syncs. Consistent with the standard
 Kubernetes controller development practices, to ensure system correctness, the KubeFleet
 hub agent will re-process all placements in a fleet hub cluster when it restarts, in case
 a change has been applied during the agent downtime. The agent is also configured to
@@ -635,10 +637,10 @@ repeat this re-processing step periodically (every 6 hours by default), to ensur
 that all changes will be captured and processed. This is a cost we have to cover nonetheless,
 despite the fact that often there will not be any change to process at all. 
 
-Re-processing 1000 placements can be an expensive operation. As briefly discussed earlier,
+Re-processing 1,000 placements can be an expensive operation. As briefly discussed earlier,
 every time a placement picks a member cluster, the KubeFleet hub agent will spawn a
 corresponding `Binding` object and one or more `Work` objects to facilitate the propagation
-of resources to the said member cluster; in our scenario, 1000 placements that each picks 100
+of resources to the said member cluster; in our scenario, 1,000 placements that each picks 100
 member clusters will lead to the creation of around 100K `Binding` objects and 100K `Work` objects
 in the hub cluster. Re-processing them not only takes time, but also comes with a side
 effect: when the KubeFleet hub agent is busy re-processing existing placement API objects,
@@ -646,7 +648,7 @@ newly created placements will be stuck waiting in the queue, and consequently on
 end one might experience a period of unresponsiveness when placing resources. The faster
 we can complete the re-processing, the shorter such a period of unresponsiveness will be.
 
-In the current build, it can take a bit more than 10 minutes for the re-processing of 1000
+In the current build, it can take a bit more than 10 minutes for the re-processing of 1,000
 placements to complete:
 
 | min | p25 | p50 | p75 | p90 | max | Expectation (SLO) |
@@ -671,7 +673,7 @@ manageable. We will continue to optimize our controllers to reduce the volume of
 during re-syncs, which should help bring down both the re-processing latency and the resource
 usage level on the hub cluster API server side.
 
-The 1000 placements, along with the spawned 100K `Binding` and 100K `Work` objects, take around
+The 1,000 placements, along with the spawned 100K `Binding` and 100K `Work` objects, take around
 1.6 GB of space in the etcd storage backend. For reference, etcd features a default space limit of
 2 GB and the limit can be raised to 8 GB if needed; all AKS clusters of the standard
 tier and above use the 8 GB limit. In other words, for larger fleets, storing KubeFleet API objects
@@ -687,11 +689,11 @@ Consequently the process has very little impact on the KubeFleet member agents' 
 We continue to see nominal level of CPU and memory usage (a few millicores and around
 40MB respectively) there during the re-processing period.
 
-#### The 1000 + 1 placement
+#### The 1,000 + 1 placement
 
 The number of existing placements in the hub cluster has very little impact on the
 processing latency of new placements. The evaluation reports that creating one
-additional placement on top of the 1000 placements takes around 21 seconds to complete
+additional placement on top of the 1,000 placements takes around 21 seconds to complete
 (p90), which is very close to the latency of creating the very first placement
 in the system.
 
@@ -734,7 +736,7 @@ memory usage around 40 MB.
 
 For the hub cluster API server, it uses more than 8 CPU cores during the rollout, and
 more than 31 GB of memory. As explained earlier, we remain committed to further
-optimizations in this area in future iterations. Hosting the 1000 member clusters + 1000
+optimizations in this area in future iterations. Hosting the 1,000 member clusters + 1,000
 placements + 100 concurrent staged rollouts takes less than 1.6 GB of space in the
 hub cluster etcd storage backend.
 
@@ -755,7 +757,7 @@ have less bandwidth to deal with the new placement.
 The KubeFleet development team strives to continuously evolve KubeFleet's architecture,
 design, and implementation to meet the needs of multi-cluster management at a larger scale.
 The performance and scalability evaluation we have performed so far has revealed that 
-**KubeFleet can support larger-scale deployments, with 1000 member clusters + 1000 placements +
+**KubeFleet can support larger-scale deployments, with 1,000 member clusters + 1,000 placements +
 100 concurrent progressive rollouts, reasonably well with the right configuration**. To run KubeFleet
 at the target scale, it is recommended that users:
 
