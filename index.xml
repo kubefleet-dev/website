@@ -606,4 +606,55 @@ The users need to use &lt;a href="../howtos/taint-toleration.md">taints&lt;/a> i
 &lt;li>&lt;strong>ResourcePlacement&lt;/strong>: Propagates the AI/ML job and LocalQueue to selected clusters within the namespace&lt;/li>
 &lt;li>&lt;strong>Kueue&lt;/strong>: Manages job queuing and resource quotas within each cluster&lt;/li>
 &lt;/ul>
-&lt;p>This combination ensures efficient scheduling and resource utilization for your AI workloads across your entire fleet.&lt;/p></description></item></channel></rss>
+&lt;p>This combination ensures efficient scheduling and resource utilization for your AI workloads across your entire fleet.&lt;/p></description></item><item><title>KubeFleet Performance and Scalability Report - Q1 2026</title><link>https://kubefleet.dev/blog/2026/04/07/kubefleet-performance-and-scalability-report-q1-2026/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/blog/2026/04/07/kubefleet-performance-and-scalability-report-q1-2026/</guid><description>&lt;h2 id="tldr">TL;DR&lt;/h2>
+&lt;ul>
+&lt;li>With proper confirmation, you can use KubeFleet to manage a large-scale multi-cluster enviornment
+environment with up to &lt;strong>1,000 member clusters, 1,000 placements, and 100 concurrent progressive rollouts&lt;/strong>.&lt;/li>
+&lt;li>To support deployments at such a scale,
+&lt;ul>
+&lt;li>on your KubeFleet hub cluster:
+&lt;ul>
+&lt;li>make sure that the API server and its etcd storage backend are configured to handle higher volume
+of requests. In this evaluation, we see that:
+&lt;ul>
+&lt;li>the API server may take 10+ cores of CPU and 30+ GB of memory when KubeFleet is busy processing
+a large number of placements and progressive rollouts concurrently;&lt;/li>
+&lt;li>the KubeFleet API objects in total consume approximately 2 GB of space on the etcd storage backend.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>make sure that the KubeFleet hub agent is allocated with ample CPU and memory resources:
+&lt;ul>
+&lt;li>the agent needs 8-12 cores and 16-24 GB of memory to run smoothly in a large-scale multi-cluster environment.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>the KubeFleet member agent can run reasonably well with a much smaller resource
+allocation (e.g., 1 core and 2 GB of memory).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>KubeFleet can reliably process placements and progressive rollouts fast in a larger-scale environment:
+&lt;ul>
+&lt;li>Typically a placement that picks 100 member clusters in a fleet of 1,000 clusters using a label
+selector can be processed within 30 seconds.&lt;/li>
+&lt;li>A 3-staged, non-gated progressive rollout with 50% in-stage concurrency can be completed within
+2 minutes. Running 100 of such rollouts concurrently usually takes less than 4 minutes to complete.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>As with any Kubernetes controllers, the KubeFleet agents, especially the hub agent, need to re-sync
+resources periodically or when they restart. In a larger-scale environment with many (1,000) placements,
+the re-processing should take less than 15 minutes to complete. During this period, you might experience
+some level of degraded responsiveness in the system.&lt;/li>
+&lt;li>We are committed to continuously optimizing KubeFleet&amp;rsquo;s performance and scalability; this report
+is the result of one of the many rounds of evaluations we plan to conduct as KubeFleet continues to evolve.
+The team aims to support larger-scale deployments better, with faster processing of placements and rollouts,
+and less resource consumption on both the API server end and the KubeFleet agent end. The team is currently
+working to revamp how KubeFleet handles heartbeat signals and cluster property collection for a smoother
+experience. Please reach out to us if you have any concerns or suggestions in the domain of KubeFleet performance and scalability.&lt;/li>
+&lt;/ul>
+
+
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">A side note&lt;/h4>
+
+ &lt;p>Your experience with KubeFleet may vary due to a variety of factors, such as:&lt;/p></description></item></channel></rss>
