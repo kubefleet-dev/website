@@ -1,0 +1,154 @@
+name: Monitor actions-hugo Node24 Support
+
+on:
+  schedule:
+    # Run once per day at 08:00 UTC
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-actions-hugo-node24:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check if actions-hugo issue #675 is closed and Node24 version exists
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+
+          # Check whether the upstream issue is closed
+          ISSUE_STATE=$(gh api repos/peaceiris/actions-hugo/issues/675 --jq '.state')
+          echo "Issue state: $ISSUE_STATE"
+
+          if [ "$ISSUE_STATE" != "closed" ]; then
+            echo "Issue #675 is still open – nothing to do."
+            echo "node24_available=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Issue #675 is closed – checking for a Node.js 24 release of actions-hugo..."
+
+          # Fetch the latest release tag
+          LATEST_TAG=$(gh api repos/peaceiris/actions-hugo/releases/latest --jq '.tag_name')
+          echo "Latest release tag: $LATEST_TAG"
+
+          # Download the action.yml from that tag and check the runtime
+          RUNTIME=$(gh api "repos/peaceiris/actions-hugo/contents/action.yml?ref=$LATEST_TAG" \
+            --jq '.content' | base64 -d | python3 -c "
+import sys, re
+content = sys.stdin.read()
+m = re.search(r\"using:\\s*['\\\"]?(node\\d+)['\\\"]?\", content)
+print(m.group(1) if m else 'unknown')
+" || true)
+          echo "Runtime in action.yml: $RUNTIME"
+
+          if [[ "$RUNTIME" == "node24" ]]; then
+            echo "node24_available=true" >> "$GITHUB_OUTPUT"
+            echo "latest_tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+          else
+            echo "No Node.js 24 release found yet (runtime is '$RUNTIME')."
+            echo "node24_available=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update github-pages.yml to use peaceiris/actions-hugo
+        if: steps.check.outputs.node24_available == 'true'
+        env:
+          LATEST_TAG: ${{ steps.check.outputs.latest_tag }}
+        run: |
+          set -e
+
+          WORKFLOW=".github/workflows/github-pages.yml"
+
+          # Replace the manual Hugo install block with the action
+          python3 - <<'PYEOF'
+          import os, re, sys
+
+          tag = os.environ["LATEST_TAG"]
+          path = ".github/workflows/github-pages.yml"
+
+          with open(path) as f:
+              content = f.read()
+
+          # Extract the Hugo version already in use from the wget URL.
+          # Assumes the URL contains the pattern: hugo_extended_<version>_linux-amd64.deb
+          # (the format used in the manual Setup Hugo step added by this repository).
+          version_match = re.search(
+              r'hugo_extended_([\d.]+)_linux-amd64\.deb', content
+          )
+          if not version_match:
+              print("Could not determine Hugo version from the existing workflow.")
+              sys.exit(1)
+          hugo_version = version_match.group(1)
+          print(f"Detected Hugo version: {hugo_version}")
+
+          # Pattern matches the "Setup Hugo" run block as written in this repository.
+          # The block starts with `set -e`, downloads a .deb via wget, installs it, and
+          # prints the version. Adjust this pattern if the step format changes.
+          old_block = re.compile(
+              r'      - name: Setup Hugo\n'
+              r'        run: \|\n'
+              r'(?:          [^\n]*\n)*?'   # any number of indented lines (non-greedy)
+              r'(?=      - )',               # stop before the next step
+              re.MULTILINE,
+          )
+
+          new_block = (
+              f"      - name: Setup Hugo\n"
+              f"        uses: peaceiris/actions-hugo@{tag}\n"
+              f"        with:\n"
+              f"          hugo-version: '{hugo_version}'\n"
+              f"          extended: true\n"
+          )
+
+          if not old_block.search(content):
+              print("Could not find the manual Hugo install block – workflow may have changed.")
+              sys.exit(1)
+
+          content = old_block.sub(new_block, content)
+
+          with open(path, "w") as f:
+              f.write(content)
+
+          print(f"Updated {path} to use peaceiris/actions-hugo@{tag}")
+          PYEOF
+
+      - name: Create Pull Request
+        if: steps.check.outputs.node24_available == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            ci: switch back to peaceiris/actions-hugo ${{ steps.check.outputs.latest_tag }} (Node.js 24)
+
+            The upstream action now supports Node.js 24.
+            See https://github.com/peaceiris/actions-hugo/issues/675
+
+            Signed-off-by: GitHub Actions Bot <actions@github.com>
+          committer: GitHub Actions Bot <actions@github.com>
+          author: GitHub Actions Bot <actions@github.com>
+          branch: restore-actions-hugo-node24
+          base: main
+          delete-branch: true
+          title: 'ci: restore peaceiris/actions-hugo (${{ steps.check.outputs.latest_tag }}) now that it supports Node.js 24'
+          body: |
+            ## Restore `peaceiris/actions-hugo`
+
+            The upstream issue [peaceiris/actions-hugo#675](https://github.com/peaceiris/actions-hugo/issues/675)
+            has been resolved and `peaceiris/actions-hugo@${{ steps.check.outputs.latest_tag }}` now runs on Node.js 24.
+
+            This PR reverts the manual Hugo binary installation back to the action,
+            keeping the workflow concise and easier to maintain.
+
+            ---
+            🤖 This PR was automatically created by the `monitor-actions-hugo-node24` workflow.
+          labels: |
+            ci
+            automated
