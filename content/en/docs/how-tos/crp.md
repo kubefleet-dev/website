@@ -266,9 +266,9 @@ spec:
             preferredDuringSchedulingIgnoredDuringExecution:
                 - weight: 20
                   preference:
-                    - labelSelector:
-                        matchLabels:
-                            critical-level: 1
+                      labelSelector:
+                          matchLabels:
+                              critical-level: "1"
 ```
 
 The `ClusterResourcePlacement` object above will pick first clusters with the `critical-level=1`
