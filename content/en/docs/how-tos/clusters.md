@@ -14,8 +14,7 @@ This how-to guide discusses how to manage clusters in a fleet, specifically:
 
 A cluster can join in a fleet if:
 
-* it runs a supported Kubernetes version; it is recommended that you use Kubernetes 1.24 or later
-versions, and
+* it runs a [currently supported Kubernetes version](https://kubernetes.io/releases/version-skew-policy/) — KubeFleet builds against `client-go` v0.34 (Kubernetes 1.31 or later under the standard skew policy) and CI tests against Kubernetes 1.33; and
 * it has network connectivity to the hub cluster of the fleet.
 
 For your convenience, Fleet provides a script that can automate the process of joining a cluster

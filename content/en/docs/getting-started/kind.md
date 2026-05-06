@@ -55,7 +55,7 @@ The output will look similar to the following.
 
 ```output
 Creating cluster "kf-hub-01" ...
- ✓ Ensuring node image (kindest/node:v1.35.0) 🖼
+ ✓ Ensuring node image (kindest/node:v1.32.8) 🖼
  ✓ Preparing nodes 📦
  ✓ Writing configuration 📜
  ✓ Starting control-plane 🕹️
