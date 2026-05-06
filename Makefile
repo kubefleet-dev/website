@@ -13,7 +13,7 @@ help: ## Display this help message
 .PHONY: install-tools
 install-tools: ## Install required tools (crd-ref-docs)
 	@echo "Installing crd-ref-docs..."
-	go install github.com/elastic/crd-ref-docs@latest
+	go install github.com/elastic/crd-ref-docs@v0.3.0
 
 .PHONY: clone-kubefleet
 clone-kubefleet: ## Clone KubeFleet source repository
