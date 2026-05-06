@@ -1,222 +1,222 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>API Reference on KubeFleet</title><link>https://kubefleet.dev/docs/api-reference/</link><description>Recent content in API Reference on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet.dev/docs/api-reference/index.xml" rel="self" type="application/rss+xml"/><item><title>cluster.kubernetes-fleet.io/v1</title><link>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/</guid><description>&lt;h1 id="api-reference">API Reference&lt;/h1>
-&lt;h2 id="packages">Packages&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#clusterkubernetes-fleetiov1">cluster.kubernetes-fleet.io/v1&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="clusterkubernetes-fleetiov1">cluster.kubernetes-fleet.io/v1&lt;/h2>
-&lt;h3 id="resource-types">Resource Types&lt;/h3>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#internalmembercluster">InternalMemberCluster&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#internalmemberclusterlist">InternalMemberClusterList&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#membercluster">MemberCluster&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#memberclusterlist">MemberClusterList&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h4 id="agentstatus">AgentStatus&lt;/h4>
-&lt;p>AgentStatus defines the observed status of the member agent of the given type.&lt;/p>
-&lt;p>&lt;em>Appears in:&lt;/em>&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#internalmemberclusterstatus">InternalMemberClusterStatus&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#memberclusterstatus">MemberClusterStatus&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>Field&lt;/th>
- &lt;th>Description&lt;/th>
- &lt;th>Default&lt;/th>
- &lt;th>Validation&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>&lt;code>type&lt;/code> &lt;em>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#agenttype">AgentType&lt;/a>&lt;/em>&lt;/td>
- &lt;td>Type of the member agent.&lt;/td>
- &lt;td>&lt;/td>
- &lt;td>Required: {} &lt;br />&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>&lt;code>conditions&lt;/code> &lt;em>&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta">Condition&lt;/a> array&lt;/em>&lt;/td>
- &lt;td>Conditions is an array of current observed conditions for the member agent.&lt;/td>
- &lt;td>&lt;/td>
- &lt;td>Optional: {} &lt;br />&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>&lt;code>lastReceivedHeartbeat&lt;/code> &lt;em>&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta">Time&lt;/a>&lt;/em>&lt;/td>
- &lt;td>Last time we received a heartbeat from the member agent.&lt;/td>
- &lt;td>&lt;/td>
- &lt;td>Optional: {} &lt;br />&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;h4 id="agenttype">AgentType&lt;/h4>
-&lt;p>&lt;em>Underlying type:&lt;/em> &lt;em>string&lt;/em>&lt;/p></description></item><item><title>cluster.kubernetes-fleet.io/v1beta1</title><link>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/</guid><description>&lt;h1 id="api-reference">API Reference&lt;/h1>
-&lt;h2 id="packages">Packages&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#clusterkubernetes-fleetiov1beta1">cluster.kubernetes-fleet.io/v1beta1&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="clusterkubernetes-fleetiov1beta1">cluster.kubernetes-fleet.io/v1beta1&lt;/h2>
-&lt;h3 id="resource-types">Resource Types&lt;/h3>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#internalmembercluster">InternalMemberCluster&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#internalmemberclusterlist">InternalMemberClusterList&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#membercluster">MemberCluster&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#memberclusterlist">MemberClusterList&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h4 id="agentstatus">AgentStatus&lt;/h4>
-&lt;p>AgentStatus defines the observed status of the member agent of the given type.&lt;/p>
-&lt;p>&lt;em>Appears in:&lt;/em>&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#internalmemberclusterstatus">InternalMemberClusterStatus&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#memberclusterstatus">MemberClusterStatus&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>Field&lt;/th>
- &lt;th>Description&lt;/th>
- &lt;th>Default&lt;/th>
- &lt;th>Validation&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>&lt;code>type&lt;/code> &lt;em>&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#agenttype">AgentType&lt;/a>&lt;/em>&lt;/td>
- &lt;td>Type of the member agent.&lt;/td>
- &lt;td>&lt;/td>
- &lt;td>Required: {} &lt;br />&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>&lt;code>conditions&lt;/code> &lt;em>&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta">Condition&lt;/a> array&lt;/em>&lt;/td>
- &lt;td>Conditions is an array of current observed conditions for the member agent.&lt;/td>
- &lt;td>&lt;/td>
- &lt;td>Optional: {} &lt;br />&lt;/td>
- &lt;/tr>
- &lt;tr>
- &lt;td>&lt;code>lastReceivedHeartbeat&lt;/code> &lt;em>&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta">Time&lt;/a>&lt;/em>&lt;/td>
- &lt;td>Last time we received a heartbeat from the member agent.&lt;/td>
- &lt;td>&lt;/td>
- &lt;td>Optional: {} &lt;br />&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;h4 id="agenttype">AgentType&lt;/h4>
-&lt;p>&lt;em>Underlying type:&lt;/em> &lt;em>string&lt;/em>&lt;/p></description></item><item><title>placement.kubernetes-fleet.io/v1</title><link>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/</guid><description>&lt;h1 id="api-reference">API Reference&lt;/h1>
-&lt;h2 id="packages">Packages&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#placementkubernetes-fleetiov1">placement.kubernetes-fleet.io/v1&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="placementkubernetes-fleetiov1">placement.kubernetes-fleet.io/v1&lt;/h2>
-&lt;h3 id="resource-types">Resource Types&lt;/h3>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#appliedwork">AppliedWork&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#appliedworklist">AppliedWorkList&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#approvalrequest">ApprovalRequest&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterapprovalrequest">ClusterApprovalRequest&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourcebinding">ClusterResourceBinding&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceoverride">ClusterResourceOverride&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceoverridesnapshot">ClusterResourceOverrideSnapshot&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceplacement">ClusterResourcePlacement&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceplacementstatus">ClusterResourcePlacementStatus&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceplacementstatuslist">ClusterResourcePlacementStatusList&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourcesnapshot">ClusterResourceSnapshot&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterschedulingpolicysnapshot">ClusterSchedulingPolicySnapshot&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterstagedupdaterun">ClusterStagedUpdateRun&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterstagedupdatestrategy">ClusterStagedUpdateStrategy&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceoverride">ResourceOverride&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceoverridesnapshot">ResourceOverrideSnapshot&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceplacement">ResourcePlacement&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceplacementlist">ResourcePlacementList&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#stagedupdaterun">StagedUpdateRun&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#stagedupdatestrategy">StagedUpdateStrategy&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#work">Work&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#worklist">WorkList&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h4 id="affinity">Affinity&lt;/h4>
-&lt;p>Affinity is a group of cluster affinity scheduling rules. More to be added.&lt;/p>
-&lt;p>&lt;em>Appears in:&lt;/em>&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#placementpolicy">PlacementPolicy&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>Field&lt;/th>
- &lt;th>Description&lt;/th>
- &lt;th>Default&lt;/th>
- &lt;th>Validation&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>&lt;code>clusterAffinity&lt;/code> &lt;em>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusteraffinity">ClusterAffinity&lt;/a>&lt;/em>&lt;/td>
- &lt;td>ClusterAffinity contains cluster affinity scheduling rules for the selected resources.&lt;/td>
- &lt;td>&lt;/td>
- &lt;td>Optional: {} &lt;br />&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;h4 id="appliedresourcemeta">AppliedResourceMeta&lt;/h4>
-&lt;p>AppliedResourceMeta represents the group, version, resource, name and namespace of a resource.
-Since these resources have been created, they must have valid group, version, resource, namespace, and name.&lt;/p></description></item><item><title>placement.kubernetes-fleet.io/v1beta1</title><link>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</guid><description>&lt;h1 id="api-reference">API Reference&lt;/h1>
-&lt;h2 id="packages">Packages&lt;/h2>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#placementkubernetes-fleetiov1beta1">placement.kubernetes-fleet.io/v1beta1&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="placementkubernetes-fleetiov1beta1">placement.kubernetes-fleet.io/v1beta1&lt;/h2>
-&lt;h3 id="resource-types">Resource Types&lt;/h3>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#appliedwork">AppliedWork&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#appliedworklist">AppliedWorkList&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#approvalrequest">ApprovalRequest&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterapprovalrequest">ClusterApprovalRequest&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourcebinding">ClusterResourceBinding&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceenvelope">ClusterResourceEnvelope&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceoverride">ClusterResourceOverride&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceoverridesnapshot">ClusterResourceOverrideSnapshot&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacement">ClusterResourcePlacement&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacementdisruptionbudget">ClusterResourcePlacementDisruptionBudget&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacementeviction">ClusterResourcePlacementEviction&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacementstatus">ClusterResourcePlacementStatus&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourcesnapshot">ClusterResourceSnapshot&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterschedulingpolicysnapshot">ClusterSchedulingPolicySnapshot&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterstagedupdaterun">ClusterStagedUpdateRun&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterstagedupdatestrategy">ClusterStagedUpdateStrategy&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourcebinding">ResourceBinding&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceenvelope">ResourceEnvelope&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceoverride">ResourceOverride&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceoverridesnapshot">ResourceOverrideSnapshot&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceplacement">ResourcePlacement&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourcesnapshot">ResourceSnapshot&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#schedulingpolicysnapshot">SchedulingPolicySnapshot&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#stagedupdaterun">StagedUpdateRun&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#stagedupdatestrategy">StagedUpdateStrategy&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#work">Work&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#worklist">WorkList&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h4 id="affinity">Affinity&lt;/h4>
-&lt;p>Affinity is a group of cluster affinity scheduling rules. More to be added.&lt;/p>
-&lt;p>&lt;em>Appears in:&lt;/em>&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#placementpolicy">PlacementPolicy&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;table>
- &lt;thead>
- &lt;tr>
- &lt;th>Field&lt;/th>
- &lt;th>Description&lt;/th>
- &lt;th>Default&lt;/th>
- &lt;th>Validation&lt;/th>
- &lt;/tr>
- &lt;/thead>
- &lt;tbody>
- &lt;tr>
- &lt;td>&lt;code>clusterAffinity&lt;/code> &lt;em>&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusteraffinity">ClusterAffinity&lt;/a>&lt;/em>&lt;/td>
- &lt;td>ClusterAffinity contains cluster affinity scheduling rules for the selected resources.&lt;/td>
- &lt;td>&lt;/td>
- &lt;td>Optional: {} &lt;br />&lt;/td>
- &lt;/tr>
- &lt;/tbody>
-&lt;/table>
-&lt;h4 id="appliedresourcemeta">AppliedResourceMeta&lt;/h4>
-&lt;p>AppliedResourceMeta represents the group, version, resource, name and namespace of a resource.
-Since these resources have been created, they must have valid group, version, resource, namespace, and name.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>API Reference on KubeFleet</title><link>https://kubefleet.dev/docs/api-reference/</link><description>Recent content in API Reference on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet.dev/docs/api-reference/index.xml" rel="self" type="application/rss+xml"/><item><title>cluster.kubernetes-fleet.io/v1</title><link>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/</guid><description>&lt;h1 id="api-reference"&gt;API Reference&lt;/h1&gt;
+&lt;h2 id="packages"&gt;Packages&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#clusterkubernetes-fleetiov1"&gt;cluster.kubernetes-fleet.io/v1&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="clusterkubernetes-fleetiov1"&gt;cluster.kubernetes-fleet.io/v1&lt;/h2&gt;
+&lt;h3 id="resource-types"&gt;Resource Types&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#internalmembercluster"&gt;InternalMemberCluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#internalmemberclusterlist"&gt;InternalMemberClusterList&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#membercluster"&gt;MemberCluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#memberclusterlist"&gt;MemberClusterList&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="agentstatus"&gt;AgentStatus&lt;/h4&gt;
+&lt;p&gt;AgentStatus defines the observed status of the member agent of the given type.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Appears in:&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#internalmemberclusterstatus"&gt;InternalMemberClusterStatus&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#memberclusterstatus"&gt;MemberClusterStatus&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Field&lt;/th&gt;
+ &lt;th&gt;Description&lt;/th&gt;
+ &lt;th&gt;Default&lt;/th&gt;
+ &lt;th&gt;Validation&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;type&lt;/code&gt; &lt;em&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1/#agenttype"&gt;AgentType&lt;/a&gt;&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Type of the member agent.&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;Required: {} &lt;br /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;conditions&lt;/code&gt; &lt;em&gt;&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta"&gt;Condition&lt;/a&gt; array&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Conditions is an array of current observed conditions for the member agent.&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;Optional: {} &lt;br /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;lastReceivedHeartbeat&lt;/code&gt; &lt;em&gt;&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta"&gt;Time&lt;/a&gt;&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Last time we received a heartbeat from the member agent.&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;Optional: {} &lt;br /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="agenttype"&gt;AgentType&lt;/h4&gt;
+&lt;p&gt;&lt;em&gt;Underlying type:&lt;/em&gt; &lt;em&gt;string&lt;/em&gt;&lt;/p&gt;</description></item><item><title>cluster.kubernetes-fleet.io/v1beta1</title><link>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/</guid><description>&lt;h1 id="api-reference"&gt;API Reference&lt;/h1&gt;
+&lt;h2 id="packages"&gt;Packages&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#clusterkubernetes-fleetiov1beta1"&gt;cluster.kubernetes-fleet.io/v1beta1&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="clusterkubernetes-fleetiov1beta1"&gt;cluster.kubernetes-fleet.io/v1beta1&lt;/h2&gt;
+&lt;h3 id="resource-types"&gt;Resource Types&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#internalmembercluster"&gt;InternalMemberCluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#internalmemberclusterlist"&gt;InternalMemberClusterList&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#membercluster"&gt;MemberCluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#memberclusterlist"&gt;MemberClusterList&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="agentstatus"&gt;AgentStatus&lt;/h4&gt;
+&lt;p&gt;AgentStatus defines the observed status of the member agent of the given type.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Appears in:&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#internalmemberclusterstatus"&gt;InternalMemberClusterStatus&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#memberclusterstatus"&gt;MemberClusterStatus&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Field&lt;/th&gt;
+ &lt;th&gt;Description&lt;/th&gt;
+ &lt;th&gt;Default&lt;/th&gt;
+ &lt;th&gt;Validation&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;type&lt;/code&gt; &lt;em&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/cluster.kubernetes-fleet.io/v1beta1/#agenttype"&gt;AgentType&lt;/a&gt;&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Type of the member agent.&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;Required: {} &lt;br /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;conditions&lt;/code&gt; &lt;em&gt;&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta"&gt;Condition&lt;/a&gt; array&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Conditions is an array of current observed conditions for the member agent.&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;Optional: {} &lt;br /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;lastReceivedHeartbeat&lt;/code&gt; &lt;em&gt;&lt;a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta"&gt;Time&lt;/a&gt;&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Last time we received a heartbeat from the member agent.&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;Optional: {} &lt;br /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="agenttype"&gt;AgentType&lt;/h4&gt;
+&lt;p&gt;&lt;em&gt;Underlying type:&lt;/em&gt; &lt;em&gt;string&lt;/em&gt;&lt;/p&gt;</description></item><item><title>placement.kubernetes-fleet.io/v1</title><link>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/</guid><description>&lt;h1 id="api-reference"&gt;API Reference&lt;/h1&gt;
+&lt;h2 id="packages"&gt;Packages&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#placementkubernetes-fleetiov1"&gt;placement.kubernetes-fleet.io/v1&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="placementkubernetes-fleetiov1"&gt;placement.kubernetes-fleet.io/v1&lt;/h2&gt;
+&lt;h3 id="resource-types"&gt;Resource Types&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#appliedwork"&gt;AppliedWork&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#appliedworklist"&gt;AppliedWorkList&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#approvalrequest"&gt;ApprovalRequest&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterapprovalrequest"&gt;ClusterApprovalRequest&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourcebinding"&gt;ClusterResourceBinding&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceoverride"&gt;ClusterResourceOverride&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceoverridesnapshot"&gt;ClusterResourceOverrideSnapshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceplacement"&gt;ClusterResourcePlacement&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceplacementstatus"&gt;ClusterResourcePlacementStatus&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourceplacementstatuslist"&gt;ClusterResourcePlacementStatusList&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterresourcesnapshot"&gt;ClusterResourceSnapshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterschedulingpolicysnapshot"&gt;ClusterSchedulingPolicySnapshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterstagedupdaterun"&gt;ClusterStagedUpdateRun&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusterstagedupdatestrategy"&gt;ClusterStagedUpdateStrategy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceoverride"&gt;ResourceOverride&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceoverridesnapshot"&gt;ResourceOverrideSnapshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceplacement"&gt;ResourcePlacement&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#resourceplacementlist"&gt;ResourcePlacementList&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#stagedupdaterun"&gt;StagedUpdateRun&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#stagedupdatestrategy"&gt;StagedUpdateStrategy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#work"&gt;Work&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#worklist"&gt;WorkList&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="affinity"&gt;Affinity&lt;/h4&gt;
+&lt;p&gt;Affinity is a group of cluster affinity scheduling rules. More to be added.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Appears in:&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#placementpolicy"&gt;PlacementPolicy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Field&lt;/th&gt;
+ &lt;th&gt;Description&lt;/th&gt;
+ &lt;th&gt;Default&lt;/th&gt;
+ &lt;th&gt;Validation&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;clusterAffinity&lt;/code&gt; &lt;em&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1/#clusteraffinity"&gt;ClusterAffinity&lt;/a&gt;&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;ClusterAffinity contains cluster affinity scheduling rules for the selected resources.&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;Optional: {} &lt;br /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="appliedresourcemeta"&gt;AppliedResourceMeta&lt;/h4&gt;
+&lt;p&gt;AppliedResourceMeta represents the group, version, resource, name and namespace of a resource.
+Since these resources have been created, they must have valid group, version, resource, namespace, and name.&lt;/p&gt;</description></item><item><title>placement.kubernetes-fleet.io/v1beta1</title><link>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/</guid><description>&lt;h1 id="api-reference"&gt;API Reference&lt;/h1&gt;
+&lt;h2 id="packages"&gt;Packages&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#placementkubernetes-fleetiov1beta1"&gt;placement.kubernetes-fleet.io/v1beta1&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="placementkubernetes-fleetiov1beta1"&gt;placement.kubernetes-fleet.io/v1beta1&lt;/h2&gt;
+&lt;h3 id="resource-types"&gt;Resource Types&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#appliedwork"&gt;AppliedWork&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#appliedworklist"&gt;AppliedWorkList&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#approvalrequest"&gt;ApprovalRequest&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterapprovalrequest"&gt;ClusterApprovalRequest&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourcebinding"&gt;ClusterResourceBinding&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceenvelope"&gt;ClusterResourceEnvelope&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceoverride"&gt;ClusterResourceOverride&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceoverridesnapshot"&gt;ClusterResourceOverrideSnapshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacement"&gt;ClusterResourcePlacement&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacementdisruptionbudget"&gt;ClusterResourcePlacementDisruptionBudget&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacementeviction"&gt;ClusterResourcePlacementEviction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourceplacementstatus"&gt;ClusterResourcePlacementStatus&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterresourcesnapshot"&gt;ClusterResourceSnapshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterschedulingpolicysnapshot"&gt;ClusterSchedulingPolicySnapshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterstagedupdaterun"&gt;ClusterStagedUpdateRun&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusterstagedupdatestrategy"&gt;ClusterStagedUpdateStrategy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourcebinding"&gt;ResourceBinding&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceenvelope"&gt;ResourceEnvelope&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceoverride"&gt;ResourceOverride&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceoverridesnapshot"&gt;ResourceOverrideSnapshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourceplacement"&gt;ResourcePlacement&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#resourcesnapshot"&gt;ResourceSnapshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#schedulingpolicysnapshot"&gt;SchedulingPolicySnapshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#stagedupdaterun"&gt;StagedUpdateRun&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#stagedupdatestrategy"&gt;StagedUpdateStrategy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#work"&gt;Work&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#worklist"&gt;WorkList&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="affinity"&gt;Affinity&lt;/h4&gt;
+&lt;p&gt;Affinity is a group of cluster affinity scheduling rules. More to be added.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Appears in:&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#placementpolicy"&gt;PlacementPolicy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Field&lt;/th&gt;
+ &lt;th&gt;Description&lt;/th&gt;
+ &lt;th&gt;Default&lt;/th&gt;
+ &lt;th&gt;Validation&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;clusterAffinity&lt;/code&gt; &lt;em&gt;&lt;a href="https://kubefleet.dev/docs/api-reference/placement.kubernetes-fleet.io/v1beta1/#clusteraffinity"&gt;ClusterAffinity&lt;/a&gt;&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;ClusterAffinity contains cluster affinity scheduling rules for the selected resources.&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;Optional: {} &lt;br /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="appliedresourcemeta"&gt;AppliedResourceMeta&lt;/h4&gt;
+&lt;p&gt;AppliedResourceMeta represents the group, version, resource, name and namespace of a resource.
+Since these resources have been created, they must have valid group, version, resource, namespace, and name.&lt;/p&gt;</description></item></channel></rss>
