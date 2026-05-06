@@ -142,8 +142,7 @@ the outbound network and no inbound network access.&lt;/p></description></item><
 &lt;h2 id="joining-a-cluster-into-a-fleet">Joining a cluster into a fleet&lt;/h2>
 &lt;p>A cluster can join in a fleet if:&lt;/p>
 &lt;ul>
-&lt;li>it runs a supported Kubernetes version; it is recommended that you use Kubernetes 1.24 or later
-versions, and&lt;/li>
+&lt;li>it runs a &lt;a href="https://kubernetes.io/releases/version-skew-policy/">currently supported Kubernetes version&lt;/a> — KubeFleet builds against &lt;code>client-go&lt;/code> v0.34 (Kubernetes 1.31 or later under the standard skew policy) and CI tests against Kubernetes 1.33; and&lt;/li>
 &lt;li>it has network connectivity to the hub cluster of the fleet.&lt;/li>
 &lt;/ul>
 &lt;p>For your convenience, Fleet provides a script that can automate the process of joining a cluster
