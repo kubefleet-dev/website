@@ -38,8 +38,8 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `type` _[AgentType](#agenttype)_ | Type of the member agent. |  | Required: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the member agent. |  | Optional: \{\} <br /> |
-| `lastReceivedHeartbeat` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | Last time we received a heartbeat from the member agent. |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the member agent. |  | Optional: \{\} <br /> |
+| `lastReceivedHeartbeat` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | Last time we received a heartbeat from the member agent. |  | Optional: \{\} <br /> |
 
 
 #### AgentType
@@ -125,7 +125,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `cluster.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `InternalMemberCluster` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[InternalMemberClusterSpec](#internalmemberclusterspec)_ | The desired state of InternalMemberCluster. |  | Required: \{\} <br /> |
 | `status` _[InternalMemberClusterStatus](#internalmemberclusterstatus)_ | The observed status of InternalMemberCluster. |  | Optional: \{\} <br /> |
 
@@ -144,7 +144,7 @@ InternalMemberClusterList contains a list of InternalMemberCluster.
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `cluster.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `InternalMemberClusterList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[InternalMemberCluster](#internalmembercluster) array_ |  |  |  |
 
 
@@ -178,7 +178,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the member cluster. |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the member cluster. |  | Optional: \{\} <br /> |
 | `properties` _object (keys:[PropertyName](#propertyname), values:[PropertyValue](#propertyvalue))_ | Properties is an array of properties observed for the member cluster.<br />This field is beta-level; it is for the property-based scheduling feature and is only<br />populated when a property provider is enabled in the deployment. |  | Optional: \{\} <br /> |
 | `resourceUsage` _[ResourceUsage](#resourceusage)_ | The current observed resource usage of the member cluster. It is populated by the member agent. |  | Optional: \{\} <br /> |
 | `namespaces` _object (keys:string, values:string)_ | Namespaces is a map of namespace names to their associated work names for namespaces<br />that are managed by Fleet (i.e., have AppliedWork owner references when created).<br />The key is the namespace name and the value is the work name from the AppliedWork owner reference.<br />If the namespace does not have an AppliedWork owner reference, the value will be an empty string.<br />This field is populated by the property provider when namespace collection is enabled. |  | Optional: \{\} <br /> |
@@ -200,7 +200,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `cluster.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `MemberCluster` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[MemberClusterSpec](#memberclusterspec)_ | The desired state of MemberCluster. |  | Required: \{\} <br /> |
 | `status` _[MemberClusterStatus](#memberclusterstatus)_ | The observed status of MemberCluster. |  | Optional: \{\} <br /> |
 
@@ -221,7 +221,7 @@ MemberClusterList contains a list of MemberCluster.
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `cluster.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `MemberClusterList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `items` _[MemberCluster](#membercluster) array_ |  |  |  |
 
 
@@ -238,7 +238,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `identity` _[Subject](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#subject-v1-rbac)_ | The identity used by the member cluster to access the hub cluster.<br />The hub agents deployed on the hub cluster will automatically grant the minimal required permissions to this identity for the member agents deployed on the member cluster to access the hub cluster. |  | Required: \{\} <br /> |
+| `identity` _[Subject](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#subject-v1-rbac)_ | The identity used by the member cluster to access the hub cluster.<br />The hub agents deployed on the hub cluster will automatically grant the minimal required permissions to this identity for the member agents deployed on the member cluster to access the hub cluster. |  | Required: \{\} <br /> |
 | `heartbeatPeriodSeconds` _integer_ | How often (in seconds) for the member cluster to send a heartbeat to the hub cluster. Default: 60 seconds. Min: 1 second. Max: 10 minutes. | 60 | Maximum: 600 <br />Minimum: 1 <br />Optional: \{\} <br /> |
 | `taints` _[Taint](#taint) array_ | If specified, the MemberCluster's taints.<br />This field is beta-level and is for the taints and tolerations feature. |  | MaxItems: 100 <br />Optional: \{\} <br /> |
 | `deleteOptions` _[DeleteOptions](#deleteoptions)_ | DeleteOptions for deleting the MemberCluster. |  | Optional: \{\} <br /> |
@@ -257,7 +257,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the member cluster. |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the member cluster. |  | Optional: \{\} <br /> |
 | `properties` _object (keys:[PropertyName](#propertyname), values:[PropertyValue](#propertyvalue))_ | Properties is an array of properties observed for the member cluster.<br />This field is beta-level; it is for the property-based scheduling feature and is only<br />populated when a property provider is enabled in the deployment. |  | Optional: \{\} <br /> |
 | `resourceUsage` _[ResourceUsage](#resourceusage)_ | The current observed resource usage of the member cluster. It is copied from the corresponding InternalMemberCluster object. |  | Optional: \{\} <br /> |
 | `namespaces` _object (keys:string, values:string)_ | Namespaces is a map of namespace names to their associated work names for namespaces<br />that are managed by Fleet (i.e., have AppliedWork owner references when created).<br />The key is the namespace name and the value is the work name from the AppliedWork owner reference.<br />If the namespace does not have an AppliedWork owner reference, the value will be an empty string.<br />This field is copied from the corresponding InternalMemberCluster object. |  | Optional: \{\} <br /> |
@@ -293,7 +293,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `value` _string_ | Value is the value of the cluster property.<br />Currently, it should be a valid Kubernetes quantity.<br />For more information, see<br />https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity. |  | Required: \{\} <br /> |
-| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | ObservationTime is when the cluster property is observed. |  | Required: \{\} <br /> |
+| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | ObservationTime is when the cluster property is observed. |  | Required: \{\} <br /> |
 
 
 #### ResourceUsage
@@ -310,10 +310,10 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `capacity` _[ResourceList](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#resourcelist-v1-core)_ | Capacity represents the total resource capacity of all the nodes on a member cluster.<br />A node's total capacity is the amount of resource installed on the node. |  | Optional: \{\} <br /> |
-| `allocatable` _[ResourceList](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#resourcelist-v1-core)_ | Allocatable represents the total allocatable resources of all the nodes on a member cluster.<br />A node's allocatable capacity is the amount of resource that can actually be used<br />for user workloads, i.e.,<br />allocatable capacity = total capacity - capacities reserved for the OS, kubelet, etc.<br />For more information, see<br />https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/. |  | Optional: \{\} <br /> |
-| `available` _[ResourceList](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#resourcelist-v1-core)_ | Available represents the total available resources of all the nodes on a member cluster.<br />A node's available capacity is the amount of resource that has not been used yet, i.e.,<br />available capacity = allocatable capacity - capacity that has been requested by workloads.<br />This field is beta-level; it is for the property-based scheduling feature and is only<br />populated when a property provider is enabled in the deployment. |  | Optional: \{\} <br /> |
-| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | When the resource usage is observed. |  | Optional: \{\} <br /> |
+| `capacity` _[ResourceList](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#resourcelist-v1-core)_ | Capacity represents the total resource capacity of all the nodes on a member cluster.<br />A node's total capacity is the amount of resource installed on the node. |  | Optional: \{\} <br /> |
+| `allocatable` _[ResourceList](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#resourcelist-v1-core)_ | Allocatable represents the total allocatable resources of all the nodes on a member cluster.<br />A node's allocatable capacity is the amount of resource that can actually be used<br />for user workloads, i.e.,<br />allocatable capacity = total capacity - capacities reserved for the OS, kubelet, etc.<br />For more information, see<br />https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/. |  | Optional: \{\} <br /> |
+| `available` _[ResourceList](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#resourcelist-v1-core)_ | Available represents the total available resources of all the nodes on a member cluster.<br />A node's available capacity is the amount of resource that has not been used yet, i.e.,<br />available capacity = allocatable capacity - capacity that has been requested by workloads.<br />This field is beta-level; it is for the property-based scheduling feature and is only<br />populated when a property provider is enabled in the deployment. |  | Optional: \{\} <br /> |
+| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | When the resource usage is observed. |  | Optional: \{\} <br /> |
 
 
 #### Taint
@@ -332,6 +332,6 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `key` _string_ | The taint key to be applied to a MemberCluster. |  | Required: \{\} <br /> |
 | `value` _string_ | The taint value corresponding to the taint key. |  | Optional: \{\} <br /> |
-| `effect` _[TaintEffect](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#tainteffect-v1-core)_ | The effect of the taint on ClusterResourcePlacements that do not tolerate the taint.<br />Only NoSchedule is supported. |  | Enum: [NoSchedule] <br />Required: \{\} <br /> |
+| `effect` _[TaintEffect](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#tainteffect-v1-core)_ | The effect of the taint on ClusterResourcePlacements that do not tolerate the taint.<br />Only NoSchedule is supported. |  | Enum: [NoSchedule] <br />Required: \{\} <br /> |
 
 
