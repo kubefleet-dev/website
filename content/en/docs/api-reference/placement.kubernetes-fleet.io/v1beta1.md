@@ -81,7 +81,7 @@ _Appears in:_
 | `resource` _string_ | Resource is the resource type of the resource. |  |  |
 | `namespace` _string_ | Namespace is the namespace of the resource, the resource is cluster scoped if the value<br />is empty. |  |  |
 | `name` _string_ | Name is the name of the resource. |  |  |
-| `uid` _[UID](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#uid-types-pkg)_ | UID is set on successful deletion of the Kubernetes resource by controller. The<br />resource might be still visible on the managed cluster after this field is set.<br />It is not directly settable by a client. |  | Optional: \{\} <br /> |
+| `uid` _[UID](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#uid-types-pkg)_ | UID is set on successful deletion of the Kubernetes resource by controller. The<br />resource might be still visible on the managed cluster after this field is set.<br />It is not directly settable by a client. |  | Optional: \{\} <br /> |
 
 
 #### AppliedWork
@@ -106,7 +106,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `AppliedWork` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[AppliedWorkSpec](#appliedworkspec)_ | Spec represents the desired configuration of AppliedWork. |  | Required: \{\} <br />Required: \{\} <br /> |
 | `status` _[AppliedWorkStatus](#appliedworkstatus)_ | Status represents the current status of AppliedWork. |  | Optional: \{\} <br /> |
 
@@ -125,7 +125,7 @@ AppliedWorkList contains a list of AppliedWork.
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `AppliedWorkList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `items` _[AppliedWork](#appliedwork) array_ | List of works. |  |  |
 
 
@@ -226,7 +226,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ApprovalRequest` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[ApprovalRequestSpec](#approvalrequestspec)_ | The desired state of ApprovalRequest. |  | Required: \{\} <br /> |
 | `status` _[ApprovalRequestStatus](#approvalrequeststatus)_ | The observed state of ApprovalRequest. |  | Optional: \{\} <br /> |
 
@@ -276,7 +276,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the specific type of post-update task.<br />Known conditions are "Approved" and "ApprovalAccepted". |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the specific type of post-update task.<br />Known conditions are "Approved" and "ApprovalAccepted". |  | Optional: \{\} <br /> |
 
 
 
@@ -294,8 +294,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `observedStatus` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#rawextension-runtime-pkg)_ |  |  | EmbeddedResource: \{\} <br /> |
-| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | ObservationTime is the timestamp when the status was last back reported. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
+| `observedStatus` _[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#rawextension-runtime-pkg)_ |  |  | EmbeddedResource: \{\} <br /> |
+| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | ObservationTime is the timestamp when the status was last back reported. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
 
 
 
@@ -363,7 +363,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterApprovalRequest` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[ApprovalRequestSpec](#approvalrequestspec)_ | The desired state of ClusterApprovalRequest. |  | Required: \{\} <br /> |
 | `status` _[ApprovalRequestStatus](#approvalrequeststatus)_ | The observed state of ClusterApprovalRequest. |  | Optional: \{\} <br /> |
 
@@ -407,7 +407,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourceBinding` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[ResourceBindingSpec](#resourcebindingspec)_ | The desired state of ClusterResourceBinding. |  | Required: \{\} <br /> |
 | `status` _[ResourceBindingStatus](#resourcebindingstatus)_ | The observed status of ClusterResourceBinding. |  | Optional: \{\} <br /> |
 
@@ -429,8 +429,8 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourceEnvelope` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `data` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#rawextension-runtime-pkg))_ | The manifests wrapped in this envelope.<br />Each manifest is uniquely identified by a string key, typically a filename that represents<br />the manifest. The value is the manifest object itself. |  | MaxProperties: 50 <br />MinProperties: 1 <br />Required: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `data` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#rawextension-runtime-pkg))_ | The manifests wrapped in this envelope.<br />Each manifest is uniquely identified by a string key, typically a filename that represents<br />the manifest. The value is the manifest object itself. |  | MaxProperties: 50 <br />MinProperties: 1 <br />Required: \{\} <br /> |
 
 
 
@@ -451,7 +451,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourceOverride` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[ClusterResourceOverrideSpec](#clusterresourceoverridespec)_ | The desired state of ClusterResourceOverrideSpec. |  | Required: \{\} <br /> |
 
 
@@ -479,7 +479,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourceOverrideSnapshot` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[ClusterResourceOverrideSnapshotSpec](#clusterresourceoverridesnapshotspec)_ | The desired state of ClusterResourceOverrideSnapshotSpec. |  | Required: \{\} <br /> |
 
 
@@ -550,7 +550,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourcePlacement` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[PlacementSpec](#placementspec)_ | The desired state of ClusterResourcePlacement. |  | Required: \{\} <br /> |
 | `status` _[PlacementStatus](#placementstatus)_ | The observed status of ClusterResourcePlacement. |  | Optional: \{\} <br /> |
 
@@ -579,7 +579,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourcePlacementDisruptionBudget` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[PlacementDisruptionBudgetSpec](#placementdisruptionbudgetspec)_ | Spec is the desired state of the ClusterResourcePlacementDisruptionBudget. |  | Required: \{\} <br /> |
 
 
@@ -628,7 +628,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourcePlacementEviction` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[PlacementEvictionSpec](#placementevictionspec)_ | Spec is the desired state of the ClusterResourcePlacementEviction.<br />Note that all fields in the spec are immutable. |  | Required: \{\} <br /> |
 | `status` _[PlacementEvictionStatus](#placementevictionstatus)_ | Status is the observed state of the ClusterResourcePlacementEviction. |  | Optional: \{\} <br /> |
 
@@ -661,9 +661,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourcePlacementStatus` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `sourceStatus` _[PlacementStatus](#placementstatus)_ | Source status copied from the corresponding ClusterResourcePlacement. |  | Required: \{\} <br /> |
-| `lastUpdatedTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | LastUpdatedTime is the timestamp when this CRPS object was last updated.<br />This field is set to the current time whenever the CRPS object is created or modified. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
+| `lastUpdatedTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | LastUpdatedTime is the timestamp when this CRPS object was last updated.<br />This field is set to the current time whenever the CRPS object is created or modified. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
 
 
 
@@ -705,7 +705,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterResourceSnapshot` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[ResourceSnapshotSpec](#resourcesnapshotspec)_ | The desired state of ResourceSnapshot. |  | Required: \{\} <br /> |
 | `status` _[ResourceSnapshotStatus](#resourcesnapshotstatus)_ | The observed status of ResourceSnapshot. |  | Optional: \{\} <br /> |
 
@@ -734,7 +734,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterSchedulingPolicySnapshot` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[SchedulingPolicySnapshotSpec](#schedulingpolicysnapshotspec)_ | The desired state of SchedulingPolicySnapshot. |  | Required: \{\} <br /> |
 | `status` _[SchedulingPolicySnapshotStatus](#schedulingpolicysnapshotstatus)_ | The observed status of SchedulingPolicySnapshot. |  | Optional: \{\} <br /> |
 
@@ -808,7 +808,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterStagedUpdateRun` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[UpdateRunSpec](#updaterunspec)_ | The desired state of ClusterStagedUpdateRun. |  | Required: \{\} <br /> |
 | `status` _[UpdateRunStatus](#updaterunstatus)_ | The observed status of ClusterStagedUpdateRun. |  | Optional: \{\} <br /> |
 
@@ -831,7 +831,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ClusterStagedUpdateStrategy` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[UpdateStrategySpec](#updatestrategyspec)_ | The desired state of ClusterStagedUpdateStrategy. |  | Required: \{\} <br /> |
 
 
@@ -853,7 +853,7 @@ _Appears in:_
 | `clusterName` _string_ | The name of the cluster. |  | Required: \{\} <br /> |
 | `resourceOverrideSnapshots` _[NamespacedName](#namespacedname) array_ | ResourceOverrideSnapshots is a list of ResourceOverride snapshots associated with the cluster.<br />The list is computed at the beginning of the update run and not updated during the update run.<br />The list is empty if there are no resource overrides associated with the cluster. |  | Optional: \{\} <br /> |
 | `clusterResourceOverrideSnapshots` _string array_ | ClusterResourceOverrides contains a list of applicable ClusterResourceOverride snapshot names<br />associated with the cluster.<br />The list is computed at the beginning of the update run and not updated during the update run.<br />The list is empty if there are no cluster overrides associated with the cluster. |  | Optional: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for clusters. Empty if the cluster has not started updating.<br />Known conditions are "Started", "Succeeded". |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for clusters. Empty if the cluster has not started updating.<br />Known conditions are "Started", "Succeeded". |  | Optional: \{\} <br /> |
 
 
 
@@ -922,9 +922,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | ObservationTime is the timestamp when the configuration difference was last detected. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
+| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | ObservationTime is the timestamp when the configuration difference was last detected. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
 | `observedInMemberClusterGeneration` _integer_ | ObservedInMemberClusterGeneration is the generation of the applied manifest on the member<br />cluster side.<br />This might be nil if the resource has not been created yet in the member cluster. |  | Optional: \{\} <br /> |
-| `firstDiffedObservedTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | FirstDiffedObservedTime is the timestamp when the configuration difference<br />was first detected. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
+| `firstDiffedObservedTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | FirstDiffedObservedTime is the timestamp when the configuration difference<br />was first detected. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
 | `observedDiffs` _[PatchDetail](#patchdetail) array_ | ObservedDiffs describes each field with configuration difference as found from the<br />member cluster side.<br />Fleet might truncate the details as appropriate to control object size.<br />Each entry specifies how the live state (the state on the member cluster side) compares<br />against the desired state (the state kept in the hub cluster manifest). |  | Optional: \{\} <br /> |
 
 
@@ -948,9 +948,9 @@ _Appears in:_
 | `name` _string_ | Name of the target resource. |  | Required: \{\} <br /> |
 | `namespace` _string_ | Namespace is the namespace of the resource. Empty if the resource is cluster scoped. |  | Optional: \{\} <br /> |
 | `envelope` _[EnvelopeIdentifier](#envelopeidentifier)_ | Envelope identifies the envelope object that contains this resource. |  | Optional: \{\} <br /> |
-| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | ObservationTime is the time when we observe the configuration differences for the resource. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
+| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | ObservationTime is the time when we observe the configuration differences for the resource. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
 | `targetClusterObservedGeneration` _integer_ | TargetClusterObservedGeneration is the generation of the resource on the target cluster<br />that contains the configuration differences.<br />This might be nil if the resource has not been created yet on the target cluster. |  | Optional: \{\} <br /> |
-| `firstDiffedObservedTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | FirstDiffedObservedTime is the first time the resource on the target cluster is<br />observed to have configuration differences. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
+| `firstDiffedObservedTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | FirstDiffedObservedTime is the first time the resource on the target cluster is<br />observed to have configuration differences. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
 | `observedDiffs` _[PatchDetail](#patchdetail) array_ | ObservedDiffs are the details about the found configuration differences. Note that<br />Fleet might truncate the details as appropriate to control the object size.<br />Each detail entry specifies how the live state (the state on the member<br />cluster side) compares against the desired state (the state kept in the hub cluster manifest).<br />An event about the details will be emitted as well. |  | Optional: \{\} <br /> |
 
 
@@ -967,9 +967,9 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | ObservationTime is the timestamp when the drift was last detected. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
+| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | ObservationTime is the timestamp when the drift was last detected. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
 | `observedInMemberClusterGeneration` _integer_ | ObservedInMemberClusterGeneration is the generation of the applied manifest on the member<br />cluster side. |  | Required: \{\} <br /> |
-| `firstDriftedObservedTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | FirstDriftedObservedTime is the timestamp when the drift was first detected. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
+| `firstDriftedObservedTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | FirstDriftedObservedTime is the timestamp when the drift was first detected. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
 | `observedDrifts` _[PatchDetail](#patchdetail) array_ | ObservedDrifts describes each drifted field found from the applied manifest.<br />Fleet might truncate the details as appropriate to control object size.<br />Each entry specifies how the live state (the state on the member cluster side) compares<br />against the desired state (the state kept in the hub cluster manifest). |  | Optional: \{\} <br /> |
 
 
@@ -993,9 +993,9 @@ _Appears in:_
 | `name` _string_ | Name of the target resource. |  | Required: \{\} <br /> |
 | `namespace` _string_ | Namespace is the namespace of the resource. Empty if the resource is cluster scoped. |  | Optional: \{\} <br /> |
 | `envelope` _[EnvelopeIdentifier](#envelopeidentifier)_ | Envelope identifies the envelope object that contains this resource. |  | Optional: \{\} <br /> |
-| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | ObservationTime is the time when we observe the configuration drifts for the resource. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
+| `observationTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | ObservationTime is the time when we observe the configuration drifts for the resource. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
 | `targetClusterObservedGeneration` _integer_ | TargetClusterObservedGeneration is the generation of the resource on the target cluster<br />that contains the configuration drifts. |  | Required: \{\} <br /> |
-| `firstDriftedObservedTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | FirstDriftedObservedTime is the first time the resource on the target cluster is<br />observed to have configuration drifts. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
+| `firstDriftedObservedTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | FirstDriftedObservedTime is the first time the resource on the target cluster is<br />observed to have configuration drifts. |  | Format: date-time <br />Required: \{\} <br />Type: string <br /> |
 | `observedDrifts` _[PatchDetail](#patchdetail) array_ | ObservedDrifts are the details about the found configuration drifts. Note that<br />Fleet might truncate the details as appropriate to control the object size.<br />Each detail entry specifies how the live state (the state on the member<br />cluster side) compares against the desired state (the state kept in the hub cluster manifest).<br />An event about the details will be emitted as well. |  | Optional: \{\} <br /> |
 
 
@@ -1060,7 +1060,7 @@ _Appears in:_
 | `name` _string_ | Name of the target resource. |  | Required: \{\} <br /> |
 | `namespace` _string_ | Namespace is the namespace of the resource. Empty if the resource is cluster scoped. |  | Optional: \{\} <br /> |
 | `envelope` _[EnvelopeIdentifier](#envelopeidentifier)_ | Envelope identifies the envelope object that contains this resource. |  | Optional: \{\} <br /> |
-| `condition` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta)_ | The failed condition status. |  | Required: \{\} <br /> |
+| `condition` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta)_ | The failed condition status. |  | Required: \{\} <br /> |
 
 
 #### JSONPatchOverride
@@ -1078,7 +1078,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `op` _[JSONPatchOverrideOperator](#jsonpatchoverrideoperator)_ | Operator defines the operation on the target field. |  | Enum: [add remove replace] <br />Required: \{\} <br /> |
 | `path` _string_ | Path defines the target location.<br />Note: override will fail if the resource path does not exist. |  | Required: \{\} <br /> |
-| `value` _[JSON](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#json-v1-apiextensions-k8s-io)_ | Value defines the content to be applied on the target location.<br />Value should be empty when operator is `remove`.<br />We have reserved a few variables in this field that will be replaced by the actual values.<br />Those variables all start with `$` and are case sensitive.<br />Here is the list of currently supported variables:<br />`$\{MEMBER-CLUSTER-NAME\}`:  this will be replaced by the name of the memberCluster CR that represents this cluster. |  | Optional: \{\} <br /> |
+| `value` _[JSON](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#json-v1-apiextensions-k8s-io)_ | Value defines the content to be applied on the target location.<br />Value should be empty when operator is `remove`.<br />We have reserved a few variables in this field that will be replaced by the actual values.<br />Those variables all start with `$` and are case sensitive.<br />Here is the list of currently supported variables:<br />`$\{MEMBER-CLUSTER-NAME\}`:  this will be replaced by the name of the memberCluster CR that represents this cluster. |  | Optional: \{\} <br /> |
 
 
 #### JSONPatchOverrideOperator
@@ -1127,7 +1127,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `identifier` _[WorkResourceIdentifier](#workresourceidentifier)_ | resourceId represents a identity of a resource linking to manifests in spec. |  | Required: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions represents the conditions of this resource on spoke cluster |  | Required: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions represents the conditions of this resource on spoke cluster |  | Required: \{\} <br /> |
 | `driftDetails` _[DriftDetails](#driftdetails)_ | DriftDetails explains about the observed configuration drifts.<br />Fleet might truncate the details as appropriate to control object size.<br />Note that configuration drifts can only occur on a resource if it is currently owned by<br />Fleet and its corresponding placement is set to use the ClientSideApply or ServerSideApply<br />apply strategy. In other words, DriftDetails and DiffDetails will not be populated<br />at the same time. |  | Optional: \{\} <br /> |
 | `diffDetails` _[DiffDetails](#diffdetails)_ | DiffDetails explains the details about the observed configuration differences.<br />Fleet might truncate the details as appropriate to control object size.<br />Note that configuration differences can only occur on a resource if it is not currently owned<br />by Fleet (i.e., it is a pre-existing resource that needs to be taken over), or if its<br />corresponding placement is set to use the ReportDiff apply strategy. In other words,<br />DiffDetails and DriftDetails will not be populated at the same time. |  | Optional: \{\} <br /> |
 | `backReportedStatus` _[BackReportedStatus](#backreportedstatus)_ | BackReportedStatus is the status reported back from the member cluster (if applicable). |  | Optional: \{\} <br /> |
@@ -1251,7 +1251,7 @@ _Appears in:_
 | `failedPlacements` _[FailedResourcePlacement](#failedresourceplacement) array_ | FailedPlacements is a list of all the resources failed to be placed to the given cluster or the resource is unavailable.<br />Note that we only include 100 failed resource placements even if there are more than 100.<br />This field is only meaningful if the `ClusterName` is not empty. |  | MaxItems: 100 <br />Optional: \{\} <br /> |
 | `driftedPlacements` _[DriftedResourcePlacement](#driftedresourceplacement) array_ | DriftedPlacements is a list of resources that have drifted from their desired states<br />kept in the hub cluster, as found by Fleet using the drift detection mechanism.<br />To control the object size, only the first 100 drifted resources will be included.<br />This field is only meaningful if the `ClusterName` is not empty. |  | MaxItems: 100 <br />Optional: \{\} <br /> |
 | `diffedPlacements` _[DiffedResourcePlacement](#diffedresourceplacement) array_ | DiffedPlacements is a list of resources that have configuration differences from their<br />corresponding hub cluster manifests. Fleet will report such differences when:<br />* The CRP uses the ReportDiff apply strategy, which instructs Fleet to compare the hub<br />  cluster manifests against the live resources without actually performing any apply op; or<br />* Fleet finds a pre-existing resource on the member cluster side that does not match its<br />  hub cluster counterpart, and the CRP has been configured to only take over a resource if<br />  no configuration differences are found.<br />To control the object size, only the first 100 diffed resources will be included.<br />This field is only meaningful if the `ClusterName` is not empty. |  | MaxItems: 100 <br />Optional: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions on the cluster.<br />Each condition corresponds to the resource snapshot at the index specified by `ObservedResourceIndex`.<br />For example, the condition of type `RolloutStarted` is observing the rollout status of the resource snapshot with index `ObservedResourceIndex`. |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions on the cluster.<br />Each condition corresponds to the resource snapshot at the index specified by `ObservedResourceIndex`.<br />For example, the condition of type `RolloutStarted` is observing the rollout status of the resource snapshot with index `ObservedResourceIndex`. |  | Optional: \{\} <br /> |
 
 
 #### PlacementDisruptionBudgetSpec
@@ -1267,8 +1267,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `maxUnavailable` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#intorstring-intstr-util)_ | MaxUnavailable is the maximum number of placements (clusters) that can be down at the<br />same time due to voluntary disruptions. For example, a setting of 1 would imply that<br />a voluntary disruption (e.g., an eviction) can only happen if all placements (clusters)<br />from the linked Placement object are applied and available.<br />This can be either an absolute value (e.g., 1) or a percentage (e.g., 10%).<br />If a percentage is specified, Fleet will calculate the corresponding absolute values<br />as follows:<br />* if the linked Placement object is of the PickFixed placement type,<br />  we don't perform any calculation because eviction is not allowed for PickFixed CRP.<br />* if the linked Placement object is of the PickAll placement type, MaxUnavailable cannot<br />  be specified since we cannot derive the total number of clusters selected.<br />* if the linked Placement object is of the PickN placement type,<br />  the percentage is against the number of clusters specified in the placement (i.e., the<br />  value of the NumberOfClusters fields in the placement policy).<br />The end result will be rounded up to the nearest integer if applicable.<br />One may use a value of 0 for this field; in this case, no voluntary disruption would be<br />allowed.<br />This field is mutually exclusive with the MinAvailable field in the spec; exactly one<br />of them can be set at a time. |  | XIntOrString: \{\} <br />Optional: \{\} <br /> |
-| `minAvailable` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#intorstring-intstr-util)_ | MinAvailable is the minimum number of placements (clusters) that must be available at any<br />time despite voluntary disruptions. For example, a setting of 10 would imply that<br />a voluntary disruption (e.g., an eviction) can only happen if there are at least 11<br />placements (clusters) from the linked Placement object are applied and available.<br />This can be either an absolute value (e.g., 1) or a percentage (e.g., 10%).<br />If a percentage is specified, Fleet will calculate the corresponding absolute values<br />as follows:<br />* if the linked Placement object is of the PickFixed placement type,<br />  we don't perform any calculation because eviction is not allowed for PickFixed CRP.<br />* if the linked Placement object is of the PickAll placement type, MinAvailable can be<br />  specified but only as an integer since we cannot derive the total number of clusters selected.<br />* if the linked Placement object is of the PickN placement type,<br />  the percentage is against the number of clusters specified in the placement (i.e., the<br />  value of the NumberOfClusters fields in the placement policy).<br />The end result will be rounded up to the nearest integer if applicable.<br />One may use a value of 0 for this field; in this case, voluntary disruption would be<br />allowed at any time.<br />This field is mutually exclusive with the MaxUnavailable field in the spec; exactly one<br />of them can be set at a time. |  | XIntOrString: \{\} <br />Optional: \{\} <br /> |
+| `maxUnavailable` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#intorstring-intstr-util)_ | MaxUnavailable is the maximum number of placements (clusters) that can be down at the<br />same time due to voluntary disruptions. For example, a setting of 1 would imply that<br />a voluntary disruption (e.g., an eviction) can only happen if all placements (clusters)<br />from the linked Placement object are applied and available.<br />This can be either an absolute value (e.g., 1) or a percentage (e.g., 10%).<br />If a percentage is specified, Fleet will calculate the corresponding absolute values<br />as follows:<br />* if the linked Placement object is of the PickFixed placement type,<br />  we don't perform any calculation because eviction is not allowed for PickFixed CRP.<br />* if the linked Placement object is of the PickAll placement type, MaxUnavailable cannot<br />  be specified since we cannot derive the total number of clusters selected.<br />* if the linked Placement object is of the PickN placement type,<br />  the percentage is against the number of clusters specified in the placement (i.e., the<br />  value of the NumberOfClusters fields in the placement policy).<br />The end result will be rounded up to the nearest integer if applicable.<br />One may use a value of 0 for this field; in this case, no voluntary disruption would be<br />allowed.<br />This field is mutually exclusive with the MinAvailable field in the spec; exactly one<br />of them can be set at a time. |  | XIntOrString: \{\} <br />Optional: \{\} <br /> |
+| `minAvailable` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#intorstring-intstr-util)_ | MinAvailable is the minimum number of placements (clusters) that must be available at any<br />time despite voluntary disruptions. For example, a setting of 10 would imply that<br />a voluntary disruption (e.g., an eviction) can only happen if there are at least 11<br />placements (clusters) from the linked Placement object are applied and available.<br />This can be either an absolute value (e.g., 1) or a percentage (e.g., 10%).<br />If a percentage is specified, Fleet will calculate the corresponding absolute values<br />as follows:<br />* if the linked Placement object is of the PickFixed placement type,<br />  we don't perform any calculation because eviction is not allowed for PickFixed CRP.<br />* if the linked Placement object is of the PickAll placement type, MinAvailable can be<br />  specified but only as an integer since we cannot derive the total number of clusters selected.<br />* if the linked Placement object is of the PickN placement type,<br />  the percentage is against the number of clusters specified in the placement (i.e., the<br />  value of the NumberOfClusters fields in the placement policy).<br />The end result will be rounded up to the nearest integer if applicable.<br />One may use a value of 0 for this field; in this case, voluntary disruption would be<br />allowed at any time.<br />This field is mutually exclusive with the MaxUnavailable field in the spec; exactly one<br />of them can be set at a time. |  | XIntOrString: \{\} <br />Optional: \{\} <br /> |
 
 
 
@@ -1303,7 +1303,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is the list of currently observed conditions for the<br />PlacementEviction object.<br />Available condition types include:<br />* Valid: whether the Eviction object is valid, i.e., it targets at a valid placement.<br />* Executed: whether the Eviction object has been executed. |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is the list of currently observed conditions for the<br />PlacementEviction object.<br />Available condition types include:<br />* Valid: whether the Eviction object is valid, i.e., it targets at a valid placement.<br />* Executed: whether the Eviction object has been executed. |  | Optional: \{\} <br /> |
 
 
 
@@ -1398,7 +1398,7 @@ _Appears in:_
 | `selectedResources` _[ResourceIdentifier](#resourceidentifier) array_ | SelectedResources contains a list of resources selected by ResourceSelectors.<br />This field is only meaningful if the `ObservedResourceIndex` is not empty. |  | Optional: \{\} <br /> |
 | `observedResourceIndex` _string_ | Resource index logically represents the generation of the selected resources.<br />We take a new snapshot of the selected resources whenever the selection or their content change.<br />Each snapshot has a different resource index.<br />One resource snapshot can contain multiple clusterResourceSnapshots CRs in order to store large amount of resources.<br />To get clusterResourceSnapshot of a given resource index, use the following command:<br />`kubectl get ClusterResourceSnapshot --selector=kubernetes-fleet.io/resource-index=$ObservedResourceIndex`<br />If the rollout strategy type is `RollingUpdate`, `ObservedResourceIndex` is the default-latest resource snapshot index.<br />If the rollout strategy type is `External`, rollout and version control are managed by an external controller,<br />and this field is not empty only if all targeted clusters observe the same resource index in `PlacementStatuses`. |  | Optional: \{\} <br /> |
 | `placementStatuses` _[PerClusterPlacementStatus](#perclusterplacementstatus) array_ | PerClusterPlacementStatuses contains a list of placement status on the clusters that are selected by PlacementPolicy.<br />Each selected cluster according to the observed resource placement is guaranteed to have a corresponding placementStatuses.<br />In the pickN case, there are N placement statuses where N = NumberOfClusters; Or in the pickFixed case, there are<br />N placement statuses where N = ClusterNames.<br />In these cases, some of them may not have assigned clusters when we cannot fill the required number of clusters. |  | Optional: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for ClusterResourcePlacement.<br />All conditions except `ClusterResourcePlacementScheduled` correspond to the resource snapshot at the index specified by `ObservedResourceIndex`.<br />For example, a condition of `ClusterResourcePlacementWorkSynchronized` type<br />is observing the synchronization status of the resource snapshot with index `ObservedResourceIndex`.<br />If the rollout strategy type is `External`, and `ObservedResourceIndex` is unset due to clusters reporting different resource indices,<br />conditions except `ClusterResourcePlacementScheduled` will be empty or set to Unknown. |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for ClusterResourcePlacement.<br />All conditions except `ClusterResourcePlacementScheduled` correspond to the resource snapshot at the index specified by `ObservedResourceIndex`.<br />For example, a condition of `ClusterResourcePlacementWorkSynchronized` type<br />is observing the synchronization status of the resource snapshot with index `ObservedResourceIndex`.<br />If the rollout strategy type is `External`, and `ObservedResourceIndex` is unset due to clusters reporting different resource indices,<br />conditions except `ClusterResourcePlacementScheduled` will be empty or set to Unknown. |  | Optional: \{\} <br /> |
 
 
 
@@ -1577,7 +1577,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ResourceBinding` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[ResourceBindingSpec](#resourcebindingspec)_ | The desired state of ResourceBinding. |  | Required: \{\} <br /> |
 | `status` _[ResourceBindingStatus](#resourcebindingstatus)_ | The observed status of ResourceBinding. |  | Optional: \{\} <br /> |
 
@@ -1627,7 +1627,7 @@ _Appears in:_
 | `failedPlacements` _[FailedResourcePlacement](#failedresourceplacement) array_ | FailedPlacements is a list of all the resources failed to be placed to the given cluster or the resource is unavailable.<br />Note that we only include 100 failed resource placements even if there are more than 100. |  | MaxItems: 100 <br />Optional: \{\} <br /> |
 | `driftedPlacements` _[DriftedResourcePlacement](#driftedresourceplacement) array_ | DriftedPlacements is a list of resources that have drifted from their desired states<br />kept in the hub cluster, as found by Fleet using the drift detection mechanism.<br />To control the object size, only the first 100 drifted resources will be included.<br />This field is only meaningful if the `ClusterName` is not empty. |  | MaxItems: 100 <br />Optional: \{\} <br /> |
 | `diffedPlacements` _[DiffedResourcePlacement](#diffedresourceplacement) array_ | DiffedPlacements is a list of resources that have configuration differences from their<br />corresponding hub cluster manifests. Fleet will report such differences when:<br />* The CRP uses the ReportDiff apply strategy, which instructs Fleet to compare the hub<br />  cluster manifests against the live resources without actually performing any apply op; or<br />* Fleet finds a pre-existing resource on the member cluster side that does not match its<br />  hub cluster counterpart, and the CRP has been configured to only take over a resource if<br />  no configuration differences are found.<br />To control the object size, only the first 100 diffed resources will be included.<br />This field is only meaningful if the `ClusterName` is not empty. |  | MaxItems: 100 <br />Optional: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for ClusterResourceBinding. |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for ClusterResourceBinding. |  | Optional: \{\} <br /> |
 
 
 #### ResourceContent
@@ -1658,8 +1658,8 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ResourceEnvelope` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
-| `data` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#rawextension-runtime-pkg))_ | The manifests wrapped in this envelope.<br />Each manifest is uniquely identified by a string key, typically a filename that represents<br />the manifest. The value is the manifest object itself. |  | MaxProperties: 50 <br />MinProperties: 1 <br />Required: \{\} <br /> |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `data` _object (keys:string, values:[RawExtension](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#rawextension-runtime-pkg))_ | The manifests wrapped in this envelope.<br />Each manifest is uniquely identified by a string key, typically a filename that represents<br />the manifest. The value is the manifest object itself. |  | MaxProperties: 50 <br />MinProperties: 1 <br />Required: \{\} <br /> |
 
 
 
@@ -1704,7 +1704,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ResourceOverride` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[ResourceOverrideSpec](#resourceoverridespec)_ | The desired state of ResourceOverrideSpec. |  | Required: \{\} <br /> |
 
 
@@ -1732,7 +1732,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ResourceOverrideSnapshot` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[ResourceOverrideSnapshotSpec](#resourceoverridesnapshotspec)_ | The desired state of ResourceOverrideSnapshot. |  | Required: \{\} <br /> |
 
 
@@ -1795,7 +1795,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ResourcePlacement` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[PlacementSpec](#placementspec)_ | The desired state of ResourcePlacement. |  | Required: \{\} <br /> |
 | `status` _[PlacementStatus](#placementstatus)_ | The observed status of ResourcePlacement. |  | Optional: \{\} <br /> |
 
@@ -1861,7 +1861,7 @@ _Appears in:_
 | `version` _string_ | Version of the to be selected resource. |  | Required: \{\} <br /> |
 | `kind` _string_ | Kind of the to be selected resource.<br />Special behavior when Kind is `namespace` (ClusterResourcePlacement only):<br />Note: ResourcePlacement cannot select namespaces since it is namespace-scoped and selects resources within a namespace.<br />For ClusterResourcePlacement, you can use SelectionScope to control what gets selected:<br />- NamespaceOnly: Only the namespace object itself<br />- NamespaceWithResources: The namespace AND all resources within it (default)<br />- NamespaceWithResourceSelectors: The namespace AND resources specified by additional selectors<br />When SelectionScope is NamespaceWithResourceSelectors, you can define additional ResourceSelectorTerms<br />(after the namespace selector) to specify which resources to include. These additional selectors can<br />target both namespace-scoped resources (within the selected namespace) and cluster-scoped resources.<br />Important requirements for NamespaceWithResourceSelectors mode:<br />- Exactly one namespace selector with this mode is allowed<br />- The namespace selector must select by name (not by label)<br />- Only one namespace selector is allowed when using this mode (cannot mix with other namespace selectors)<br />- All requirements are validated via CEL at API validation time<br />- If the selected namespace is deleted after CRP creation, the controller will report an error condition<br />Example using NamespaceWithResourceSelectors:<br />- Namespace selector: \{Group: "", Version: "v1", Kind: "Namespace", Name: "prod", SelectionScope: "NamespaceWithResourceSelectors"\}<br />- Additional selector: \{Group: "apps", Version: "v1", Kind: "Deployment", LabelSelector: \{app: "frontend"\}\}<br />- Third selector: \{Group: "rbac.authorization.k8s.io", Version: "v1", Kind: "ClusterRole", Name: "admin"\}<br />This selects: the "prod" namespace, all Deployments with label app=frontend in "prod", and the "admin" ClusterRole. |  | Required: \{\} <br /> |
 | `name` _string_ | Name of the be selected  resource. |  | Optional: \{\} <br /> |
-| `labelSelector` _[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#labelselector-v1-meta)_ | A label query over all the be selected  resources. Resources matching the query are selected.<br />Note that namespace-scoped resources can't be selected even if they match the query. |  | Optional: \{\} <br /> |
+| `labelSelector` _[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#labelselector-v1-meta)_ | A label query over all the be selected  resources. Resources matching the query are selected.<br />Note that namespace-scoped resources can't be selected even if they match the query. |  | Optional: \{\} <br /> |
 | `selectionScope` _[SelectionScope](#selectionscope)_ | SelectionScope defines the scope of resource selections when the Kind is `namespace`.<br />This field is only applicable when Kind is "Namespace" and is ignored for other resource kinds.<br />See the Kind field documentation for detailed examples and usage patterns. | NamespaceWithResources | Enum: [NamespaceOnly NamespaceWithResources NamespaceWithResourceSelectors] <br />Optional: \{\} <br /> |
 
 
@@ -1901,7 +1901,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `ResourceSnapshot` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[ResourceSnapshotSpec](#resourcesnapshotspec)_ | The desired state of ResourceSnapshot. |  | Required: \{\} <br /> |
 | `status` _[ResourceSnapshotStatus](#resourcesnapshotstatus)_ | The observed status of ResourceSnapshot. |  | Optional: \{\} <br /> |
 
@@ -1947,7 +1947,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for ResourceSnapshot. |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for ResourceSnapshot. |  | Optional: \{\} <br /> |
 
 
 
@@ -1965,8 +1965,8 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `maxUnavailable` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#intorstring-intstr-util)_ | The maximum number of clusters that can be unavailable during the rolling update<br />comparing to the desired number of clusters.<br />The desired number equals to the `NumberOfClusters` field when the placement type is `PickN`.<br />The desired number equals to the number of clusters scheduler selected when the placement type is `PickAll`.<br />Value can be an absolute number (ex: 5) or a percentage of the desired number of clusters (ex: 10%).<br />Absolute number is calculated from percentage by rounding up.<br />We consider a resource unavailable when we either remove it from a cluster or in-place<br />upgrade the resources content on the same cluster.<br />The minimum of MaxUnavailable is 0 to allow no downtime moving a placement from one cluster to another.<br />Please set it to be greater than 0 to avoid rolling out stuck during in-place resource update.<br />Defaults to 25%. | 25% | Optional: \{\} <br />Pattern: `^((100\|[0-9]\{1,2\})%\|[0-9]+)$` <br />XIntOrString: \{\} <br /> |
-| `maxSurge` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#intorstring-intstr-util)_ | The maximum number of clusters that can be scheduled above the desired number of clusters.<br />The desired number equals to the `NumberOfClusters` field when the placement type is `PickN`.<br />The desired number equals to the number of clusters scheduler selected when the placement type is `PickAll`.<br />Value can be an absolute number (ex: 5) or a percentage of desire (ex: 10%).<br />Absolute number is calculated from percentage by rounding up.<br />This does not apply to the case that we do in-place update of resources on the same cluster.<br />This can not be 0 if MaxUnavailable is 0.<br />Defaults to 25%. | 25% | Optional: \{\} <br />Pattern: `^((100\|[0-9]\{1,2\})%\|[0-9]+)$` <br />XIntOrString: \{\} <br /> |
+| `maxUnavailable` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#intorstring-intstr-util)_ | The maximum number of clusters that can be unavailable during the rolling update<br />comparing to the desired number of clusters.<br />The desired number equals to the `NumberOfClusters` field when the placement type is `PickN`.<br />The desired number equals to the number of clusters scheduler selected when the placement type is `PickAll`.<br />Value can be an absolute number (ex: 5) or a percentage of the desired number of clusters (ex: 10%).<br />Absolute number is calculated from percentage by rounding up.<br />We consider a resource unavailable when we either remove it from a cluster or in-place<br />upgrade the resources content on the same cluster.<br />The minimum of MaxUnavailable is 0 to allow no downtime moving a placement from one cluster to another.<br />Please set it to be greater than 0 to avoid rolling out stuck during in-place resource update.<br />Defaults to 25%. | 25% | Optional: \{\} <br />Pattern: `^((100\|[0-9]\{1,2\})%\|[0-9]+)$` <br />XIntOrString: \{\} <br /> |
+| `maxSurge` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#intorstring-intstr-util)_ | The maximum number of clusters that can be scheduled above the desired number of clusters.<br />The desired number equals to the `NumberOfClusters` field when the placement type is `PickN`.<br />The desired number equals to the number of clusters scheduler selected when the placement type is `PickAll`.<br />Value can be an absolute number (ex: 5) or a percentage of desire (ex: 10%).<br />Absolute number is calculated from percentage by rounding up.<br />This does not apply to the case that we do in-place update of resources on the same cluster.<br />This can not be 0 if MaxUnavailable is 0.<br />Defaults to 25%. | 25% | Optional: \{\} <br />Pattern: `^((100\|[0-9]\{1,2\})%\|[0-9]+)$` <br />XIntOrString: \{\} <br /> |
 | `unavailablePeriodSeconds` _integer_ | UnavailablePeriodSeconds is used to configure the waiting time between rollout phases when we<br />cannot determine if the resources have rolled out successfully or not.<br />We have a built-in resource state detector to determine the availability status of following well-known Kubernetes<br />native resources: Deployment, StatefulSet, DaemonSet, Service, Namespace, ConfigMap, Secret,<br />ClusterRole, ClusterRoleBinding, Role, RoleBinding.<br />Please see [SafeRollout](https://github.com/Azure/fleet/tree/main/docs/concepts/SafeRollout/README.md) for more details.<br />For other types of resources, we consider them as available after `UnavailablePeriodSeconds` seconds<br />have passed since they were successfully applied to the target cluster.<br />Default is 60. | 60 | Optional: \{\} <br /> |
 
 
@@ -2029,7 +2029,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `SchedulingPolicySnapshot` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[SchedulingPolicySnapshotSpec](#schedulingpolicysnapshotspec)_ | The desired state of SchedulingPolicySnapshot. |  | Required: \{\} <br /> |
 | `status` _[SchedulingPolicySnapshotStatus](#schedulingpolicysnapshotstatus)_ | The observed status of SchedulingPolicySnapshot. |  | Optional: \{\} <br /> |
 
@@ -2071,7 +2071,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `observedCRPGeneration` _integer_ | ObservedCRPGeneration is the generation of the resource placement which the scheduler uses to perform<br />the scheduling cycle and prepare the scheduling status. |  | Required: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for SchedulingPolicySnapshot. |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for SchedulingPolicySnapshot. |  | Optional: \{\} <br /> |
 | `targetClusters` _[ClusterDecision](#clusterdecision) array_ | ClusterDecisions contains a list of names of member clusters considered by the scheduler.<br />Note that all the selected clusters must present in the list while not all the<br />member clusters are guaranteed to be listed due to the size limit. We will try to<br />add the clusters that can provide the most insight to the list first. |  | MaxItems: 1000 <br />Optional: \{\} <br /> |
 
 
@@ -2127,9 +2127,9 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `name` _string_ | The name of the stage. This MUST be unique within the same StagedUpdateStrategy. |  | MaxLength: 63 <br />Pattern: `^[a-z0-9]+$` <br />Required: \{\} <br /> |
-| `labelSelector` _[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#labelselector-v1-meta)_ | LabelSelector is a label query over all the joined member clusters. Clusters matching the query are selected<br />for this stage. There cannot be overlapping clusters between stages when the stagedUpdateRun is created.<br />If the label selector is empty, the stage includes all the selected clusters.<br />If the label selector is nil, the stage does not include any selected clusters. |  | Optional: \{\} <br /> |
+| `labelSelector` _[LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#labelselector-v1-meta)_ | LabelSelector is a label query over all the joined member clusters. Clusters matching the query are selected<br />for this stage. There cannot be overlapping clusters between stages when the stagedUpdateRun is created.<br />If the label selector is empty, the stage includes all the selected clusters.<br />If the label selector is nil, the stage does not include any selected clusters. |  | Optional: \{\} <br /> |
 | `sortingLabelKey` _string_ | The label key used to sort the selected clusters.<br />The clusters within the stage are updated sequentially following the rule below:<br />  - primary: Ascending order based on the value of the label key, interpreted as integers if present.<br />  - secondary: Ascending order based on the name of the cluster if the label key is absent or the label value is the same. |  | Optional: \{\} <br /> |
-| `maxConcurrency` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#intorstring-intstr-util)_ | MaxConcurrency specifies the maximum number of clusters that can be updated concurrently within this stage.<br />Value can be an absolute number (ex: 5) or a percentage of the total clusters in the stage (ex: 50%).<br />Fractional results are rounded down. A minimum of 1 update is enforced.<br />If not specified, all clusters in the stage are updated sequentially (effectively maxConcurrency = 1).<br />Defaults to 1. | 1 | Optional: \{\} <br />Pattern: `^(100\|[1-9][0-9]?)%$` <br />XIntOrString: \{\} <br /> |
+| `maxConcurrency` _[IntOrString](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#intorstring-intstr-util)_ | MaxConcurrency specifies the maximum number of clusters that can be updated concurrently within this stage.<br />Value can be an absolute number (ex: 5) or a percentage of the total clusters in the stage (ex: 50%).<br />Fractional results are rounded down. A minimum of 1 update is enforced.<br />If not specified, all clusters in the stage are updated sequentially (effectively maxConcurrency = 1).<br />Defaults to 1. | 1 | Optional: \{\} <br />Pattern: `^(100\|[1-9][0-9]?)%$` <br />XIntOrString: \{\} <br /> |
 | `afterStageTasks` _[StageTask](#stagetask) array_ | The collection of tasks that each stage needs to complete successfully before moving to the next stage.<br />Each task is executed in parallel and there cannot be more than one task of the same type. |  | MaxItems: 2 <br />Optional: \{\} <br /> |
 | `beforeStageTasks` _[StageTask](#stagetask) array_ | The collection of tasks that needs to completed successfully by each stage before starting the stage.<br />Each task is executed in parallel and there cannot be more than one task of the same type. |  | MaxItems: 1 <br />Optional: \{\} <br /> |
 
@@ -2148,7 +2148,7 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `type` _[StageTaskType](#stagetasktype)_ | The type of the before or after stage task. |  | Enum: [TimedWait Approval] <br />Required: \{\} <br /> |
-| `waitTime` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#duration-v1-meta)_ | The time to wait after all the clusters in the current stage complete the update before moving to the next stage. |  | Optional: \{\} <br />Pattern: `^0\|([0-9]+(\.[0-9]+)?(s\|m\|h))+$` <br />Type: string <br /> |
+| `waitTime` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#duration-v1-meta)_ | The time to wait after all the clusters in the current stage complete the update before moving to the next stage.<br />Only hours (h), minutes (m), and seconds (s) units are accepted. |  | Optional: \{\} <br />Pattern: `^(?:(?:0\|[1-9][0-9]*)(\.[0-9]+)?(?:s\|m\|h))+$` <br />Type: string <br /> |
 
 
 
@@ -2168,7 +2168,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `type` _[StageTaskType](#stagetasktype)_ | The type of the pre or post update task. |  | Enum: [TimedWait Approval] <br />Required: \{\} <br /> |
 | `approvalRequestName` _string_ | The name of the approval request object that is created for this stage.<br />Only valid if the AfterStageTaskType is Approval. |  | Optional: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the specific type of pre or post update task.<br />Known conditions are "ApprovalRequestCreated", "WaitTimeElapsed", and "ApprovalRequestApproved". |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for the specific type of pre or post update task.<br />Known conditions are "ApprovalRequestCreated", "WaitTimeElapsed", and "ApprovalRequestApproved". |  | Optional: \{\} <br /> |
 
 
 #### StageTaskType
@@ -2208,9 +2208,9 @@ _Appears in:_
 | `clusters` _[ClusterUpdatingStatus](#clusterupdatingstatus) array_ | The list of each cluster's updating status in this stage. |  | Required: \{\} <br /> |
 | `afterStageTaskStatus` _[StageTaskStatus](#stagetaskstatus) array_ | The status of the post-update tasks associated with the current stage.<br />Empty if the stage has not finished updating all the clusters. |  | MaxItems: 2 <br />Optional: \{\} <br /> |
 | `beforeStageTaskStatus` _[StageTaskStatus](#stagetaskstatus) array_ | The status of the pre-update tasks associated with the current stage. |  | MaxItems: 1 <br />Optional: \{\} <br /> |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | The time when the update started on the stage. Empty if the stage has not started updating. |  | Format: date-time <br />Optional: \{\} <br />Type: string <br /> |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#time-v1-meta)_ | The time when the update finished on the stage. Empty if the stage has not started updating. |  | Format: date-time <br />Optional: \{\} <br />Type: string <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed updating conditions for the stage. Empty if the stage has not started updating.<br />Known conditions are "Progressing", "Succeeded". |  | Optional: \{\} <br /> |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | The time when the update started on the stage. Empty if the stage has not started updating. |  | Format: date-time <br />Optional: \{\} <br />Type: string <br /> |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#time-v1-meta)_ | The time when the update finished on the stage. Empty if the stage has not started updating. |  | Format: date-time <br />Optional: \{\} <br />Type: string <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed updating conditions for the stage. Empty if the stage has not started updating.<br />Known conditions are "Progressing", "Succeeded". |  | Optional: \{\} <br /> |
 
 
 #### StagedUpdateRun
@@ -2233,7 +2233,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `StagedUpdateRun` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[UpdateRunSpec](#updaterunspec)_ | The desired state of StagedUpdateRun. |  | Required: \{\} <br /> |
 | `status` _[UpdateRunStatus](#updaterunstatus)_ | The observed status of StagedUpdateRun. |  | Optional: \{\} <br /> |
 
@@ -2258,7 +2258,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `StagedUpdateStrategy` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[UpdateStrategySpec](#updatestrategyspec)_ | The desired state of StagedUpdateStrategy. |  | Required: \{\} <br /> |
 
 
@@ -2316,9 +2316,9 @@ _Appears in:_
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
 | `key` _string_ | Key is the taint key that the toleration applies to. Empty means match all taint keys.<br />If the key is empty, operator must be Exists; this combination means to match all values and all keys. |  | Optional: \{\} <br /> |
-| `operator` _[TolerationOperator](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#tolerationoperator-v1-core)_ | Operator represents a key's relationship to the value.<br />Valid operators are Exists and Equal. Defaults to Equal.<br />Exists is equivalent to wildcard for value, so that a<br />ClusterResourcePlacement can tolerate all taints of a particular category. | Equal | Enum: [Equal Exists] <br />Optional: \{\} <br /> |
+| `operator` _[TolerationOperator](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#tolerationoperator-v1-core)_ | Operator represents a key's relationship to the value.<br />Valid operators are Exists and Equal. Defaults to Equal.<br />Exists is equivalent to wildcard for value, so that a<br />ClusterResourcePlacement can tolerate all taints of a particular category. | Equal | Enum: [Equal Exists] <br />Optional: \{\} <br /> |
 | `value` _string_ | Value is the taint value the toleration matches to.<br />If the operator is Exists, the value should be empty, otherwise just a regular string. |  | Optional: \{\} <br /> |
-| `effect` _[TaintEffect](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#tainteffect-v1-core)_ | Effect indicates the taint effect to match. Empty means match all taint effects.<br />When specified, only allowed value is NoSchedule. |  | Enum: [NoSchedule] <br />Optional: \{\} <br /> |
+| `effect` _[TaintEffect](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#tainteffect-v1-core)_ | Effect indicates the taint effect to match. Empty means match all taint effects.<br />When specified, only allowed value is NoSchedule. |  | Enum: [NoSchedule] <br />Optional: \{\} <br /> |
 
 
 #### TopologySpreadConstraint
@@ -2406,7 +2406,7 @@ _Appears in:_
 | `stagedUpdateStrategySnapshot` _[UpdateStrategySpec](#updatestrategyspec)_ | UpdateStrategySnapshot is the snapshot of the UpdateStrategy used for the update run.<br />The snapshot is immutable during the update run.<br />The strategy is applied to the list of clusters scheduled by the CRP according to the current policy.<br />The update run fails to initialize if the strategy fails to produce a valid list of stages where each selected<br />cluster is included in exactly one stage. |  | Optional: \{\} <br /> |
 | `stagesStatus` _[StageUpdatingStatus](#stageupdatingstatus) array_ | StagesStatus lists the current updating status of each stage.<br />The list is empty if the update run is not started or failed to initialize. |  | Optional: \{\} <br /> |
 | `deletionStageStatus` _[StageUpdatingStatus](#stageupdatingstatus)_ | DeletionStageStatus lists the current status of the deletion stage. The deletion stage<br />removes all the resources from the clusters that are not selected by the<br />current policy after all the update stages are completed. |  | Optional: \{\} <br /> |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for StagedUpdateRun.<br />Known conditions are "Initialized", "Progressing", "Succeeded". |  | Optional: \{\} <br /> |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions is an array of current observed conditions for StagedUpdateRun.<br />Known conditions are "Initialized", "Progressing", "Succeeded". |  | Optional: \{\} <br /> |
 
 
 
@@ -2489,7 +2489,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `Work` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  |  |
 | `spec` _[WorkSpec](#workspec)_ | spec defines the workload of a work. |  | Optional: \{\} <br /> |
 | `status` _[WorkStatus](#workstatus)_ | status defines the status of each applied manifest on the spoke cluster. |  |  |
 
@@ -2508,7 +2508,7 @@ WorkList contains a list of Work.
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `placement.kubernetes-fleet.io/v1beta1` | | |
 | `kind` _string_ | `WorkList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |  | Optional: \{\} <br /> |
 | `items` _[Work](#work) array_ | List of works. |  |  |
 
 
@@ -2567,7 +2567,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#condition-v1-meta) array_ | Conditions contains the different condition statuses for this work.<br />Valid condition types are:<br />1. Applied represents workload in Work is applied successfully on the spoke cluster.<br />2. Progressing represents workload in Work in the transitioning from one state to another the on the spoke cluster.<br />3. Available represents workload in Work exists on the spoke cluster.<br />4. Degraded represents the current state of workload does not match the desired<br />state for a certain period. |  |  |
+| `conditions` _[Condition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.34/#condition-v1-meta) array_ | Conditions contains the different condition statuses for this work.<br />Valid condition types are:<br />1. Applied represents workload in Work is applied successfully on the spoke cluster.<br />2. Progressing represents workload in Work in the transitioning from one state to another the on the spoke cluster.<br />3. Available represents workload in Work exists on the spoke cluster.<br />4. Degraded represents the current state of workload does not match the desired<br />state for a certain period. |  |  |
 | `manifestConditions` _[ManifestCondition](#manifestcondition) array_ | ManifestConditions represents the conditions of each resource in work deployed on<br />spoke cluster. |  | Optional: \{\} <br /> |
 
 
