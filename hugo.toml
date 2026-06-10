@@ -57,10 +57,10 @@ anchor = "Smart"
 
 [languages]
 [languages.en]
-label ="English"
 # Weight used for sorting.
 weight = 1
 [languages.en.params]
+label = "English"
 title = "KubeFleet"
 description = "Learn more about KubeFleet, a CNCF sandbox project for simplified Kubernetes multi-cluster management at scale."
 
