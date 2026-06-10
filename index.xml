@@ -133,20 +133,20 @@ the outbound network and no inbound network access.&lt;/p&gt;</description></ite
  &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h4 id="agenttype"&gt;AgentType&lt;/h4&gt;
-&lt;p&gt;&lt;em&gt;Underlying type:&lt;/em&gt; &lt;em&gt;string&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Managing clusters</title><link>https://kubefleet.dev/docs/how-tos/clusters/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/clusters/</guid><description>&lt;p&gt;This how-to guide discusses how to manage clusters in a fleet, specifically:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Underlying type:&lt;/em&gt; &lt;em&gt;string&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Managing clusters</title><link>https://kubefleet.dev/docs/how-tos/clusters/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/clusters/</guid><description>&lt;p&gt;This how-to guide discusses how to manage member cluster lifecycle in a fleet, specifically:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;how to join a cluster into a fleet; and&lt;/li&gt;
-&lt;li&gt;how to set a cluster to leave a fleet; and&lt;/li&gt;
-&lt;li&gt;how to add labels to a member cluster&lt;/li&gt;
+&lt;li&gt;how to add a cluster to a fleet; and&lt;/li&gt;
+&lt;li&gt;how to remove a cluster from a fleet; and&lt;/li&gt;
+&lt;li&gt;how to add labels to a member cluster.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="joining-a-cluster-into-a-fleet"&gt;Joining a cluster into a fleet&lt;/h2&gt;
+&lt;h2 id="add-a-cluster-to-a-fleet"&gt;Add a cluster to a fleet&lt;/h2&gt;
 &lt;p&gt;A cluster can join in a fleet if:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;it runs a &lt;a href="https://kubernetes.io/releases/version-skew-policy/"&gt;currently supported Kubernetes version&lt;/a&gt; — KubeFleet builds against &lt;code&gt;client-go&lt;/code&gt; v0.34 (Kubernetes 1.31 or later under the standard skew policy) and CI tests against Kubernetes 1.33; and&lt;/li&gt;
+&lt;li&gt;it runs a &lt;a href="https://kubernetes.io/releases/version-skew-policy/"&gt;Kubernetes version&lt;/a&gt; currently supported by KubeFleet ; and&lt;/li&gt;
 &lt;li&gt;it has network connectivity to the hub cluster of the fleet.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;For your convenience, Fleet provides a script that can automate the process of joining a cluster
-into a fleet. To use the script, run the commands below:&lt;/p&gt;</description></item><item><title>MemberCluster</title><link>https://kubefleet.dev/docs/concepts/membercluster/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/membercluster/</guid><description>&lt;h2 id="overview"&gt;Overview&lt;/h2&gt;
+&lt;h3 id="use-script-to-join-clusters"&gt;Use script to join clusters&lt;/h3&gt;
+&lt;p&gt;For your convenience, KubeFleet provides scripts &lt;a href="https://github.com/kubefleet-dev/kubefleet/tree/main/hack/quickstart/join-member-clusters.sh"&gt;(&lt;code&gt;join-member-clusters.sh&lt;/code&gt;)&lt;/a&gt; and &lt;a href="https://github.com/kubefleet-dev/kubefleet/tree/main/hack/quickstart/join-member-clusters.ps1"&gt;(&lt;code&gt;join-member-clusters.ps1&lt;/code&gt;)&lt;/a&gt; that can automate the process of joining one or more cluster to a fleet.&lt;/p&gt;</description></item><item><title>MemberCluster</title><link>https://kubefleet.dev/docs/concepts/membercluster/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/concepts/membercluster/</guid><description>&lt;h2 id="overview"&gt;Overview&lt;/h2&gt;
 &lt;p&gt;The fleet constitutes an implementation of a &lt;a href="https://multicluster.sigs.k8s.io/api-types/cluster-set/"&gt;&lt;code&gt;ClusterSet&lt;/code&gt;&lt;/a&gt; and
 encompasses the following attributes:&lt;/p&gt;
 &lt;ul&gt;
@@ -612,7 +612,9 @@ The users need to use &lt;a href="../howtos/taint-toleration.md"&gt;taints&lt;/a
 &lt;li&gt;&lt;strong&gt;ResourcePlacement&lt;/strong&gt;: Propagates the AI/ML job and LocalQueue to selected clusters within the namespace&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Kueue&lt;/strong&gt;: Manages job queuing and resource quotas within each cluster&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;This combination ensures efficient scheduling and resource utilization for your AI workloads across your entire fleet.&lt;/p&gt;</description></item><item><title>KubeFleet Performance and Scalability Report - Q1 2026</title><link>https://kubefleet.dev/blog/2026/04/07/kubefleet-performance-and-scalability-report-q1-2026/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/blog/2026/04/07/kubefleet-performance-and-scalability-report-q1-2026/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;This combination ensures efficient scheduling and resource utilization for your AI workloads across your entire fleet.&lt;/p&gt;</description></item><item><title>Use KubeFleet to rollout Kernel LPE CVE mitigations</title><link>https://kubefleet.dev/blog/2026/06/05/use-kubefleet-to-rollout-kernel-lpe-cve-mitigations/</link><pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/blog/2026/06/05/use-kubefleet-to-rollout-kernel-lpe-cve-mitigations/</guid><description>&lt;p&gt;This post shows how to use KubeFleet to simplify the safe rollout of mitigations for &lt;a href="https://github.com/advisories/GHSA-2274-3hgr-wxv6"&gt;CVE-2026-31431&lt;/a&gt; (&amp;ldquo;Copy Fail&amp;rdquo;) and &lt;a href="https://github.com/advisories/GHSA-mmw8-mxmc-8w2r"&gt;CVE-2026-43284&lt;/a&gt; / &lt;a href="https://github.com/advisories/GHSA-8p2w-g92w-f4x3"&gt;CVE-2026-43500&lt;/a&gt; (&amp;ldquo;DirtyFrag&amp;rdquo;) and &lt;a href="https://github.com/advisories/GHSA-47jg-vqrv-5f8v"&gt;CVE-2026-46300&lt;/a&gt; (&amp;ldquo;Fragnesia&amp;rdquo;) across multiple Kubernetes clusters. This vulnerability allows a container to escalate to root on the node and impacts Linux nodes until mitigations are applied. Existing nodes require either a node image upgrade or the self-service DaemonSet mitigation shown in this post.&lt;/p&gt;
+&lt;!-- truncate --&gt;
+&lt;p&gt;The DaemonSet used in this post originates from the Azure Kubernetes Service (AKS) advisory and detailed mitigation guide for per-cluster application which can be found in &lt;a href="https://github.com/Azure/AKS/issues/5753"&gt;GitHub Issue 5753&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>KubeFleet Performance and Scalability Report - Q1 2026</title><link>https://kubefleet.dev/blog/2026/04/07/kubefleet-performance-and-scalability-report-q1-2026/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/blog/2026/04/07/kubefleet-performance-and-scalability-report-q1-2026/</guid><description>&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;With proper confirmation, you can use KubeFleet to manage a large-scale multi-cluster enviornment
 environment with up to &lt;strong&gt;1,000 member clusters, 1,000 placements, and 100 concurrent progressive rollouts&lt;/strong&gt;.&lt;/li&gt;

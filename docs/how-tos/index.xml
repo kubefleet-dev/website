@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>How-To Guides on KubeFleet</title><link>https://kubefleet.dev/docs/how-tos/</link><description>Recent content in How-To Guides on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet.dev/docs/how-tos/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing clusters</title><link>https://kubefleet.dev/docs/how-tos/clusters/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/clusters/</guid><description>&lt;p&gt;This how-to guide discusses how to manage clusters in a fleet, specifically:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>How-To Guides on KubeFleet</title><link>https://kubefleet.dev/docs/how-tos/</link><description>Recent content in How-To Guides on KubeFleet</description><generator>Hugo</generator><language>en</language><atom:link href="https://kubefleet.dev/docs/how-tos/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing clusters</title><link>https://kubefleet.dev/docs/how-tos/clusters/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/clusters/</guid><description>&lt;p&gt;This how-to guide discusses how to manage member cluster lifecycle in a fleet, specifically:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;how to join a cluster into a fleet; and&lt;/li&gt;
-&lt;li&gt;how to set a cluster to leave a fleet; and&lt;/li&gt;
-&lt;li&gt;how to add labels to a member cluster&lt;/li&gt;
+&lt;li&gt;how to add a cluster to a fleet; and&lt;/li&gt;
+&lt;li&gt;how to remove a cluster from a fleet; and&lt;/li&gt;
+&lt;li&gt;how to add labels to a member cluster.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="joining-a-cluster-into-a-fleet"&gt;Joining a cluster into a fleet&lt;/h2&gt;
+&lt;h2 id="add-a-cluster-to-a-fleet"&gt;Add a cluster to a fleet&lt;/h2&gt;
 &lt;p&gt;A cluster can join in a fleet if:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;it runs a &lt;a href="https://kubernetes.io/releases/version-skew-policy/"&gt;currently supported Kubernetes version&lt;/a&gt; — KubeFleet builds against &lt;code&gt;client-go&lt;/code&gt; v0.34 (Kubernetes 1.31 or later under the standard skew policy) and CI tests against Kubernetes 1.33; and&lt;/li&gt;
+&lt;li&gt;it runs a &lt;a href="https://kubernetes.io/releases/version-skew-policy/"&gt;Kubernetes version&lt;/a&gt; currently supported by KubeFleet ; and&lt;/li&gt;
 &lt;li&gt;it has network connectivity to the hub cluster of the fleet.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;For your convenience, Fleet provides a script that can automate the process of joining a cluster
-into a fleet. To use the script, run the commands below:&lt;/p&gt;</description></item><item><title>Using the ClusterResourcePlacement API</title><link>https://kubefleet.dev/docs/how-tos/crp/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/crp/</guid><description>&lt;p&gt;This guide provides an overview of how to use the Fleet &lt;code&gt;ClusterResourcePlacement&lt;/code&gt; (CRP) API to orchestrate workload distribution across your fleet.&lt;/p&gt;
+&lt;h3 id="use-script-to-join-clusters"&gt;Use script to join clusters&lt;/h3&gt;
+&lt;p&gt;For your convenience, KubeFleet provides scripts &lt;a href="https://github.com/kubefleet-dev/kubefleet/tree/main/hack/quickstart/join-member-clusters.sh"&gt;(&lt;code&gt;join-member-clusters.sh&lt;/code&gt;)&lt;/a&gt; and &lt;a href="https://github.com/kubefleet-dev/kubefleet/tree/main/hack/quickstart/join-member-clusters.ps1"&gt;(&lt;code&gt;join-member-clusters.ps1&lt;/code&gt;)&lt;/a&gt; that can automate the process of joining one or more cluster to a fleet.&lt;/p&gt;</description></item><item><title>Using the ClusterResourcePlacement API</title><link>https://kubefleet.dev/docs/how-tos/crp/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kubefleet.dev/docs/how-tos/crp/</guid><description>&lt;p&gt;This guide provides an overview of how to use the Fleet &lt;code&gt;ClusterResourcePlacement&lt;/code&gt; (CRP) API to orchestrate workload distribution across your fleet.&lt;/p&gt;
 &lt;h2 id="overview"&gt;Overview&lt;/h2&gt;
 &lt;p&gt;The CRP API is a core Fleet API that facilitates the distribution of specific resources from the hub cluster to
 member clusters within a fleet. This API offers scheduling capabilities that allow you to target the most suitable
