@@ -80,9 +80,9 @@ includes:
   * `In`: the cluster must have a label key with one of the listed values.
   * `NotIn`: the cluster must have a label key that is not associated with any of the listed values.
   * `Exists`: the cluster must have the label key present; any value is acceptable.
-  * `NotExists`: the cluster must not have the label key.
+  * `DoesNotExist`: the cluster must not have the label key.
 
-    If you plan to use `Exists` and/or `NotExists`, you must leave the list of values empty.
+    If you plan to use `Exists` and/or `DoesNotExist`, you must leave the list of values empty.
 
 Below is an example of `matchExpressions` affinity term using the `In` operator:
 
