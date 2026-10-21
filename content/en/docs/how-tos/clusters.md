@@ -25,7 +25,7 @@ To use this script successfully make sure:
 
 * You know the hub cluster name (kf-hub-01) and member cluster names (my-member-cluster-01, my-member-cluster-02, my-member-cluster-03).
 * Your kubeconfig includes all clusters. This includes the hub and all members you want to join.
-* You have the KubeFleet version to deploy (i.e. 0.3.1)
+* You have the KubeFleet version to deploy (i.e. 0.3.2)
 * You have the IP address of the hub cluster (i.e. 172.18.0.2)
 
 Unless you made any modifications, the hub cluster's API server will listen on port 6443.
@@ -33,13 +33,13 @@ Unless you made any modifications, the hub cluster's API server will listen on p
 On MacOSX or Linux you can use this shell script:
 
 ```sh
-./join-member-clusters.sh 0.3.1 kf-hub-01 https://172.18.0.2:6443/ my-member-cluster-01 my-member-cluster-02 my-member-cluster-03
+./join-member-clusters.sh 0.3.2 kf-hub-01 https://172.18.0.2:6443/ my-member-cluster-01 my-member-cluster-02 my-member-cluster-03
 ```
 
 On Windows you can use PowerShell:
 
 ```powershell
-.\join-member-clusters.ps1 0.3.1 kf-hub-01 https://172.18.0.2:6443/ my-member-cluster-01 my-member-cluster-02 my-member-cluster-03
+.\join-member-clusters.ps1 0.3.2 kf-hub-01 https://172.18.0.2:6443/ my-member-cluster-01 my-member-cluster-02 my-member-cluster-03
 ```
 
 > Note: you can add multiple member clusters to join by adding them on the end of the argument list.
@@ -150,7 +150,7 @@ system.
     export HUB_CA=$(kubectl config view --raw -o jsonpath="{.clusters[?(@.name==\"$HUB_CLUSTER_CONTEXT\")].cluster.certificate-authority-data}")
 
     # Configure bits to pull from OCI repo
-    export KUBEFLEET_VERSION="0.3.1"
+    export KUBEFLEET_VERSION="0.3.2"
     export HUB_CONTROL_PLANE_URL="https://172.18.0.2:6443/"
     export MEMBER_AGENT_IMAGE="member-agent"
     export REFRESH_TOKEN_IMAGE="refresh-token"
