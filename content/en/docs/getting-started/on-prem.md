@@ -189,6 +189,9 @@ the completion.
 Now, log into the member clusters to confirm that the placement has been completed.
 
 ```sh
+# Replace YOUR-MEMBER-CLUSTER-CONTEXT with the name of the kubeconfig context for one of
+# the member clusters you joined above.
+export MEMBER_CLUSTER_CONTEXT=YOUR-MEMBER-CLUSTER-CONTEXT
 kubectl config use-context $MEMBER_CLUSTER_CONTEXT
 kubectl get ns
 kubectl get configmap -n work

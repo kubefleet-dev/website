@@ -288,7 +288,7 @@ To remove all the resources you just created, run the commands below:
 kubectl delete crp sample-crp
 
 kubectl delete ns kubefleet-sample
-kubectl delete configmap app -n kubefleet-sample
+kubectl delete configmap kf-cm -n kubefleet-sample
 ```
 
 To uninstall KubeFleet components on the clusters, run the commands below:
