@@ -27,6 +27,7 @@ selected member clusters along with this namespace.
   - **PickAll (Default)**: select any member clusters with matching cluster `Affinity` scheduling rules. If the `Affinity`
 is not specified, it will select all joined and healthy member clusters.
   - **PickFixed**: select a fixed list of member clusters defined in the `ClusterNames`.
+    An empty or omitted list selects no clusters, allowing the placement to scale down to zero clusters.
   - **PickN**: select a `NumberOfClusters` of member clusters with optional matching cluster `Affinity` scheduling rules or topology spread constraints `TopologySpreadConstraints`.
 
 - **Strategy**: how changes are rolled out (rollout strategy) and how resources are applied on the member cluster side (apply strategy).
