@@ -169,6 +169,21 @@ spec:
 
 The example above will place resources to two clusters, `bravelion` and `smartfish`.
 
+To select no clusters, set `clusterNames` to an empty list or omit the field:
+
+```yaml
+policy:
+  placementType: PickFixed
+  clusterNames: []
+```
+
+This allows you to create a placement before choosing any target clusters, or scale an
+existing placement down to zero clusters without deleting the `ClusterResourcePlacement`.
+When you clear the list on an existing placement, Fleet removes the resources previously
+placed by that placement from the member clusters. The selected resources on the hub
+cluster are not deleted. To place the resources again, add target cluster names back
+to `clusterNames`.
+
 ### `PickAll` placement type
 
 `PickAll` placement type allows you to pick all clusters in the fleet per some standard. With
