@@ -173,6 +173,15 @@ jsonPatchOverrides:
 
 This will successfully add the new label `newlabel` with the value `new-value` to the `ClusterRole` `secret-reader`, as we are creating the `labels` field and adding a new value `newlabel: new-value` to it.
 
+> Note: Using `op: add` with the path `/metadata/labels` (pointing to the entire labels map) will **replace all existing labels** with the value provided. This is only safe here because the `ClusterRole` `secret-reader` has no labels at all. If the resource already has labels, or might get some later, use the more specific path `/metadata/labels/newlabel` instead, which adds the single label without affecting the existing ones:
+>
+> ```yaml
+> jsonPatchOverrides:
+>   - op: add
+>     path: /metadata/labels/newlabel
+>     value: new-value
+> ```
+
 ## General Notes
 
 For ResourcePlacement the override flow is identical except that all the resources reside in the same namespace; use `ResourceOverride` instead of `ClusterResourceOverride` and expect `ResourcePlacementOverridden` in conditions.
